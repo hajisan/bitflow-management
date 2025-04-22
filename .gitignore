@@ -11,7 +11,7 @@
 .mtj.tmp/
 
 # XML Configuration files
-*.xml
+# idea/misc.xml
 
 # macOS system files
 .DS_Store
