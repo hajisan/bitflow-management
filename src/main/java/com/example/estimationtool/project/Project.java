@@ -97,7 +97,7 @@ public class Project {
                 Estimated Time: %d
                 Time spent: %d
                 Local date: %d
-                Status: %e
+                Status: %d
                 """, projectId, userId, name, description, estimatedTime, timeSpent, localDate, status);
     }
 
