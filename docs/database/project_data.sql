@@ -3,7 +3,7 @@ INSERT INTO User (firstName, lastName, email, password, role) VALUES
 ('Admin', 'Admin', 'admin@bitbros.dk', 'admin', 'ADMIN'), -- ID 1
 ('Projektleder', 'BitBro', 'projektleder@bitbros.dk', 'projektleder', 'PROJECT_MANAGER'), -- ID 2
 ('Sofie', 'Rytter', 'sofie@bitbros.dk', 'sofie', 'DEVELOPER'), -- ID 3
-('Joakim', 'Serverinsen', 'joakim@bitbros.dk', 'joakim', 'DEVELOPER'), -- ID 4
+('Joakim', 'Severinsen', 'joakim@bitbros.dk', 'joakim', 'DEVELOPER'), -- ID 4
 ('Nima', 'Salami', 'nima@bitbros.dk', 'nima', 'DEVELOPER'); -- ID 5
 
 -- Indsæt projekt
