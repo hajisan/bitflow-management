@@ -1,4 +1,6 @@
-package user;
+package com.example.estimationtool.user;
+
+import com.example.estimationtool.enums.Role;
 
 public class User {
 
