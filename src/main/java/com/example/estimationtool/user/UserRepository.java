@@ -36,7 +36,7 @@ public class UserRepository implements IUserRepository {
             ps.setString(2, user.getLastName());
             ps.setString(3, user.getEmail());
             ps.setString(4, user.getPasswordHash());
-            ps.setString(5, user.getRole().getDisplayName());
+            ps.setString(5, user.getRole().name());
             return ps;
         }, keyHolder);
 

@@ -1,6 +1,10 @@
-package com.example.estimationtool.user;
+package com.example.estimationtool.controller;
 
 import com.example.estimationtool.dto.UserRegistrationDTO;
+import com.example.estimationtool.enums.Role;
+import com.example.estimationtool.user.User;
+import com.example.estimationtool.user.UserService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +36,7 @@ public class UserController {
         return "user/create-user"; //Thymeleaf-skabelon
     }
 
+
     //------------------------------------ Create() ------------------------------------
 
     @PostMapping("/create")
@@ -44,15 +49,44 @@ public class UserController {
 
         redirectAttributes.addFlashAttribute("succes", "Bruger oprettet"); //Viser succesbesked EFTER redirect
 
-        return "redirect:/users";
+        return "redirect:/user-list";
 
     }
 
+
+
     //------------------------------------ Read() --------------------------------------
+
+    @GetMapping("/user-list")
+    public String showAllUsers() { // DUMMY USER INDTIL VIDERE
+        return "user/user-list";
+    }
 
     //------------------------------------ Hent Update() -------------------------------
 
     //------------------------------------ Update() ------------------------------------
 
     //------------------------------------ Delete() ------------------------------------
+
+
+
+
+
+    // DUMMY
+
+    @ModelAttribute("currentUser")
+    public User dummyCurrentUser(HttpSession session) {
+        User dummyAdmin = new User(
+                1,
+                "Admin",
+                "Test",
+                "admin@example.com",
+                "hashed", // hashet password er irrelevant her
+                Role.ADMIN
+        );
+
+        session.setAttribute("currentUser", dummyAdmin);
+        return dummyAdmin;
+    }
+
 }
