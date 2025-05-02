@@ -1,5 +1,6 @@
 package com.example.estimationtool.user;
 
+import com.example.estimationtool.dto.UserViewDTO;
 import com.example.estimationtool.interfaces.IUserRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -52,7 +53,9 @@ public class UserRepository implements IUserRepository {
 
     @Override
     public List<User> readAll() {
-        return List.of();
+
+        String sql = "SELECT id, firstName,lastName, email, passwordHash, role FROM user";
+        return jdbcTemplate.query(sql, new UserRowMapper());
     }
 
     @Override
