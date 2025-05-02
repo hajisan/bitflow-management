@@ -14,6 +14,8 @@ public class UserRegistrationDTO {
         setRole(role);
     }
 
+    public UserRegistrationDTO() {}
+
     // Getter-metoder
 
     public String getFirstName() {
