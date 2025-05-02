@@ -13,7 +13,7 @@ public class RoleCheck {
 
     public static void ensureAdminOrProjectManager(Role role) {
         if (role != Role.ADMIN && role != Role.PROJECT_MANAGER) {
-            throw new SecurityException("Kun Admin eller Project Manager har adgang til denne funktion");
+            throw new SecurityException("Kun Admin eller Projektleder har adgang til denne funktion");
         }
     }
 }

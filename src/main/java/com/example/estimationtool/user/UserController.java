@@ -17,7 +17,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    // ExceptionHandler-annotationen fanger og håndterer vores SecuritryException
+    // ExceptionHandler-annotationen fanger og håndterer vores SecurityException
     @ExceptionHandler(SecurityException.class)
     public String handleSecurityException(SecurityException e, Model model) {
         model.addAttribute("error", e.getMessage()); //
