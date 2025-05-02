@@ -71,7 +71,7 @@ public class User {
                 First Name: %s
                 Last Name : %s
                 E-mail    : %s
-                Role      : %e
+                Role      : %s
                 Password  : %s
                 """, userId, firstName, lastName, email, role, passwordHash);
     }

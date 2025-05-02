@@ -1,5 +1,5 @@
 -- Indsæt brugere
-INSERT INTO User (firstName, lastName, email, password, role) VALUES
+INSERT INTO User (firstName, lastName, email, passwordHash, role) VALUES
 ('Admin', 'Admin', 'admin@bitbros.dk', 'admin', 'ADMIN'), -- ID 1
 ('Projektleder', 'BitBro', 'projektleder@bitbros.dk', 'projektleder', 'PROJECT_MANAGER'), -- ID 2
 ('Sofie', 'Rytter', 'sofie@bitbros.dk', 'sofie', 'DEVELOPER'), -- ID 3

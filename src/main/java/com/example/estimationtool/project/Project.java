@@ -88,20 +88,20 @@ public class Project {
         this.status = status;
     }
 
+
+    @Override
     public String toString() {
-        return String.format("""
-                Project ID: %d
-                User ID: %d
-                Name: %s
-                Description: %s
-                Estimated Time: %d
-                Time spent: %d
-                Local date: %d
-                Status: %d
-                """, projectId, userId, name, description, estimatedTime, timeSpent, localDate, status);
+        return "Project{" +
+                "projectId=" + projectId +
+                ", userId=" + userId +
+                ", estimatedTime=" + estimatedTime +
+                ", timeSpent=" + timeSpent +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", localDate=" + localDate +
+                ", status=" + status +
+                '}';
     }
-
-
 
 
 

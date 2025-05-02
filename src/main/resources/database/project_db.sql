@@ -11,7 +11,7 @@ CREATE TABLE User (
     firstName VARCHAR(255),
     lastName VARCHAR(255),
     email VARCHAR(255) UNIQUE,
-    password VARCHAR(255),
+    passwordHash VARCHAR(255),
     role VARCHAR(255) CHECK (role IN ('ADMIN', 'PROJECT_MANAGER', 'DEVELOPER'))
 ) AUTO_INCREMENT = 1;
 
