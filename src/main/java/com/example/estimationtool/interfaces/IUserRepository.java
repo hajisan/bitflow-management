@@ -10,7 +10,7 @@ public interface IUserRepository extends IRepository<User, Integer> {
 
     List<User> readAll();
 
-    User findById(int id);
+    User readById(int id);
 
     User update(User user);
 
