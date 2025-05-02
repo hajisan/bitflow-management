@@ -9,3 +9,6 @@
 
 # IGNORE PLEASE
 .idea/misc.xml
+.idea/dataSources.xml
+.idea/dataSources.local.xml
+
