@@ -54,13 +54,15 @@ public class UserRepository implements IUserRepository {
     @Override
     public List<User> readAll() {
 
-        String sql = "SELECT id, firstName,lastName, email, passwordHash, role FROM user";
+        String sql = "SELECT id, firstName, lastName, email, passwordHash, role FROM user";
         return jdbcTemplate.query(sql, new UserRowMapper());
     }
 
     @Override
     public User readById(int id) {
-        return null;
+
+        String sql = "SELECT id, firstName, lastName, email, passwordHash, role FROM user WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, new UserRowMapper(), id);
     }
 
 
