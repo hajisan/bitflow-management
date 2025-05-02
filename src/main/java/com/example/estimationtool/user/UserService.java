@@ -1,7 +1,7 @@
 package com.example.estimationtool.user;
 
 import com.example.estimationtool.dto.UserRegistrationDTO;
-import com.example.estimationtool.enums.Role;
+
 import com.example.estimationtool.interfaces.IUserRepository;
 import com.example.estimationtool.roleCheck.RoleCheck;
 import org.springframework.security.crypto.password.PasswordEncoder;

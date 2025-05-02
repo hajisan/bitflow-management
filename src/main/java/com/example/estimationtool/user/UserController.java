@@ -1,9 +1,7 @@
-package com.example.estimationtool.controller;
+package com.example.estimationtool.user;
 
 import com.example.estimationtool.dto.UserRegistrationDTO;
 import com.example.estimationtool.enums.Role;
-import com.example.estimationtool.user.User;
-import com.example.estimationtool.user.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -58,7 +56,7 @@ public class UserController {
     //------------------------------------ Read() --------------------------------------
 
     @GetMapping("/user-list")
-    public String showAllUsers() { // DUMMY USER INDTIL VIDERE
+    public String showAllUsers() { // MIDLERTIDIG USER -> BRUGER user-list.html
         return "user/user-list";
     }
 
