@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create new user</title>
+</head>
+<body>
+<h1>Opret ny bruger</h1>
+
+<!-- Fejl- og succesbeskeder -->
+<div th:if="${error}" class="error" th:text="${error}"></div>
+<div th:if="${success}" class="success" th:text="${success}"></div>
+
+<!-- Formular til opret bruger -->
+<form th:action="@{/users/create}" th:object="${user}" method="post">
+
+    <label for="firstName">Fornavn:</label>
+    <input type="text" id="firstName" th:field="*{firstName}" required>
+    <br>
+
+    <label for="lastName">Efternavn:</label>
+    <input type="text" id="lastName" th:field="*{lastName}" required>
+    <br>
+
+    <label for="email">E-mail:</label>
+    <input type="text" id="email" th:field="*{email}" required>
+    <br>
+
+    <label for="password">Adgangskode:</label>
+    <input type="text" id="password" th:field="*{password}" required>
+    <br>
+
+    <label for="role">Rolle:</label>
+    <select id="role" th:field="*{role}" required>
+        <option value="">Vælg rolle</option>
+        <option value="ADMIN">Admin</option>
+        <option value="PROJECT_MANAGER">Projektleder</option>
+        <option value="DEVELOPER">Udvikler</option>
+    </select><br><br>
+
+    <button type="submit">Opret bruger</button>
+</form>
+
+</body>
+</html>

@@ -2,20 +2,6 @@
 CREATE DATABASE IF NOT EXISTS project_db;
 USE project_db;
 
--- Dropper tables hvis de findes for at rydde al data
-DROP TABLE IF EXISTS user_subtask;
-DROP TABLE IF EXISTS user_task;
-DROP TABLE IF EXISTS user_subproject;
-DROP TABLE IF EXISTS user_project;
-DROP TABLE IF EXISTS user;
-DROP TABLE IF EXISTS timeentry_subtask;
-DROP TABLE IF EXISTS timeentry_task;
-DROP TABLE IF EXISTS timeentry;
-DROP TABLE IF EXISTS subtask;
-DROP TABLE IF EXISTS task;
-DROP TABLE IF EXISTS subproject;
-DROP TABLE IF EXISTS project;
-
 -- ========================
 -- Tabel: User
 -- Gemmer information om en User
@@ -57,7 +43,7 @@ CREATE TABLE Subproject (
     timeSpent INTEGER,
     status VARCHAR(255) CHECK (status IN ('ACTIVE', 'INACTIVE', 'DONE')),
     UNIQUE (projectID, name),
-    FOREIGN KEY (projectID) REFERENCES Project(id) ON DELETE CASCADE
+    FOREIGN KEY (projectID) REFERENCES Project(id) ON DELETE CASCADE 
 ) AUTO_INCREMENT = 10000;
 
 -- ========================
@@ -89,7 +75,7 @@ CREATE TABLE SubTask (
     estimatedTime INTEGER,
     status VARCHAR(255) CHECK (status IN ('ACTIVE', 'INACTIVE', 'DONE')),
     UNIQUE (taskID, name),
-    FOREIGN KEY (taskID) REFERENCES Task(id) ON DELETE CASCADE
+    FOREIGN KEY (taskID) REFERENCES Task(id) ON DELETE CASCADE 
 ) AUTO_INCREMENT = 1000000;
 
 -- ========================
