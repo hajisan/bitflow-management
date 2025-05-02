@@ -1,6 +1,9 @@
 package com.example.estimationtool.unitTest.controller;
 
 
+import com.example.estimationtool.dto.UserRegistrationDTO;
+import com.example.estimationtool.enums.Role;
+import com.example.estimationtool.user.User;
 import com.example.estimationtool.user.UserController;
 import com.example.estimationtool.user.UserService;
 import org.junit.jupiter.api.Test;
@@ -11,6 +14,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import org.springframework.ui.Model;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -23,7 +29,18 @@ public class UserControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private UserService userService;
+    private UserService userService; //Mocker @Service = injiceres i @UserController
+
+
+      /* Skabelon:
+
+    //--------- Arrange ---------
+
+    //--------- Act -------------
+
+    //--------- Assert ----------
+
+     */
 
 
     //--------------------------------- Hent Create() ----------------------------------
@@ -36,6 +53,44 @@ public class UserControllerTest {
     }
 
     //------------------------------------ Create() ------------------------------------
+
+    @Test
+    void test_createUser() throws Exception {
+
+        //--------- Arrange ---------
+        User adminUser = new User(
+                1,
+                "Sofie",
+                "Rytter",
+                "rytterriet@gmail.com",
+                "rytterKoden",
+                Role.ADMIN
+        );
+
+        //--------- Act -------------
+
+        mockMvc.perform(post("/users/create")
+                .param("firstName", "Sofie") //Sætter parametrene fra UserRegistrationDTO
+                .param("lastName", "Rytter")
+                .param("email", "rytterriet@gmail.com" )
+                .param("password", "rytterKoden")
+                .sessionAttr("adminUser", adminUser))
+                .andExpect(status().is3xxRedirection()) // Assert - Tjekker at den redirecter
+                .andExpect(redirectedUrl("/user-list")) // Tjekker at den redirecter til user-list
+                .andExpect(flash().attributeExists("succes")); // Tjekker at succes-besked findes
+
+        // Tjekker at createUser() kaldes fra @UserService
+        verify(userService).createUser(any(User.class), any(UserRegistrationDTO.class));
+
+
+
+
+
+        //--------- Assert ----------
+
+
+
+    }
 
     //------------------------------------ Read() --------------------------------------
 
