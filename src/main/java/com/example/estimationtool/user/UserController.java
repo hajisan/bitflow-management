@@ -12,7 +12,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.List;
 
 @Controller
-@RequestMapping("/users") //Base-URL for alle endpoints i UserController
+@RequestMapping() //Base-URL for alle endpoints i UserController
 public class UserController {
 
     private final UserService userService;
@@ -50,7 +50,7 @@ public class UserController {
 
         redirectAttributes.addFlashAttribute("succes", "Bruger oprettet"); //Viser succesbesked EFTER redirect
 
-        return "redirect:/user-list"; //SKAL MÅSKE REDIRECTE TIL ADMINOVERSIGT?
+        return "redirect:/users"; //SKAL MÅSKE REDIRECTE TIL ADMINOVERSIGT?
 
     }
 
@@ -58,11 +58,19 @@ public class UserController {
 
     //------------------------------------ Read() --------------------------------------
 
-    @GetMapping("/user-list")
+    @GetMapping("/users")
     public String showAllUsers(Model model) {
         List<UserViewDTO> userViewDTOList = userService.readAll();
         model.addAttribute("users", userViewDTOList);
         return "user/user-list";
+    }
+
+    @GetMapping("users/{userId}")
+    public String showUser(@PathVariable int userId, Model model) {
+        UserViewDTO userViewDTO = userService.readById(userId);
+        model.addAttribute("user", userViewDTO);
+        return "user/user-details";
+
     }
 
 
