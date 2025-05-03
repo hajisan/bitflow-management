@@ -1,12 +1,15 @@
 package com.example.estimationtool.user;
 
 import com.example.estimationtool.dto.UserRegistrationDTO;
+import com.example.estimationtool.dto.UserViewDTO;
 import com.example.estimationtool.enums.Role;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/users") //Base-URL for alle endpoints i UserController
@@ -47,7 +50,7 @@ public class UserController {
 
         redirectAttributes.addFlashAttribute("succes", "Bruger oprettet"); //Viser succesbesked EFTER redirect
 
-        return "redirect:/user-list";
+        return "redirect:/user-list"; //SKAL MÅSKE REDIRECTE TIL ADMINOVERSIGT?
 
     }
 
@@ -56,9 +59,12 @@ public class UserController {
     //------------------------------------ Read() --------------------------------------
 
     @GetMapping("/user-list")
-    public String showAllUsers() { // MIDLERTIDIG USER -> BRUGER user-list.html
+    public String showAllUsers(Model model) {
+        List<UserViewDTO> userViewDTOList = userService.readAll();
+        model.addAttribute("users", userViewDTOList);
         return "user/user-list";
     }
+
 
     //------------------------------------ Hent Update() -------------------------------
 
