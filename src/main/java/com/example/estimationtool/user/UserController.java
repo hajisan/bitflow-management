@@ -13,7 +13,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.List;
 
 @Controller
-@RequestMapping() //Base-URL for alle endpoints i UserController
+@RequestMapping("users") //Base-URL for alle endpoints i UserController
 public class UserController {
 
     private final UserService userService;
@@ -27,8 +27,17 @@ public class UserController {
     //--------------------------------- Hent Create() ----------------------------------
 
     @GetMapping("/create")
-    public String showCreateUser(@SessionAttribute("currentUser") User currentUser,
-                                 Model model) {
+    public String showCreateUser(HttpSession session,
+                                 Model model,
+                                 RedirectAttributes redirectAttributes) {
+
+        User currentUser = (User) session.getAttribute("currentUser");
+
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Log ind for at oprette en ny bruger.");
+            return "redirect:/login";
+        }
+
         model.addAttribute("user", new UserRegistrationDTO());
         return "user/create-user"; //Thymeleaf-skabelon
     }
@@ -38,13 +47,20 @@ public class UserController {
 
     @PostMapping("/create")
     public String createUser(@ModelAttribute("user") UserRegistrationDTO userDTO,
-                             @SessionAttribute("currentUser")
-                             User currentUser,
+                             HttpSession session,
                              RedirectAttributes redirectAttributes) {
+
+        User currentUser = (User) session.getAttribute("currentUser");
+
+        // Tjekker om brugeren er logget ind
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Log ind for at oprette en bruger.");
+            return "redirect:/login";
+        }
 
         userService.createUser(currentUser, userDTO);
 
-        redirectAttributes.addFlashAttribute("succes", "Brugere blev oprettet"); //Viser succesbesked EFTER redirect
+        redirectAttributes.addFlashAttribute("succes", "Bruger blev oprettet"); //Viser succesbesked EFTER redirect
 
         return "redirect:/users"; //SKAL MÅSKE REDIRECTE TIL ADMINOVERSIGT?
 
@@ -54,18 +70,37 @@ public class UserController {
 
     //------------------------------------ Read() --------------------------------------
 
-    @GetMapping("/users")
-    public String showAllUsers(@SessionAttribute("currentUser") User currentUser,
-                               Model model) {
+    @GetMapping("")
+    public String showAllUsers(HttpSession session,
+                               Model model,
+                               RedirectAttributes redirectAttributes) {
+
+        User currentUser = (User) session.getAttribute("currentUser");
+
+        // Tjekker om brugeren er logget ind
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Log ind for at se brugeroplysninger.");
+            return "redirect:/login";
+        }
         List<UserViewDTO> userViewDTOList = userService.readAll();
         model.addAttribute("users", userViewDTOList);
         return "user/user-list";
     }
 
-    @GetMapping("users/{id}")
+    @GetMapping("/{id}")
     public String showUser(@PathVariable int id,
-                           @SessionAttribute("currentUser") User currentUser,
-                           Model model) {
+                           HttpSession session,
+                           Model model,
+                           RedirectAttributes redirectAttributes) {
+
+        User currentUser = (User) session.getAttribute("currentUser");
+
+        // Tjekker om brugeren er logget ind
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Log ind for at se brugeroplysninger.");
+            return "redirect:/login";
+        }
+
         UserViewDTO userViewDTO = userService.readById(id);
         model.addAttribute("user", userViewDTO);
         return "user/user-details";
@@ -74,10 +109,19 @@ public class UserController {
 
     //------------------------------------ Hent Update() -------------------------------
 
-    @GetMapping("/users/edit/{id}")
+    @GetMapping("/edit/{id}")
     public String showEditUser(@PathVariable int id,
-                               @SessionAttribute("currentUser") User currentUser,
-                               Model model) {
+                               HttpSession session,
+                               Model model,
+                               RedirectAttributes redirectAttributes) {
+
+        User currentUser = (User) session.getAttribute("currentUser");
+
+        // Tjekker om bruger er logget ind
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Log ind for at opdatere bruger.");
+            return "redirect:/login";
+        }
 
         UserViewDTO userViewDTO = userService.readById(id);
 
@@ -100,7 +144,7 @@ public class UserController {
 
     //------------------------------------ Update() ------------------------------------
 
-    @PostMapping("/users/edit")
+    @PostMapping("/edit")
     public String updateUser(@ModelAttribute("userUpdateDTO") UserUpdateDTO userUpdateDTO,
                              HttpSession session,
                              RedirectAttributes redirectAttributes) {
@@ -128,24 +172,5 @@ public class UserController {
     //------------------------------------ Delete() ------------------------------------
 
 
-
-
-
-    // DUMMY
-
-    @ModelAttribute("currentUser")
-    public User dummyCurrentUser(HttpSession session) {
-        User dummyAdmin = new User(
-                1,
-                "Admin",
-                "Test",
-                "admin@example.com",
-                "hashed", // hashet password er irrelevant her
-                Role.ADMIN
-        );
-
-        session.setAttribute("currentUser", dummyAdmin);
-        return dummyAdmin;
-    }
 
 }
