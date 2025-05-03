@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Error Page</title>
+</head>
+<body>
+    <h1>Der opstod en fejl</h1>
+    <p th:text="${error}"></p>
+    <a th:href="@{/}">Gå tilbage</a>
+</body>
+</html>

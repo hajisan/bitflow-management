@@ -22,12 +22,22 @@ public class UserController {
         this.userService = userService;
     }
 
-    // ExceptionHandler-annotationen fanger og håndterer vores SecurityException
+    //------------------------------- ExceptionHandler -------------------------------
+
+    // Fanger og håndterer vores SecurityException ved adgangskontrol
     @ExceptionHandler(SecurityException.class)
     public String handleSecurityException(SecurityException e, Model model) {
         model.addAttribute("error", e.getMessage()); //
         return "user/create-user";
     }
+
+    // Fanger og håndterer
+    @ExceptionHandler(RuntimeException.class)
+    public String handleRuntimeException(RuntimeException e, Model model) {
+        model.addAttribute("error", e.getMessage());
+        return "user/edit-user"; // Viser fejlen i redigeringsformularen
+    }
+
 
     //--------------------------------- Hent Create() ----------------------------------
 
@@ -73,8 +83,9 @@ public class UserController {
 
     }
 
-
     //------------------------------------ Hent Update() -------------------------------
+
+
 
     //------------------------------------ Update() ------------------------------------
 
