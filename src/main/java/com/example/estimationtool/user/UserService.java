@@ -2,10 +2,15 @@ package com.example.estimationtool.user;
 
 import com.example.estimationtool.dto.UserRegistrationDTO;
 
+import com.example.estimationtool.dto.UserViewDTO;
 import com.example.estimationtool.interfaces.IUserRepository;
 import com.example.estimationtool.roleCheck.RoleCheck;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class UserService {
@@ -39,8 +44,41 @@ public class UserService {
     }
 
 
-
     //------------------------------------ Read() --------------------------------------
+
+    public List<UserViewDTO> readAll() {
+        List<User> userList = iUserRepository.readAll();
+        List<UserViewDTO> userViewDTOList = new ArrayList<>();
+
+        for (User user : userList) {
+            UserViewDTO userViewDTO = new UserViewDTO(
+                    user.getUserId(),
+                    user.getFirstName(),
+                    user.getLastName(),
+                    user.getEmail(),
+                    user.getRole()
+            );
+            userViewDTOList.add(userViewDTO);
+        }
+        return userViewDTOList;
+
+    }
+
+    public UserViewDTO readById(int id) {
+        User user = iUserRepository.readById(id);
+        if (user == null) {
+            throw new NoSuchElementException("Bruger med ID " + id + " eksisterer ikke.");
+        }
+
+        return new UserViewDTO(
+                user.getUserId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getRole()
+        );
+
+    }
 
     //------------------------------------ Update() ------------------------------------
 

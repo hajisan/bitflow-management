@@ -2,11 +2,13 @@ package com.example.estimationtool.unitTest.controller;
 
 
 import com.example.estimationtool.dto.UserRegistrationDTO;
+import com.example.estimationtool.dto.UserViewDTO;
 import com.example.estimationtool.enums.Role;
 import com.example.estimationtool.user.User;
 import com.example.estimationtool.user.UserController;
 import com.example.estimationtool.user.UserService;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -17,9 +19,11 @@ import org.springframework.ui.Model;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import java.util.List;
 
 @WebMvcTest(UserController.class)
 @AutoConfigureMockMvc(addFilters = false) // DEAKTIVERER SPRING SECURITY, så tests ikke fejler pga. adgangskontrol
@@ -46,7 +50,7 @@ public class UserControllerTest {
     //--------------------------------- Hent Create() ----------------------------------
     @Test
     void test_showCreateUser() throws Exception {
-        mockMvc.perform(get("/users/create"))
+        mockMvc.perform(get("/create"))
                 .andExpect(status().isOk()) // Forventer status 200
                 .andExpect(view().name("user/create-user")) // Forventer dette view-navn
                 .andExpect(model().attributeExists("user")); //Forventer at modellen "user" sendes med til Thymeleaf
@@ -69,30 +73,66 @@ public class UserControllerTest {
 
         //--------- Act -------------
 
-        mockMvc.perform(post("/users/create")
+        mockMvc.perform(post("/create")
                 .param("firstName", "Sofie") //Sætter parametrene fra UserRegistrationDTO
                 .param("lastName", "Rytter")
                 .param("email", "rytterriet@gmail.com" )
                 .param("password", "rytterKoden")
                 .sessionAttr("adminUser", adminUser))
                 .andExpect(status().is3xxRedirection()) // Assert - Tjekker at den redirecter
-                .andExpect(redirectedUrl("/user-list")) // Tjekker at den redirecter til user-list
+                .andExpect(redirectedUrl("/users")) // Tjekker at den redirecter til user-list
                 .andExpect(flash().attributeExists("succes")); // Tjekker at succes-besked findes
 
         // Tjekker at createUser() kaldes fra @UserService
         verify(userService).createUser(any(User.class), any(UserRegistrationDTO.class));
 
 
-
-
-
-        //--------- Assert ----------
-
-
-
     }
 
     //------------------------------------ Read() --------------------------------------
+
+    @Test
+    void showAllUsers() throws Exception {
+
+        //--------- Arrange ---------
+
+        List<UserViewDTO> users = List.of(
+                new UserViewDTO(1, "Bob", "Marley", "marley@example.com", Role.DEVELOPER),
+                new UserViewDTO(2, "Tut", "Jensen", "tut@example.com", Role.PROJECT_MANAGER)
+        );
+
+        Mockito.when(userService.readAll()).thenReturn(users);
+
+        //--------- Act -------------
+
+        mockMvc.perform(get("/users"))
+                .andExpect(status().isOk()) // Assert
+                .andExpect(view().name("user/user-list"))
+                .andExpect(model().attributeExists("users"))
+                .andExpect(model().attribute("users", users)); // Sammenligner hele listen
+    }
+
+
+
+
+    @Test
+    void showUser() throws Exception {
+
+        //--------- Arrange ---------
+
+        UserViewDTO expectedUserDTO = new UserViewDTO(1, "Bob", "Marley", "marley@gmail.com", Role.DEVELOPER);
+
+        Mockito.when(userService.readById(1)).thenReturn(expectedUserDTO);
+
+        //--------- Act -------------
+        mockMvc.perform(get("/users/1"))
+                .andExpect(status().isOk()) //Assert
+                .andExpect(view().name("user/user-details"))
+                .andExpect(model().attributeExists("user"))
+                .andExpect(model().attribute("user", expectedUserDTO));
+
+    }
+
 
     //------------------------------------ Hent Update() -------------------------------
 
