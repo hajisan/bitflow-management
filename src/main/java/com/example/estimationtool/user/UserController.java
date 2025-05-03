@@ -60,9 +60,10 @@ public class UserController {
         return "user/user-list";
     }
 
-    @GetMapping("users/{userId}")
-    public String showUser(@PathVariable int userId, Model model) {
-        UserViewDTO userViewDTO = userService.readById(userId);
+    @GetMapping("users/{id}")
+    public String showUser(@PathVariable int id,
+                           Model model) {
+        UserViewDTO userViewDTO = userService.readById(id);
         model.addAttribute("user", userViewDTO);
         return "user/user-details";
 
@@ -71,7 +72,9 @@ public class UserController {
     //------------------------------------ Hent Update() -------------------------------
 
     @GetMapping("/users/edit/{id}")
-    public String showEditUser(@PathVariable int id, @SessionAttribute("currentUser)") Model model) {
+    public String showEditUser(@PathVariable int id,
+                               @SessionAttribute("currentUser") User currentUser,
+                               Model model) {
 
         UserViewDTO userViewDTO = userService.readById(id);
 
@@ -86,13 +89,27 @@ public class UserController {
         );
 
         model.addAttribute("userUpdateDTO", userUpdateDTO);
+        model.addAttribute("isAdmin", currentUser.getRole() == Role.ADMIN); // bruges i HTML
         return "user/edit-user";
 
     }
 
 
-
     //------------------------------------ Update() ------------------------------------
+
+    @PostMapping("/users/update")
+    public String updateUser(@ModelAttribute("userUpdateDTO") UserUpdateDTO userUpdateDTO,
+                             @SessionAttribute("currentUser") User currentUser,
+                             RedirectAttributes redirectAttributes) {
+
+        userService.updateUser(userUpdateDTO, currentUser);
+
+        // Tilføj succesbesked som flash-attribut (vises efter redirect)
+        redirectAttributes.addFlashAttribute("succes", "Bruger opdateret!");
+
+        return "redirect:/users/" + userUpdateDTO.getUserId(); // Redirect til user-detail
+    }
+
 
     //------------------------------------ Delete() ------------------------------------
 
