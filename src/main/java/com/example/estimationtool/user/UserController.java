@@ -27,7 +27,8 @@ public class UserController {
     //--------------------------------- Hent Create() ----------------------------------
 
     @GetMapping("/create")
-    public String showCreateUser(Model model) {
+    public String showCreateUser(@SessionAttribute("currentUser") User currentUser,
+                                 Model model) {
         model.addAttribute("user", new UserRegistrationDTO());
         return "user/create-user"; //Thymeleaf-skabelon
     }
@@ -54,7 +55,8 @@ public class UserController {
     //------------------------------------ Read() --------------------------------------
 
     @GetMapping("/users")
-    public String showAllUsers(Model model) {
+    public String showAllUsers(@SessionAttribute("currentUser") User currentUser,
+                               Model model) {
         List<UserViewDTO> userViewDTOList = userService.readAll();
         model.addAttribute("users", userViewDTOList);
         return "user/user-list";
@@ -62,6 +64,7 @@ public class UserController {
 
     @GetMapping("users/{id}")
     public String showUser(@PathVariable int id,
+                           @SessionAttribute("currentUser") User currentUser,
                            Model model) {
         UserViewDTO userViewDTO = userService.readById(id);
         model.addAttribute("user", userViewDTO);
@@ -99,13 +102,21 @@ public class UserController {
 
     @PostMapping("/users/edit")
     public String updateUser(@ModelAttribute("userUpdateDTO") UserUpdateDTO userUpdateDTO,
-                             @SessionAttribute("currentUser") User currentUser,
+                             HttpSession session,
                              RedirectAttributes redirectAttributes) {
+
+        User currentUser = (User) session.getAttribute("currentUser");
+
+        // Tjekker om bruger er logget ind
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Log ind for at opdatere bruger.");
+            return "redirect:/login";
+        }
 
         userService.updateUser(userUpdateDTO, currentUser);
 
         // Tilføj succesbesked som flash-attribut (vises efter redirect)
-        redirectAttributes.addFlashAttribute("succes", "Bruger opdateret!");
+        redirectAttributes.addFlashAttribute("succes", "Brugeren blev opdateret.");
 
         return "redirect:/users/" + userUpdateDTO.getUserId(); // Redirect til user-detail
     }
