@@ -1,10 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Edit User</title>
 </head>
 <body>
+<h1>Rediger bruger</h1>
+
+<!-- Vis fejl hvis der er en -->
+<div th:if="${error}" class="error" th:text="${error}"></div>
+<div th:if="${succes}" class="success" th:text="${succes}"></div>
+
+<form th:action="@{/users/update}" th:object="${userUpdateDTO}" method="post">
+    <input type="hidden" th:field="*{userId}"/>
+
+    <label for="firstName">Fornavn:</label>
+    <input type="text" id="firstName" th:field="*{firstName}" required/>
+
+    <label for="lastName">Efternavn:</label>
+    <input type="text" id="lastName" th:field="*{lastName}" required/>
+
+    <label for="email">E-mail:</label>
+    <input type="email" id="email" th:field="*{email}" required/>
+
+    <label for="password">Adgangskode:</label>
+    <input type="password" id="password" th:field="*{password}"/>
+
+    <label for="role">Rolle:</label>
+    <select id="role" th:field="*{role}" required>
+        <option value="" disabled>Vælg rolle</option>
+        <option value="ADMIN">Admin</option>
+        <option value="PROJECT_MANAGER">Projektleder</option>
+        <option value="DEVELOPER">Udvikler</option>
+    </select>
+
+    <br><br>
+    <button type="submit">Opdater bruger</button>
+</form>
+
+</body>
+</html>
 
 </body>
 </html>

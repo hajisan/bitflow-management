@@ -4,6 +4,7 @@ import com.example.estimationtool.dto.UserRegistrationDTO;
 
 import com.example.estimationtool.dto.UserUpdateDTO;
 import com.example.estimationtool.dto.UserViewDTO;
+import com.example.estimationtool.enums.Role;
 import com.example.estimationtool.interfaces.IUserRepository;
 import com.example.estimationtool.roleCheck.RoleCheck;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -83,36 +84,46 @@ public class UserService {
 
     //------------------------------------ Update() ------------------------------------
 
-    public User updateUser(UserUpdateDTO userUpdateDTO) {
+    public User updateUser(UserUpdateDTO userUpdateDTO, User currentUser) {
 
-        User excistingUser = iUserRepository.readById(userUpdateDTO.getUserId());
+        User existingUser = iUserRepository.readById(userUpdateDTO.getUserId());
 
         // Tjekker om bruger findes
-        if (excistingUser == null) {
+        if (existingUser == null) {
             throw new RuntimeException("Bruger med ID: " + userUpdateDTO.getUserId() + " eksisterer ikke.");
         }
 
 
+        // Håndterer password
         String passwordHash;
 
-        if (passwordEncoder.matches(userUpdateDTO.getPassword(), excistingUser.getPasswordHash())) {
-            // Henter uændret hash'et password
-            passwordHash = excistingUser.getPasswordHash();
-        }
-        else {
-            // Hash'er opdaterede password
+        if (userUpdateDTO.getPassword() == null || userUpdateDTO.getPassword().isBlank()) {
+            // Hvis intet password er angivet, behold eksisterende hash
+            passwordHash = existingUser.getPasswordHash();
+        } else if (passwordEncoder.matches(userUpdateDTO.getPassword(), existingUser.getPasswordHash())) {
+            // Hvis brugeren indtaster det samme password = behold det
+            passwordHash = existingUser.getPasswordHash();
+        } else {
+            // Hash opdaterede password
             passwordHash = passwordEncoder.encode(userUpdateDTO.getPassword());
         }
 
+        // Håndterer rolle
+        Role role = existingUser.getRole(); // Default = beholder nuværende rolle
 
-        // Mapper UserUpdateDTO til User-objekt med opdaterede værdier
+        if (currentUser.getRole() == Role.ADMIN) {
+            role = userUpdateDTO.getRole(); // Kun admin må ændre
+        }
+
+
+        // Mapper UserUpdateDTO til User-objekt med opdateret bruger
         User updatedUser = new User(
                 userUpdateDTO.getUserId(),
                 userUpdateDTO.getFirstName(),
                 userUpdateDTO.getLastName(),
                 userUpdateDTO.getEmail(),
                 passwordHash,
-                userUpdateDTO.getRole()
+                role
         );
 
         return iUserRepository.update(updatedUser);

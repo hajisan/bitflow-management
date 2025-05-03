@@ -1,6 +1,7 @@
 package com.example.estimationtool.user;
 
 import com.example.estimationtool.dto.UserRegistrationDTO;
+import com.example.estimationtool.dto.UserUpdateDTO;
 import com.example.estimationtool.dto.UserViewDTO;
 import com.example.estimationtool.enums.Role;
 import jakarta.servlet.http.HttpSession;
@@ -20,22 +21,6 @@ public class UserController {
     // Dependency Injection af UserService i constructoren
     public UserController(UserService userService) {
         this.userService = userService;
-    }
-
-    //------------------------------- ExceptionHandler -------------------------------
-
-    // Fanger og håndterer vores SecurityException ved adgangskontrol
-    @ExceptionHandler(SecurityException.class)
-    public String handleSecurityException(SecurityException e, Model model) {
-        model.addAttribute("error", e.getMessage()); //
-        return "user/create-user";
-    }
-
-    // Fanger og håndterer
-    @ExceptionHandler(RuntimeException.class)
-    public String handleRuntimeException(RuntimeException e, Model model) {
-        model.addAttribute("error", e.getMessage());
-        return "user/edit-user"; // Viser fejlen i redigeringsformularen
     }
 
 
@@ -58,7 +43,7 @@ public class UserController {
 
         userService.createUser(currentUser, userDTO);
 
-        redirectAttributes.addFlashAttribute("succes", "Bruger oprettet"); //Viser succesbesked EFTER redirect
+        redirectAttributes.addFlashAttribute("succes", "Brugere blev oprettet"); //Viser succesbesked EFTER redirect
 
         return "redirect:/users"; //SKAL MÅSKE REDIRECTE TIL ADMINOVERSIGT?
 
@@ -84,6 +69,26 @@ public class UserController {
     }
 
     //------------------------------------ Hent Update() -------------------------------
+
+    @GetMapping("/users/edit/{id}")
+    public String showEditUser(@PathVariable int id, @SessionAttribute("currentUser)") Model model) {
+
+        UserViewDTO userViewDTO = userService.readById(id);
+
+        // Konverterer UserViewDTO til UserUpdateDTO — password = tomt (vises ikke)
+        UserUpdateDTO userUpdateDTO = new UserUpdateDTO(
+                userViewDTO.getUserId(),
+                userViewDTO.getFirstName(),
+                userViewDTO.getLastName(),
+                userViewDTO.getEmail(),
+                "", // Tomt felt, skal indtastes igen
+                userViewDTO.getRole()
+        );
+
+        model.addAttribute("userUpdateDTO", userUpdateDTO);
+        return "user/edit-user";
+
+    }
 
 
 
