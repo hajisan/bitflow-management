@@ -2,6 +2,7 @@ package com.example.estimationtool.user;
 
 import com.example.estimationtool.dto.UserRegistrationDTO;
 
+import com.example.estimationtool.dto.UserUpdateDTO;
 import com.example.estimationtool.dto.UserViewDTO;
 import com.example.estimationtool.interfaces.IUserRepository;
 import com.example.estimationtool.roleCheck.RoleCheck;
@@ -81,6 +82,43 @@ public class UserService {
     }
 
     //------------------------------------ Update() ------------------------------------
+
+    public User updateUser(UserUpdateDTO userUpdateDTO) {
+
+        User excistingUser = iUserRepository.readById(userUpdateDTO.getUserId());
+
+        // Tjekker om bruger findes
+        if (excistingUser == null) {
+            throw new RuntimeException("Bruger med ID: " + userUpdateDTO.getUserId() + " eksisterer ikke.");
+        }
+
+
+        String passwordHash;
+
+        if (passwordEncoder.matches(userUpdateDTO.getPassword(), excistingUser.getPasswordHash())) {
+            // Henter uændret hash'et password
+            passwordHash = excistingUser.getPasswordHash();
+        }
+        else {
+            // Hash'er opdaterede password
+            passwordHash = passwordEncoder.encode(userUpdateDTO.getPassword());
+        }
+
+
+        // Mapper UserUpdateDTO til User-objekt med opdaterede værdier
+        User updatedUser = new User(
+                userUpdateDTO.getUserId(),
+                userUpdateDTO.getFirstName(),
+                userUpdateDTO.getLastName(),
+                userUpdateDTO.getEmail(),
+                passwordHash,
+                userUpdateDTO.getRole()
+        );
+
+        return iUserRepository.update(updatedUser);
+
+
+    }
 
     //------------------------------------ Delete() ------------------------------------
 }

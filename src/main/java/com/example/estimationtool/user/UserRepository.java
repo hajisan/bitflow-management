@@ -80,7 +80,7 @@ public class UserRepository implements IUserRepository {
         String sql = "UPDATE user SET firstName = ?, lastName = ?, email = ?, passwordHash = ?, role = ? WHERE id = ?";
 
 
-            int rowsAffected = jdbcTemplate.update( // Henter disse værdier, så de kan opdateres
+            jdbcTemplate.update( // Henter disse værdier, så de kan opdateres
                     sql,
                     user.getFirstName(),
                     user.getLastName(),
@@ -89,9 +89,6 @@ public class UserRepository implements IUserRepository {
                     user.getRole(),
                     user.getUserId() // Parameter -> id til WHERE
             );
-            if (rowsAffected == 0) {
-                throw new EmptyResultDataAccessException("Ingen rækker blev opdateret for bruger-ID: " + user.getUserId(), 1);
-            }
             return user;
         }
 
