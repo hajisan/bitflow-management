@@ -86,7 +86,7 @@ public class UserRepository implements IUserRepository {
                     user.getLastName(),
                     user.getEmail(),
                     user.getPasswordHash(),
-                    user.getRole(),
+                    user.getRole().name(), // Konverteres til String for at gemmes i databasen
                     user.getUserId() // Parameter -> id til WHERE
             );
             return user;

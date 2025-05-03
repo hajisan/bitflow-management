@@ -93,6 +93,20 @@ public class UserService {
             throw new RuntimeException("Bruger med ID: " + userUpdateDTO.getUserId() + " eksisterer ikke.");
         }
 
+        // Håndterer rolle
+        Role role;
+
+        if (currentUser.getRole() == Role.ADMIN) {
+            role = userUpdateDTO.getRole(); // Kun admin må ændre rolle
+        } else {
+            if (!userUpdateDTO.getRole().equals(existingUser.getRole())) {
+                throw new SecurityException("Du har ikke tilladelse til ændre en brugers rolle.");
+            }
+
+            role = existingUser.getRole(); // Beholder nuværende rolle
+        }
+
+
 
         // Håndterer password
         String passwordHash;
@@ -108,12 +122,6 @@ public class UserService {
             passwordHash = passwordEncoder.encode(userUpdateDTO.getPassword());
         }
 
-        // Håndterer rolle
-        Role role = existingUser.getRole(); // Default = beholder nuværende rolle
-
-        if (currentUser.getRole() == Role.ADMIN) {
-            role = userUpdateDTO.getRole(); // Kun admin må ændre
-        }
 
 
         // Mapper UserUpdateDTO til User-objekt med opdateret bruger

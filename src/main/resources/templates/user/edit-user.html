@@ -7,11 +7,11 @@
 <body>
 <h1>Rediger bruger</h1>
 
-<!-- Vis fejl hvis der er en -->
+<!-- Vis fejl eller succes -->
 <div th:if="${error}" class="error" th:text="${error}"></div>
 <div th:if="${succes}" class="success" th:text="${succes}"></div>
 
-<form th:action="@{/users/update}" th:object="${userUpdateDTO}" method="post">
+<form th:action="@{/users/edit}" th:object="${userUpdateDTO}" method="post">
     <input type="hidden" th:field="*{userId}" />
 
     <label>Fornavn:</label>

@@ -89,7 +89,7 @@ public class UserController {
         );
 
         model.addAttribute("userUpdateDTO", userUpdateDTO);
-        model.addAttribute("isAdmin", currentUser.getRole() == Role.ADMIN); // bruges i HTML
+        model.addAttribute("isAdmin", currentUser.getRole() == Role.ADMIN); // Så admin kan se rolle-felter
         return "user/edit-user";
 
     }
@@ -97,7 +97,7 @@ public class UserController {
 
     //------------------------------------ Update() ------------------------------------
 
-    @PostMapping("/users/update")
+    @PostMapping("/users/edit")
     public String updateUser(@ModelAttribute("userUpdateDTO") UserUpdateDTO userUpdateDTO,
                              @SessionAttribute("currentUser") User currentUser,
                              RedirectAttributes redirectAttributes) {
@@ -109,6 +109,9 @@ public class UserController {
 
         return "redirect:/users/" + userUpdateDTO.getUserId(); // Redirect til user-detail
     }
+
+
+
 
 
     //------------------------------------ Delete() ------------------------------------
