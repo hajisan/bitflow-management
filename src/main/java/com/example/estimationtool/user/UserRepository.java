@@ -2,6 +2,7 @@ package com.example.estimationtool.user;
 
 import com.example.estimationtool.dto.UserViewDTO;
 import com.example.estimationtool.interfaces.IUserRepository;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -75,10 +76,28 @@ public class UserRepository implements IUserRepository {
 
     @Override
     public User update(User user) {
-        return null;
-    }
 
-    //------------------------------------ Delete() ------------------------------------
+        String sql = "UPDATE user SET firstName = ?, lastName = ?, email = ?, passwordHash = ?, role = ? WHERE id = ?";
+
+
+            int rowsAffected = jdbcTemplate.update( // Henter disse værdier, så de kan opdateres
+                    sql,
+                    user.getFirstName(),
+                    user.getLastName(),
+                    user.getEmail(),
+                    user.getPasswordHash(),
+                    user.getRole(),
+                    user.getUserId() // Parameter -> id til WHERE
+            );
+            if (rowsAffected == 0) {
+                throw new EmptyResultDataAccessException("Ingen rækker blev opdateret for bruger-ID: " + user.getUserId(), 1);
+            }
+            return user;
+        }
+
+
+
+        //------------------------------------ Delete() ------------------------------------
 
 
     @Override
