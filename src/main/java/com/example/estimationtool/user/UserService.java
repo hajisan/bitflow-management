@@ -7,6 +7,7 @@ import com.example.estimationtool.dto.UserViewDTO;
 import com.example.estimationtool.enums.Role;
 import com.example.estimationtool.interfaces.IUserRepository;
 import com.example.estimationtool.roleCheck.RoleCheck;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -140,4 +141,23 @@ public class UserService {
     }
 
     //------------------------------------ Delete() ------------------------------------
+
+
+    //------------------------------------ Login() -------------------------------------
+
+    public UserViewDTO login(String email, String inputPassword) {
+
+        User user = iUserRepository.readByEmail(email);
+
+        if (passwordEncoder.matches(inputPassword, user.getPasswordHash())) {
+            return new UserViewDTO(
+                    user.getUserId(),
+                    user.getFirstName(),
+                    user.getLastName(),
+                    user.getEmail(),
+                    user.getRole()
+            );
+        }
+        throw new BadCredentialsException("Adgangskoden er forkert.");
+    }
 }

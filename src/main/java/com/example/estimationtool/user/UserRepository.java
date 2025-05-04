@@ -92,13 +92,24 @@ public class UserRepository implements IUserRepository {
             return user;
         }
 
-
-
-        //------------------------------------ Delete() ------------------------------------
+    //------------------------------------ Delete() ------------------------------------
 
 
     @Override
     public void deleteById(int id) {
 
+    }
+
+    //------------------------------------ Login() -------------------------------------
+
+    @Override
+    public User readByEmail(String email) {
+        String sql = """
+            SELECT id, firstName, lastName, email, passwordHash, role
+            FROM user
+            WHERE email = ?
+            """;
+
+        return jdbcTemplate.queryForObject(sql, new UserRowMapper(), email);
     }
 }

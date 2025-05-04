@@ -16,4 +16,6 @@ public interface IUserRepository extends IRepository<User, Integer> {
 
     void deleteById(int id);
 
+    User readByEmail(String email);
+
 }

@@ -1,5 +1,6 @@
 package com.example.estimationtool.user;
 
+import com.example.estimationtool.dto.LoginDTO;
 import com.example.estimationtool.dto.UserRegistrationDTO;
 import com.example.estimationtool.dto.UserUpdateDTO;
 import com.example.estimationtool.dto.UserViewDTO;
@@ -23,8 +24,48 @@ public class UserController {
         this.userService = userService;
     }
 
+    @GetMapping("/login")
+    public String getLogin() {
+        return "index";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "index";
+    }
+
+    @PostMapping("/login")
+    public String postLogin(@RequestParam("email") String email,
+                            @RequestParam("password") String password,
+                            HttpSession session,
+                            RedirectAttributes redirectAttributes) {
+
+        UserViewDTO userViewDTO = userService.login(email, password); // Kaster exception ved fejl fra @Service
 
 
+        session.setAttribute("user", userViewDTO);
+        session.setMaxInactiveInterval(1000);
+        redirectAttributes.addFlashAttribute("success", "Du er nu logget ind.");
+
+        return "redirect:/users/profile";
+    }
+
+    @GetMapping("/profile")
+    public String getFrontPage(HttpSession session,
+                               RedirectAttributes redirectAttributes,
+                               Model model) {
+
+        UserViewDTO currentUser = (UserViewDTO) session.getAttribute("user");
+
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at tilgå forsiden.");
+            return "redirect:/login";
+        }
+
+        model.addAttribute("user", currentUser); // valgfrit – Thymeleaf kan også hente fra session direkte
+        return "front-page";
+    }
 
 
     //--------------------------------- Hent Create() ----------------------------------
