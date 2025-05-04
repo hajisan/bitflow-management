@@ -11,7 +11,7 @@
 <div th:if="${succes}" class="success" th:text="${succes}"></div>
 
 <!-- Formular til opret bruger -->
-<form th:action="@{/create}" th:object="${user}" method="post">
+<form th:action="@{/users/create}" th:object="${user}" method="post">
 
     <label for="firstName">Fornavn:</label>
     <input type="text" id="firstName" th:field="*{firstName}" required>

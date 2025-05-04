@@ -6,6 +6,9 @@
 <body>
 <h1>Brugeroversigt</h1>
 
+<div th:if="${error}" class="error" th:text="${error}"></div>
+
+
 <table>
   <tr>
     <th>Bruger-ID</th>

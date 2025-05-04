@@ -9,6 +9,22 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class SecurityConfig {
+    // MIDLERTIDIGT, FOR AT KOBLE SPRING BOOTS LOGIN-METODE FRA I WEBBROWSER
+
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+                .authorizeHttpRequests(auth -> auth
+                        .anyRequest().permitAll()
+                )
+                .csrf().disable()
+                .formLogin().disable()
+                .httpBasic().disable()
+                .logout().disable();
+
+        return http.build();
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -16,16 +32,7 @@ public class SecurityConfig {
     }
 
 
-    // MIDLERTIDIGT, FOR AT KOBLE SPRING BOOTS LOGIN-METODE FRA I WEBBROWSER
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll()
-                )
-                .csrf(csrf -> csrf.disable()); // moderne måde at disable CSRF på
 
-        return http.build();
-    }
-    }
+
+}

@@ -24,6 +24,9 @@ public class UserController {
     }
 
 
+
+
+
     //--------------------------------- Hent Create() ----------------------------------
 
     @GetMapping("/create")
@@ -165,7 +168,13 @@ public class UserController {
         return "redirect:/users/" + userUpdateDTO.getUserId(); // Redirect til user-detail
     }
 
+    // DUMMY tester
 
+    @GetMapping("/test")
+    @ResponseBody
+    public String testPublic() {
+        return "OK - no auth required";
+    }
 
 
 
