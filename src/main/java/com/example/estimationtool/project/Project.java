@@ -1,19 +1,17 @@
 package com.example.estimationtool.project;
 
 import com.example.estimationtool.enums.Status;
-
 import java.time.LocalDate;
 
 public class Project {
 
-
     private int projectId, userId, estimatedTime, timeSpent;
     private String name, description;
-    private LocalDate localDate;
+    private LocalDate deadline;
     private Status status;
 
     public Project(int projectId, int userId, int estimatedTime, int timeSpent,
-                   String name, String description, LocalDate localDate,
+                   String name, String description, LocalDate deadline,
                    Status status) {
         setProjectId(projectId);
         setUserId(userId);
@@ -21,9 +19,15 @@ public class Project {
         setTimeSpent(timeSpent);
         setName(name);
         setDescription(description);
-        setLocalDate(localDate);
+        setDeadLine(deadline);
         setStatus(status);
     }
+
+    // Tom konstruktør til integrationstest
+    public Project() {
+
+    }
+
     public int getProjectId() {
         return projectId;
     }
@@ -72,12 +76,12 @@ public class Project {
         this.description = description;
     }
 
-    public LocalDate getLocalDate() {
-        return localDate;
+    public LocalDate getDeadLine() {
+        return deadline;
     }
 
-    public void setLocalDate(LocalDate localDate) {
-        this.localDate = localDate;
+    public void setDeadLine(LocalDate deadline) {
+        this.deadline = deadline;
     }
 
     public Status getStatus() {
@@ -88,7 +92,6 @@ public class Project {
         this.status = status;
     }
 
-
     @Override
     public String toString() {
         return "Project{" +
@@ -98,11 +101,8 @@ public class Project {
                 ", timeSpent=" + timeSpent +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", localDate=" + localDate +
+                ", localDate=" + deadline +
                 ", status=" + status +
                 '}';
     }
-
-
-
 }
