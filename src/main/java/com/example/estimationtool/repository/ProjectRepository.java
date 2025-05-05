@@ -1,13 +1,16 @@
-package com.example.estimationtool.project;
+package com.example.estimationtool.repository;
 
+import com.example.estimationtool.interfaces.IProjectRepository;
+import com.example.estimationtool.model.Project;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import java.sql.PreparedStatement;
+import java.util.List;
 
 @Repository
-public class ProjectRepository {
+public class ProjectRepository implements IProjectRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -41,5 +44,25 @@ public class ProjectRepository {
         if (projectId != -1) project.setProjectId(projectId);
 
         return project;
+    }
+
+    @Override
+    public List<Project> readAll() {
+        return List.of();
+    }
+
+    @Override
+    public Project readById(int id) {
+        return null;
+    }
+
+    @Override
+    public Project update(Project t) {
+        return null;
+    }
+
+    @Override
+    public void deleteById(int id) {
+
     }
 }

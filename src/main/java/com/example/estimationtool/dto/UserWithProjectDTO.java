@@ -1,6 +1,6 @@
 package com.example.estimationtool.dto;
 
-import com.example.estimationtool.project.Project;
+import com.example.estimationtool.model.Project;
 
 import java.util.List;
 

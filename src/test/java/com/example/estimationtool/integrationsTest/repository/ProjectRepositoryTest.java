@@ -1,7 +1,7 @@
-package com.example.estimationtool.integrationsTest;
+package com.example.estimationtool.integrationsTest.repository;
 
-import com.example.estimationtool.project.Project;
-import com.example.estimationtool.project.ProjectRepository;
+import com.example.estimationtool.model.Project;
+import com.example.estimationtool.repository.ProjectRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,7 +27,7 @@ public class ProjectRepositoryTest {
 
     @Test // Tester oprettelsen af et nyt projekt og om det bliver gemt i databasen
     void create() {
-        // Arrange
+        //--------- Arrange ---------
         Project newProject = new Project();
         newProject.setName("New Project 1");
         newProject.setDescription("Et nyt projekt 1");
@@ -36,10 +36,10 @@ public class ProjectRepositoryTest {
         newProject.setTimeSpent(250);
         newProject.setStatus(ACTIVE);
 
-        // Act
+        //--------- Act -------------
         Project savedProject = projectRepository.create(newProject);
 
-        // Assert
+        //--------- Assert ----------
         assertNotNull(savedProject.getProjectId());
         assertEquals("New Project 1", savedProject.getName());
     }
