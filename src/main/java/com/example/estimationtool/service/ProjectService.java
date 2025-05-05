@@ -2,7 +2,9 @@ package com.example.estimationtool.service;
 
 import com.example.estimationtool.interfaces.IProjectRepository;
 import com.example.estimationtool.model.Project;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ProjectService {
 
     private final IProjectRepository iProjectRepository;
