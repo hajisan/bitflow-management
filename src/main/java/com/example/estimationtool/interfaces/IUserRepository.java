@@ -1,6 +1,6 @@
 package com.example.estimationtool.interfaces;
 
-import com.example.estimationtool.user.User;
+import com.example.estimationtool.model.User;
 
 import java.util.List;
 

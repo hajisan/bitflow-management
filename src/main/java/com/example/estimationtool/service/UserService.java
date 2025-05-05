@@ -1,4 +1,4 @@
-package com.example.estimationtool.user;
+package com.example.estimationtool.service;
 
 import com.example.estimationtool.dto.UserRegistrationDTO;
 
@@ -7,6 +7,7 @@ import com.example.estimationtool.dto.UserViewDTO;
 import com.example.estimationtool.enums.Role;
 import com.example.estimationtool.interfaces.IUserRepository;
 import com.example.estimationtool.roleCheck.RoleCheck;
+import com.example.estimationtool.model.User;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,7 @@ public class UserService {
 
     //------------------------------------ Create() ------------------------------------
 
-    public User createUser(User currentUser, UserRegistrationDTO userDTO) {
+    public User createUser(UserViewDTO currentUser, UserRegistrationDTO userDTO) {
 
         RoleCheck.ensureAdmin(currentUser.getRole()); // Adgangskontrol
 
@@ -85,7 +86,7 @@ public class UserService {
 
     //------------------------------------ Update() ------------------------------------
 
-    public User updateUser(UserUpdateDTO userUpdateDTO, User currentUser) {
+    public User updateUser(UserUpdateDTO userUpdateDTO, UserViewDTO currentUser) {
 
         User existingUser = iUserRepository.readById(userUpdateDTO.getUserId());
 

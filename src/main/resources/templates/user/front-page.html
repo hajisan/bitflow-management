@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Front Page</title>
+</head>
+<body>
+<h1>Her skal den dynamiske forside laves til admin, project manager og developer :)</h1>
+
+
+<h1>Velkommen, <span th:text="${user.firstName} + ' ' + ${user.lastName}">Navn</span>!</h1>
+<p>Din rolle: <strong th:text="${user.role}">ROLLE</strong></p>
+
+<!-- ADMIN -->
+<div th:if="${user.role.name() == 'ADMIN'}">
+    <h2>Admin Panel</h2>
+    <ul>
+        <li><a th:href="@{/users/users}">Se alle brugere</a></li>
+        <li><a th:href="@{/users/create}">Opret ny bruger</a></li>
+    </ul>
+</div>
+
+<!-- PROJECT MANAGER -->
+<div th:if="${user.role.name() == 'PROJECT_MANAGER'}">
+    <h2>Projektleder Panel</h2>
+    <ul>
+        <li><a th:href="@{/projects}">Mine projekter</a></li>
+        <li><a th:href="@{/team-overview}">Teamoversigt</a></li>
+    </ul>
+</div>
+
+<!-- DEVELOPER -->
+<div th:if="${user.role.name() == 'DEVELOPER'}">
+    <h2>Udvikler Panel</h2>
+    <ul>
+        <li><a th:href="@{/tasks}">Mine opgaver</a></li>
+        <li><a th:href="@{/code-repo}">Kode repository</a></li>
+    </ul>
+</div>
+</body>
+</html>
