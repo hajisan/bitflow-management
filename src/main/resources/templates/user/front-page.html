@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Front Page</title>
+</head>
+<body>
+
+<!-- DEBUGGER, hvis siden ikke vises for specifik bruger-rolle -->
+<h1>Her skal den dynamiske forside laves til admin, project manager og developer :)</h1>
+
+
+<h1>Velkommen, <span th:text="${user.firstName} + ' ' + ${user.lastName}">Navn</span>!</h1>
+<p>Din rolle: <strong th:text="${user.role}">ROLLE</strong></p>
+
+<!-- ADMIN -->
+<div th:if="${user.role.name() == 'ADMIN'}">
+    <h2>Admin</h2>
+    <ul>
+        <li><a th:href="@{/users/users}">Se alle brugere</a></li>
+        <li><a th:href="@{/users/create}">Opret ny bruger</a></li>
+        <!-- <li><a th:href="@{/users/}">Projekter</a></li> READALLPROJECTS()-->
+        <!-- <li><a th:href="@{/users/}">Opret nyt projekt</a></li> CREATEPROJECT()-->
+    </ul>
+</div>
+
+<!-- PROJECT MANAGER -->
+<div th:if="${user.role.name() == 'PROJECT_MANAGER'}">
+    <h2>Projektleder</h2>
+    <ul>
+        <!-- <li><a th:href="@{/projects}">Mine projekter</a></li> READALLPROJECTS()-->
+        <!-- <li><a th:href="@{/createproject}">Teamoversigt</a></li> CREATEPROJECT-->
+    </ul>
+</div>
+
+<!-- DEVELOPER -->
+<div th:if="${user.role.name() == 'DEVELOPER'}">
+    <h2>Udvikler</h2>
+    <ul>
+        <!-- <li><a th:href="@{/PROJECTS}">Mine opgaver</a></li> READALLPROJECTS() -->
+
+    </ul>
+</div>
+</body>
+</html>

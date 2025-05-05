@@ -1,4 +1,4 @@
-package com.example.estimationtool.user;
+package com.example.estimationtool.model;
 
 import com.example.estimationtool.enums.Role;
 

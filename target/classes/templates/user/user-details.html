@@ -33,7 +33,11 @@
 </table>
 
 <br>
-<a th:href="@{/users}">Tilbage til brugeroversigt</a>
+
+<br>
+<a th:href="@{/users/edit/{id}(id=${user.userId})}"><button>Rediger bruger</button></a>
+
+<a th:href="@{/users/users}">Tilbage til brugeroversigt</a>
 
 </body>
 </html>

@@ -1,7 +1,7 @@
-package com.example.estimationtool.user;
+package com.example.estimationtool.rowMapper;
 
-import com.example.estimationtool.dto.UserViewDTO;
 import com.example.estimationtool.enums.Role;
+import com.example.estimationtool.model.User;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

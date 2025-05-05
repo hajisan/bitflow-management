@@ -1,10 +1,11 @@
-package com.example.estimationtool.user;
+package com.example.estimationtool.controller;
 
-import com.example.estimationtool.dto.LoginDTO;
 import com.example.estimationtool.dto.UserRegistrationDTO;
 import com.example.estimationtool.dto.UserUpdateDTO;
 import com.example.estimationtool.dto.UserViewDTO;
 import com.example.estimationtool.enums.Role;
+import com.example.estimationtool.model.User;
+import com.example.estimationtool.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,39 +25,21 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/login")
-    public String getLogin() {
-        return "index";
+
+    private UserViewDTO getCurrentUser(HttpSession session) {
+        return (UserViewDTO) session.getAttribute("currentUser");
     }
 
-    @GetMapping("/logout")
-    public String logout(HttpSession session) {
-        session.invalidate();
-        return "index";
-    }
-
-    @PostMapping("/login")
-    public String postLogin(@RequestParam("email") String email,
-                            @RequestParam("password") String password,
-                            HttpSession session,
-                            RedirectAttributes redirectAttributes) {
-
-        UserViewDTO userViewDTO = userService.login(email, password); // Kaster exception ved fejl fra @Service
-
-
-        session.setAttribute("user", userViewDTO);
-        session.setMaxInactiveInterval(1000);
-        redirectAttributes.addFlashAttribute("success", "Du er nu logget ind.");
-
-        return "redirect:/users/profile";
-    }
 
     @GetMapping("/profile")
     public String getFrontPage(HttpSession session,
                                RedirectAttributes redirectAttributes,
                                Model model) {
 
-        UserViewDTO currentUser = (UserViewDTO) session.getAttribute("user");
+        UserViewDTO currentUser = getCurrentUser(session);
+
+
+        //UserViewDTO currentUser = (UserViewDTO) session.getAttribute("currentUser");
 
         if (currentUser == null) {
             redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at tilgå forsiden.");
@@ -64,7 +47,7 @@ public class UserController {
         }
 
         model.addAttribute("user", currentUser); // valgfrit – Thymeleaf kan også hente fra session direkte
-        return "front-page";
+        return "user/front-page";
     }
 
 
@@ -75,7 +58,9 @@ public class UserController {
                                  Model model,
                                  RedirectAttributes redirectAttributes) {
 
-        User currentUser = (User) session.getAttribute("currentUser");
+        UserViewDTO currentUser = getCurrentUser(session);
+
+       // User currentUser = (User) session.getAttribute("currentUser");
 
         if (currentUser == null) {
             redirectAttributes.addFlashAttribute("error", "Log ind for at oprette en ny bruger.");
@@ -94,7 +79,10 @@ public class UserController {
                              HttpSession session,
                              RedirectAttributes redirectAttributes) {
 
-        User currentUser = (User) session.getAttribute("currentUser");
+        UserViewDTO currentUser = getCurrentUser(session);
+
+
+        //User currentUser = (User) session.getAttribute("currentUser");
 
         // Tjekker om brugeren er logget ind
         if (currentUser == null) {
@@ -104,9 +92,9 @@ public class UserController {
 
         userService.createUser(currentUser, userDTO);
 
-        redirectAttributes.addFlashAttribute("succes", "Bruger blev oprettet"); //Viser succesbesked EFTER redirect
+        redirectAttributes.addFlashAttribute("success", "Bruger blev oprettet"); //Viser succesbesked EFTER redirect
 
-        return "redirect:/users"; //SKAL MÅSKE REDIRECTE TIL ADMINOVERSIGT?
+        return "redirect:/users/users"; //SKAL MÅSKE REDIRECTE TIL ADMINOVERSIGT?
 
     }
 
@@ -114,12 +102,15 @@ public class UserController {
 
     //------------------------------------ Read() --------------------------------------
 
-    @GetMapping("")
+    @GetMapping("users")
     public String showAllUsers(HttpSession session,
                                Model model,
                                RedirectAttributes redirectAttributes) {
 
-        User currentUser = (User) session.getAttribute("currentUser");
+        UserViewDTO currentUser = getCurrentUser(session);
+
+        //User currentUser = (User) session.getAttribute("currentUser");
+
 
         // Tjekker om brugeren er logget ind
         if (currentUser == null) {
@@ -128,6 +119,7 @@ public class UserController {
         }
         List<UserViewDTO> userViewDTOList = userService.readAll();
         model.addAttribute("users", userViewDTOList);
+        model.addAttribute("isAdmin", currentUser.getRole() == Role.ADMIN);
         return "user/user-list";
     }
 
@@ -137,7 +129,10 @@ public class UserController {
                            Model model,
                            RedirectAttributes redirectAttributes) {
 
-        User currentUser = (User) session.getAttribute("currentUser");
+        UserViewDTO currentUser = getCurrentUser(session);
+
+
+        //User currentUser = (User) session.getAttribute("currentUser");
 
         // Tjekker om brugeren er logget ind
         if (currentUser == null) {
@@ -159,7 +154,10 @@ public class UserController {
                                Model model,
                                RedirectAttributes redirectAttributes) {
 
-        User currentUser = (User) session.getAttribute("currentUser");
+        UserViewDTO currentUser = getCurrentUser(session);
+
+
+        //User currentUser = (User) session.getAttribute("currentUser");
 
         // Tjekker om bruger er logget ind
         if (currentUser == null) {
@@ -193,7 +191,10 @@ public class UserController {
                              HttpSession session,
                              RedirectAttributes redirectAttributes) {
 
-        User currentUser = (User) session.getAttribute("currentUser");
+        UserViewDTO currentUser = getCurrentUser(session);
+
+
+        //User currentUser = (User) session.getAttribute("currentUser");
 
         // Tjekker om bruger er logget ind
         if (currentUser == null) {
@@ -220,6 +221,25 @@ public class UserController {
 
 
     //------------------------------------ Delete() ------------------------------------
+
+    @PostMapping("/delete/{id}")
+    public String deleteUser(@PathVariable int id,
+                             HttpSession session,
+                             RedirectAttributes redirectAttributes) {
+
+        UserViewDTO currentUser = getCurrentUser(session);
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne slette brugeren.");
+            return "redirect:/login";
+        }
+
+        userService.deleteById(id, currentUser);
+
+        redirectAttributes.addFlashAttribute("success", "Brugeren blev slettet.");
+
+        return "redirect:/users/users";
+
+    }
 
 
 
