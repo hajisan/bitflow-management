@@ -1,11 +1,9 @@
 package com.example.estimationtool.project;
 
 import com.example.estimationtool.enums.Status;
-
 import java.time.LocalDate;
 
 public class Project {
-
 
     private int projectId, userId, estimatedTime, timeSpent;
     private String name, description;
@@ -24,6 +22,12 @@ public class Project {
         setDeadLine(deadline);
         setStatus(status);
     }
+
+    // Tom konstruktør til integrationstest
+    public Project() {
+
+    }
+
     public int getProjectId() {
         return projectId;
     }
@@ -88,7 +92,6 @@ public class Project {
         this.status = status;
     }
 
-
     @Override
     public String toString() {
         return "Project{" +
@@ -102,7 +105,4 @@ public class Project {
                 ", status=" + status +
                 '}';
     }
-
-
-
 }
