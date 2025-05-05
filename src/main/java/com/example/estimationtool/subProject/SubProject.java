@@ -9,11 +9,11 @@ public class SubProject {
 
     private int subProjectId, userId, estimatedTime, timeSpent;
     private String name, description;
-    private LocalDate localDate;
+    private LocalDate deadline;
     private Status status;
 
     public SubProject(int subProjectId, int userId, int estimatedTime, int timeSpent,
-                      String name, String description, LocalDate localDate,
+                      String name, String description, LocalDate deadline,
                       Status status) {
         setSubProjectId(subProjectId);
         setUserId(userId);
@@ -21,7 +21,7 @@ public class SubProject {
         setTimeSpent(timeSpent);
         setName(name);
         setDescription(description);
-        setLocalDate(localDate);
+        setDeadline(deadline);
         setStatus(status);
     }
 
@@ -73,12 +73,12 @@ public class SubProject {
         this.description = description;
     }
 
-    public LocalDate getLocalDate() {
-        return localDate;
+    public LocalDate getDeadline() {
+        return deadline;
     }
 
-    public void setLocalDate(LocalDate localDate) {
-        this.localDate = localDate;
+    public void setDeadline(LocalDate deadline) {
+        this.deadline = deadline;
     }
 
     public Status getStatus() {
@@ -98,7 +98,7 @@ public class SubProject {
                 ", timeSpent=" + timeSpent +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", localDate=" + localDate +
+                ", localDate=" + deadline +
                 ", status=" + status +
                 '}';
     }
