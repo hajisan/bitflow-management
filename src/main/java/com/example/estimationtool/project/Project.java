@@ -9,11 +9,11 @@ public class Project {
 
     private int projectId, userId, estimatedTime, timeSpent;
     private String name, description;
-    private LocalDate localDate;
+    private LocalDate deadline;
     private Status status;
 
     public Project(int projectId, int userId, int estimatedTime, int timeSpent,
-                   String name, String description, LocalDate localDate,
+                   String name, String description, LocalDate deadline,
                    Status status) {
         setProjectId(projectId);
         setUserId(userId);
@@ -21,7 +21,7 @@ public class Project {
         setTimeSpent(timeSpent);
         setName(name);
         setDescription(description);
-        setLocalDate(localDate);
+        setLocalDate(deadline);
         setStatus(status);
     }
     public int getProjectId() {
@@ -73,11 +73,11 @@ public class Project {
     }
 
     public LocalDate getLocalDate() {
-        return localDate;
+        return deadline;
     }
 
     public void setLocalDate(LocalDate localDate) {
-        this.localDate = localDate;
+        this.deadline = localDate;
     }
 
     public Status getStatus() {
@@ -98,7 +98,7 @@ public class Project {
                 ", timeSpent=" + timeSpent +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", localDate=" + localDate +
+                ", localDate=" + deadline +
                 ", status=" + status +
                 '}';
     }
