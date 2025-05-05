@@ -11,7 +11,6 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
     // MIDLERTIDIGT, FOR AT KOBLE SPRING BOOTS LOGIN-METODE FRA I WEBBROWSER
 
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http

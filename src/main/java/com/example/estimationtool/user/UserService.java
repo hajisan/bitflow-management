@@ -98,16 +98,14 @@ public class UserService {
         Role role;
 
         if (currentUser.getRole() == Role.ADMIN) {
-            role = userUpdateDTO.getRole(); // Kun admin må ændre rolle
+            role = existingUser.getRole(); // Kun admin må ændre rolle
         } else {
-            if (!userUpdateDTO.getRole().equals(existingUser.getRole())) {
+            if (!currentUser.getRole().equals(existingUser.getRole())) {
                 throw new SecurityException("Du har ikke tilladelse til ændre en brugers rolle.");
             }
 
             role = existingUser.getRole(); // Beholder nuværende rolle
         }
-
-
 
         // Håndterer password
         String passwordHash;
@@ -123,8 +121,6 @@ public class UserService {
             passwordHash = passwordEncoder.encode(userUpdateDTO.getPassword());
         }
 
-
-
         // Mapper UserUpdateDTO til User-objekt med opdateret bruger
         User updatedUser = new User(
                 userUpdateDTO.getUserId(),
@@ -136,7 +132,6 @@ public class UserService {
         );
 
         return iUserRepository.update(updatedUser);
-
 
     }
 
