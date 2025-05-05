@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h2>Log ind</h2>
+
+<!-- Vis fejl hvis credentials er forkerte -->
+<div th:if="${error}">
+    <p style="color: red;" th:text="${error}">Der skete en fejl</p>
+</div>
+<div th:if="${success}">
+    <p style="color: green;" th:text="${success}">Logget ind!</p>
+</div>
+
+
+<form th:action="@{/users/login}" method="post">
+    <div>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required/>
+    </div>
+    <div>
+        <label for="password">Adgangskode:</label>
+        <input type="password" id="password" name="password" required/>
+    </div>
+    <div>
+        <button type="submit">Log ind</button>
+    </div>
+</form>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit User</title>
+</head>
+<body>
+<h1>Rediger bruger</h1>
+
+<!-- Vis fejl eller succes -->
+<div th:if="${error}" class="error" th:text="${error}"></div>
+<div th:if="${succes}" class="success" th:text="${succes}"></div>
+
+<form th:action="@{/users/edit}" th:object="${userUpdateDTO}" method="post">
+    <input type="hidden" th:field="*{userId}" />
+
+    <label>Fornavn:</label>
+    <input type="text" th:field="*{firstName}" required />
+
+    <label>Efternavn:</label>
+    <input type="text" th:field="*{lastName}" required />
+
+    <label>Email:</label>
+    <input type="email" th:field="*{email}" required />
+
+    <label>Adgangskode (valgfrit):</label>
+    <input type="password" th:field="*{password}" />
+
+    <!-- Kun vis rolle-feltet hvis brugeren er admin -->
+    <div th:if="${isAdmin}">
+        <label>Rolle:</label>
+        <select th:field="*{role}">
+            <option value="ADMIN">Admin</option>
+            <option value="PROJECT_MANAGER">Projektleder</option>
+            <option value="DEVELOPER">Udvikler</option>
+        </select>
+    </div>
+
+    <br>
+    <button type="submit">Opdater bruger</button>
+</form>
+
+</body>
+</html>

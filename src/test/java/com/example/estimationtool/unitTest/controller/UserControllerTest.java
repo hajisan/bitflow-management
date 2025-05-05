@@ -50,7 +50,12 @@ public class UserControllerTest {
     //--------------------------------- Hent Create() ----------------------------------
     @Test
     void test_showCreateUser() throws Exception {
-        mockMvc.perform(get("/create"))
+
+        // Tilføjer en bruger, der er logget ind til sessionen
+        User mockUser = new User(99, "Admin", "User", "admin@admin.com", "hashedPassword", Role.ADMIN);
+
+        mockMvc.perform(get("/users/create")
+                        .sessionAttr("currentUser", mockUser))
                 .andExpect(status().isOk()) // Forventer status 200
                 .andExpect(view().name("user/create-user")) // Forventer dette view-navn
                 .andExpect(model().attributeExists("user")); //Forventer at modellen "user" sendes med til Thymeleaf
@@ -73,12 +78,12 @@ public class UserControllerTest {
 
         //--------- Act -------------
 
-        mockMvc.perform(post("/create")
+        mockMvc.perform(post("/users/create")
                 .param("firstName", "Sofie") //Sætter parametrene fra UserRegistrationDTO
                 .param("lastName", "Rytter")
                 .param("email", "rytterriet@gmail.com" )
                 .param("password", "rytterKoden")
-                .sessionAttr("adminUser", adminUser))
+                .sessionAttr("currentUser", adminUser))
                 .andExpect(status().is3xxRedirection()) // Assert - Tjekker at den redirecter
                 .andExpect(redirectedUrl("/users")) // Tjekker at den redirecter til user-list
                 .andExpect(flash().attributeExists("succes")); // Tjekker at succes-besked findes
@@ -103,16 +108,19 @@ public class UserControllerTest {
 
         Mockito.when(userService.readAll()).thenReturn(users);
 
+        // Tilføjer en bruger, der er logget ind til sessionen
+        User mockUser = new User(99, "Admin", "User", "admin@admin.com", "hashedPassword", Role.ADMIN);
+
+
         //--------- Act -------------
 
-        mockMvc.perform(get("/users"))
+        mockMvc.perform(get("/users")
+                        .sessionAttr("currentUser", mockUser))
                 .andExpect(status().isOk()) // Assert
                 .andExpect(view().name("user/user-list"))
                 .andExpect(model().attributeExists("users"))
                 .andExpect(model().attribute("users", users)); // Sammenligner hele listen
     }
-
-
 
 
     @Test
@@ -121,11 +129,14 @@ public class UserControllerTest {
         //--------- Arrange ---------
 
         UserViewDTO expectedUserDTO = new UserViewDTO(1, "Bob", "Marley", "marley@gmail.com", Role.DEVELOPER);
-
         Mockito.when(userService.readById(1)).thenReturn(expectedUserDTO);
 
+        // Tilføjer en bruger, der er logget ind til sessionen
+        User mockUser = new User(99, "Admin", "User", "admin@admin.com", "hashedPassword", Role.ADMIN);
+
         //--------- Act -------------
-        mockMvc.perform(get("/users/1"))
+        mockMvc.perform(get("/users/1")
+                        .sessionAttr("currentUser", mockUser))
                 .andExpect(status().isOk()) //Assert
                 .andExpect(view().name("user/user-details"))
                 .andExpect(model().attributeExists("user"))
@@ -135,6 +146,7 @@ public class UserControllerTest {
 
 
     //------------------------------------ Hent Update() -------------------------------
+
 
     //------------------------------------ Update() ------------------------------------
 

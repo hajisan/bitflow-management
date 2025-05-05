@@ -16,4 +16,6 @@ public class RoleCheck {
             throw new SecurityException("Kun Admin eller Projektleder har adgang til denne funktion");
         }
     }
+
+
 }
