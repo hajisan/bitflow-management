@@ -1,10 +1,10 @@
 -- Indsæt brugere
 INSERT INTO User (firstName, lastName, email, passwordHash, role) VALUES
-('Admin', 'Admin', 'admin@bitbros.dk', 'admin', 'ADMIN'), -- ID 1
-('Projektleder', 'BitBro', 'projektleder@bitbros.dk', 'projektleder', 'PROJECT_MANAGER'), -- ID 2
-('Sofie', 'Rytter', 'sofie@bitbros.dk', 'sofie', 'DEVELOPER'), -- ID 3
-('Joakim', 'Severinsen', 'joakim@bitbros.dk', 'joakim', 'DEVELOPER'), -- ID 4
-('Nima', 'Salami', 'nima@bitbros.dk', 'nima', 'DEVELOPER'); -- ID 5
+('Admin', 'Admin', 'admin@bitbros.dk', '$2y$10$EDKwiK4z4Se/x2svOesd.ewJiyetJxiUeAr2EwSAMn0VBgxnibDqi', 'ADMIN'), -- ID 1 - passwordHash 'admin'
+('Projektleder', 'BitBro', 'projektleder@bitbros.dk', 'projektleder', 'PROJECT_MANAGER'), -- ID 2 - passwordHash 'projektleder'
+('Sofie', 'Rytter', 'sofie@bitbros.dk', 'sofie', 'DEVELOPER'), -- ID 3 - passwordHash 'sofie'
+('Joakim', 'Severinsen', 'joakim@bitbros.dk', 'joakim', 'DEVELOPER'), -- ID 4 - passwordHash 'joakim'
+('Nima', 'Salami', 'nima@bitbros.dk', 'nima', 'DEVELOPER'); -- ID 5 - passwordHash 'nima'
 
 -- Indsæt projekt
 INSERT INTO Project (name, description, deadline, estimatedTime, timeSpent, status) VALUES 
