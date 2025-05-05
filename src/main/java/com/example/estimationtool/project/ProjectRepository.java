@@ -4,9 +4,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-
 import java.sql.PreparedStatement;
-import java.time.format.DateTimeFormatter;
 
 @Repository
 public class ProjectRepository {
@@ -30,7 +28,7 @@ public class ProjectRepository {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setString(1, project.getName());
             ps.setString(2, project.getDescription());
-            ps.setString(3, project.getDeadLine().format(DateTimeFormatter.BASIC_ISO_DATE)); // MySQL time-format
+            ps.setDate(3, java.sql.Date.valueOf(project.getDeadLine())); // Sætter deadline som SQL-dato
             ps.setInt(4, project.getEstimatedTime());
             ps.setInt(5, project.getTimeSpent());
             ps.setString(6, project.getStatus().name());
