@@ -35,8 +35,15 @@ public class TaskRepository implements ITaskRepository {
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setInt(1, task.getSubProjectId());
-        })
-        return null;
+            ps.setString(2, task.getName());
+            ps.setString(3, task.getDescription());
+            ps.setDate(4, java.sql.Date.valueOf(task.getDeadline())); // Konverterer LocalDate til java.sql.Date
+            ps.setInt(5, task.getEstimatedTime());
+            ps.setString(6, task.getStatus().name());
+            return ps;
+        }, keyHolder);
+
+        return task;
     }
 
     //------------------------------------ Read() ------------------------------------

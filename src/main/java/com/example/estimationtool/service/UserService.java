@@ -16,6 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+// DATABASEFEJL BOBLER OP til @ControllerAdvice pga. JdbcTemplate fordi det er en unchecked exception
+//VALIDERING, eks. login-fejl, KASTER VI EXCEPTION (throws) for at signalere en fejl
+
 @Service
 public class UserService {
 

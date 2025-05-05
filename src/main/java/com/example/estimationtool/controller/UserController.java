@@ -46,7 +46,7 @@ public class UserController {
             return "redirect:/login";
         }
 
-        model.addAttribute("user", currentUser); // valgfrit – Thymeleaf kan også hente fra session direkte
+        model.addAttribute("user", currentUser);
         return "user/front-page";
     }
 

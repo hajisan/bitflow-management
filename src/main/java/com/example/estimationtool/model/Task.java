@@ -18,10 +18,11 @@ public class Task {
         setEstimatedTime(estimatedTime);
         setName(name);
         setDescription(description);
-        setLocalDate(deadline);
+        setDeadline(deadline);
         setStatus(status);
 
     }
+    public Task() {}
 
     // Getter-metoder
 
@@ -72,7 +73,7 @@ public class Task {
         this.description = description;
     }
 
-    public void setLocalDate(LocalDate deadline) {
+    public void setDeadline(LocalDate deadline) {
         this.deadline = deadline;
     }
 
