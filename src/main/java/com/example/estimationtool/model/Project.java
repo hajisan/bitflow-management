@@ -1,4 +1,4 @@
-package com.example.estimationtool.project;
+package com.example.estimationtool.model;
 
 import com.example.estimationtool.enums.Status;
 import java.time.LocalDate;

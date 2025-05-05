@@ -1,7 +1,6 @@
 package com.example.estimationtool.interfaces;
 
-import com.example.estimationtool.project.Project;
-import com.example.estimationtool.project.ProjectRepository;
+import com.example.estimationtool.model.Project;
 
 import java.util.List;
 
