@@ -21,7 +21,7 @@ public class Project {
         setTimeSpent(timeSpent);
         setName(name);
         setDescription(description);
-        setLocalDate(deadline);
+        setDeadLine(deadline);
         setStatus(status);
     }
     public int getProjectId() {
@@ -72,12 +72,12 @@ public class Project {
         this.description = description;
     }
 
-    public LocalDate getLocalDate() {
+    public LocalDate getDeadLine() {
         return deadline;
     }
 
-    public void setLocalDate(LocalDate localDate) {
-        this.deadline = localDate;
+    public void setDeadLine(LocalDate deadline) {
+        this.deadline = deadline;
     }
 
     public Status getStatus() {
