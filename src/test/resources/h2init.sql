@@ -186,3 +186,78 @@ CREATE TABLE User_SubTask
     FOREIGN KEY (subTaskID) REFERENCES SubTask (id) ON DELETE CASCADE
 );
 
+INSERT INTO User (firstName, lastName, email, password, role)
+VALUES ('TestAdmin', '1', 'test@1.com', '123', 'ADMIN'),
+       ('TestManager', '2', 'test@2.com', '123', 'PROJECT_MANAGER'),
+       ('TestUser', '3', 'test@2.com', '123', 'DEVELOPER');
+INSERT INTO Project (name, description, deadline, estimatedTime, timeSpent, status)
+VALUES ('Test Project 1', 'Et testprojekt 1', '2025-05-31', 100, 0, 'ACTIVE'),
+       ('Test Project 2', 'Et testprojekt 2', '2025-05-31', 2500, 0, 'PASSIVE');
+
+INSERT INTO Subproject (projectID, name, description, deadline, estimatedTime, timeSpent, status)
+VALUES (1, 'Backend', 'Delprojekt: Backend', '2025-05-31', 80, 0, 'ACTIVE'),
+       (2, 'Frontend', 'Delprojekt: Frontend', '2025-05-31', 80, 0, 'ACTIVE');
+
+-- Indsæt tasks
+INSERT INTO Task (subProjectID, name, description, deadline, estimatedTime, status)
+VALUES (1, 'Backend_Task_1', 'Opgave 1', '2025-05-31', 10, 'ACTIVE'),
+       (1, 'Backend_Task_2', 'Opgave 2', '2025-05-31', 10, 'ACTIVE'),
+       (2, 'Frontend_Task_1', 'Opgave 1', '2025-05-31', 10, 'ACTIVE'),
+       (2, 'Frontend_Task_2', 'Opgave 2', '2025-05-31', 10, 'ACTIVE');
+
+-- Indsæt subtasks
+INSERT INTO SubTask (taskID, name, description, deadline, estimatedTime, status)
+VALUES (1, 'Task_1_Sub_1', 'Underopgave 1', '2025-05-31', 2, 'ACTIVE'),
+       (1, 'Task_1_Sub_2', 'Underopgave 2', '2025-05-31', 2, 'ACTIVE'),
+       (2, 'Task_2_Sub_1', 'Underopgave 1', '2025-05-31', 2, 'ACTIVE'),
+       (2, 'Task_2_Sub_2', 'Underopgave 2', '2025-05-31', 2, 'ACTIVE'),
+       (3, 'Task_3_Sub_1', 'Underopgave 1', '2025-05-31', 2, 'ACTIVE'),
+       (3, 'Task_3_Sub_2', 'Underopgave 2', '2025-05-31', 2, 'ACTIVE'),
+       (4, 'Task_4_Sub_1', 'Underopgave 1', '2025-05-31', 2, 'ACTIVE'),
+       (4, 'Task_4_Sub_2', 'Underopgave 2', '2025-05-31', 2, 'ACTIVE');
+
+-- Indsæt time entries0æl
+INSERT INTO TimeEntry (date, hoursSpent)
+VALUES ('2025-05-01', 2),
+       ('2025-05-01', 2),
+       ('2025-05-01', 4),
+       ('2025-05-01', 2),
+       ('2025-05-01', 2),
+       ('2025-05-01', 4),
+       ('2025-05-01', 2),
+       ('2025-05-01', 2);
+
+INSERT INTO TimeEntry_Task (timeEntryID, taskID)
+VALUES (2, 1),
+       (5, 1),
+       (8, 2);
+
+INSERT INTO TimeEntry_SubTask (timeEntryID, subTaskID)
+VALUES (1, 1),
+       (1, 1),
+       (2, 2),
+       (3, 3),
+       (4, 4),
+       (5, 5),
+       (6, 6),
+       (7, 7),
+       (8, 8);
+
+INSERT INTO User_Project (userID, projectID)
+VALUES (2, 1);
+
+INSERT INTO User_Subproject (userID, subProjectID)
+VALUES (3, 1),
+       (3, 2);
+
+INSERT INTO User_Task (userID, taskID)
+VALUES (3, 1),
+       (3, 1),
+       (3, 2);
+
+INSERT INTO User_SubTask (userID, subTaskID)
+VALUES (3, 1),
+       (3, 1),
+       (3, 2),
+       (3, 3),
+       (3, 4);
