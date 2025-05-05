@@ -1,10 +1,10 @@
 -- Indsæt brugere
 INSERT INTO User (firstName, lastName, email, passwordHash, role) VALUES
-('Admin', 'Admin', 'admin@bitbros.dk', '$2y$10$EDKwiK4z4Se/x2svOesd.ewJiyetJxiUeAr2EwSAMn0VBgxnibDqi', 'ADMIN'), -- ID 1 - passwordHash 'admin'
-('Projektleder', 'BitBro', 'projektleder@bitbros.dk', 'projektleder', 'PROJECT_MANAGER'), -- ID 2 - passwordHash 'projektleder'
-('Sofie', 'Rytter', 'sofie@bitbros.dk', 'sofie', 'DEVELOPER'), -- ID 3 - passwordHash 'sofie'
-('Joakim', 'Severinsen', 'joakim@bitbros.dk', 'joakim', 'DEVELOPER'), -- ID 4 - passwordHash 'joakim'
-('Nima', 'Salami', 'nima@bitbros.dk', 'nima', 'DEVELOPER'); -- ID 5 - passwordHash 'nima'
+('Admin', 'Admin', 'admin@bitbros.dk', '$2a$12$MGilL/UlYqHFlxUQPN472e1pc9no6/v.V1euob3c3R0kjqUYDL5Ua', 'ADMIN'), -- ID 1 - passwordHash 'admin'
+('Projektleder', 'BitBro', 'projektleder@bitbros.dk', '$2a$12$XerhDcoG6tIwL.7giuUxg.W4K3zP2UMt7sqhb/ghoXwReQHj8lbD.', 'PROJECT_MANAGER'), -- ID 2 - passwordHash 'projektleder'
+('Sofie', 'Rytter', 'sofie@bitbros.dk', '$2a$12$Aswqt9sTSdfydqIhoyNEgesHjWKp0aqS2Ku9WoaVskL1/z0dLtVZ6', 'DEVELOPER'), -- ID 3 - passwordHash 'sofie'
+('Joakim', 'Severinsen', 'joakim@bitbros.dk', '$2a$12$04TS8rlFidB7O4PGEGgn2uKVY6TtVn1X6ngk/wPgQ/zrrvu84cwG.', 'DEVELOPER'), -- ID 4 - passwordHash 'joakim'
+('Nima', 'Salami', 'nima@bitbros.dk', '$2a$12$lLteHXSInISgzrHlMzCuEeN02o4TeKXjsFHrweUoGfqsvU1OFzKwm', 'DEVELOPER'); -- ID 5 - passwordHash 'nima'
 
 -- Indsæt projekt
 INSERT INTO Project (name, description, deadline, estimatedTime, timeSpent, status) VALUES 
