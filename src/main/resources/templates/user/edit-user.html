@@ -40,5 +40,11 @@
     <button type="submit">Opdater bruger</button>
 </form>
 
+<!-- Kun admin må slette -->
+<form th:if="${isAdmin}" th:action="@{/users/delete/{id}(id=${userUpdateDTO.userId})}" method="post" onsubmit="return confirm('Er du sikker på, at du vil slette denne bruger?');">
+    <button type="submit" style="color: red;">Slet bruger</button>
+</form>
+
+
 </body>
 </html>

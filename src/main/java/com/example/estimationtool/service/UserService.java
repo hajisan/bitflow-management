@@ -138,6 +138,14 @@ public class UserService {
 
     //------------------------------------ Delete() ------------------------------------
 
+    public void deleteById(int id, UserViewDTO currentUser) {
+
+        RoleCheck.ensureAdmin(currentUser.getRole());
+
+        iUserRepository.deleteById(id);
+
+    }
+
 
     //------------------------------------ Login() -------------------------------------
 

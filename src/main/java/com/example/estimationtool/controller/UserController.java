@@ -119,6 +119,7 @@ public class UserController {
         }
         List<UserViewDTO> userViewDTOList = userService.readAll();
         model.addAttribute("users", userViewDTOList);
+        model.addAttribute("isAdmin", currentUser.getRole() == Role.ADMIN);
         return "user/user-list";
     }
 
@@ -220,6 +221,25 @@ public class UserController {
 
 
     //------------------------------------ Delete() ------------------------------------
+
+    @PostMapping("/delete/{id}")
+    public String deleteUser(@PathVariable int id,
+                             HttpSession session,
+                             RedirectAttributes redirectAttributes) {
+
+        UserViewDTO currentUser = getCurrentUser(session);
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne slette brugeren.");
+            return "redirect:/login";
+        }
+
+        userService.deleteById(id, currentUser);
+
+        redirectAttributes.addFlashAttribute("success", "Brugeren blev slettet.");
+
+        return "redirect:/users/users";
+
+    }
 
 
 

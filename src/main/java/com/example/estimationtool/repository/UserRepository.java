@@ -99,7 +99,7 @@ public class UserRepository implements IUserRepository {
     public void deleteById(int id) {
 
         String sql = "DELETE FROM user WHERE id = ?";
-        jdbcTemplate.update(sql);
+        jdbcTemplate.update(sql, id);
 
     }
 
