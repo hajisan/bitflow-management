@@ -126,7 +126,7 @@ public class UserController {
 
         UserViewDTO userViewDTO = userService.readById(id);
         model.addAttribute("user", userViewDTO);
-        return "user/user-details";
+        return "user/user-detail";
 
     }
 
@@ -182,7 +182,7 @@ public class UserController {
         userService.updateUser(userUpdateDTO, currentUser);
 
         // Tilføj succesbesked som flash-attribut (vises efter redirect)
-        redirectAttributes.addFlashAttribute("succes", "Brugeren blev opdateret.");
+        redirectAttributes.addFlashAttribute("success", "Brugeren blev opdateret.");
 
         return "redirect:/users/" + userUpdateDTO.getUserId(); // Redirect til user-detail
     }
