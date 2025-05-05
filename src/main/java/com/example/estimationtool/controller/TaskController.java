@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("tasks")
 public class TaskController {
@@ -86,7 +88,11 @@ public class TaskController {
             return "redirect:/login";
         }
 
-        return ""
+        List<Task> taskList = taskService.readAll();
+
+        model.addAttribute("tasks", taskList);
+
+        return "task/task-list";
 
     }
     //------------------------------------ Hent Update() -------------------------------

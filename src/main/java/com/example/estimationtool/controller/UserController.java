@@ -38,9 +38,6 @@ public class UserController {
 
         UserViewDTO currentUser = getCurrentUser(session);
 
-
-        //UserViewDTO currentUser = (UserViewDTO) session.getAttribute("currentUser");
-
         if (currentUser == null) {
             redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at tilgå forsiden.");
             return "redirect:/login";
@@ -59,8 +56,6 @@ public class UserController {
                                  RedirectAttributes redirectAttributes) {
 
         UserViewDTO currentUser = getCurrentUser(session);
-
-       // User currentUser = (User) session.getAttribute("currentUser");
 
         if (currentUser == null) {
             redirectAttributes.addFlashAttribute("error", "Log ind for at oprette en ny bruger.");
@@ -81,9 +76,6 @@ public class UserController {
 
         UserViewDTO currentUser = getCurrentUser(session);
 
-
-        //User currentUser = (User) session.getAttribute("currentUser");
-
         // Tjekker om brugeren er logget ind
         if (currentUser == null) {
             redirectAttributes.addFlashAttribute("error", "Log ind for at oprette en bruger.");
@@ -98,8 +90,6 @@ public class UserController {
 
     }
 
-
-
     //------------------------------------ Read() --------------------------------------
 
     @GetMapping("users")
@@ -108,9 +98,6 @@ public class UserController {
                                RedirectAttributes redirectAttributes) {
 
         UserViewDTO currentUser = getCurrentUser(session);
-
-        //User currentUser = (User) session.getAttribute("currentUser");
-
 
         // Tjekker om brugeren er logget ind
         if (currentUser == null) {
@@ -130,9 +117,6 @@ public class UserController {
                            RedirectAttributes redirectAttributes) {
 
         UserViewDTO currentUser = getCurrentUser(session);
-
-
-        //User currentUser = (User) session.getAttribute("currentUser");
 
         // Tjekker om brugeren er logget ind
         if (currentUser == null) {
@@ -155,9 +139,6 @@ public class UserController {
                                RedirectAttributes redirectAttributes) {
 
         UserViewDTO currentUser = getCurrentUser(session);
-
-
-        //User currentUser = (User) session.getAttribute("currentUser");
 
         // Tjekker om bruger er logget ind
         if (currentUser == null) {
@@ -183,7 +164,6 @@ public class UserController {
 
     }
 
-
     //------------------------------------ Update() ------------------------------------
 
     @PostMapping("/edit")
@@ -192,9 +172,6 @@ public class UserController {
                              RedirectAttributes redirectAttributes) {
 
         UserViewDTO currentUser = getCurrentUser(session);
-
-
-        //User currentUser = (User) session.getAttribute("currentUser");
 
         // Tjekker om bruger er logget ind
         if (currentUser == null) {
@@ -209,15 +186,6 @@ public class UserController {
 
         return "redirect:/users/" + userUpdateDTO.getUserId(); // Redirect til user-detail
     }
-
-    // DUMMY tester
-
-    @GetMapping("/test")
-    @ResponseBody
-    public String testPublic() {
-        return "OK - no auth required";
-    }
-
 
 
     //------------------------------------ Delete() ------------------------------------

@@ -31,7 +31,6 @@ public class TaskRepository implements ITaskRepository {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         // Bruger PreparedStatement sammen med vores GeneratedKeyHolder til at kunne autogenerere et nyt id
-
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setInt(1, task.getSubProjectId());
