@@ -5,6 +5,8 @@
     <title>Front Page</title>
 </head>
 <body>
+
+<!-- DEBUGGER, hvis siden ikke vises for specifik bruger-rolle -->
 <h1>Her skal den dynamiske forside laves til admin, project manager og developer :)</h1>
 
 
@@ -13,28 +15,30 @@
 
 <!-- ADMIN -->
 <div th:if="${user.role.name() == 'ADMIN'}">
-    <h2>Admin Panel</h2>
+    <h2>Admin</h2>
     <ul>
         <li><a th:href="@{/users/users}">Se alle brugere</a></li>
         <li><a th:href="@{/users/create}">Opret ny bruger</a></li>
+        <!-- <li><a th:href="@{/users/}">Projekter</a></li> READALLPROJECTS()-->
+        <!-- <li><a th:href="@{/users/}">Opret nyt projekt</a></li> CREATEPROJECT()-->
     </ul>
 </div>
 
 <!-- PROJECT MANAGER -->
 <div th:if="${user.role.name() == 'PROJECT_MANAGER'}">
-    <h2>Projektleder Panel</h2>
+    <h2>Projektleder</h2>
     <ul>
-        <li><a th:href="@{/projects}">Mine projekter</a></li>
-        <li><a th:href="@{/team-overview}">Teamoversigt</a></li>
+        <!-- <li><a th:href="@{/projects}">Mine projekter</a></li> READALLPROJECTS()-->
+        <!-- <li><a th:href="@{/createproject}">Teamoversigt</a></li> CREATEPROJECT-->
     </ul>
 </div>
 
 <!-- DEVELOPER -->
 <div th:if="${user.role.name() == 'DEVELOPER'}">
-    <h2>Udvikler Panel</h2>
+    <h2>Udvikler</h2>
     <ul>
-        <li><a th:href="@{/tasks}">Mine opgaver</a></li>
-        <li><a th:href="@{/code-repo}">Kode repository</a></li>
+        <!-- <li><a th:href="@{/PROJECTS}">Mine opgaver</a></li> READALLPROJECTS() -->
+
     </ul>
 </div>
 </body>

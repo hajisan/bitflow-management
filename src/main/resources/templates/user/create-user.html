@@ -8,7 +8,7 @@
 <h1>Opret ny bruger</h1>
 
 <!-- Succesbesked -->
-<div th:if="${succes}" class="success" th:text="${succes}"></div>
+<div th:if="${success}" class="success" th:text="${success}"></div>
 
 <!-- Formular til opret bruger -->
 <form th:action="@{/users/create}" th:object="${user}" method="post">

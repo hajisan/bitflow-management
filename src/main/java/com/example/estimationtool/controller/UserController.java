@@ -92,9 +92,9 @@ public class UserController {
 
         userService.createUser(currentUser, userDTO);
 
-        redirectAttributes.addFlashAttribute("succes", "Bruger blev oprettet"); //Viser succesbesked EFTER redirect
+        redirectAttributes.addFlashAttribute("success", "Bruger blev oprettet"); //Viser succesbesked EFTER redirect
 
-        return "redirect:/users"; //SKAL MÅSKE REDIRECTE TIL ADMINOVERSIGT?
+        return "redirect:/users/users"; //SKAL MÅSKE REDIRECTE TIL ADMINOVERSIGT?
 
     }
 

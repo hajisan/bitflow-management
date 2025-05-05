@@ -23,6 +23,9 @@
     <td th:text="${user.lastName}"></td>
     <td th:text="${user.email}"></td>
     <td th:text="${user.role}"></td>
+    <td>
+      <a th:href="@{/users/{id}(id=${user.userId})}">Se detaljer</a>
+    </td>
 
   </tr>
 </table>
