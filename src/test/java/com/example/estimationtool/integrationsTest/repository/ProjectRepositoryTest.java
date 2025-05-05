@@ -1,4 +1,4 @@
-package com.example.estimationtool.integrationsTest;
+package com.example.estimationtool.integrationsTest.repository;
 
 import com.example.estimationtool.model.Project;
 import com.example.estimationtool.repository.ProjectRepository;
