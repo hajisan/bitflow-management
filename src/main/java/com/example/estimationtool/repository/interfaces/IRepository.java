@@ -9,11 +9,9 @@ public interface IRepository<T, Integer> { // Vi bruger wrapper-klasse til int, 
 
     List<T> readAll();
 
-    T readById(int id);
+    T readById(Integer id);
 
     T update(T t);
 
-    void deleteById(int id);
+    void deleteById(Integer id);
 }
-
-

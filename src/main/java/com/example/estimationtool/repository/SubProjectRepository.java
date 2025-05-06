@@ -59,7 +59,7 @@ public class SubProjectRepository implements ISubProjectRepository{
     }
 
     @Override
-    public SubProject readById(int id) {
+    public SubProject readById(Integer id) {
         return null;
     }
 
@@ -73,7 +73,7 @@ public class SubProjectRepository implements ISubProjectRepository{
     //------------------------------------ Delete() ------------------------------------
 
     @Override
-    public void deleteById(int id) {
+    public void deleteById(Integer id) {
 
     }
 }

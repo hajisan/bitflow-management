@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -44,8 +45,19 @@ public class SubProjectController {
     }
 
     @PostMapping("/create")
-    public String postCreateSubProject() {
+    public String postCreateSubProject(@ModelAttribute SubProject subProject,
+                                       HttpSession session,
+                                       RedirectAttributes redirectAttributes) {
 
+        UserViewDTO currentUser = getCurrentUser(session);
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Log ind for at oprette et projekt.");
+            return "redirect:/login";
+        }
+
+        // Behøver vi et rollecheck både ved get- og postmapping?
+
+        subProjectService
 
         return "";
     }

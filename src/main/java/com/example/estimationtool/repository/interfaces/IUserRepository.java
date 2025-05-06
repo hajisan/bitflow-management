@@ -10,11 +10,11 @@ public interface IUserRepository extends IRepository<User, Integer> {
 
     List<User> readAll();
 
-    User readById(int id);
+    User readById(Integer id);
 
     User update(User user);
 
-    void deleteById(int id);
+    void deleteById(Integer id);
 
     User readByEmail(String email);
 

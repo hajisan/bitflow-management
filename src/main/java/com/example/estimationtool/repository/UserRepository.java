@@ -61,7 +61,7 @@ public class UserRepository implements IUserRepository {
     }
 
     @Override
-    public User readById(int id) {
+    public User readById(Integer id) {
         String sql = "SELECT id, firstName, lastName, email, passwordHash, role FROM user WHERE id = ?";
 
         try {
@@ -96,7 +96,7 @@ public class UserRepository implements IUserRepository {
 
 
     @Override
-    public void deleteById(int id) {
+    public void deleteById(Integer id) {
 
         String sql = "DELETE FROM user WHERE id = ?";
         jdbcTemplate.update(sql, id);

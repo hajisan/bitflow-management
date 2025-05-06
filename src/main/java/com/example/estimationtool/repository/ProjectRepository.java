@@ -52,7 +52,7 @@ public class ProjectRepository implements IProjectRepository {
     }
 
     @Override
-    public Project readById(int id) {
+    public Project readById(Integer id) {
         return null;
     }
 
@@ -62,7 +62,7 @@ public class ProjectRepository implements IProjectRepository {
     }
 
     @Override
-    public void deleteById(int id) {
+    public void deleteById(Integer id) {
 
     }
 }

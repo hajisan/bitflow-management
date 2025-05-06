@@ -10,9 +10,9 @@ public interface IProjectRepository extends IRepository<Project, Integer> {
 
     List<Project> readAll();
 
-    Project readById(int id);
+    Project readById(Integer id);
 
     Project update(Project project);
 
-    void deleteById(int id);
+    void deleteById(Integer id);
 }

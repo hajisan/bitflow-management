@@ -10,9 +10,9 @@ public interface ISubProjectRepository extends IRepository<SubProject, Integer>{
 
     List<SubProject> readAll();
 
-    SubProject readById(int id);
+    SubProject readById(Integer id);
 
     SubProject update(SubProject subProject);
 
-    void deleteById(int id);
+    void deleteById(Integer id);
 }
