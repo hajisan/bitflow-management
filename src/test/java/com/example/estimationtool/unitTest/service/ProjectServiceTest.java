@@ -1,6 +1,6 @@
 package com.example.estimationtool.unitTest.service;
 
-import com.example.estimationtool.interfaces.IProjectRepository;
+import com.example.estimationtool.repository.interfaces.IProjectRepository;
 import com.example.estimationtool.model.Project;
 import com.example.estimationtool.service.ProjectService;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,7 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 
-import static com.example.estimationtool.enums.Status.ACTIVE;
+import static com.example.estimationtool.model.enums.Status.ACTIVE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;

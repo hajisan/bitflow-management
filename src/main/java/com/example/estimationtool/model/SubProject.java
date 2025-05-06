@@ -1,31 +1,56 @@
 package com.example.estimationtool.model;
 
 import com.example.estimationtool.model.enums.Status;
+
 import java.time.LocalDate;
 
-public class Project {
+public class SubProject {
 
-    private int projectId, userId, estimatedTime, timeSpent;
+
+    private int subProjectId, projectId, estimatedTime, timeSpent;
     private String name, description;
     private LocalDate deadline;
     private Status status;
 
-    public Project(int projectId, int userId, int estimatedTime, int timeSpent,
-                   String name, String description, LocalDate deadline,
-                   Status status) {
+    // Tom constructor
+    public SubProject() {
+    }
+
+    // Overloaded constructor der instantierer alle felter med parametre
+    public SubProject(int subProjectId, int projectId, int estimatedTime, int timeSpent,
+                      String name, String description, LocalDate deadline,
+                      Status status) {
+        setSubProjectId(subProjectId);
         setProjectId(projectId);
-        setUserId(userId);
         setEstimatedTime(estimatedTime);
         setTimeSpent(timeSpent);
         setName(name);
         setDescription(description);
-        setDeadLine(deadline);
+        setDeadline(deadline);
         setStatus(status);
     }
 
-    // Tom konstruktør til integrationstest
-    public Project() {
+    // Overloaded constructor der instantierer alle felter med parametre - UNDTAGEN timeSpent, da den er 0,
+    // når et nyt subprojekt oprettes
+    public SubProject(int subProjectId, int projectId, int estimatedTime,
+                      String name, String description, LocalDate deadline,
+                      Status status) {
+        setSubProjectId(subProjectId);
+        setProjectId(projectId);
+        setEstimatedTime(estimatedTime);
+        setTimeSpent(0);
+        setName(name);
+        setDescription(description);
+        setDeadline(deadline);
+        setStatus(status);
+    }
 
+    public int getSubProjectId() {
+        return subProjectId;
+    }
+
+    public void setSubProjectId(int subProjectId) {
+        this.subProjectId = subProjectId;
     }
 
     public int getProjectId() {
@@ -34,14 +59,6 @@ public class Project {
 
     public void setProjectId(int projectId) {
         this.projectId = projectId;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
     }
 
     public int getEstimatedTime() {
@@ -76,11 +93,11 @@ public class Project {
         this.description = description;
     }
 
-    public LocalDate getDeadLine() {
+    public LocalDate getDeadline() {
         return deadline;
     }
 
-    public void setDeadLine(LocalDate deadline) {
+    public void setDeadline(LocalDate deadline) {
         this.deadline = deadline;
     }
 
@@ -94,9 +111,9 @@ public class Project {
 
     @Override
     public String toString() {
-        return "Project{" +
-                "projectId=" + projectId +
-                ", userId=" + userId +
+        return "SubProject{" +
+                "subProjectId=" + subProjectId +
+                ", projectId=" + projectId +
                 ", estimatedTime=" + estimatedTime +
                 ", timeSpent=" + timeSpent +
                 ", name='" + name + '\'' +

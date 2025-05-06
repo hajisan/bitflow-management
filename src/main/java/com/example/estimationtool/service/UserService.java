@@ -1,12 +1,12 @@
 package com.example.estimationtool.service;
 
-import com.example.estimationtool.dto.UserRegistrationDTO;
+import com.example.estimationtool.toolbox.dto.UserRegistrationDTO;
 
-import com.example.estimationtool.dto.UserUpdateDTO;
-import com.example.estimationtool.dto.UserViewDTO;
-import com.example.estimationtool.enums.Role;
-import com.example.estimationtool.interfaces.IUserRepository;
-import com.example.estimationtool.roleCheck.RoleCheck;
+import com.example.estimationtool.toolbox.dto.UserUpdateDTO;
+import com.example.estimationtool.toolbox.dto.UserViewDTO;
+import com.example.estimationtool.model.enums.Role;
+import com.example.estimationtool.repository.interfaces.IUserRepository;
+import com.example.estimationtool.toolbox.roleCheck.RoleCheck;
 import com.example.estimationtool.model.User;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;

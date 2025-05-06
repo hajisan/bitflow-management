@@ -1,6 +1,6 @@
 package com.example.estimationtool.repository;
 
-import com.example.estimationtool.interfaces.IProjectRepository;
+import com.example.estimationtool.repository.interfaces.IProjectRepository;
 import com.example.estimationtool.model.Project;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;

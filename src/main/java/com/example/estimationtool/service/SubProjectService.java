@@ -1,8 +1,8 @@
 package com.example.estimationtool.service;
 
-import com.example.estimationtool.enums.Status;
-import com.example.estimationtool.interfaces.ISubProjectRepository;
-import com.example.estimationtool.subProject.SubProject;
+import com.example.estimationtool.model.enums.Status;
+import com.example.estimationtool.repository.interfaces.ISubProjectRepository;
+import com.example.estimationtool.model.SubProject;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

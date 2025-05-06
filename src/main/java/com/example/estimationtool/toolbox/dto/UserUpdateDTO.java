@@ -1,23 +1,21 @@
-package com.example.estimationtool.model;
+package com.example.estimationtool.toolbox.dto;
 
 import com.example.estimationtool.model.enums.Role;
 
-public class User {
+public class UserUpdateDTO {
 
     private int userId;
-    private String firstName, lastName, email, passwordHash;
+    private String firstName, lastName, email, password;
     private Role role;
 
-    public User(int userId, String firstName, String lastName, String email, String passwordHash, Role role) {
+    public UserUpdateDTO(int userId, String firstName, String lastName, String email, String password, Role role) {
         setUserId(userId);
         setFirstName(firstName);
         setLastName(lastName);
         setEmail(email);
-        setPasswordHash(passwordHash);
+        setPassword(password);
         setRole(role);
     }
-
-    public User() {}
 
     // Getter-metoder
 
@@ -33,8 +31,8 @@ public class User {
     public String getEmail() {
         return email;
     }
-    public String getPasswordHash() {
-        return passwordHash;
+    public String getPassword() {
+        return password;
     }
     public Role getRole() {
         return role;
@@ -54,24 +52,23 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
+    public void setPassword(String password) {
+        this.password = password;
     }
     public void setRole(Role role) {
         this.role = role;
     }
 
+    @Override
     public String toString() {
-        return String.format("""
-                ID: %d
-                First Name: %s
-                Last Name : %s
-                E-mail    : %s
-                Role      : %s
-                Password  : %s
-                """, userId, firstName, lastName, email, role, passwordHash);
+        return "UserUpdateDTO{" +
+                "userId=" + userId +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", role=" + role +
+                '}';
     }
-
-
 
 }
