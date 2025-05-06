@@ -35,11 +35,16 @@ public class TaskService {
         return iTaskRepository.readById(id);
     }
 
-
     //------------------------------------ Update() ------------------------------------
 
+    public Task updateTask(Task task) {
+        return iTaskRepository.update(task);
+    }
     //------------------------------------ Delete() ------------------------------------
 
+    public void deleteById(int id ) {
+        iTaskRepository.deleteById(id);
+    }
 
     //------------------------------------ Create() ------------------------------------
 
