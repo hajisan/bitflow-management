@@ -1,4 +1,4 @@
-package com.example.estimationtool.interfaces;
+package com.example.estimationtool.repository.interfaces;
 
 import com.example.estimationtool.model.Task;
 import com.example.estimationtool.model.User;
@@ -11,10 +11,10 @@ public interface ITaskRepository extends IRepository<Task, Integer> {
 
     List<Task> readAll();
 
-    Task readById(int id);
+    Task readById(Integer id);
 
     Task update(Task task);
 
-    void deleteById(int id);
+    void deleteById(Integer id);
 
 }

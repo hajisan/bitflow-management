@@ -1,6 +1,6 @@
 package com.example.estimationtool.controller;
 
-import com.example.estimationtool.dto.UserViewDTO;
+import com.example.estimationtool.toolbox.dto.UserViewDTO;
 import com.example.estimationtool.model.Task;
 import com.example.estimationtool.service.TaskService;
 import jakarta.servlet.http.HttpSession;

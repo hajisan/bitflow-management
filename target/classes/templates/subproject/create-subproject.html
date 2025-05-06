@@ -10,8 +10,6 @@
 <div th:if="${success}" class="success" th:text="${success}"></div>
 
 <form th:action="@{/subproject/create}" method="post" th:object="${subproject}">
-    <!-- TODO Når vi har READ-funktionalitet skal vi have en menu med alle eksisterende Projekter, så man kan vælge -->
-
     <label for="name">Navn:</label>
     <input type="text" id="name" th:field="*{name}" required />
     <br/>

@@ -1,6 +1,6 @@
-package com.example.estimationtool.rowMapper;
+package com.example.estimationtool.toolbox.rowMappers;
 
-import com.example.estimationtool.enums.Status;
+import com.example.estimationtool.model.enums.Status;
 import com.example.estimationtool.model.Task;
 import org.springframework.jdbc.core.RowMapper;
 
