@@ -1,7 +1,9 @@
 package com.example.estimationtool.repository;
 
+import com.example.estimationtool.ProjectRowMapper;
 import com.example.estimationtool.interfaces.IProjectRepository;
 import com.example.estimationtool.model.Project;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -46,20 +48,41 @@ public class ProjectRepository implements IProjectRepository {
         return project;
     }
 
+    //------------------------------------ Read() ------------------------------------
+
     @Override
     public List<Project> readAll() {
-        return List.of();
+
+        // String sql = "SELECT id, name, description, deadline, estimatedTime, timeSpent, status FROM project";
+        String sql = """
+    SELECT p.id, p.name, p.description, p.deadline, p.estimatedTime, p.timeSpent, p.status,
+           up.userID as userId
+    FROM project p
+    LEFT JOIN user_project up ON p.id = up.projectID
+    """;
+        return jdbcTemplate.query(sql, new ProjectRowMapper());
     }
 
     @Override
     public Project readById(int id) {
-        return null;
+
+        String sql = "SELECT id, name, description, deadline, estimatedTime, timeSpent, status FROM project WHERE id = ?";
+
+        try {
+            return jdbcTemplate.queryForObject(sql, new ProjectRowMapper(), id);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
+
+    //------------------------------------ Update() ------------------------------------
 
     @Override
     public Project update(Project t) {
         return null;
     }
+
+    //------------------------------------ Delete() ------------------------------------
 
     @Override
     public void deleteById(int id) {
