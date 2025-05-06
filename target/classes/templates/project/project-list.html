@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Projektliste</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<h1>Projektliste</h1>
+
+<!-- Succesbesked vises her -->
+<div th:if="${success}">
+    <p th:text="${success}" style="color: green; font-weight: bold;"></p>
+</div>
+
+<!-- Midlertidig placeholder indhold -->
+<p>Her vil dine projekter blive vist.</p>
+
+<!-- Link til at oprette nyt projekt -->
+<a href="/projects/create">➕ Opret nyt projekt</a>
+
+</body>
+</html>
