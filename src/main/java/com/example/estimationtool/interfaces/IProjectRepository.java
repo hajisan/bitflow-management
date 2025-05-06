@@ -12,7 +12,7 @@ public interface IProjectRepository extends IRepository<Project, Integer> {
 
     Project readById(int id);
 
-    Project update(Project t);
+    Project update(Project project);
 
     void deleteById(int id);
 }
