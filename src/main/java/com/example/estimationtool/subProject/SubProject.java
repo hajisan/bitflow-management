@@ -7,16 +7,19 @@ import java.time.LocalDate;
 public class SubProject {
 
 
-    private int subProjectId, userId, estimatedTime, timeSpent;
+    private int subProjectId, projectId, estimatedTime, timeSpent;
     private String name, description;
     private LocalDate deadline;
     private Status status;
 
-    public SubProject(int subProjectId, int userId, int estimatedTime, int timeSpent,
+    public SubProject() {
+    }
+
+    public SubProject(int subProjectId, int projectId, int estimatedTime, int timeSpent,
                       String name, String description, LocalDate deadline,
                       Status status) {
         setSubProjectId(subProjectId);
-        setUserId(userId);
+        setProjectId(projectId);
         setEstimatedTime(estimatedTime);
         setTimeSpent(timeSpent);
         setName(name);
@@ -33,12 +36,12 @@ public class SubProject {
         this.subProjectId = subProjectId;
     }
 
-    public int getUserId() {
-        return userId;
+    public int getProjectId() {
+        return projectId;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setProjectId(int projectId) {
+        this.projectId = projectId;
     }
 
     public int getEstimatedTime() {
@@ -93,7 +96,7 @@ public class SubProject {
     public String toString() {
         return "SubProject{" +
                 "subProjectId=" + subProjectId +
-                ", userId=" + userId +
+                ", projectId=" + projectId +
                 ", estimatedTime=" + estimatedTime +
                 ", timeSpent=" + timeSpent +
                 ", name='" + name + '\'' +
