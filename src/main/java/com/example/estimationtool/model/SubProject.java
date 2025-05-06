@@ -45,6 +45,19 @@ public class SubProject {
         setStatus(status);
     }
 
+    // Overloaded constructor der ikke sætter subprojektets id og estimatedTime
+    public SubProject(int projectId, int estimatedTime,
+                      String name, String description, LocalDate deadline,
+                      Status status) {
+        setProjectId(projectId);
+        setEstimatedTime(estimatedTime);
+        setTimeSpent(0);
+        setName(name);
+        setDescription(description);
+        setDeadline(deadline);
+        setStatus(status);
+    }
+
     public int getSubProjectId() {
         return subProjectId;
     }
