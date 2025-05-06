@@ -173,6 +173,8 @@ public class TaskController {
             return "redirect:/login";
         }
 
+        taskService.deleteById(id);
+
         redirectAttributes.addFlashAttribute("success", "Opgaven blev slettet.");
 
         return "redirect:/tasks/tasks";

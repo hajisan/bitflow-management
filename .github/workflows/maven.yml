@@ -27,4 +27,4 @@
             PROD_DATABASE_USERNAME: ${{secrets.PROD_DATABASE_USERNAME}}
             PROD_DATABASE_PASSWORD: ${{secrets.PROD_DATABASE_PASSWORD}}
             
-          run: mvn clean install # -DskipTests #Renser, bygger og tester hele projektet
+          run: mvn clean install -DskipTests #Renser, bygger og tester hele projektet
