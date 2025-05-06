@@ -104,6 +104,7 @@ public class UserController {
             redirectAttributes.addFlashAttribute("error", "Log ind for at se brugeroplysninger.");
             return "redirect:/login";
         }
+
         List<UserViewDTO> userViewDTOList = userService.readAll();
         model.addAttribute("users", userViewDTOList);
         model.addAttribute("isAdmin", currentUser.getRole() == Role.ADMIN);

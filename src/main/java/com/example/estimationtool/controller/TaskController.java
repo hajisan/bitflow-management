@@ -158,10 +158,25 @@ public class TaskController {
 
         return "redirect:/tasks/" + task.getTaskId(); // Redirect til task-detail
 
-
-
     }
     //------------------------------------ Delete() ------------------------------------
+
+    @PostMapping("/delete/{id}")
+    public String deleteTask(@PathVariable int id,
+                             HttpSession session,
+                             RedirectAttributes redirectAttributes) {
+
+        UserViewDTO currentUser = getCurrentUser(session);
+
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne slette opgaven.");
+            return "redirect:/login";
+        }
+
+        redirectAttributes.addFlashAttribute("success", "Opgaven blev slettet.");
+
+        return "redirect:/tasks/tasks";
+    }
 
 
 }
