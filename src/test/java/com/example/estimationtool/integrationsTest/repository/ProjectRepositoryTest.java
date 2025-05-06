@@ -43,4 +43,27 @@ public class ProjectRepositoryTest {
         assertNotNull(savedProject.getProjectId());
         assertEquals("New Project 1", savedProject.getName());
     }
+
+    @Test // Tester om alle projekter kan hentes fra h2init.sql
+    void readAll() {
+        //--------- Arrange ---------
+        // Testdata indsættes via h2init.sql (to projekter forventes)
+
+        //--------- Act -------------
+        var projects = projectRepository.readAll();
+
+        //--------- Assert ----------
+        assertEquals(2, projects.size());
+        assertEquals("Test Project 1", projects.get(0).getName());
+        assertEquals("Test Project 2", projects.get(1).getName());
+
+    }
+
+    //--------- Arrange ---------
+    //--------- Act -------------
+    //--------- Assert ----------
+
+    //--------- Arrange ---------
+    //--------- Act -------------
+    //--------- Assert ----------
 }
