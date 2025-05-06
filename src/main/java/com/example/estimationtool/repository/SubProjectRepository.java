@@ -2,6 +2,7 @@ package com.example.estimationtool.repository;
 
 import com.example.estimationtool.repository.interfaces.ISubProjectRepository;
 import com.example.estimationtool.model.SubProject;
+import com.example.estimationtool.toolbox.rowMappers.SubProjectRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -12,7 +13,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Repository
-public class SubProjectRepository implements ISubProjectRepository{
+public class SubProjectRepository implements ISubProjectRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -53,14 +54,22 @@ public class SubProjectRepository implements ISubProjectRepository{
 
     @Override
     public List<SubProject> readAll() {
+        String sql = """
+                SELECT id, projectID, name, description, deadline, estimatedTime, timeSpent, status
+                FROM subproject
+                """;
 
-
-        return List.of();
+        return jdbcTemplate.query(sql, new SubProjectRowMapper());
     }
 
     @Override
     public SubProject readById(Integer id) {
-        return null;
+        String sql = """
+                SELECT id, projectID, name, description, deadline, estimatedTime, timeSpent, status
+                FROM subproject
+                WHERE id = ?
+                """;
+        return (SubProject) jdbcTemplate.query(sql, new SubProjectRowMapper(), id); // Jeg er nødt til at type caste her, for ellers skriger compileren
     }
 
     //------------------------------------ Update() ------------------------------------
