@@ -1,4 +1,4 @@
-package com.example.estimationtool;
+package com.example.estimationtool.toolbox.rowMappers;
 
 import com.example.estimationtool.enums.Status;
 import com.example.estimationtool.model.Project;

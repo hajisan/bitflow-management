@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+
 import java.sql.PreparedStatement;
 import java.util.List;
 
@@ -55,10 +56,10 @@ public class ProjectRepository implements IProjectRepository {
 
         // String sql = "SELECT id, name, description, deadline, estimatedTime, timeSpent, status FROM project";
         String sql = """
-        SELECT p.id, p.name, p.description, p.deadline, p.estimatedTime, p.timeSpent, p.status, up.userID as userId
-        FROM project p
-        LEFT JOIN user_project up ON p.id = up.projectID
-        """;
+                SELECT p.id, p.name, p.description, p.deadline, p.estimatedTime, p.timeSpent, p.status, up.userID as userId
+                FROM project p
+                LEFT JOIN user_project up ON p.id = up.projectID
+                """;
 
         return jdbcTemplate.query(sql, new ProjectRowMapper());
     }
@@ -67,17 +68,18 @@ public class ProjectRepository implements IProjectRepository {
     public Project readById(Integer id) {
 
         String sql = """
-        SELECT p.id, p.name, p.description, p.deadline, p.estimatedTime, p.timeSpent, p.status, up.userID as userId
-        FROM project p
-        LEFT JOIN user_project up ON p.id = up.projectID
-        WHERE p.id = ?
-        """;
+                SELECT p.id, p.name, p.description, p.deadline, p.estimatedTime, p.timeSpent, p.status, up.userID as userId
+                FROM project p
+                LEFT JOIN user_project up ON p.id = up.projectID
+                WHERE p.id = ?
+                """;
 
         try {
             return jdbcTemplate.queryForObject(sql, new ProjectRowMapper(), id);
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
+    }
 
     //------------------------------------ Update() ------------------------------------
 
@@ -93,3 +95,4 @@ public class ProjectRepository implements IProjectRepository {
 
     }
 }
+

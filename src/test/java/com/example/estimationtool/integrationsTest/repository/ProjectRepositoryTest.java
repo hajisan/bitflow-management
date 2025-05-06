@@ -10,8 +10,7 @@ import org.springframework.test.context.jdbc.Sql;
 import java.time.LocalDate;
 
 import static com.example.estimationtool.model.enums.Status.ACTIVE;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 @SpringBootTest

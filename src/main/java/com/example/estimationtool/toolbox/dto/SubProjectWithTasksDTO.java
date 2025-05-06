@@ -1,5 +1,4 @@
 package com.example.estimationtool.toolbox.dto;
-
 import com.example.estimationtool.model.SubProject;
 import com.example.estimationtool.model.Task;
 

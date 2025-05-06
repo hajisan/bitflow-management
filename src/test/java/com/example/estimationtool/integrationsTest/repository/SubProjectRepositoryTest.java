@@ -1,8 +1,8 @@
-package com.example.estimationtool.repository;
+package com.example.estimationtool.integrationsTest.repository;
 
 import com.example.estimationtool.model.SubProject;
 import com.example.estimationtool.model.enums.Status;
-import com.example.estimationtool.service.SubProjectService;
+import com.example.estimationtool.repository.SubProjectRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
