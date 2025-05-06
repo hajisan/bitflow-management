@@ -1,9 +1,8 @@
 package com.example.estimationtool.unitTest.controller;
 
 
-import com.example.estimationtool.dto.UserRegistrationDTO;
-import com.example.estimationtool.dto.UserViewDTO;
-import com.example.estimationtool.enums.Role;
+import com.example.estimationtool.toolbox.dto.UserViewDTO;
+import com.example.estimationtool.model.enums.Role;
 import com.example.estimationtool.model.User;
 import com.example.estimationtool.controller.UserController;
 import com.example.estimationtool.service.UserService;

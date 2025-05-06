@@ -1,8 +1,8 @@
 package com.example.estimationtool.repository;
 
-import com.example.estimationtool.interfaces.IUserRepository;
+import com.example.estimationtool.repository.interfaces.IUserRepository;
 import com.example.estimationtool.model.User;
-import com.example.estimationtool.rowMapper.UserRowMapper;
+import com.example.estimationtool.toolbox.rowMappers.UserRowMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -61,7 +61,7 @@ public class UserRepository implements IUserRepository {
     }
 
     @Override
-    public User readById(int id) {
+    public User readById(Integer id) {
         String sql = "SELECT id, firstName, lastName, email, passwordHash, role FROM user WHERE id = ?";
 
         return jdbcTemplate.queryForObject(sql, new UserRowMapper(), id);
@@ -93,7 +93,7 @@ public class UserRepository implements IUserRepository {
 
 
     @Override
-    public void deleteById(int id) {
+    public void deleteById(Integer id) {
 
         String sql = "DELETE FROM user WHERE id = ?";
         jdbcTemplate.update(sql, id);

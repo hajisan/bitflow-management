@@ -1,10 +1,9 @@
 package com.example.estimationtool.controller;
 
-import com.example.estimationtool.dto.UserRegistrationDTO;
-import com.example.estimationtool.dto.UserUpdateDTO;
-import com.example.estimationtool.dto.UserViewDTO;
-import com.example.estimationtool.enums.Role;
-import com.example.estimationtool.model.User;
+import com.example.estimationtool.toolbox.dto.UserRegistrationDTO;
+import com.example.estimationtool.toolbox.dto.UserUpdateDTO;
+import com.example.estimationtool.toolbox.dto.UserViewDTO;
+import com.example.estimationtool.model.enums.Role;
 import com.example.estimationtool.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;

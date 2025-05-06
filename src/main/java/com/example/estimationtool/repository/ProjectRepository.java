@@ -1,6 +1,6 @@
 package com.example.estimationtool.repository;
 
-import com.example.estimationtool.interfaces.IProjectRepository;
+import com.example.estimationtool.repository.interfaces.IProjectRepository;
 import com.example.estimationtool.model.Project;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -52,17 +52,17 @@ public class ProjectRepository implements IProjectRepository {
     }
 
     @Override
-    public Project readById(int id) {
+    public Project readById(Integer id) {
         return null;
     }
 
     @Override
-    public Project update(Project t) {
+    public Project update(Project project) {
         return null;
     }
 
     @Override
-    public void deleteById(int id) {
+    public void deleteById(Integer id) {
 
     }
 }
