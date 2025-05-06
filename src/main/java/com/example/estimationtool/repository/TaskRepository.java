@@ -71,13 +71,31 @@ public class TaskRepository implements ITaskRepository {
 
     @Override
     public Task update(Task task) {
-        return null;
+
+        String sql = """
+        UPDATE task
+        SET name = ?, description = ?, deadline = ?, estimatedTime = ?, status = ?
+        WHERE id = ?
+        """;
+
+        jdbcTemplate.update( // Henter disse værdier, så de kan opdateres
+                sql,
+                task.getName(),
+                task.getDescription(),
+                task.getDeadline(),
+                task.getEstimatedTime(),
+                task.getStatus().name(), // Konverteres til String for at gemmes i databasen
+                task.getTaskId()); // Parameter -> id til WHERE
+
+        return task;
     }
 
     //------------------------------------ Delete() ------------------------------------
 
     @Override
     public void deleteById(int id) {
+
+
 
     }
 }
