@@ -32,6 +32,10 @@ public class ProjectService {
         - at projektet har en beskrivelse?
         - at projektet har en status?
          */
+        /* TODO Tænker vi skal sørge for at det har en status, men en tom beskrivelse er vel fin nok.
+            Et id bliver jo tildelt når det oprettes i databasen med vores KeyHolder så det findes jo egentlig ikke.
+            Det gør vel ikke noget at man sætter et id her, men så skal vi bare overskrive det alligevel i Repo...
+         */
 
         return iProjectRepository.create(project);
     }

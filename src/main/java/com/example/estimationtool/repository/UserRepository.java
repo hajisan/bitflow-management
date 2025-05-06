@@ -2,7 +2,7 @@ package com.example.estimationtool.repository;
 
 import com.example.estimationtool.interfaces.IUserRepository;
 import com.example.estimationtool.model.User;
-import com.example.estimationtool.rowMapper.UserRowMapper;
+import com.example.estimationtool.rowMappers.UserRowMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;

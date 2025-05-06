@@ -1,4 +1,4 @@
-package com.example.estimationtool.rowMapper;
+package com.example.estimationtool.rowMappers;
 
 import com.example.estimationtool.enums.Role;
 import com.example.estimationtool.model.User;
