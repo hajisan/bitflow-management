@@ -5,74 +5,76 @@ import com.example.estimationtool.model.enums.Status;
 import java.time.LocalDate;
 
 public class Task {
-    private int subTaskId, taskId, estimatedTime;
+    private int subProjectId, taskId, estimatedTime;
     private String name, description;
     private LocalDate deadline;
     private Status status;
 
-    public Task(int subTaskId, int taskId, int estimatedTime,
+    public Task(int subProjectId, int taskId, int estimatedTime,
                 String name, String description, LocalDate deadline,
                 Status status) {
-        setSubTaskId(subTaskId);
+        setSubProjectId(subProjectId);
         setTaskId(taskId);
         setEstimatedTime(estimatedTime);
         setName(name);
         setDescription(description);
-        setLocalDate(deadline);
+        setDeadline(deadline);
         setStatus(status);
 
     }
+    public Task() {}
 
-    public int getSubTaskId() {
-        return subTaskId;
+    // Getter-metoder
+
+    public int getSubProjectId() {
+        return subProjectId;
     }
-
-    public void setSubTaskId(int subTaskId) {
-        this.subTaskId = subTaskId;
-    }
-
     public int getTaskId() {
         return taskId;
-    }
-
-    public void setTaskId(int taskId) {
-        this.taskId = taskId;
     }
 
     public int getEstimatedTime() {
         return estimatedTime;
     }
 
-    public void setEstimatedTime(int estimatedTime) {
-        this.estimatedTime = estimatedTime;
-    }
-
     public String getName() {
         return name;
+    }
+    public String getDescription() {
+        return description;
+    }
+    public LocalDate getDeadline() {
+        return deadline;
+    }
+    public Status getStatus() {
+        return status;
+    }
+
+
+    // Setter-metoder
+
+    public void setSubProjectId(int subProjectId) {
+        this.subProjectId = subProjectId;
+    }
+
+    public void setTaskId(int taskId) {
+        this.taskId = taskId;
+    }
+
+    public void setEstimatedTime(int estimatedTime) {
+        this.estimatedTime = estimatedTime;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
     public void setDescription(String description) {
         this.description = description;
     }
 
-    public LocalDate getDeadline() {
-        return deadline;
-    }
-
-    public void setLocalDate(LocalDate deadline) {
+    public void setDeadline(LocalDate deadline) {
         this.deadline = deadline;
-    }
-
-    public Status getStatus() {
-        return status;
     }
 
     public void setStatus(Status status) {
@@ -83,12 +85,12 @@ public class Task {
     public String toString() {
         return String.format("""
                 Task ID: %d
-                SubTask ID: %d
+                SubProject ID: %d
                 Name: %s
                 Description: %s
                 Estimated Time: %d
                 Deadline: %d
                 Status: %d
-                """, taskId, subTaskId, name, description, estimatedTime, deadline, status);
+                """, taskId, subProjectId, name, description, estimatedTime, deadline, status);
     }
 }

@@ -64,11 +64,8 @@ public class UserRepository implements IUserRepository {
     public User readById(Integer id) {
         String sql = "SELECT id, firstName, lastName, email, passwordHash, role FROM user WHERE id = ?";
 
-        try {
-            return jdbcTemplate.queryForObject(sql, new UserRowMapper(), id);
-        } catch (EmptyResultDataAccessException e) {
-            return null;
-        }
+        return jdbcTemplate.queryForObject(sql, new UserRowMapper(), id);
+
     }
 
 

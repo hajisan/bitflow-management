@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Task</title>
+</head>
+<body>
+<h1>Opret Ny Opgave</h1>
+
+<!-- Fejl- eller succesbesked -->
+<p th:if="${error}" th:text="${error}"></p>
+<p th:if="${success}" th:text="${success}"></p>
+
+<!-- Formular til oprettelse -->
+<form th:action="@{/tasks/create}" th:object="${task}" method="post">
+
+    <p>
+        <label>Subprojekt ID:</label>
+        <input type="number" th:field="*{subProjectId}" required/>
+    </p>
+
+    <p>
+        <label>Navn:</label>
+        <input type="text" th:field="*{name}" required/>
+    </p>
+
+    <p>
+        <label>Beskrivelse:</label>
+        <textarea th:field="*{description}" required></textarea>
+    </p>
+
+    <p>
+        <label>Deadline:</label>
+        <input type="date" th:field="*{deadline}" required/>
+    </p>
+
+    <p>
+        <label>Estimeret Tid (timer):</label>
+        <input type="number" th:field="*{estimatedTime}" required/>
+    </p>
+
+    <p>
+        <label>Status:</label>
+        <select th:field="*{status}">
+            <option th:each="s : ${T(com.example.estimationtool.enums.Status).values()}"
+                    th:value="${s}"
+                    th:text="${s}"></option>
+        </select>
+    </p>
+
+    <p>
+        <button type="submit">Opret</button>
+    </p>
+
+</form>
+
+<p><a th:href="@{/tasks}">Tilbage til opgaveliste</a></p>
+
+</body>
+</html>

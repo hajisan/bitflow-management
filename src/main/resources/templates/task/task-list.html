@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Task List</title>
+</head>
+<body>
+<h1>Opgaveliste</h1>
+
+<!-- Fejlbesked -->
+<p th:if="${error}" th:text="${error}"></p>
+
+<!-- Tabel med opgaver -->
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Subprojekt</th>
+        <th>Navn</th>
+        <th>Beskrivelse</th>
+        <th>Deadline</th>
+        <th>Estimeret Tid</th>
+        <th>Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="task : ${tasks}">
+        <td th:text="${task.taskId}"></td>
+        <td th:text="${task.subProjectId}"></td>
+        <td th:text="${task.name}"></td>
+        <td th:text="${task.description}"></td>
+        <td th:text="${task.deadline}"></td>
+        <td th:text="${task.estimatedTime}"></td>
+        <td th:text="${task.status}"></td>
+
+        <td>
+            <a th:href="@{/tasks/{id}(id=${task.taskId})}">Se detaljer</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
