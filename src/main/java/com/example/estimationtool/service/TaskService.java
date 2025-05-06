@@ -28,12 +28,11 @@ public class TaskService {
 
 
     public List<Task> readAll() {
-
-
+        return iTaskRepository.readAll();
     }
 
     public Task readById(int id) {
-        return null;
+        return iTaskRepository.readById(id);
     }
 
 
