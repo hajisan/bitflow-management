@@ -12,9 +12,11 @@ public class SubProject {
     private LocalDate deadline;
     private Status status;
 
+    // Tom constructor
     public SubProject() {
     }
 
+    // Overloaded constructor der instantierer alle felter med parametre
     public SubProject(int subProjectId, int projectId, int estimatedTime, int timeSpent,
                       String name, String description, LocalDate deadline,
                       Status status) {
@@ -22,6 +24,21 @@ public class SubProject {
         setProjectId(projectId);
         setEstimatedTime(estimatedTime);
         setTimeSpent(timeSpent);
+        setName(name);
+        setDescription(description);
+        setDeadline(deadline);
+        setStatus(status);
+    }
+
+    // Overloaded constructor der instantierer alle felter med parametre - UNDTAGEN timeSpent, da den er 0,
+    // når et nyt subprojekt oprettes
+    public SubProject(int subProjectId, int projectId, int estimatedTime,
+                      String name, String description, LocalDate deadline,
+                      Status status) {
+        setSubProjectId(subProjectId);
+        setProjectId(projectId);
+        setEstimatedTime(estimatedTime);
+        setTimeSpent(0);
         setName(name);
         setDescription(description);
         setDeadline(deadline);

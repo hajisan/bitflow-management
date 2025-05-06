@@ -1,5 +1,7 @@
 package com.example.estimationtool.subProject;
 
+import com.example.estimationtool.NotApplicableDatatypeException;
+import com.example.estimationtool.enums.Status;
 import com.example.estimationtool.interfaces.IRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -30,12 +32,29 @@ public class SubProjectRepository implements IRepository<SubProject, Integer> {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"}); // Giver ikke ID'et en værdi før til sidst
-            ps.setString(1, subProject.getName());
-            ps.setString(2, subProject.getDescription());
-            ps.setString(3, subProject.getDeadline().format(DateTimeFormatter.ISO_LOCAL_DATE));
-            ps.setString(4, Integer.toString(subProject.getEstimatedTime()));
-            ps.setString(5, Integer.toString(0));
-            ps.setString(6, subProject.getStatus().name());
+            if (subProject.getName() != null) ps.setString(1, subProject.getName());
+            else
+                throw new NotApplicableDatatypeException("Subprojektets navn er enten ikke angivet eller forkert datatype.");
+
+            if (subProject.getDescription() != null) ps.setString(2, subProject.getDescription());
+            else
+                throw new NotApplicableDatatypeException("Subprojektets beskrivelse er enten ikke angivet eller forkert datatype.");
+
+            if (subProject.getDeadline() != null)
+                ps.setString(3, subProject.getDeadline().format(DateTimeFormatter.ISO_LOCAL_DATE));
+            else
+                throw new NotApplicableDatatypeException("Subprojektets deadline er enten ikke angivet eller forkert datatype.");
+
+            // TODO Jeg er ikke sikker på, hvad vi skal validere her... Måske er det slet ikke i Repository vi skal errorhandle alt det her?
+            ps.setString(4, Integer.toString(subProject.getEstimatedTime())); // Må gerne være 0
+
+            ps.setString(5, Integer.toString(0)); // Et subprojekt oprettes som udgangspunkt med 0 timer brugt på det.
+
+            if (subProject.getStatus() != Status.ACTIVE || subProject.getStatus() != Status.INACTIVE || subProject.getStatus() != Status.DONE)
+                ps.setString(6, subProject.getStatus().name());
+            else
+                throw new NotApplicableDatatypeException("Subprojektets navn er enten ikke angivet eller forkert datatype.");
+
             return ps;
         }, keyHolder);
 
@@ -74,3 +93,4 @@ public class SubProjectRepository implements IRepository<SubProject, Integer> {
     public void deleteById(int id) {
 
     }
+}
