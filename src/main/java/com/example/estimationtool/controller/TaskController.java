@@ -39,7 +39,7 @@ public class TaskController {
 
         // Tjekker om brugeren er logget ind
         if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Log ind for at oprette en ny opgave.");
+            redirectAttributes.addFlashAttribute("error", "Log ind for at se en opgave.");
             return "redirect:/login";
         }
 
@@ -81,7 +81,7 @@ public class TaskController {
 
         // Tjekker om brugeren er logget ind
         if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Log ind for at oprette en ny opgave.");
+            redirectAttributes.addFlashAttribute("error", "Log ind for at se opgaver.");
             return "redirect:/login";
         }
 
@@ -103,7 +103,7 @@ public class TaskController {
 
         // Tjekker om brugeren er logget ind
         if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Log ind for at se brugeroplysninger.");
+            redirectAttributes.addFlashAttribute("error", "Log ind for at se en opgave.");
             return "redirect:/login";
         }
 
@@ -115,8 +115,52 @@ public class TaskController {
     }
     //------------------------------------ Hent Update() -------------------------------
 
+    @GetMapping("/edit/{id}")
+    public String showEditTask(@PathVariable int id,
+                               HttpSession session,
+                               Model model,
+                               RedirectAttributes redirectAttributes) {
+
+        UserViewDTO currentUser = getCurrentUser(session);
+
+        // Tjekker om bruger er logget ind
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Log ind for at opdatere en opgave.");
+            return "redirect:/login";
+        }
+
+        Task task = taskService.readById(id);
+
+        model.addAttribute("task", task);
+
+        return "task/edit-task";
+
+    }
     //------------------------------------ Update() ------------------------------------
 
+    @PostMapping("/edit")
+    public String updateTask(@ModelAttribute("task") Task task,
+                             HttpSession session,
+                             RedirectAttributes redirectAttributes) {
+
+        UserViewDTO currentUser = getCurrentUser(session);
+
+        // Tjekker om bruger er logget ind
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Log ind for at opdatere en opgave.");
+            return "redirect:/login";
+        }
+
+        taskService.updateTask(task);
+
+        // Tilføj succesbesked som flash-attribut (vises efter redirect)
+        redirectAttributes.addFlashAttribute("success", "Opgaven blev opdateret.");
+
+        return "redirect:/tasks/" + task.getTaskId(); // Redirect til task-detail
+
+
+
+    }
     //------------------------------------ Delete() ------------------------------------
 
 
