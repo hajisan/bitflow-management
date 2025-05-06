@@ -1,7 +1,7 @@
 package com.example.estimationtool.repository;
 
-import com.example.estimationtool.ProjectRowMapper;
-import com.example.estimationtool.interfaces.IProjectRepository;
+import com.example.estimationtool.toolbox.rowMappers.ProjectRowMapper;
+import com.example.estimationtool.repository.interfaces.IProjectRepository;
 import com.example.estimationtool.model.Project;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -64,7 +64,7 @@ public class ProjectRepository implements IProjectRepository {
     }
 
     @Override
-    public Project readById(int id) {
+    public Project readById(Integer id) {
 
         String sql = """
         SELECT p.id, p.name, p.description, p.deadline, p.estimatedTime, p.timeSpent, p.status, up.userID as userId
@@ -78,19 +78,18 @@ public class ProjectRepository implements IProjectRepository {
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
-    }
 
     //------------------------------------ Update() ------------------------------------
 
     @Override
-    public Project update(Project t) {
+    public Project update(Project project) {
         return null;
     }
 
     //------------------------------------ Delete() ------------------------------------
 
     @Override
-    public void deleteById(int id) {
+    public void deleteById(Integer id) {
 
     }
 }

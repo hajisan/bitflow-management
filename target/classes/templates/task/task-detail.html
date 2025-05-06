@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Task Detail</title>
+</head>
+<body>
+
+<h1>Opgavedetaljer</h1>
+
+<!-- Fejlbesked -->
+<p th:if="${error}" th:text="${error}"></p>
+
+<!-- Viser detaljer om task -->
+<ul>
+    <li><strong>ID:</strong> <span th:text="${task.taskId}"></span></li>
+    <li><strong>Subprojekt ID:</strong> <span th:text="${task.subProjectId}"></span></li>
+    <li><strong>Navn:</strong> <span th:text="${task.name}"></span></li>
+    <li><strong>Beskrivelse:</strong> <span th:text="${task.description}"></span></li>
+    <li><strong>Deadline:</strong> <span th:text="${task.deadline}"></span></li>
+    <li><strong>Estimeret tid:</strong> <span th:text="${task.estimatedTime}"></span></li>
+    <li><strong>Status:</strong> <span th:text="${task.status}"></span></li>
+</ul>
+
+<!-- Rediger-link -->
+<p>
+    <a th:href="@{/tasks/edit/{id}(id=${task.taskId})}">Rediger opgave</a>
+</p>
+
+<!-- Tilbage-knap -->
+<p><a th:href="@{/tasks}">Tilbage til opgaveliste</a></p>
+
+</body>
+</html>

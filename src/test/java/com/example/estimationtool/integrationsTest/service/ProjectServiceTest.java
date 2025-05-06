@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
 
-import static com.example.estimationtool.enums.Status.ACTIVE;
+import static com.example.estimationtool.model.enums.Status.ACTIVE;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest

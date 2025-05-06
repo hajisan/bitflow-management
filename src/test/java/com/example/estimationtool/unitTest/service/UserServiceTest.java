@@ -1,8 +1,8 @@
 package com.example.estimationtool.unitTest.service;
 
-import com.example.estimationtool.enums.Role;
-import com.example.estimationtool.dto.UserRegistrationDTO;
-import com.example.estimationtool.interfaces.IUserRepository;
+import com.example.estimationtool.model.enums.Role;
+import com.example.estimationtool.toolbox.dto.UserRegistrationDTO;
+import com.example.estimationtool.repository.interfaces.IUserRepository;
 import com.example.estimationtool.model.User;
 import com.example.estimationtool.service.UserService;
 import org.junit.jupiter.api.Test;

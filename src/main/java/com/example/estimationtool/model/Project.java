@@ -1,6 +1,6 @@
 package com.example.estimationtool.model;
 
-import com.example.estimationtool.enums.Status;
+import com.example.estimationtool.model.enums.Status;
 import java.time.LocalDate;
 
 public class Project {

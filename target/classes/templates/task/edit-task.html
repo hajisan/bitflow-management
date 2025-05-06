@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Task</title>
+</head>
+<body>
+<h1>Rediger Opgave</h1>
+
+<!-- Fejlbesked -->
+<p th:if="${error}" th:text="${error}"></p>
+
+
+<!-- Formular til edit-task -->
+
+<form th:action="@{/tasks/update}" th:object="${task}" method="post">
+
+    <input type="hidden" th:field="*{taskId}"/>
+
+    <p>
+        <label>Subprojekt ID:</label>
+        <input type="number" th:field="*{subProjectId}" required/>
+    </p>
+
+    <p>
+        <label>Navn:</label>
+        <input type="text" th:field="*{name}" required/>
+    </p>
+
+    <p>
+        <label>Beskrivelse:</label>
+        <textarea th:field="*{description}" required></textarea>
+    </p>
+
+    <p>
+        <label>Deadline:</label>
+        <input type="date" th:field="*{deadline}" required/>
+    </p>
+
+    <p>
+        <label>Estimeret Tid (timer):</label>
+        <input type="number" th:field="*{estimatedTime}" required/>
+    </p>
+
+    <p>
+        <label>Status:</label>
+        <select th:field="*{status}">
+            <option th:each="s : ${T(com.example.estimationtool.enums.Status).values()}"
+                    th:value="${s}"
+                    th:text="${s}"></option>
+        </select>
+    </p>
+
+    <!-- Knap til Opdatér task -->
+
+    <p>
+        <button type="submit">Opdater</button>
+    </p>
+
+</form>
+
+<!-- Sletter task -->
+
+<form th:action="@{/tasks/delete/{id}(id=${task.taskId})}" method="post">
+    <button type="submit" onclick="return confirm('Er du sikker på, at du vil slette denne opgave?')">Slet</button>
+</form>
+
+<p><a th:href="@{/tasks}">Tilbage til opgaveliste</a></p>
+
+</body>
+</html>
