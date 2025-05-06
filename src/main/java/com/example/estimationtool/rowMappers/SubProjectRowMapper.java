@@ -2,6 +2,7 @@ package com.example.estimationtool.rowMappers;
 
 import com.example.estimationtool.enums.Status;
 import com.example.estimationtool.subProject.SubProject;
+import com.example.estimationtool.timeEntry.DateHandler;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
@@ -15,14 +16,11 @@ public class SubProjectRowMapper implements RowMapper<SubProject> {
         subProject.setProjectId(rs.getInt("projectID"));
         subProject.setName(rs.getString("name"));
         subProject.setDescription(rs.getString("description"));
-        // @TODO Constructoren tager en LocalDate og ikke en String!
-        subProject.setDescription(rs.getString("deadline"));
+        subProject.setDeadline(DateHandler.getLocalDateFromString(rs.getString("deadline")));
         subProject.setEstimatedTime(rs.getInt("estimatedTime"));
         subProject.setTimeSpent(rs.getInt("timeSpent"));
         subProject.setStatus(Status.valueOf(rs.getString("status")));
 
-
-
-        return null;
+        return subProject;
     }
 }
