@@ -16,7 +16,7 @@ public class SubProjectRowMapper implements RowMapper<SubProject> {
         subProject.setProjectId(rs.getInt("projectID"));
         subProject.setName(rs.getString("name"));
         subProject.setDescription(rs.getString("description"));
-        subProject.setDeadline(DateHandler.getLocalDateFromString(rs.getString("deadline")));
+        subProject.setDeadline(rs.getDate("deadline").toLocalDate());
         subProject.setEstimatedTime(rs.getInt("estimatedTime"));
         subProject.setTimeSpent(rs.getInt("timeSpent"));
         subProject.setStatus(Status.valueOf(rs.getString("status")));

@@ -1,7 +1,7 @@
 package com.example.estimationtool.controller;
 
-import com.example.estimationtool.dto.UserViewDTO;
-import com.example.estimationtool.enums.Role;
+import com.example.estimationtool.toolbox.dto.UserViewDTO;
+import com.example.estimationtool.model.enums.Role;
 import com.example.estimationtool.model.Project;
 import com.example.estimationtool.service.ProjectService;
 import jakarta.servlet.http.HttpSession;
