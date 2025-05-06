@@ -4,6 +4,7 @@ import com.example.estimationtool.model.SubProject;
 import com.example.estimationtool.model.enums.Role;
 import com.example.estimationtool.service.SubProjectService;
 import com.example.estimationtool.toolbox.dto.UserViewDTO;
+import com.example.estimationtool.toolbox.roleCheck.RoleCheck;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,13 +34,6 @@ public class SubProjectController {
                                       RedirectAttributes redirectAttributes) {
         UserViewDTO currentUser = getCurrentUser(session);
         if (currentUser == null) return "redirect:/login";
-
-        Role role = currentUser.getRole();
-        if (role != Role.ADMIN && role != Role.PROJECT_MANAGER) {
-            redirectAttributes.addFlashAttribute("error", "Kun Admin og Projektleder kan oprette et subprojekt.");
-            return "redirect:/error-page";
-        }
-
         model.addAttribute("subproject", new SubProject());
         return "subproject/create-subproject";
     }
@@ -55,9 +49,7 @@ public class SubProjectController {
             return "redirect:/login";
         }
 
-        // Behøver vi et rollecheck både ved get- og postmapping?
 
-        subProjectService
 
         return "";
     }

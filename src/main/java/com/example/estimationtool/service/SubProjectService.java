@@ -3,6 +3,8 @@ package com.example.estimationtool.service;
 import com.example.estimationtool.model.enums.Status;
 import com.example.estimationtool.repository.interfaces.ISubProjectRepository;
 import com.example.estimationtool.model.SubProject;
+import com.example.estimationtool.toolbox.dto.UserViewDTO;
+import com.example.estimationtool.toolbox.roleCheck.RoleCheck;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,7 +18,9 @@ public class SubProjectService {
     }
 
     //------------------------------------ Create() ------------------------------------
-    public SubProject create(SubProject subProject) {
+    public SubProject create(UserViewDTO currentUser, SubProject subProject) {
+        RoleCheck.ensureAdminOrProjectManager(currentUser.getRole());
+
         // Inputvalidering
         if (subProject.getName() == null || subProject.getName().isBlank()) {
             throw new IllegalArgumentException("Subprojektets navn må ikke være tomt.");
@@ -44,13 +48,13 @@ public class SubProjectService {
     }
 
     //------------------------------------ Update() ------------------------------------
-    public SubProject update(SubProject subProject) {
+    public SubProject update(UserViewDTO currentUser, SubProject subProject) {
+        RoleCheck.ensureAdminOrProjectManager(currentUser.getRole());
         return null;
     }
 
     //------------------------------------ Delete() ------------------------------------
-    public void deleteById(int id) {
-
+    public void deleteById(UserViewDTO currentUser, int id) {
+        RoleCheck.ensureAdminOrProjectManager(currentUser.getRole());
     }
-
 }

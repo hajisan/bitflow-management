@@ -2,6 +2,8 @@ package com.example.estimationtool.service;
 
 import com.example.estimationtool.repository.interfaces.IProjectRepository;
 import com.example.estimationtool.model.Project;
+import com.example.estimationtool.toolbox.dto.UserViewDTO;
+import com.example.estimationtool.toolbox.roleCheck.RoleCheck;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,7 +17,9 @@ public class ProjectService {
 
     //------------------------------------ Create() ------------------------------------
 
-    public Project createProject(Project project) {
+    public Project createProject(UserViewDTO currentUser, Project project) {
+        RoleCheck.ensureAdminOrProjectManager(currentUser.getRole());
+
         // Inputvalidering
         if (project.getName() == null || project.getName().isBlank()) {
             throw new IllegalArgumentException("Projektets navn må ikke være tomt");

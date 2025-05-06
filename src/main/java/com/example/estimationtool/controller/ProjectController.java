@@ -51,13 +51,6 @@ public class ProjectController {
 
         UserViewDTO currentUser = getCurrentUser(session);
         if (currentUser == null) return "redirect:/login";
-
-        Role role = currentUser.getRole();
-        if (role != Role.ADMIN && role != Role.PROJECT_MANAGER) {
-            redirectAttributes.addFlashAttribute("error", "Kun Admin og Projektleder kan oprette et projekt.");
-            return "redirect:/error-page";
-        }
-
         model.addAttribute("project", new Project());
         return "project/create-project";
     }
@@ -71,23 +64,7 @@ public class ProjectController {
 
         // Konsol besked til debug
         System.out.println("POST - projektet er created");
-
-        // Tjekker om brugeren er logget ind
-        UserViewDTO currentUser = getCurrentUser(session);
-        if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Log ind for at oprette et projekt.");
-            return "redirect:/login";
-        }
-
-        // Rolle validering
-        Role role = currentUser.getRole();
-        if (role != Role.ADMIN && role != Role.PROJECT_MANAGER) {
-            redirectAttributes.addFlashAttribute("error", "Kun Admin og Projektleder kan oprette et projekt.");
-            return "redirect:/error-page";
-        }
-
         projectService.createProject(project);
-
         redirectAttributes.addFlashAttribute("success", "Projektet er oprettet."); // Viser succesbesked EFTER redirect
 
         return "redirect:/projects/list"; // Kan ikke finde ud af hvor jeg skal redirecte til? :/
