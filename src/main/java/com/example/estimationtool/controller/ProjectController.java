@@ -1,7 +1,6 @@
 package com.example.estimationtool.controller;
 
 import com.example.estimationtool.toolbox.dto.UserViewDTO;
-import com.example.estimationtool.model.enums.Role;
 import com.example.estimationtool.model.Project;
 import com.example.estimationtool.service.ProjectService;
 import jakarta.servlet.http.HttpSession;
@@ -46,8 +45,7 @@ public class ProjectController {
 
     @GetMapping("/create") // Vis opret formular
     public String showCreateForm(HttpSession session,
-                                 Model model,
-                                 RedirectAttributes redirectAttributes) {
+                                 Model model) {
 
         UserViewDTO currentUser = getCurrentUser(session);
         if (currentUser == null) return "redirect:/login";
@@ -64,7 +62,13 @@ public class ProjectController {
 
         // Konsol besked til debug
         System.out.println("POST - projektet er created");
-        projectService.createProject(project);
+
+        UserViewDTO currentUser = getCurrentUser(session);
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Log ind for at oprette et projekt.");
+            return "redirect:/login";
+        }
+        projectService.createProject(currentUser, project);
         redirectAttributes.addFlashAttribute("success", "Projektet er oprettet."); // Viser succesbesked EFTER redirect
 
         return "redirect:/projects/list"; // Kan ikke finde ud af hvor jeg skal redirecte til? :/
