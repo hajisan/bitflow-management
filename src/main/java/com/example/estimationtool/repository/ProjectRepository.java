@@ -55,18 +55,23 @@ public class ProjectRepository implements IProjectRepository {
 
         // String sql = "SELECT id, name, description, deadline, estimatedTime, timeSpent, status FROM project";
         String sql = """
-    SELECT p.id, p.name, p.description, p.deadline, p.estimatedTime, p.timeSpent, p.status,
-           up.userID as userId
-    FROM project p
-    LEFT JOIN user_project up ON p.id = up.projectID
-    """;
+        SELECT p.id, p.name, p.description, p.deadline, p.estimatedTime, p.timeSpent, p.status, up.userID as userId
+        FROM project p
+        LEFT JOIN user_project up ON p.id = up.projectID
+        """;
+
         return jdbcTemplate.query(sql, new ProjectRowMapper());
     }
 
     @Override
     public Project readById(int id) {
 
-        String sql = "SELECT id, name, description, deadline, estimatedTime, timeSpent, status FROM project WHERE id = ?";
+        String sql = """
+        SELECT p.id, p.name, p.description, p.deadline, p.estimatedTime, p.timeSpent, p.status, up.userID as userId
+        FROM project p
+        LEFT JOIN user_project up ON p.id = up.projectID
+        WHERE p.id = ?
+        """;
 
         try {
             return jdbcTemplate.queryForObject(sql, new ProjectRowMapper(), id);
