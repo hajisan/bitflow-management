@@ -7,7 +7,9 @@ import com.example.estimationtool.toolbox.dto.UserViewDTO;
 import com.example.estimationtool.toolbox.roleCheck.RoleCheck;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class SubProjectService {
@@ -40,11 +42,14 @@ public class SubProjectService {
 
     //------------------------------------ Read() ------------------------------------
     public List<SubProject> readAll() {
-        return List.of();
+        return iSubProjectRepository.readAll();
     }
 
     public SubProject readById(int id) {
-        return null;
+        SubProject subProject = iSubProjectRepository.readById(id);
+        if (subProject == null) throw new NoSuchElementException("Subprojekt med ID" + id + " eksisterer ikke.");
+
+        return subProject;
     }
 
     //------------------------------------ Update() ------------------------------------
