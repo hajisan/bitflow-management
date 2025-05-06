@@ -1,5 +1,6 @@
 package com.example.estimationtool.service;
 
+import com.example.estimationtool.model.enums.Status;
 import com.example.estimationtool.repository.interfaces.IProjectRepository;
 import com.example.estimationtool.model.Project;
 import com.example.estimationtool.toolbox.dto.UserViewDTO;
@@ -30,16 +31,9 @@ public class ProjectService {
         if (project.getDeadLine() == null) {
             throw new IllegalArgumentException("Projektets deadline må ikke være null/tomt");
         }
-
-        /* Bør man validere alle input?
-        - at projektet har et id?
-        - at projektet har en beskrivelse?
-        - at projektet har en status?
-         */
-        /* TODO Tænker vi skal sørge for at det har en status, men en tom beskrivelse er vel fin nok.
-            Et id bliver jo tildelt når det oprettes i databasen med vores KeyHolder så det findes jo egentlig ikke.
-            Det gør vel ikke noget at man sætter et id her, men så skal vi bare overskrive det alligevel i Repo...
-         */
+        if (project.getStatus() == null) {
+            throw new IllegalArgumentException("Projektet skal have tildelt en gyldig status");
+        }
 
         return iProjectRepository.create(project);
     }
