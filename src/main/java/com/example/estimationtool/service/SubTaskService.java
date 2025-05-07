@@ -27,11 +27,15 @@ public class SubTaskService {
         return iSubTaskRepository.readAll();
     }
 
-    //------------------------------------ Update() ------------------------------------
-
     public SubTask readById(int id) {
         return iSubTaskRepository.readById(id);
     }
+
+    //------------------------------------ Update() ------------------------------------
+
+   public void deleteById(int id) {
+        iSubTaskRepository.deleteById(id);
+   }
 
     //------------------------------------ Delete() ------------------------------------
 
