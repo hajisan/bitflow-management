@@ -79,7 +79,23 @@ public class SubTaskRepository implements ISubTaskRepository {
 
     @Override
     public SubTask update(SubTask subTask) {
-        return null;
+
+        String sql = """
+                UPDATE subtask
+                SET estimatedTime = ?, name = ?, description = ?, deadline = ?, status = ?
+                WHERE id = ?
+                """;
+
+        jdbcTemplate.update( // Henter disse værdier, så de kan opdateres
+             sql,
+             subTask.getEstimatedTime(),
+             subTask.getName(),
+             subTask.getDescription(),
+             subTask.getDeadline(), // Konverteres til String for at gemmes i databasen
+             subTask.getStatus(),
+             subTask.getSubTaskId());// Parameter -> id til WHERE
+
+        return subTask;
     }
 
     //------------------------------------ Delete() ------------------------------------
