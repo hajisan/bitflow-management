@@ -1,4 +1,3 @@
-
 package com.example.estimationtool.repository;
 
 import com.example.estimationtool.model.SubTask;
@@ -20,6 +19,7 @@ public class SubTaskRepository implements ISubTaskRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    //------------------------------------ Create() ------------------------------------
 
     @Override
     public SubTask create(SubTask subTask) {
@@ -29,7 +29,6 @@ public class SubTaskRepository implements ISubTaskRepository {
                 subtask (taskID, name, description, deadline, estimatedTime, status)
                 VALUES (?, ?, ?, ?, ?, ?)
                 """;
-
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -48,6 +47,9 @@ public class SubTaskRepository implements ISubTaskRepository {
         return subTask;
     }
 
+    //------------------------------------ Read() --------------------------------------
+
+
     @Override
     public List<SubTask> readAll() {
         return List.of();
@@ -58,10 +60,16 @@ public class SubTaskRepository implements ISubTaskRepository {
         return null;
     }
 
+    //------------------------------------ Update() ------------------------------------
+
+
     @Override
     public SubTask update(SubTask subTask) {
         return null;
     }
+
+    //------------------------------------ Delete() ------------------------------------
+
 
     @Override
     public void deleteById(Integer id) {
