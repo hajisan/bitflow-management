@@ -48,11 +48,6 @@ public class SubProjectService {
         return iSubProjectRepository.readAll();
     }
 
-
-//    public List<SubProject> readAllFromProjectID(int projectID) {
-//
-//    }
-
     public ProjectWithSubProjectsDTO readAllFromProjectId(int projectId) {
         try {
             ProjectWithSubProjectsDTO projectWithSubProjectsDTO = new ProjectWithSubProjectsDTO(

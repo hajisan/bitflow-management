@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Subproject Details</title>
+</head>
+<body>
+<h1>Subprojektoplysninger</h1>
+<div th:if="${error}" class="error" th:text="${error}"></div>
+
+<table>
+    <tr>
+        <th>Status</th>
+        <td th:text="${subproject.getStatus()}"></td>
+    </tr>
+    <tr>
+        <th>Project ID</th>
+        <td th:text="${subproject.getProjectId()}"></td>
+    </tr>
+    <tr>
+        <th>Subproject ID</th>
+        <td th:text="${subproject.getSubProjectId()}"></td>
+    </tr>
+    <tr>
+        <th>Navn</th>
+        <td th:text="${subproject.getName()}"></td>
+    </tr>
+    <tr>
+        <th>Beskrivelse</th>
+        <td th:text="${subproject.getDescription()}"></td>
+    </tr>
+    <tr>
+        <th>Estimeret tid</th>
+        <td th:text="${subproject.getEstimatedTime()}"></td>
+    </tr>
+    <tr>
+        <th>Tidsforbrug logget</th>
+        <td th:text="${subproject.getTimeSpent()}"></td>
+    </tr>
+    <tr>
+        <th>Deadline</th>
+        <td th:text="${subproject.getDeadline()}"></td>
+    </tr>
+</table>
+
+<!--a th:href="@{/subprojects/edit/{id}(id=${subproject.getSubProjectId})}"><button>Rediger subprojekt</button></a -->
+
+<a th:href="@{/projects/list}">Tilbage til projekter</a>
+</body>
+</html>

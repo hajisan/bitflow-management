@@ -1,6 +1,8 @@
 package com.example.estimationtool.controller;
 
+import com.example.estimationtool.model.Project;
 import com.example.estimationtool.model.SubProject;
+import com.example.estimationtool.service.ProjectService;
 import com.example.estimationtool.service.SubProjectService;
 import com.example.estimationtool.toolbox.dto.UserViewDTO;
 import jakarta.servlet.http.HttpSession;
@@ -9,13 +11,20 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Controller
 @RequestMapping("/subprojects")
 public class SubProjectController {
     private final SubProjectService subProjectService;
+    private final ProjectController projectController;
+    private final ProjectService projectService;
 
-    public SubProjectController(SubProjectService subProjectService) {
+    public SubProjectController(SubProjectService subProjectService, ProjectController projectController, ProjectService projectService) {
         this.subProjectService = subProjectService;
+        this.projectController = projectController;
+        this.projectService = projectService;
     }
 
     private UserViewDTO getCurrentUser(HttpSession session) {
@@ -28,6 +37,7 @@ public class SubProjectController {
                                       Model model) {
         UserViewDTO currentUser = getCurrentUser(session);
         if (currentUser == null) return "redirect:/login";
+        model.addAttribute("allProjects", new ArrayList<>(projectService.readAll()));
         model.addAttribute("subproject", new SubProject());
         return "subproject/create-subproject";
     }
