@@ -64,7 +64,14 @@ public class SubTaskRepository implements ISubTaskRepository {
 
     @Override
     public SubTask readById(Integer id) {
-        return null;
+
+        String sql = """
+                SELECT
+                id, taskID, estimatedTime, name, description, deadline, status
+                FROM subtask
+                WHERE id = ?
+                """;
+        return jdbcTemplate.queryForObject(sql, new SubTaskRowMapper(), id);
     }
 
     //------------------------------------ Update() ------------------------------------
