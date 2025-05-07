@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>SubTask List</title>
+</head>
+<body>
+<h1>Underopgaveliste</h1>
+
+<!-- Fejl- eller succesbesked -->
+<p th:if="${error}" th:text="${error}"></p>
+<p th:if="${success}" th:text="${success}"></p>
+
+<!-- Knap til at oprette ny underopgave -->
+<p>
+    <a th:href="@{/subtasks/create}">
+        <button>Opret ny underopgave</button>
+    </a>
+</p>
+
+<!-- Tabel over underopgaver -->
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Opgave ID</th>
+        <th>Navn</th>
+        <th>Beskrivelse</th>
+        <th>Deadline</th>
+        <th>Estimeret Tid</th>
+        <th>Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="subtask : ${subtasks}">
+        <td th:text="${subtask.subTaskId}"></td>
+        <td th:text="${subtask.taskId}"></td>
+        <td th:text="${subtask.name}"></td>
+        <td th:text="${subtask.description}"></td>
+        <td th:text="${subtask.deadline}"></td>
+        <td th:text="${subtask.estimatedTime}"></td>
+        <td th:text="${subtask.status}"></td>
+
+        <!-- Link til subtask-detail -->
+        <td>
+            <a th:href="@{/subtasks/{id}(id=${subtask.subTaskId})}">Se detaljer</a>
+        </td>
+
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

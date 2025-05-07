@@ -79,7 +79,23 @@ public class SubTaskRepository implements ISubTaskRepository {
 
     @Override
     public SubTask update(SubTask subTask) {
-        return null;
+
+        String sql = """
+                UPDATE subtask
+                SET estimatedTime = ?, name = ?, description = ?, deadline = ?, status = ?
+                WHERE id = ?
+                """;
+
+        jdbcTemplate.update( // Henter disse værdier, så de kan opdateres
+             sql,
+             subTask.getEstimatedTime(),
+             subTask.getName(),
+             subTask.getDescription(),
+             subTask.getDeadline(),
+             subTask.getStatus().name(), // Konverteres til String for at gemmes i databasen
+             subTask.getSubTaskId()); // Parameter -> id til WHERE
+
+        return subTask;
     }
 
     //------------------------------------ Delete() ------------------------------------
@@ -87,6 +103,9 @@ public class SubTaskRepository implements ISubTaskRepository {
 
     @Override
     public void deleteById(Integer id) {
+
+        String sql = "DELETE FROM subtask WHERE id = ?";
+        jdbcTemplate.update(sql, id);
 
     }
 }
