@@ -33,10 +33,13 @@ public class SubTaskService {
 
     //------------------------------------ Update() ------------------------------------
 
-   public void deleteById(int id) {
-        iSubTaskRepository.deleteById(id);
+   public SubTask updateSubTask(SubTask subtask) {
+        return iSubTaskRepository.update(subtask);
    }
 
     //------------------------------------ Delete() ------------------------------------
 
+    public void deleteById(int id) {
+        iSubTaskRepository.deleteById(id);
+    }
 }

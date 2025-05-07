@@ -115,7 +115,69 @@ public class SubTaskController {
 
     }
     //------------------------------------ Hent Update() -------------------------------
+
+    @GetMapping("/edit/{id}")
+    public String showEditSubTask(@PathVariable int id,
+                                  Model model,
+                                  HttpSession session,
+                                  RedirectAttributes redirectAttributes) {
+
+        UserViewDTO currentUser = getCurrentUser(session);
+
+        // Tjekker om brugeren er logget ind
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Log ind for at redigere en underopgave");
+            return "redirect:/login";
+        }
+
+        SubTask subTask = subTaskService.readById(id);
+
+        model.addAttribute("subtask", subTask);
+
+        return "subtask/edit-subtask";
+    }
+
     //------------------------------------ Update() ------------------------------------
+
+    @PostMapping("/update")
+    public String updateSubTask(@ModelAttribute("subtask") SubTask subTask,
+                                HttpSession session,
+                                RedirectAttributes redirectAttributes) {
+
+        UserViewDTO currentUser = getCurrentUser(session);
+
+        // Tjekker om bruger er logget ind
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Log ind for at opdatere en underopgave.");
+            return "redirect:/login";
+        }
+
+        subTaskService.updateSubTask(subTask);
+
+        // Tilføj succesbesked som flash-attribut (vises efter redirect)
+        redirectAttributes.addFlashAttribute("success", "Underopgaven blev opdateret.");
+
+        return "redirect:/subtasks/" + subTask.getSubTaskId(); // Redirect til subtask-detail.html
+    }
+
     //------------------------------------ Delete() ------------------------------------
 
+    @PostMapping("/delete/{id}")
+    public String deleteSubTask(@PathVariable int id,
+                                HttpSession session,
+                                RedirectAttributes redirectAttributes) {
+
+        UserViewDTO currentUser = getCurrentUser(session);
+
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne slette underopgaven.");
+            return "redirect:/login";
+        }
+
+        subTaskService.deleteById(id);
+
+        redirectAttributes.addFlashAttribute("success", "Opgaven blev slettet.");
+
+        return "redirect:/subtasks/subtasks";
+    }
 }

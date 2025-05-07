@@ -125,7 +125,7 @@ public class TaskController {
 
         // Tjekker om bruger er logget ind
         if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Log ind for at opdatere en opgave.");
+            redirectAttributes.addFlashAttribute("error", "Log ind for at redigere en opgave.");
             return "redirect:/login";
         }
 
