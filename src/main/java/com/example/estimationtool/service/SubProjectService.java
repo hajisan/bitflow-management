@@ -3,11 +3,11 @@ package com.example.estimationtool.service;
 import com.example.estimationtool.model.enums.Status;
 import com.example.estimationtool.repository.interfaces.ISubProjectRepository;
 import com.example.estimationtool.model.SubProject;
+import com.example.estimationtool.toolbox.dto.ProjectWithSubProjectsDTO;
 import com.example.estimationtool.toolbox.dto.UserViewDTO;
 import com.example.estimationtool.toolbox.roleCheck.RoleCheck;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -43,6 +43,17 @@ public class SubProjectService {
     //------------------------------------ Read() ------------------------------------
     public List<SubProject> readAll() {
         return iSubProjectRepository.readAll();
+    }
+
+
+//    public List<SubProject> readAllFromProjectID(int projectID) {
+//
+//    }
+
+    public ProjectWithSubProjectsDTO readAllFromProjectId(int projectId) {
+        ProjectWithSubProjectsDTO projectWithSubProjectsDTO = iSubProjectRepository.readAllFromProjectId(projectId);
+
+        return
     }
 
     public SubProject readById(int id) {

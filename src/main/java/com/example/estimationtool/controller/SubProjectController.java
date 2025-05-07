@@ -6,10 +6,7 @@ import com.example.estimationtool.toolbox.dto.UserViewDTO;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -55,5 +52,50 @@ public class SubProjectController {
     }
 
     //------------------------------------ Read() --------------------------------------
+    @GetMapping("")
+    public String readAllSubProjects(HttpSession session,
+                                     Model model,
+                                     RedirectAttributes redirectAttributes) {
+        UserViewDTO currentUser = getCurrentUser(session);
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Log ind for at oprette et projekt.");
+            return "redirect:/login";
+        }
 
+        model.addAttribute("allSubprojects", subProjectService.readAll());
+
+        return "subproject/subproject-list";
+    }
+
+    @GetMapping("/{projectId}/subprojects")
+    public String readByProjectId(HttpSession session,
+                                  Model model,
+                                  RedirectAttributes redirectAttributes,
+                                  @PathVariable int projectId) {
+        UserViewDTO currentUser = getCurrentUser(session);
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Log ind for at oprette et projekt.");
+            return "redirect:/login";
+        }
+
+        model.addAttribute("subprojectsUnderProject", subProjectService.readAllFromProjectId(projectId));
+
+        return "subproject/subprojects-under-project";
+    }
+
+    @GetMapping("/{id}")
+    public String readById(HttpSession session,
+                           Model model,
+                           RedirectAttributes redirectAttributes,
+                           @PathVariable int id) {
+        UserViewDTO currentUser = getCurrentUser(session);
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Log ind for at oprette et projekt.");
+            return "redirect:/login";
+        }
+
+        model.addAttribute("subproject", subProjectService.readById(id));
+
+        return "subproject/subproject-details";
+    }
 }
