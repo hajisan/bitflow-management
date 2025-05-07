@@ -45,7 +45,11 @@ public class ProjectService {
     //------------------------------------ Read() ------------------------------------
 
     public List<Project> readAll() {
+        // Rollevalideringslogik - Det skal kun være en Admin som kan se alle projekter
+
         return iProjectRepository.readAll();
+
+
     }
 
     public Project readyById(int id) {
@@ -53,6 +57,13 @@ public class ProjectService {
         if (project == null) throw new NoSuchElementException("Projekt med ID" + id + " eksistere ikke.");
 
         return project;
+    }
+
+    public List<Project> readByUserId(int userId) {
+        // Rollevalideringslogik - en Project Manager eller Developer skal kun kunne se de projekter de knyttet til
+
+        return iProjectRepository.readByUserId(userId);
+
     }
 
     //------------------------------------ Delete() ------------------------------------
