@@ -54,9 +54,16 @@ public class ProjectRepository implements IProjectRepository {
     @Override
     public List<Project> readAll() {
 
-        // String sql = "SELECT id, name, description, deadline, estimatedTime, timeSpent, status FROM project";
+        /*
+        TODO
+        SELECT p.userId gør at Admin henter alle projekter altså, hvilket resultere i at Admin ser samme projekt flere gange
+        da et projekt kan have flere brugere tilknyttet i user_project tabellen.
+        Formål er dog at Admin kun skal kunne se listen over alle projekter, uden afhængigheden af user_project tabellen.
+        Så Admin kun se en liste af Projekter uden duplikater. Se seneste chat for forslag til at løse det.
+         */
+
         String sql = """
-                SELECT p.id, p.name, p.description, p.deadline, p.estimatedTime, p.timeSpent, p.status, up.userID as userId
+                SELECT DISTINCT p.id, p.name, p.description, p.deadline, p.estimatedTime, p.timeSpent, p.status, up.userID as userId
                 FROM project p
                 LEFT JOIN user_project up ON p.id = up.projectID
                 """;
@@ -79,6 +86,19 @@ public class ProjectRepository implements IProjectRepository {
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
+    }
+
+    @Override
+    public List<Project> readByUserId(Integer userId) {
+
+        String sql = """
+                SELECT p.id, p.name, p.description, p.deadline, p.estimatedTime, p.timeSpent, p.status, up.userID as userId
+                FROM project p
+                LEFT JOIN user_project up ON p.id = up.projectID
+                WHERE up.userID = ?
+                """;
+
+        return jdbcTemplate.query(sql, new ProjectRowMapper(), userId);
     }
 
     //------------------------------------ Update() ------------------------------------

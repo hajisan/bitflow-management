@@ -19,7 +19,7 @@
     <ul>
         <li><a th:href="@{/users/users}">Se alle brugere</a></li>
         <li><a th:href="@{/users/create}">Opret ny bruger</a></li>
-        <!-- <li><a th:href="@{/users/}">Projekter</a></li> READALLPROJECTS()-->
+        <li><a th:href="@{/projects/list}">Projekter</a></li> <!-- Viser alle projekter -->
         <li><a th:href="@{/projects/create}">Opret nyt projekt</a></li>
     </ul>
 </div>
@@ -28,7 +28,8 @@
 <div th:if="${user.role.name() == 'PROJECT_MANAGER'}">
     <h2>Projektleder</h2>
     <ul>
-        <!-- <li><a th:href="@{/projects}">Mine projekter</a></li> READALLPROJECTS()-->
+        <li><a th:href="@{/projects/list}">Mine projekter</a></li> <!-- Viser alle projekter pt -->
+        <li><a th:href="@{/projects/create}">Opret nyt projekt</a></li>
         <li><a th:href="@{/createproject}">Teamoversigt</a></li>
     </ul>
 </div>
@@ -37,7 +38,7 @@
 <div th:if="${user.role.name() == 'DEVELOPER'}">
     <h2>Udvikler</h2>
     <ul>
-        <!-- <li><a th:href="@{/PROJECTS}">Mine opgaver</a></li> READALLPROJECTS() -->
+        <li><a th:href="@{/projects/list}">Mine opgaver</a></li> <!-- Viser alle projekter lige pt -->
 
     </ul>
 </div>
