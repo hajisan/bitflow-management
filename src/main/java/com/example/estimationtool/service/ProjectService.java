@@ -27,6 +27,7 @@ public class ProjectService {
             throw new IllegalArgumentException("Projektets deadline må ikke være null/tomt");
         }
 
+
         /* Bør man validere alle input?
         - at projektet har et id?
         - at projektet har en beskrivelse?

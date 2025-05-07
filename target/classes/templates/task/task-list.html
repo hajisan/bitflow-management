@@ -7,8 +7,15 @@
 <body>
 <h1>Opgaveliste</h1>
 
-<!-- Fejlbesked -->
+<!-- Fejl-/succesbesked -->
 <p th:if="${error}" th:text="${error}"></p>
+<p th:if="${success}" th:text="${success}"></p>
+
+<p>
+    <a th:href="@{/tasks/create}">
+        <button>Opret ny opgave</button>
+    </a>
+</p>
 
 <!-- Tabel med opgaver -->
 <table>

@@ -138,7 +138,7 @@ public class TaskController {
     }
     //------------------------------------ Update() ------------------------------------
 
-    @PostMapping("/edit")
+    @PostMapping("/update")
     public String updateTask(@ModelAttribute("task") Task task,
                              HttpSession session,
                              RedirectAttributes redirectAttributes) {

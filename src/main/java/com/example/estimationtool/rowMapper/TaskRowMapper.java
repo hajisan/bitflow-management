@@ -11,8 +11,8 @@ public class TaskRowMapper implements RowMapper<Task> {
     @Override
     public Task mapRow(ResultSet rs, int rowNum) throws SQLException {
         return new Task(
-                rs.getInt("id"),
                 rs.getInt("subProjectID"),
+                rs.getInt("id"),
                 rs.getInt("estimatedTime"),
                 rs.getString("name"),
                 rs.getString("description"),
