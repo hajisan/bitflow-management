@@ -30,7 +30,7 @@ public class TaskController {
     //------------------------------------ Hent Create() -------------------------------
 
     @GetMapping("/create")
-    public String showTask(Model model,
+    public String showCreateTask(Model model,
                            HttpSession session,
                            RedirectAttributes redirectAttributes
                            ) {
@@ -39,7 +39,7 @@ public class TaskController {
 
         // Tjekker om brugeren er logget ind
         if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Log ind for at se en opgave.");
+            redirectAttributes.addFlashAttribute("error", "Log ind for at oprette en opgave.");
             return "redirect:/login";
         }
 
