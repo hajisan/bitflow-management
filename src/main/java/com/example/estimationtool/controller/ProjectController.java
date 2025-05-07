@@ -5,7 +5,9 @@ import com.example.estimationtool.model.enums.Role;
 import com.example.estimationtool.toolbox.dto.UserViewDTO;
 import com.example.estimationtool.model.Project;
 import com.example.estimationtool.service.ProjectService;
+import com.example.estimationtool.toolbox.dto.UserWithProjectDTO;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.security.access.expression.SecurityExpressionHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,10 +23,12 @@ import java.util.List;
 public class ProjectController {
 
     private final ProjectService projectService;
+    private final SecurityExpressionHandler securityExpressionHandler;
 
     // Dependency injection af ProjectService i konstruktør
-    public ProjectController(ProjectService projectService) {
+    public ProjectController(ProjectService projectService, SecurityExpressionHandler securityExpressionHandler) {
         this.projectService = projectService;
+        this.securityExpressionHandler = securityExpressionHandler;
     }
 
     private UserViewDTO getCurrentUser(HttpSession session) {
@@ -78,35 +82,41 @@ public class ProjectController {
         projectService.createProject(currentUser, project);
         redirectAttributes.addFlashAttribute("success", "Projektet er oprettet."); // Viser succesbesked EFTER redirect
 
-        return "redirect:/projects/list"; // Kan ikke finde ud af hvor jeg skal redirecte til? :/
+        return "redirect:/projects/list";
     }
 
     //------------------------------------ Read() --------------------------------------
 
-    @GetMapping("/list") // Vis liste af projekter (Lige nu bare en succesbesked)
+    @GetMapping("/list") // Lige nu ser Admin alle projekter og dermed ét specifikt projekt flere gange
     public String showProjectList(Model model,
                                   HttpSession session,
                                   RedirectAttributes redirectAttributes) {
 
         UserViewDTO currentUser = getCurrentUser(session);
 
-        // Tjekker om brugeren er logget ind
         if (currentUser == null) {
             redirectAttributes.addFlashAttribute("error", "Log ind for at se projekter.");
             return "redirect:/login";
         }
 
-        List<Project> projectList = projectService.readAll();
-        model.addAttribute("projects", projectList);
-
         boolean isAdmin = currentUser.getRole() == Role.ADMIN;
         boolean isProjectManager = currentUser.getRole() == Role.PROJECT_MANAGER;
 
+        List<Project> projectList = isAdmin
+                ? projectService.readAll()
+                : projectService.readByUserId(currentUser.getUserId());
+
+        if (projectList.isEmpty() && !isAdmin && !isProjectManager) {
+            model.addAttribute("info", "Du er ikke tilknyttet nogen projekter endnu");
+        }
+
+        UserWithProjectDTO userWithProjectDTO = new UserWithProjectDTO(currentUser, projectList);
+
+        model.addAttribute("userWithProjects", userWithProjectDTO);
         model.addAttribute("isAdmin", isAdmin);
         model.addAttribute("isProjectManager", isProjectManager);
 
-
-        return "/project/project-list"; // peger på project-list.html
+        return "/project/project-list";
     }
 
 }
