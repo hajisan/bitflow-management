@@ -12,6 +12,8 @@ public interface IProjectRepository extends IRepository<Project, Integer> {
 
     Project readById(Integer id);
 
+    List<Project> readByUserId(Integer userId);
+
     Project update(Project project);
 
     void deleteById(Integer id);
