@@ -5,6 +5,22 @@
     <title>SubTask Detail</title>
 </head>
 <body>
+<h1>Detaljer for Underopgave</h1>
+
+<!-- Fejlbesked -->
+<p th:if="${error}" th:text="${error}"></p>
+
+<ul>
+    <li><strong>ID:</strong> <span th:text="${subtask.subTaskId}"></span></li>
+    <li><strong>Opgave ID:</strong> <span th:text="${subtask.taskId}"></span></li>
+    <li><strong>Navn:</strong> <span th:text="${subtask.name}"></span></li>
+    <li><strong>Beskrivelse:</strong> <span th:text="${subtask.description}"></span></li>
+    <li><strong>Deadline:</strong> <span th:text="${subtask.deadline}"></span></li>
+    <li><strong>Estimeret Tid:</strong> <span th:text="${subtask.estimatedTime}"></span></li>
+    <li><strong>Status:</strong> <span th:text="${subtask.status}"></span></li>
+</ul>
+
+<p><a th:href="@{/subtasks}">Tilbage til underopgaveliste</a></p>
 
 </body>
 </html>
