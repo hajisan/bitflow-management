@@ -2,6 +2,7 @@ package com.example.estimationtool.repository;
 
 import com.example.estimationtool.model.SubTask;
 import com.example.estimationtool.repository.interfaces.ISubTaskRepository;
+import com.example.estimationtool.toolbox.rowMappers.SubTaskRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -52,12 +53,25 @@ public class SubTaskRepository implements ISubTaskRepository {
 
     @Override
     public List<SubTask> readAll() {
-        return List.of();
+
+        String sql = """
+                SELECT id, taskID, estimatedTime, name, description, deadline, status
+                FROM subtask
+                """;
+
+        return jdbcTemplate.query(sql, new SubTaskRowMapper());
     }
 
     @Override
     public SubTask readById(Integer id) {
-        return null;
+
+        String sql = """
+                SELECT
+                id, taskID, estimatedTime, name, description, deadline, status
+                FROM subtask
+                WHERE id = ?
+                """;
+        return jdbcTemplate.queryForObject(sql, new SubTaskRowMapper(), id);
     }
 
     //------------------------------------ Update() ------------------------------------

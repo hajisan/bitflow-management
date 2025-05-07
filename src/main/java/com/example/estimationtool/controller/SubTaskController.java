@@ -6,11 +6,9 @@ import com.example.estimationtool.toolbox.dto.UserViewDTO;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import java.util.List;
 
 @Controller
 @RequestMapping("subtasks")
@@ -32,7 +30,7 @@ public class SubTaskController {
     //------------------------------------ Hent Create() -------------------------------
 
 
-    @GetMapping("")
+    @GetMapping("/create")
     public String showCreateSubTask(Model model,
                                   HttpSession session,
                                   RedirectAttributes redirectAttributes
@@ -50,7 +48,9 @@ public class SubTaskController {
         return "subtask/create-subtask";
     }
 
-    @PostMapping("")
+    //------------------------------------ Create() ------------------------------------
+
+    @PostMapping("/create")
     public String createSubTask(@ModelAttribute("subtask") SubTask subTask,
                                 HttpSession session,
                                 RedirectAttributes redirectAttributes) {
@@ -71,8 +71,49 @@ public class SubTaskController {
 
     }
 
-    //------------------------------------ Create() ------------------------------------
     //------------------------------------ Read() --------------------------------------
+
+    @GetMapping("subtasks")
+
+    public String showAllSubTasks(Model model,
+                                  HttpSession session,
+                                  RedirectAttributes redirectAttributes) {
+
+        UserViewDTO currentUser = getCurrentUser(session);
+
+        // Tjekker om brugeren er logget ind
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Log ind for at se underopgaver.");
+            return "redirect:/login";
+        }
+
+        List<SubTask> subTaskList = subTaskService.readAll();
+
+        model.addAttribute("subtasks", subTaskList);
+
+        return "subtask/subtask-list";
+
+    }
+
+    @GetMapping("/{id}")
+    public String showSubTask(@PathVariable int id,
+                              Model model,
+                              HttpSession session,
+                              RedirectAttributes redirectAttributes) {
+
+        UserViewDTO currentUser = getCurrentUser(session);
+
+        // Tjekker om brugeren er logget ind
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Log ind for at se en underopgave");
+            return "redirect:/login";
+        }
+
+        SubTask subTask = subTaskService.readById(id);
+
+        return "subtask/subtask-detail";
+
+    }
     //------------------------------------ Hent Update() -------------------------------
     //------------------------------------ Update() ------------------------------------
     //------------------------------------ Delete() ------------------------------------
