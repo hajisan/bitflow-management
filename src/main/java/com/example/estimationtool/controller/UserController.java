@@ -168,7 +168,7 @@ public class UserController {
 
     //------------------------------------ Update() ------------------------------------
 
-    @PostMapping("/edit")
+    @PostMapping("/update")
     public String updateUser(@ModelAttribute("userUpdateDTO") UserUpdateDTO userUpdateDTO,
                              HttpSession session,
                              RedirectAttributes redirectAttributes) {

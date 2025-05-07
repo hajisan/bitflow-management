@@ -7,8 +7,9 @@
 <body>
 <h1>Rediger Opgave</h1>
 
-<!-- Fejlbesked -->
+<!-- Fejl-/succesbesked -->
 <p th:if="${error}" th:text="${error}"></p>
+<div th:if="${success}" class="success" th:text="${success}"></div>
 
 
 <!-- Formular til edit-task -->
