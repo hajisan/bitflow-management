@@ -5,7 +5,11 @@ import com.example.estimationtool.repository.interfaces.IProjectRepository;
 import com.example.estimationtool.model.Project;
 import com.example.estimationtool.toolbox.dto.UserViewDTO;
 import com.example.estimationtool.toolbox.roleCheck.RoleCheck;
+import org.springframework.data.projection.EntityProjection;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class ProjectService {
@@ -37,4 +41,21 @@ public class ProjectService {
 
         return iProjectRepository.create(project);
     }
+
+    //------------------------------------ Read() ------------------------------------
+
+    public List<Project> readAll() {
+        return iProjectRepository.readAll();
+    }
+
+    public Project readyById(int id) {
+        Project project = iProjectRepository.readById(id);
+        if (project == null) throw new NoSuchElementException("Projekt med ID" + id + " eksistere ikke.");
+
+        return project;
+    }
+
+    //------------------------------------ Delete() ------------------------------------
+
+
 }
