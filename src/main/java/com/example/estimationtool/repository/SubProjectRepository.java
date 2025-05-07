@@ -2,6 +2,7 @@ package com.example.estimationtool.repository;
 
 import com.example.estimationtool.repository.interfaces.ISubProjectRepository;
 import com.example.estimationtool.model.SubProject;
+import com.example.estimationtool.toolbox.dto.ProjectWithSubProjectsDTO;
 import com.example.estimationtool.toolbox.rowMappers.SubProjectRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -60,6 +61,18 @@ public class SubProjectRepository implements ISubProjectRepository {
                 """;
 
         return jdbcTemplate.query(sql, new SubProjectRowMapper());
+    }
+
+    @Override
+    public ProjectWithSubProjectsDTO readAllFromProjectId(int projectId) {
+        String sql = """
+                SELECT id, projectID, name, description, deadline, estimatedTime, timeSpent, status
+                FROM subproject
+                WHERE projectID = ?
+                """;
+
+
+        return jdbcTemplate.query(sql, );
     }
 
     @Override

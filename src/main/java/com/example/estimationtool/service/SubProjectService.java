@@ -52,8 +52,19 @@ public class SubProjectService {
 
     public ProjectWithSubProjectsDTO readAllFromProjectId(int projectId) {
         ProjectWithSubProjectsDTO projectWithSubProjectsDTO = iSubProjectRepository.readAllFromProjectId(projectId);
+        if (projectWithSubProjectsDTO == null) {
+            throw new NoSuchElementException("Projekt med ID "
+                    + projectId +
+                    " findes ikke.");
+        }
 
-        return
+        if (projectWithSubProjectsDTO.subProjectList().isEmpty()) {
+            throw new NoSuchElementException("Projekt med ID "
+                    + projectId +
+                    " har ikke nogen subprojekter.");
+        }
+
+        return projectWithSubProjectsDTO;
     }
 
     public SubProject readById(int id) {
