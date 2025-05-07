@@ -1,8 +1,8 @@
 package com.example.estimationtool.repository;
 
-import com.example.estimationtool.interfaces.ITaskRepository;
+import com.example.estimationtool.repository.interfaces.ITaskRepository;
 import com.example.estimationtool.model.Task;
-import com.example.estimationtool.rowMapper.TaskRowMapper;
+import com.example.estimationtool.toolbox.rowMappers.TaskRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -56,7 +56,7 @@ public class TaskRepository implements ITaskRepository {
     }
 
     @Override
-    public Task readById(int id) {
+    public Task readById(Integer id) {
 
         String sql = """
         SELECT
@@ -93,7 +93,7 @@ public class TaskRepository implements ITaskRepository {
     //------------------------------------ Delete() ------------------------------------
 
     @Override
-    public void deleteById(int id) {
+    public void deleteById(Integer id) {
 
         String sql = "DELETE FROM task WHERE id = ?";
         jdbcTemplate.update(sql, id);

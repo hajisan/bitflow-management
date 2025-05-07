@@ -1,23 +1,20 @@
-package com.example.estimationtool.model;
+package com.example.estimationtool.toolbox.dto;
 
 import com.example.estimationtool.model.enums.Role;
 
-public class User {
+public class UserViewDTO {
 
     private int userId;
-    private String firstName, lastName, email, passwordHash;
+    private String firstName, lastName, email;
     private Role role;
 
-    public User(int userId, String firstName, String lastName, String email, String passwordHash, Role role) {
+    public UserViewDTO(int userId, String firstName, String lastName, String email, Role role) {
         setUserId(userId);
         setFirstName(firstName);
         setLastName(lastName);
         setEmail(email);
-        setPasswordHash(passwordHash);
         setRole(role);
     }
-
-    public User() {}
 
     // Getter-metoder
 
@@ -32,9 +29,6 @@ public class User {
     }
     public String getEmail() {
         return email;
-    }
-    public String getPasswordHash() {
-        return passwordHash;
     }
     public Role getRole() {
         return role;
@@ -54,23 +48,21 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
-    }
     public void setRole(Role role) {
         this.role = role;
     }
 
+    @Override
     public String toString() {
-        return String.format("""
-                ID: %d
-                First Name: %s
-                Last Name : %s
-                E-mail    : %s
-                Role      : %s
-                Password  : %s
-                """, userId, firstName, lastName, email, role, passwordHash);
+        return "UserViewDTO{" +
+                "userId=" + userId +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", role=" + role +
+                '}';
     }
+
 
 
 

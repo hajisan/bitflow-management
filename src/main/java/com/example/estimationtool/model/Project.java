@@ -1,6 +1,6 @@
 package com.example.estimationtool.model;
 
-import com.example.estimationtool.enums.Status;
+import com.example.estimationtool.model.enums.Status;
 import java.time.LocalDate;
 
 public class Project {
@@ -28,66 +28,56 @@ public class Project {
 
     }
 
+// Getter-metoder
+
     public int getProjectId() {
         return projectId;
     }
-
-    public void setProjectId(int projectId) {
-        this.projectId = projectId;
-    }
-
     public int getUserId() {
         return userId;
     }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
     public int getEstimatedTime() {
         return estimatedTime;
     }
-
-    public void setEstimatedTime(int estimatedTime) {
-        this.estimatedTime = estimatedTime;
-    }
-
     public int getTimeSpent() {
         return timeSpent;
     }
-
-    public void setTimeSpent(int timeSpent) {
-        this.timeSpent = timeSpent;
-    }
-
     public String getName() {
         return name;
     }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getDescription() {
         return description;
     }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public LocalDate getDeadLine() {
         return deadline;
     }
-
-    public void setDeadLine(LocalDate deadline) {
-        this.deadline = deadline;
-    }
-
     public Status getStatus() {
         return status;
     }
 
+// Setter-metoder
+
+    public void setProjectId(int projectId) {
+        this.projectId = projectId;
+    }
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+    public void setEstimatedTime(int estimatedTime) {
+        this.estimatedTime = estimatedTime;
+    }
+    public void setTimeSpent(int timeSpent) {
+        this.timeSpent = timeSpent;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public void setDescription(String description) {
+        this.description = description;
+    }
+    public void setDeadLine(LocalDate deadline) {
+        this.deadline = deadline;
+    }
     public void setStatus(Status status) {
         this.status = status;
     }

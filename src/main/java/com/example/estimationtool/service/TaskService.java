@@ -1,7 +1,7 @@
 package com.example.estimationtool.service;
 
 
-import com.example.estimationtool.interfaces.ITaskRepository;
+import com.example.estimationtool.repository.interfaces.ITaskRepository;
 import com.example.estimationtool.model.Task;
 import java.util.List;
 
