@@ -22,6 +22,8 @@ public class SubTask {
         setStatus(status);
     }
 
+    public SubTask() {}
+
     // Getter-metoder
 
     public int getSubTaskId() {

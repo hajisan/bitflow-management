@@ -30,7 +30,7 @@ public class TaskController {
     //------------------------------------ Hent Create() -------------------------------
 
     @GetMapping("/create")
-    public String showTask(Model model,
+    public String showCreateTask(Model model,
                            HttpSession session,
                            RedirectAttributes redirectAttributes
                            ) {
