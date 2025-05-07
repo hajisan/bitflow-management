@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface ISubTaskRepository extends IRepository<SubTask, Integer> {
 
-    SubTask create(SubTask SubTask);
+    SubTask create(SubTask subTask);
 
     List<SubTask> readAll();
 
