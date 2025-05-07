@@ -104,5 +104,8 @@ public class SubTaskRepository implements ISubTaskRepository {
     @Override
     public void deleteById(Integer id) {
 
+        String sql = "DELETE FROM subtask WHERE id = ?";
+        jdbcTemplate.update(sql, id);
+
     }
 }
