@@ -1,8 +1,10 @@
 package com.example.estimationtool.unitTest.service;
 
+import com.example.estimationtool.model.enums.Role;
 import com.example.estimationtool.repository.interfaces.IProjectRepository;
 import com.example.estimationtool.model.Project;
 import com.example.estimationtool.service.ProjectService;
+import com.example.estimationtool.toolbox.dto.UserViewDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,10 +44,17 @@ public class ProjectServiceTest {
     @Test // Tjekker om projekt bliver opretter
     void test_projectCreate() {
         //--------- Arrange ---------
+        UserViewDTO userViewDTO = new UserViewDTO(
+                1, // userId
+                "John", // firstName
+                "Doe", // lastName
+                "john.doe@example.com", // email
+                Role.ADMIN // role
+        );
         when(iProjectRepository.create(testProject)).thenReturn(testProject);
 
         //--------- Act -------------
-        Project result = projectService.createProject(testProject);
+        Project result = projectService.createProject(userViewDTO, testProject);
 
         //--------- Assert ----------
         assertEquals(testProject, result);
