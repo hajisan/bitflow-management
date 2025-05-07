@@ -64,15 +64,14 @@ public class SubProjectRepository implements ISubProjectRepository {
     }
 
     @Override
-    public ProjectWithSubProjectsDTO readAllFromProjectId(int projectId) {
+    public List<SubProject> readAllFromProjectId(int projectId) {
         String sql = """
                 SELECT id, projectID, name, description, deadline, estimatedTime, timeSpent, status
                 FROM subproject
                 WHERE projectID = ?
                 """;
 
-
-        return jdbcTemplate.query(sql, );
+        return jdbcTemplate.query(sql, new SubProjectRowMapper(), projectId);
     }
 
     @Override

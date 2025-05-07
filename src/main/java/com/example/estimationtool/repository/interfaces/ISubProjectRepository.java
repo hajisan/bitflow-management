@@ -18,5 +18,5 @@ public interface ISubProjectRepository extends IRepository<SubProject, Integer>{
     void deleteById(Integer id);
 
     // Ikke fra IRepository
-    ProjectWithSubProjectsDTO readAllFromProjectId(int projectId);
+    List<SubProject> readAllFromProjectId(int projectId);
 }

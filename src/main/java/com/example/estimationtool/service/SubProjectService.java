@@ -1,6 +1,7 @@
 package com.example.estimationtool.service;
 
 import com.example.estimationtool.model.enums.Status;
+import com.example.estimationtool.repository.interfaces.IProjectRepository;
 import com.example.estimationtool.repository.interfaces.ISubProjectRepository;
 import com.example.estimationtool.model.SubProject;
 import com.example.estimationtool.toolbox.dto.ProjectWithSubProjectsDTO;
@@ -14,9 +15,11 @@ import java.util.NoSuchElementException;
 @Service
 public class SubProjectService {
     private final ISubProjectRepository iSubProjectRepository;
+    private final IProjectRepository iProjectRepository;
 
-    public SubProjectService(ISubProjectRepository iSubProjectRepository) {
+    public SubProjectService(ISubProjectRepository iSubProjectRepository, IProjectRepository iProjectRepository) {
         this.iSubProjectRepository = iSubProjectRepository;
+        this.iProjectRepository = iProjectRepository;
     }
 
     //------------------------------------ Create() ------------------------------------
@@ -51,20 +54,28 @@ public class SubProjectService {
 //    }
 
     public ProjectWithSubProjectsDTO readAllFromProjectId(int projectId) {
-        ProjectWithSubProjectsDTO projectWithSubProjectsDTO = iSubProjectRepository.readAllFromProjectId(projectId);
-        if (projectWithSubProjectsDTO == null) {
-            throw new NoSuchElementException("Projekt med ID "
-                    + projectId +
-                    " findes ikke.");
-        }
+        try {
+            ProjectWithSubProjectsDTO projectWithSubProjectsDTO = new ProjectWithSubProjectsDTO(
+                    iProjectRepository.readById(projectId),
+                    iSubProjectRepository.readAllFromProjectId(projectId));
 
-        if (projectWithSubProjectsDTO.subProjectList().isEmpty()) {
-            throw new NoSuchElementException("Projekt med ID "
-                    + projectId +
-                    " har ikke nogen subprojekter.");
-        }
 
-        return projectWithSubProjectsDTO;
+//            if (projectWithSubProjectsDTO == null) {
+//                throw new NoSuchElementException("Projekt med ID "
+//                        + projectId +
+//                        " findes ikke.");
+//            }
+
+            if (projectWithSubProjectsDTO.subProjectList().isEmpty()) {
+                throw new NoSuchElementException("Projekt med ID "
+                        + projectId +
+                        " har ikke nogen subprojekter.");
+            }
+
+            return projectWithSubProjectsDTO;
+        } catch (NullPointerException e) {
+            throw new NullPointerException("Enten findes projekt med ID " + projectId + "ikke, eller også findes subprojekterne ikke.");
+        }
     }
 
     public SubProject readById(int id) {
