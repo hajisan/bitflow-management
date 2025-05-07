@@ -1,6 +1,7 @@
 package com.example.estimationtool.controller;
 
 import com.example.estimationtool.model.SubTask;
+import com.example.estimationtool.model.enums.Status;
 import com.example.estimationtool.service.SubTaskService;
 import com.example.estimationtool.toolbox.dto.UserViewDTO;
 import jakarta.servlet.http.HttpSession;
@@ -111,6 +112,8 @@ public class SubTaskController {
 
         SubTask subTask = subTaskService.readById(id);
 
+        model.addAttribute("subtask", subTask);
+
         return "subtask/subtask-detail";
 
     }
@@ -133,6 +136,7 @@ public class SubTaskController {
         SubTask subTask = subTaskService.readById(id);
 
         model.addAttribute("subtask", subTask);
+        model.addAttribute("statuses", Status.values()); //Fordi Thymeleaf ikke vil læse vores enum
 
         return "subtask/edit-subtask";
     }
@@ -176,7 +180,7 @@ public class SubTaskController {
 
         subTaskService.deleteById(id);
 
-        redirectAttributes.addFlashAttribute("success", "Opgaven blev slettet.");
+        redirectAttributes.addFlashAttribute("success", "Underopgaven blev slettet.");
 
         return "redirect:/subtasks/subtasks";
     }

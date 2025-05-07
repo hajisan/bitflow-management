@@ -91,9 +91,9 @@ public class SubTaskRepository implements ISubTaskRepository {
              subTask.getEstimatedTime(),
              subTask.getName(),
              subTask.getDescription(),
-             subTask.getDeadline(), // Konverteres til String for at gemmes i databasen
-             subTask.getStatus(),
-             subTask.getSubTaskId());// Parameter -> id til WHERE
+             subTask.getDeadline(),
+             subTask.getStatus().name(), // Konverteres til String for at gemmes i databasen
+             subTask.getSubTaskId()); // Parameter -> id til WHERE
 
         return subTask;
     }
