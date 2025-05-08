@@ -3,60 +3,64 @@ package com.example.estimationtool.model.timeEntry;
 import java.time.LocalDate;
 
 public class TimeEntry {
-    private int timeId, userId, taskId, subTaskId, timeSpent;
+    private int timeId, userId, taskId, subTaskId, hoursSpent;
     private LocalDate date;
 
-    public TimeEntry(int timeId, int userId, int taskId, int subTaskId, int timeSpent, LocalDate date) {
+    public TimeEntry(int timeId, int userId, int taskId,
+                     int subTaskId, int hoursSpent, LocalDate date) {
         setTimeId(timeId);
         setUserId(userId);
         setTaskId(taskId);
         setSubTaskId(subTaskId);
-        setTimeSpent(timeSpent);
+        setHoursSpent(hoursSpent);
         setDate(date);
     }
 
+    // Getter-metoder
+
     public int getTimeId() {
         return timeId;
-    }
-
-    public void setTimeId(int timeId) {
-        this.timeId = timeId;
     }
 
     public int getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
     public int getTaskId() {
         return taskId;
-    }
-
-    public void setTaskId(int taskId) {
-        this.taskId = taskId;
     }
 
     public int getSubTaskId() {
         return subTaskId;
     }
 
+    public int getHoursSpent() {
+        return hoursSpent;
+    }
+    public LocalDate getDate() {
+        return date;
+    }
+
+    // Setter-metoder
+
+    public void setTimeId(int timeId) {
+        this.timeId = timeId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public void setTaskId(int taskId) {
+        this.taskId = taskId;
+    }
+
     public void setSubTaskId(int subTaskId) {
         this.subTaskId = subTaskId;
     }
 
-    public int getTimeSpent() {
-        return timeSpent;
-    }
-
-    public void setTimeSpent(int timeSpent) {
-        this.timeSpent = timeSpent;
-    }
-
-    public LocalDate getDate() {
-        return date;
+    public void setHoursSpent(int hoursSpent) {
+        this.hoursSpent = hoursSpent;
     }
 
     public void setDate(LocalDate date) {
@@ -70,7 +74,7 @@ public class TimeEntry {
                 User ID: %d
                 Task ID: %d
                 SubTask ID: %d
-                Time Spent (hour): %d
+                Hours spent: %d
                 Date of entry: %d
                 """, timeId, userId, taskId, subTaskId, timeSpent, date);
     }
