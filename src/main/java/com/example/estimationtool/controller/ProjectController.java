@@ -57,10 +57,7 @@ public class ProjectController {
     public String createProject(@ModelAttribute Project project,
                                 HttpSession session,
                                 RedirectAttributes redirectAttributes) {
-
-        // Konsol besked til debug
-        System.out.println("POST - projektet er created");
-
+        
         UserViewDTO currentUser = getCurrentUser(session);
 
         // Tjekker om brugeren er logget ind
