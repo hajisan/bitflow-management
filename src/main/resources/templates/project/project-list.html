@@ -25,7 +25,7 @@
         <td th:text="${project.description}"></td>
         <td th:text="${project.estimatedTime} + ' t.'"></td>
         <td th:text="${project.timeSpent} + ' t.'"></td>
-        <td th:text="${project.deadLine}"></td>
+        <td th:text="${project.deadline}"></td>
         <td th:text="${project.status}"></td>
         <td>
             <a th:href="@{/projects/{id}(id=${project.projectId})}">Se detaljer</a>
