@@ -104,7 +104,47 @@ public class TimeEntryRepository implements ITimeEntryRepository {
 
     @Override
     public TimeEntry update(TimeEntry timeEntry) {
-        return null;
+
+        String sql = """
+                UPDATE timeentry
+                SET userID = ?, date = ?, hoursSpent = ?
+                WHERE id = ?
+                """;
+
+        jdbcTemplate.update(sql,
+                timeEntry.getUserId(),
+                java.sql.Date.valueOf(timeEntry.getDate()),
+                timeEntry.getHoursSpent(),
+                timeEntry.getTimeId()
+        );
+
+        // Opdaterer timeEntry i tabellen: timeentry_task
+        String sqlTask = """
+                UPDATE timeentry_task
+                SET taskID = ?
+                WHERE timeEntryID = ?
+                """;
+
+
+        jdbcTemplate.update(sqlTask,
+                timeEntry.getTaskId(),
+                timeEntry.getTimeId()
+        );
+
+        // Opdaterer timeEntry i tabellen: timeentry_subtask
+        String sqlSubTask = """
+                UPDATE timeentry_subtask
+                SET subTaskID = ?
+                WHERE timeEntryID = ?
+                """;
+
+        jdbcTemplate.update(sqlSubTask,
+                timeEntry.getSubTaskId(),
+                timeEntry.getTimeId()
+        );
+
+        return timeEntry;
+
     }
 
     //------------------------------------ Delete() ------------------------------------
