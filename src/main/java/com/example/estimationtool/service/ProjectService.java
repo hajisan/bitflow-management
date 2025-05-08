@@ -49,7 +49,7 @@ public class ProjectService {
         return iProjectRepository.readAll();
     }
 
-    public Project readyById(int id) {
+    public Project readById(int id) {
         Project project = iProjectRepository.readById(id);
         if (project == null) throw new NoSuchElementException("Projekt med ID" + id + " eksistere ikke.");
 

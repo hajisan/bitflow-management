@@ -112,7 +112,7 @@ public class ProjectServiceTest {
         int savedId = savedProject.getProjectId(); // <-- korrekt ID fra databasen
 
         // --------- Assert ----------
-        Project fetchedProject = projectService.readyById(savedId);
+        Project fetchedProject = projectService.readById(savedId);
         assertNotNull(fetchedProject);
         assertEquals("New Project 1", fetchedProject.getName());
         assertEquals("Et nyt projekt 1", fetchedProject.getDescription());
