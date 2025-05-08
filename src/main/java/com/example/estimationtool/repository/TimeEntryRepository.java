@@ -152,6 +152,19 @@ public class TimeEntryRepository implements ITimeEntryRepository {
     @Override
     public void deleteById(Integer id) {
 
+        String sqlSubTask = "DELETE FROM timeentry_subtask WHERE timeEntryID = ?";
+
+        String sqlTask = "DELETE FROM timeentry_task WHERE timeEntryID = ?";
+
+
+
+        String sqlTimeEntry = "DELETE FROM timeentry WHERE id = ?";
+
+        //Relationstabeller slettes FØR timeEntry (ellers = foreign key violation)
+        jdbcTemplate.update(sqlSubTask, id);
+        jdbcTemplate.update(sqlTask, id);
+        jdbcTemplate.update(sqlTimeEntry, id);
+
     }
 
 
