@@ -34,4 +34,8 @@ public class TimeEntryService {
     }
     //------------------------------------ Delete() ------------------------------------
 
+    public void deleteById(int id) {
+
+        iTimeEntryRepository.deleteById(id);
+    }
 }
