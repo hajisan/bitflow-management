@@ -167,8 +167,7 @@ public class ProjectController {
         // Tilføj succesbesked som flash-attribut (vises efter redirect)
         redirectAttributes.addFlashAttribute("success", "Projektet blev opdateret.");
 
-        return "redirect:/projects/list" + project.getProjectId(); // Redirect til task-detail
-
+        return "redirect:/projects/" + project.getProjectId();  // Redirect til task-detail
     }
 
     //------------------------------------ Delete() ------------------------------------

@@ -9,7 +9,8 @@
 <h1>Projekt detaljer</h1>
 
 <!-- Fejlbesked -->
-<p th:if="${error}" th:text="${error}"></p>
+<p th:if="${error}" th:text="${error}" class="error-message"></p>
+<p th:if="${success}" th:text="${success}" class="success-message"></p>
 
 <!-- Viser detaljer om projekt -->
 <ul>
@@ -22,7 +23,7 @@
 
 <!-- Rediger-link -->
 <p>
-  <a th:href="@{/project/edit/{id}(id=${project.projectId})}">Rediger opgave</a>
+  <a th:href="@{/projects/edit/{id}(id=${project.projectId})}">Rediger</a>
 </p>
 
 <!-- Tilbage-knap -->

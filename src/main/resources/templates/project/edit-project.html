@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Project</title>
+</head>
+<body>
+
+<h1>Rediger Projekt</h1>
+
+<!-- Fejl-/succesbesked -->
+<p th:if="${error}" th:text="${error}"></p>
+<div th:if="${success}" class="success" th:text="${success}"></div>
+
+<!-- Formular til redigering af projekt -->
+<form th:action="@{/projects/update}" th:object="${project}" method="post">
+
+  <input type="hidden" th:field="*{projectId}"/>
+
+  <p>
+    <label>Navn:</label>
+    <input type="text" th:field="*{name}" required/>
+  </p>
+
+  <p>
+    <label>Beskrivelse:</label>
+    <textarea th:field="*{description}"></textarea>
+  </p>
+
+  <p>
+    <label>Deadline:</label>
+    <input type="date" th:field="*{deadline}"/>
+  </p>
+
+  <p>
+    <label>Estimeret Tid (timer):</label>
+    <input type="number" th:field="*{estimatedTime}" min="0"/>
+  </p>
+
+  <p>
+    <label>Status:</label>
+    <select th:field="*{status}">
+      <option th:each="s : ${T(com.example.estimationtool.model.enums.Status).values()}"
+              th:value="${s}"
+              th:text="${s}"></option>
+    </select>
+  </p>
+
+
+  <p>
+    <button type="submit">Opdater</button>
+  </p>
+</form>
+
+<!-- Tilbage til projektliste -->
+<p><a th:href="@{/projects/list}">Tilbage til projektliste</a></p>
+
+</body>
+</html>
