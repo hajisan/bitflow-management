@@ -36,7 +36,7 @@ public class SubProjectService {
         if (subProject.getDeadline() == null) {
             throw new IllegalArgumentException("Subprojektets deadline må ikke være null eller tom.");
         }
-        if (subProject.getStatus() != Status.ACTIVE || subProject.getStatus() != Status.INACTIVE || subProject.getStatus() != Status.DONE) {
+        if (subProject.getStatus() != Status.ACTIVE && subProject.getStatus() != Status.INACTIVE && subProject.getStatus() != Status.DONE) {
             throw new IllegalArgumentException("Subprojektets status skal være sat til enten Active, Inactive eller Done.");
         }
 

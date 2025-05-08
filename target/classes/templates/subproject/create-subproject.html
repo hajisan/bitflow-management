@@ -9,11 +9,12 @@
 
 <div th:if="${success}" class="success" th:text="${success}"></div>
 
-<form th:action="@{/subproject/create}" method="post" th:object="${subproject}">
+<form th:action="@{/subprojects/create}" method="post" th:object="${subproject}">
     <label for="project">Tilknyttede Projekt:</label>
-    <select name="projects" id="project" th:each="project: ${allProjects}">
+    <select id="project" th:field="*{projectId}" required>
         <option value="0">Vælg Projekt</option>
-        <option th:each="project : ${allProjects}" th:value="${project}" th:text="${project.getName()}"></option>
+        <option th:each="project : ${allProjects}" th:value="${project.getProjectId()}"
+                th:text="${project.getName()}"></option>
     </select>
 
     <label for="name">Navn:</label>

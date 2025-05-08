@@ -33,12 +33,13 @@ public class SubProjectRepository implements ISubProjectRepository {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"}); // Giver ikke ID'et en værdi før til sidst
-            ps.setString(1, subProject.getName());
-            ps.setString(2, subProject.getDescription());
-            ps.setString(3, subProject.getDeadline().format(DateTimeFormatter.ISO_LOCAL_DATE));
-            ps.setString(4, Integer.toString(subProject.getEstimatedTime()));
-            ps.setString(5, Integer.toString(0));
-            ps.setString(6, subProject.getStatus().name());
+            ps.setString(1, Integer.toString(subProject.getProjectId()));
+            ps.setString(2, subProject.getName());
+            ps.setString(3, subProject.getDescription());
+            ps.setString(4, subProject.getDeadline().format(DateTimeFormatter.ISO_LOCAL_DATE));
+            ps.setString(5, Integer.toString(subProject.getEstimatedTime()));
+            ps.setString(6, Integer.toString(0));
+            ps.setString(7, subProject.getStatus().name());
 
             return ps;
         }, keyHolder);
