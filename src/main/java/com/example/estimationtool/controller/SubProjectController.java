@@ -57,8 +57,7 @@ public class SubProjectController {
         subProjectService.create(currentUser, subProject);
         redirectAttributes.addFlashAttribute("success", "Subprojektet er oprettet.");
 
-        // TODO tilføj en side her, når READ task laves!
-        return "";
+        return "subproject/subproject-list";
     }
 
     //------------------------------------ Read() --------------------------------------
@@ -87,8 +86,7 @@ public class SubProjectController {
             redirectAttributes.addFlashAttribute("error", "Log ind for at oprette et projekt.");
             return "redirect:/login";
         }
-
-        model.addAttribute("subprojectsUnderProject", subProjectService.readAllFromProjectId(projectId));
+        model.addAttribute("projectwithsubprojectdto", subProjectService.readAllFromProjectId(projectId));
 
         return "subproject/subprojects-under-project";
     }

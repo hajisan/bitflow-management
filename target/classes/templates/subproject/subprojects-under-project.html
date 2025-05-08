@@ -2,13 +2,14 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Alle subprojekter</title>
+    <title>Projektets subprojekter</title>
 </head>
 <body>
+<!--h1 th:text="${project.getName()}"></h1-->
+<div th:if="${error}" class="error" th:text="${error}"></div>
 <table>
-    <tr>
+    <tr th:text="">
         <th>Status</th>
-        <th>ProjektID</th>
         <th>SubprojektID</th>
         <th>Navn</th>
         <th>Beskrivelse</th>
@@ -16,9 +17,8 @@
         <th>Tidsforbrug logget</th>
         <th>Deadline</th>
     </tr>
-    <tr th:each="subproject : ${allSubprojects}">
+    <tr th:each="subproject : ${projectwithsubprojectdto.subProjectList()}">
         <td th:text="''${subproject.getStatus()}"></td>
-        <td th:text="''${subproject.getProjectId()}"></td>
         <td th:text="''${subproject.getSubProjectId()}"></td>
         <td th:text="''${subproject.getName()}"></td>
         <td th:text="''${subproject.getDescription()}"></td>
@@ -27,5 +27,6 @@
         <td th:text="''${subproject.getDeadline()}"></td>
     </tr>
 </table>
+
 </body>
 </html>
