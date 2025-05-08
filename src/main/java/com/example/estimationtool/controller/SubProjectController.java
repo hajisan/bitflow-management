@@ -150,6 +150,8 @@ public class SubProjectController {
                 newProjectId, newEstimatedTime, newTimeSpent, newName, newDescription, newDeadline, newStatus
         )));
 
+        redirectAttributes.addFlashAttribute("success", "Subpojekt opdateret.");
+
         return "redirect:/subproject/subproject-details";
     }
 }
