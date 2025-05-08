@@ -16,6 +16,8 @@ public class TimeEntry {
         setDate(date);
     }
 
+    public TimeEntry() {}
+
     // Getter-metoder
 
     public int getTimeId() {

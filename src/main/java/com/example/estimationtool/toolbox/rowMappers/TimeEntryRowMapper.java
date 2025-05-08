@@ -11,7 +11,7 @@ public class TimeEntryRowMapper implements RowMapper<TimeEntry> {
     public TimeEntry mapRow(ResultSet rs, int rowNum) throws SQLException {
         return new TimeEntry(
                 rs.getInt("id"),
-                rs.getInt("userID"), //@TODO user med TimeEntry
+                rs.getInt("userID"),
                 rs.getInt("taskID"),
                 rs.getInt("subTaskID"),
                 rs.getInt("hoursSpent"),
