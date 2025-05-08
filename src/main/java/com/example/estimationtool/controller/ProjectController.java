@@ -1,13 +1,11 @@
 package com.example.estimationtool.controller;
 
-import com.example.estimationtool.model.User;
 import com.example.estimationtool.model.enums.Role;
 import com.example.estimationtool.toolbox.dto.UserViewDTO;
 import com.example.estimationtool.model.Project;
 import com.example.estimationtool.service.ProjectService;
 import com.example.estimationtool.toolbox.dto.UserWithProjectDTO;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.security.access.expression.SecurityExpressionHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,12 +21,11 @@ import java.util.List;
 public class ProjectController {
 
     private final ProjectService projectService;
-    private final SecurityExpressionHandler securityExpressionHandler;
+
 
     // Dependency injection af ProjectService i konstruktør
-    public ProjectController(ProjectService projectService, SecurityExpressionHandler securityExpressionHandler) {
+    public ProjectController(ProjectService projectService) {
         this.projectService = projectService;
-        this.securityExpressionHandler = securityExpressionHandler;
     }
 
     private UserViewDTO getCurrentUser(HttpSession session) {
@@ -39,11 +36,17 @@ public class ProjectController {
     //--------------------------------- Hent Create() ----------------------------------
 
     @GetMapping("/create") // Vis opret formular
-    public String showCreateForm(HttpSession session,
-                                 Model model) {
+    public String showCreateForm(Model model,
+                                 HttpSession session,
+                                 RedirectAttributes redirectAttributes) {
 
         UserViewDTO currentUser = getCurrentUser(session);
-        if (currentUser == null) return "redirect:/login";
+
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Log ind for at opret et projekt.");
+            return "redirect:/login";
+        }
+
         model.addAttribute("project", new Project());
         return "project/create-project";
     }
