@@ -46,7 +46,7 @@ public class TimeEntryController {
     //------------------------------------ Hent Create() -------------------------------
 
     @PostMapping("/create")
-    public String createTimeEntry(@ModelAttribute("time") TimeEntry timeEntry,
+    public String createTimeEntry(@ModelAttribute("timeentry") TimeEntry timeEntry,
                                   HttpSession session,
                                   RedirectAttributes redirectAttributes) {
 
@@ -84,7 +84,7 @@ public class TimeEntryController {
         return "timeentry/timeentry-list";
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public String showTimeEntry(@PathVariable int id,
                                 Model model,
                                 HttpSession session,
@@ -105,11 +105,70 @@ public class TimeEntryController {
         return "timeentry/timeentry-detail";
     }
 
-    //------------------------------------ Update() ------------------------------------
-
-
     //------------------------------------ Hent Update() -------------------------------
 
+    @GetMapping("/edit/{id}")
+    public String showEditTimeEntry(@PathVariable int id,
+                                    Model model,
+                                    HttpSession session,
+                                    RedirectAttributes redirectAttributes) {
+
+        // Tjekker om bruger er logget ind
+        UserViewDTO currentUser = getCurrentUser(session);
+
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne se en tidsregistrering");
+            return "redirect:/login";
+        }
+
+        TimeEntry timeEntry = timeEntryService.readById(id);
+
+        model.addAttribute("timeentry", timeEntry);
+        return "timeentry/edit-timeentry";
+
+    }
+
+    //------------------------------------ Update() ------------------------------------
+
+    @PostMapping("/update")
+    public String updateTimeEntry(@ModelAttribute("timeentry") TimeEntry timeEntry,
+                                  HttpSession session,
+                                  RedirectAttributes redirectAttributes) {
+
+        // Tjekker om bruger er logget ind
+        UserViewDTO currentUser = getCurrentUser(session);
+
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne se en tidsregistrering");
+            return "redirect:/login";
+        }
+
+
+        timeEntryService.updateTimeEntry(timeEntry);
+
+        redirectAttributes.addFlashAttribute("success", "Ændring af tidsregistrering lykkedes.");
+
+
+        return "redirect:/timeentries/" + timeEntry.getTimeId(); // Redirect til timeentry-detail.html
+
+    }
     //------------------------------------ Delete() ------------------------------------
 
+    @PostMapping("/delete/{id}")
+    public String deleteTimeEntry(@PathVariable int id,
+                                  HttpSession session,
+                                  RedirectAttributes redirectAttributes) {
+
+        UserViewDTO currentUser = getCurrentUser(session);
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne slette en tidsregistrering.");
+            return "redirect:/login";
+        }
+
+        timeEntryService.deleteById(id);
+
+        redirectAttributes.addFlashAttribute("success", "Tidsregistrering blev slettet.");
+
+        return "redirect:/timeentries";
+    }
 }

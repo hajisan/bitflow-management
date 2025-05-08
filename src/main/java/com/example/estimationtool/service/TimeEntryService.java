@@ -27,10 +27,14 @@ public class TimeEntryService {
     public List<TimeEntry> readAll() {
         return iTimeEntryRepository.readAll();
     }
-    //------------------------------------ Update() ------------------------------------
 
     public TimeEntry readById(int id) {
         return iTimeEntryRepository.readById(id);
+    }
+    //------------------------------------ Update() ------------------------------------
+
+    public TimeEntry updateTimeEntry(TimeEntry timeEntry) {
+        return iTimeEntryRepository.update(timeEntry);
     }
     //------------------------------------ Delete() ------------------------------------
 
