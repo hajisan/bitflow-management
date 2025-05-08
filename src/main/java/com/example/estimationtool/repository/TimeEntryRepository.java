@@ -2,12 +2,14 @@ package com.example.estimationtool.repository;
 
 import com.example.estimationtool.model.timeEntry.TimeEntry;
 import com.example.estimationtool.repository.interfaces.ITimeEntryRepository;
+import com.example.estimationtool.toolbox.rowMappers.TimeEntryRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+import java.sql.Time;
 import java.util.List;
 
 @Repository
@@ -61,7 +63,22 @@ public class TimeEntryRepository implements ITimeEntryRepository {
 
     @Override
     public List<TimeEntry> readAll() {
-        return List.of();
+
+        // JOIN bruges til at hente data fra de øvrige tabeller: timeentry_subtask og timeentry_task
+
+        String sql = """
+                SELECT
+                timeentry.id AS timeId,
+                timeentry.userID AS userId,
+                timeentry.date,
+                timeentry.hoursSpent,
+                timeentry_task.taskID AS taskId,
+                timeentry_subtask.subTaskID AS subTaskId
+                FROM timeentry
+                JOIN timeentry_task ON timeentry.id = timeentry_task.timeEntryID
+                JOIN timeentry_subtask ON timeentry.id = timeentry_subtask.timeEntryID
+                """; // Finder dét taskID/subtaskID, der hører til en timeentry
+        return jdbcTemplate.query(sql, new TimeEntryRowMapper());
     }
 
     @Override
