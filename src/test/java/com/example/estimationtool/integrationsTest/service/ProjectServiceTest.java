@@ -1,7 +1,6 @@
 package com.example.estimationtool.integrationsTest.service;
 
 import com.example.estimationtool.model.Project;
-import com.example.estimationtool.model.User;
 import com.example.estimationtool.model.enums.Role;
 import com.example.estimationtool.service.ProjectService;
 import com.example.estimationtool.toolbox.dto.UserViewDTO;
@@ -41,7 +40,7 @@ public class ProjectServiceTest {
         Project invalidProject = new Project();
         invalidProject.setName(""); // blank navn
         invalidProject.setDescription("Projekt uden navn");
-        invalidProject.setDeadLine(LocalDate.of(2025, 6, 1));
+        invalidProject.setDeadline(LocalDate.of(2025, 6, 1));
         invalidProject.setEstimatedTime(1000);
         invalidProject.setTimeSpent(0);
         invalidProject.setStatus(ACTIVE);
@@ -64,7 +63,7 @@ public class ProjectServiceTest {
         Project newProject1 = new Project();
         newProject1.setName("New Project 1");
         newProject1.setDescription("Et nyt projekt 1");
-        newProject1.setDeadLine(LocalDate.of(2025, 5, 5));
+        newProject1.setDeadline(LocalDate.of(2025, 5, 5));
         newProject1.setEstimatedTime(1000);
         newProject1.setTimeSpent(250);
         newProject1.setStatus(ACTIVE);
@@ -72,7 +71,7 @@ public class ProjectServiceTest {
         Project newProject2 = new Project();
         newProject2.setName("New Project 2");
         newProject2.setDescription("Et nyt projekt 2");
-        newProject2.setDeadLine(LocalDate.of(2025, 5, 5));
+        newProject2.setDeadline(LocalDate.of(2025, 5, 5));
         newProject2.setEstimatedTime(1000);
         newProject2.setTimeSpent(250);
         newProject2.setStatus(ACTIVE);
@@ -103,7 +102,7 @@ public class ProjectServiceTest {
         Project newProject1 = new Project();
         newProject1.setName("New Project 1");
         newProject1.setDescription("Et nyt projekt 1");
-        newProject1.setDeadLine(LocalDate.of(2025, 5, 5));
+        newProject1.setDeadline(LocalDate.of(2025, 5, 5));
         newProject1.setEstimatedTime(1000);
         newProject1.setTimeSpent(250);
         newProject1.setStatus(ACTIVE);
@@ -117,7 +116,7 @@ public class ProjectServiceTest {
         assertNotNull(fetchedProject);
         assertEquals("New Project 1", fetchedProject.getName());
         assertEquals("Et nyt projekt 1", fetchedProject.getDescription());
-        assertEquals(LocalDate.of(2025, 5, 5), fetchedProject.getDeadLine());
+        assertEquals(LocalDate.of(2025, 5, 5), fetchedProject.getDeadline());
         assertEquals(1000, fetchedProject.getEstimatedTime());
         assertEquals(250, fetchedProject.getTimeSpent());
         assertEquals(ACTIVE, fetchedProject.getStatus());
