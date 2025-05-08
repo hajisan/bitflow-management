@@ -1,11 +1,10 @@
 package com.example.estimationtool.service;
 
-import com.example.estimationtool.model.enums.Status;
+
 import com.example.estimationtool.repository.interfaces.IProjectRepository;
 import com.example.estimationtool.model.Project;
 import com.example.estimationtool.toolbox.dto.UserViewDTO;
 import com.example.estimationtool.toolbox.roleCheck.RoleCheck;
-import org.springframework.data.projection.EntityProjection;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,7 +31,7 @@ public class ProjectService {
         if (project.getEstimatedTime() <= 0) {
             throw new IllegalArgumentException("Projektets estimeret tid må ikke være 0 eller negativ");
         }
-        if (project.getDeadLine() == null) {
+        if (project.getDeadline() == null) {
             throw new IllegalArgumentException("Projektets deadline må ikke være null/tomt");
         }
         if (project.getStatus() == null) {
@@ -48,8 +47,6 @@ public class ProjectService {
         // Rollevalideringslogik - Det skal kun være en Admin som kan se alle projekter
 
         return iProjectRepository.readAll();
-
-
     }
 
     public Project readyById(int id) {
@@ -63,10 +60,18 @@ public class ProjectService {
         // Rollevalideringslogik - en Project Manager eller Developer skal kun kunne se de projekter de knyttet til
 
         return iProjectRepository.readByUserId(userId);
+    }
 
+    //------------------------------------ Update() ------------------------------------
+
+    public Project updateProject(Project project) {
+        return iProjectRepository.update(project);
     }
 
     //------------------------------------ Delete() ------------------------------------
 
+    public void deleteById(int id) {
+        iProjectRepository.deleteById(id);
+    }
 
 }
