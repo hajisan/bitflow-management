@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Project Detail</title>
+</head>
+<body>
+
+<h1>Projekt detaljer</h1>
+
+<!-- Fejlbesked -->
+<p th:if="${error}" th:text="${error}"></p>
+
+<!-- Viser detaljer om projekt -->
+<ul>
+  <li><strong>Navn:</strong> <span th:text="${project.name}"></span></li>
+  <li><strong>Beskrivelse:</strong> <span th:text="${project.description}"></span></li>
+  <li><strong>Deadline:</strong> <span th:text="${project.deadline}"></span></li>
+  <li><strong>Estimeret tid:</strong> <span th:text="${project.estimatedTime}"></span></li>
+  <li><strong>Status:</strong> <span th:text="${project.status}"></span></li>
+</ul>
+
+<!-- Rediger-link -->
+<p>
+  <a th:href="@{/project/edit/{id}(id=${project.projectId})}">Rediger opgave</a>
+</p>
+
+<!-- Tilbage-knap -->
+<p><a th:href="@{/projects/list}">Tilbage til opgaveliste</a></p>
+
+</body>
+</html>
