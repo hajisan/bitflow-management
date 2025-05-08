@@ -75,7 +75,7 @@ public class TimeEntry {
                 Task ID: %d
                 SubTask ID: %d
                 Hours spent: %d
-                Date of entry: %d
-                """, timeId, userId, taskId, subTaskId, timeSpent, date);
+                Date of entry: %s
+                """, timeId, userId, taskId, subTaskId, hoursSpent, date);
     }
 }

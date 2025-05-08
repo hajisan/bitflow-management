@@ -10,7 +10,13 @@ public class TimeEntryRowMapper implements RowMapper<TimeEntry> {
     @Override
     public TimeEntry mapRow(ResultSet rs, int rowNum) throws SQLException {
         return new TimeEntry(
-                rs.getInt()
+                rs.getInt("id"),
+                rs.getInt("userID"), //@TODO user med TimeEntry
+                rs.getInt("taskID"),
+                rs.getInt("subTaskID"),
+                rs.getInt("hoursSpent"),
+                rs.getDate("date").toLocalDate()
+
         );
     }
 }
