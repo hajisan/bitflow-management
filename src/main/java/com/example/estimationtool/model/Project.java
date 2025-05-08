@@ -1,7 +1,6 @@
 package com.example.estimationtool.model;
 
 import com.example.estimationtool.model.enums.Status;
-import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
 
@@ -21,7 +20,7 @@ public class Project {
         setTimeSpent(timeSpent);
         setName(name);
         setDescription(description);
-        setDeadLine(deadline);
+        setDeadline(deadline);
         setStatus(status);
     }
 
@@ -34,7 +33,7 @@ public class Project {
         setTimeSpent(timeSpent);
         setName(name);
         setDescription(description);
-        setDeadLine(deadline);
+        setDeadline(deadline);
         setStatus(status);
     }
 
@@ -63,7 +62,7 @@ public class Project {
     public String getDescription() {
         return description;
     }
-    public LocalDate getDeadLine() {
+    public LocalDate getDeadline() {
         return deadline;
     }
     public Status getStatus() {
@@ -90,7 +89,7 @@ public class Project {
     public void setDescription(String description) {
         this.description = description;
     }
-    public void setDeadLine(LocalDate deadline) {
+    public void setDeadline(LocalDate deadline) {
         this.deadline = deadline;
     }
     public void setStatus(Status status) {
