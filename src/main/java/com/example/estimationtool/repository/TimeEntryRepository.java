@@ -68,12 +68,12 @@ public class TimeEntryRepository implements ITimeEntryRepository {
 
         String sql = """
                 SELECT
-                timeentry.id AS timeId,
-                timeentry.userID AS userId,
+                timeentry.id,
+                timeentry.userID,
                 timeentry.date,
                 timeentry.hoursSpent,
-                timeentry_task.taskID AS taskId,
-                timeentry_subtask.subTaskID AS subTaskId
+                timeentry_task.taskID,
+                timeentry_subtask.subTaskID
                 FROM timeentry
                 JOIN timeentry_task ON timeentry.id = timeentry_task.timeEntryID
                 JOIN timeentry_subtask ON timeentry.id = timeentry_subtask.timeEntryID
@@ -83,7 +83,21 @@ public class TimeEntryRepository implements ITimeEntryRepository {
 
     @Override
     public TimeEntry readById(Integer id) {
-        return null;
+
+        String sql = """
+                SELECT
+                timeentry.id,
+                timeentry.userID,
+                timeentry.date,
+                timeentry.hoursSpent,
+                timeentry_task.taskID,
+                timeentry_subtask.subTaskID
+                FROM timeentry
+                JOIN timeentry_task ON timeentry.id = timeentry_task.timeEntryID
+                JOIN timeentry_subtask ON timeentry.id = timeentry_subtask.timeEntryID
+                WHERE timeentry.id = ?
+                """; // Finder task/subtask for en timeEntry
+        return jdbcTemplate.queryForObject(sql, new TimeEntryRowMapper(), id);
     }
 
     //------------------------------------ Update() ------------------------------------
