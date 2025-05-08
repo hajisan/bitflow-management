@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Subproject</title>
+</head>
+<body>
+<h1 th:text="'Rediger subprojekt: ' + ${subproject.name}"></h1>
+
+<p th:if="${error}" th:text="${error}"></p>
+<div th:if="${success}" class="success" th:text="${success}"></div>
+</body>
+</html>
