@@ -3,6 +3,7 @@ package com.example.estimationtool.service;
 import com.example.estimationtool.model.timeEntry.TimeEntry;
 import com.example.estimationtool.repository.interfaces.ITimeEntryRepository;
 import org.springframework.stereotype.Service;
+import java.util.List;
 
 @Service
 public class TimeEntryService {
@@ -23,8 +24,14 @@ public class TimeEntryService {
 
     //------------------------------------ Read() --------------------------------------
 
+    public List<TimeEntry> readAll() {
+        return iTimeEntryRepository.readAll();
+    }
     //------------------------------------ Update() ------------------------------------
 
+    public TimeEntry readById(int id) {
+        return iTimeEntryRepository.readById(id);
+    }
     //------------------------------------ Delete() ------------------------------------
 
 }
