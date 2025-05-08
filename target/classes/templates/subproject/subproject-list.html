@@ -17,14 +17,14 @@
         <th>Deadline</th>
     </tr>
     <tr th:each="subproject : ${allSubprojects}">
-        <td th:text="''${subproject.getStatus()}"></td>
-        <td th:text="''${subproject.getProjectId()}"></td>
-        <td th:text="''${subproject.getSubProjectId()}"></td>
-        <td th:text="''${subproject.getName()}"></td>
-        <td th:text="''${subproject.getDescription()}"></td>
-        <td th:text="''${subproject.getEstimatedTime()}"></td>
-        <td th:text="''${subproject.getTimeSpent()}"></td>
-        <td th:text="''${subproject.getDeadline()}"></td>
+        <td th:text="${subproject.status}"></td>
+        <td th:text="${subproject.projectId}"></td>
+        <td th:text="${subproject.subProjectId}"></td>
+        <td th:text="${subproject.name}"></td>
+        <td th:text="${subproject.description}"></td>
+        <td th:text="${subproject.estimatedTime}"></td>
+        <td th:text="${subproject.timeSpent}"></td>
+        <td th:text="${subproject.deadline}"></td>
     </tr>
 </table>
 </body>

@@ -49,28 +49,21 @@ public class SubProjectService {
     }
 
     public ProjectWithSubProjectsDTO readAllFromProjectId(int projectId) {
-        try {
-            ProjectWithSubProjectsDTO projectWithSubProjectsDTO = new ProjectWithSubProjectsDTO(
-                    iProjectRepository.readById(projectId),
-                    iSubProjectRepository.readAllFromProjectId(projectId));
+//        try {
+        ProjectWithSubProjectsDTO projectWithSubProjectsDTO = new ProjectWithSubProjectsDTO(
+                iProjectRepository.readById(projectId),
+                iSubProjectRepository.readAllFromProjectId(projectId));
 
-
-//            if (projectWithSubProjectsDTO == null) {
-//                throw new NoSuchElementException("Projekt med ID "
-//                        + projectId +
-//                        " findes ikke.");
-//            }
-
-            if (projectWithSubProjectsDTO.subProjectList().isEmpty()) {
-                throw new NoSuchElementException("Projekt med ID "
-                        + projectId +
-                        " har ikke nogen subprojekter.");
-            }
-
-            return projectWithSubProjectsDTO;
-        } catch (NullPointerException e) {
-            throw new NullPointerException("Enten findes projekt med ID " + projectId + "ikke, eller også findes subprojekterne ikke.");
+        if (projectWithSubProjectsDTO.subProjectList().isEmpty()) {
+            throw new NoSuchElementException("Projekt med ID "
+                    + projectId +
+                    " har ikke nogen subprojekter.");
         }
+
+        return projectWithSubProjectsDTO;
+//        } catch (NullPointerException e) {
+//            throw new NullPointerException("Enten findes projekt med ID " + projectId + "ikke, eller også findes subprojekterne ikke.");
+//        }
     }
 
     public SubProject readById(int id) {
