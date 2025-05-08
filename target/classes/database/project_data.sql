@@ -102,8 +102,11 @@ INSERT INTO TimeEntry_SubTask (timeEntryID, subTaskID) VALUES
 (10000014, 1000014),
 (10000015, 1000015);
 
--- Knyt projektleder til projekt
-INSERT INTO User_Project (userID, projectID) VALUES (2, 1000); -- Projektleder ID 1
+-- Knyt user til projekt
+INSERT INTO User_Project (userID, projectID) VALUES
+(2, 1000), -- Projektleder ID 1
+(3, 1000), -- Developer Sofie ID 3
+(4, 1000); -- Developer Joakim ID 4
 
 -- Knyt udviklere til subprojekter
 INSERT INTO User_Subproject (userID, subProjectID) VALUES (3, 10000), (4, 10001);  -- Sofie ID 3 & Joakim ID 4

@@ -1,6 +1,8 @@
 package com.example.estimationtool.model;
 
 import com.example.estimationtool.model.enums.Status;
+import org.springframework.cglib.core.Local;
+
 import java.time.LocalDate;
 
 public class Project {
@@ -15,6 +17,19 @@ public class Project {
                    Status status) {
         setProjectId(projectId);
         setUserId(userId);
+        setEstimatedTime(estimatedTime);
+        setTimeSpent(timeSpent);
+        setName(name);
+        setDescription(description);
+        setDeadLine(deadline);
+        setStatus(status);
+    }
+
+    // Konstruktør til Admin, som ikke har brug for et userId, for at undgå duplikater
+    public Project(int projectId, int estimatedTime, int timeSpent,
+                   String name, String description, LocalDate deadline,
+                   Status status) {
+        setProjectId(projectId);
         setEstimatedTime(estimatedTime);
         setTimeSpent(timeSpent);
         setName(name);

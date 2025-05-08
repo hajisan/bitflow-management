@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit SubTask</title>
+</head>
+<body>
+<h1>Redigér Underopgave</h1>
+
+<!-- Fejl- eller succesbeskeder -->
+<p th:if="${error}" th:text="${error}"></p>
+<p th:if="${success}" th:text="${success}"></p>
+
+<form th:action="@{/subtasks/update}" th:object="${subtask}" method="post">
+    <!-- Skjult ID -->
+    <input type="hidden" th:field="*{subTaskId}"/>
+
+    <label>Opgave ID:
+        <input type="number" th:field="*{taskId}" required/>
+    </label><br/>
+
+    <label>Navn:
+        <input type="text" th:field="*{name}" required/>
+    </label><br/>
+
+    <label>Beskrivelse:
+        <textarea th:field="*{description}" required></textarea>
+    </label><br/>
+
+    <label>Deadline:
+        <input type="date" th:field="*{deadline}" required/>
+    </label><br/>
+
+    <label>Estimeret Tid:
+        <input type="number" th:field="*{estimatedTime}" required/>
+    </label><br/>
+
+    <label>Status:
+        <select th:field="*{status}">
+            <option th:each="s : ${statuses}"
+                    th:value="${s}"
+                    th:text="${s}"></option>
+        </select>
+    </label>
+
+
+    <br/><br/>
+
+    <button type="submit">Gem Ændringer</button>
+</form>
+
+<form th:action="@{'/subtasks/delete/' + ${subtask.subTaskId}}" method="post">
+    <button type="submit" onclick="return confirm('Er du sikker på, at du vil slette denne underopgave?');">
+        Slet Underopgave
+    </button>
+</form>
+
+
+<p>
+    <a th:href="@{'/subtasks/' + ${subtask.subTaskId}}">Tilbage til detaljer</a>
+</p>
+
+</body>
+</html>
