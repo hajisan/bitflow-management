@@ -62,7 +62,7 @@ public class UserController {
         }
 
         model.addAttribute("user", new UserRegistrationDTO());
-        return "user/create-user"; //Thymeleaf-skabelon
+        return "user/create-user";
     }
 
 
