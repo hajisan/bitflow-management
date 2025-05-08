@@ -35,19 +35,6 @@ public class ProjectController {
         return (UserViewDTO) session.getAttribute("currentUser");
     }
 
-//    @GetMapping("/project")
-//    public String getProjectOverview(HttpSession session, RedirectAttributes redirectAttributes, Model model) {
-//
-//        UserViewDTO currentUser = getCurrentUser(session);
-//
-//        if (currentUser == null) {
-//            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at tilgå denne side");
-//            return "redirect:/login";
-//        }
-//
-//        model.addAttribute("user", currentUser);
-//        return "project/project-overview";
-//    }
 
     //--------------------------------- Hent Create() ----------------------------------
 
