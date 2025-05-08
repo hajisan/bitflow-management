@@ -43,6 +43,9 @@ public class TaskRepository implements ITaskRepository {
             return ps;
         }, keyHolder);
 
+        int generatedId = keyHolder.getKey().intValue();
+        task.setTaskId(generatedId);  // Sæt det genererede ID i objektet
+
         return task;
     }
 
