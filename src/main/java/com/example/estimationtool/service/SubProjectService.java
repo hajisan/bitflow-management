@@ -76,7 +76,7 @@ public class SubProjectService {
     //------------------------------------ Update() ------------------------------------
     public SubProject update(UserViewDTO currentUser, SubProject subProject) {
         RoleCheck.ensureAdminOrProjectManager(currentUser.getRole());
-        return null;
+        return iSubProjectRepository.update(subProject);
     }
 
     //------------------------------------ Delete() ------------------------------------

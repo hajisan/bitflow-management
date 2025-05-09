@@ -21,12 +21,10 @@ import java.util.List;
 @RequestMapping("/subprojects")
 public class SubProjectController {
     private final SubProjectService subProjectService;
-    private final ProjectController projectController;
     private final ProjectService projectService;
 
     public SubProjectController(SubProjectService subProjectService, ProjectController projectController, ProjectService projectService) {
         this.subProjectService = subProjectService;
-        this.projectController = projectController;
         this.projectService = projectService;
     }
 
@@ -135,8 +133,7 @@ public class SubProjectController {
     @PostMapping("/update")
     public String postUpdateSubProject(HttpSession session,
                                        RedirectAttributes redirectAttributes,
-                                       Model model,
-                                       @PathVariable int id,
+                                       Model model, int id,
                                        @RequestParam int newProjectId,
                                        @RequestParam String newName,
                                        @RequestParam String newDescription,
