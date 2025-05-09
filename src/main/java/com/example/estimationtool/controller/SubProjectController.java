@@ -121,6 +121,8 @@ public class SubProjectController {
             return "redirect:/login";
         }
 
+
+        model.addAttribute("allProjects", new ArrayList<>(projectService.readAll()));
         model.addAttribute("subproject", subProjectService.readById(id));
 
         return "subproject/edit-subproject";

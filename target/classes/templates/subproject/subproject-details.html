@@ -2,44 +2,44 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Subproject Details</title>
+    <title th:text="'Details for subproject: ' + ${subproject.name}"></title>
 </head>
 <body>
-<h1>Subprojektoplysninger</h1>
+<h1 th:text="'Subprojektoplysninger for ' + ${subproject.name}"></h1>
 <div th:if="${error}" class="error" th:text="${error}"></div>
 
 <table>
     <tr>
         <th>Status</th>
-        <td th:text="${subproject.getStatus()}"></td>
+        <td th:text="${subproject.status}"></td>
     </tr>
     <tr>
         <th>Project ID</th>
-        <td th:text="${subproject.getProjectId()}"></td>
+        <td th:text="${subproject.projectId}"></td>
     </tr>
     <tr>
         <th>Subproject ID</th>
-        <td th:text="${subproject.getSubProjectId()}"></td>
+        <td th:text="${subproject.subProjectId}"></td>
     </tr>
     <tr>
         <th>Navn</th>
-        <td th:text="${subproject.getName()}"></td>
+        <td th:text="${subproject.name}"></td>
     </tr>
     <tr>
         <th>Beskrivelse</th>
-        <td th:text="${subproject.getDescription()}"></td>
+        <td th:text="${subproject.description}"></td>
     </tr>
     <tr>
         <th>Estimeret tid</th>
-        <td th:text="${subproject.getEstimatedTime()}"></td>
+        <td th:text="${subproject.estimatedTime}"></td>
     </tr>
     <tr>
         <th>Tidsforbrug logget</th>
-        <td th:text="${subproject.getTimeSpent()}"></td>
+        <td th:text="${subproject.timeSpent}"></td>
     </tr>
     <tr>
         <th>Deadline</th>
-        <td th:text="${subproject.getDeadline()}"></td>
+        <td th:text="${subproject.deadline}"></td>
     </tr>
 </table>
 
