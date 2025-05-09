@@ -30,15 +30,13 @@ public class SubProject {
         setStatus(status);
     }
 
-    // Overloaded constructor der instantierer alle felter med parametre - UNDTAGEN timeSpent, da den er 0,
-    // når et nyt subprojekt oprettes
-    public SubProject(int subProjectId, int projectId, int estimatedTime,
+    // Overloaded constructor til at opdatere et subprojekt
+    public SubProject(int projectId, int estimatedTime, int timeSpent,
                       String name, String description, LocalDate deadline,
                       Status status) {
-        setSubProjectId(subProjectId);
         setProjectId(projectId);
         setEstimatedTime(estimatedTime);
-        setTimeSpent(0);
+        setTimeSpent(timeSpent);
         setName(name);
         setDescription(description);
         setDeadline(deadline);

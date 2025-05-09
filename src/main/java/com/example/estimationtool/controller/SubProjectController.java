@@ -2,6 +2,8 @@ package com.example.estimationtool.controller;
 
 import com.example.estimationtool.model.Project;
 import com.example.estimationtool.model.SubProject;
+import com.example.estimationtool.model.enums.Role;
+import com.example.estimationtool.model.enums.Status;
 import com.example.estimationtool.service.ProjectService;
 import com.example.estimationtool.service.SubProjectService;
 import com.example.estimationtool.toolbox.dto.UserViewDTO;
@@ -11,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,11 +74,16 @@ public class SubProjectController {
             return "redirect:/login";
         }
 
+        boolean isAdmin = currentUser.getRole().equals(Role.ADMIN);
+        boolean isProjectManager = currentUser.getRole().equals(Role.PROJECT_MANAGER);
+        model.addAttribute("isAdmin", isAdmin);
+        model.addAttribute("isProjectManager", isProjectManager);
         model.addAttribute("allSubprojects", subProjectService.readAll());
 
         return "subproject/subproject-list";
     }
 
+    // TODO skal endpointet her ikke være projects/{projectId}/subprojects?
     @GetMapping("/{projectId}/subprojects")
     public String readByProjectId(HttpSession session,
                                   Model model,
@@ -105,5 +113,51 @@ public class SubProjectController {
         model.addAttribute("subproject", subProjectService.readById(id));
 
         return "subproject/subproject-details";
+    }
+
+    //------------------------------------ Update() ------------------------------------
+    @GetMapping("/edit/{id}")
+    public String getUpdateSubProject(HttpSession session,
+                                      RedirectAttributes redirectAttributes,
+                                      Model model,
+                                      @PathVariable int id) {
+        UserViewDTO currentUser = getCurrentUser(session);
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Log ind for at oprette et projekt.");
+            return "redirect:/login";
+        }
+        model.addAttribute("allProjects", new ArrayList<>(projectService.readAll()));
+        model.addAttribute("subproject", subProjectService.readById(id));
+
+        return "subproject/edit-subproject";
+    }
+
+    @PostMapping("/update")
+    public String postUpdateSubProject(HttpSession session,
+                                       RedirectAttributes redirectAttributes,
+                                       Model model,
+                                       @PathVariable int id,
+                                       @RequestParam int newProjectId,
+                                       @RequestParam String newName,
+                                       @RequestParam String newDescription,
+                                       @RequestParam LocalDate newDeadline,
+                                       @RequestParam int newEstimatedTime,
+                                       @RequestParam int newTimeSpent,
+                                       @RequestParam Status newStatus) {
+
+        UserViewDTO currentUser = getCurrentUser(session);
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Log ind for at oprette et projekt.");
+            return "redirect:/login";
+        }
+
+        model.addAttribute("oldsubproject", subProjectService.readById(id));
+        model.addAttribute("updatedsubproject", subProjectService.update(currentUser, new SubProject(
+                newProjectId, newEstimatedTime, newTimeSpent, newName, newDescription, newDeadline, newStatus
+        )));
+
+        redirectAttributes.addFlashAttribute("success", "Subpojekt opdateret.");
+
+        return "redirect:/subproject/subproject-details";
     }
 }

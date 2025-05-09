@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Subproject</title>
+</head>
+<body>
+<h1 th:text="'Rediger subprojekt: ' + ${subproject.name}"></h1>
+
+<p th:if="${error}" th:text="${error}"></p>
+
+<form th:action="@{/subprojects/update}" method="post" th:object="${subproject}">
+
+    <input type="hidden" th:field="*{subProjectId}"/>
+
+    <label for="project">Tilknyttede Projekt:</label>
+    <select id="project" th:field="*{projectId}" required>
+        <option value="0">Vælg Projekt</option>
+        <option th:each="project : ${allProjects}" th:value="${project.getProjectId()}"
+                th:text="${project.getName()}"></option>
+    </select>
+
+    <p>
+        <label>Navn:</label>
+        <input type="text" th:field="*{name}"/>
+    </p>
+
+    <p>
+        <label>Beskrivelse:</label>
+        <textarea th:field="*{description}"></textarea>
+    </p>
+
+    <p>
+        <label>Deadline:</label>
+        <input type="date" th:field="*{deadline}"/>
+    </p>
+
+    <p>
+        <label>Estimeret Tid (timer):</label>
+        <input type="number" th:field="*{estimatedTime}"/>
+    </p>
+
+    <p>
+        <label>Status:</label>
+        <select th:field="*{status}">
+            <option th:each="s : ${T(com.example.estimationtool.model.enums.Status).values()}"
+                    th:value="${s}"
+                    th:text="${s}"></option>
+        </select>
+    </p>
+
+    <p>
+        <button type="submit">Opdater</button>
+    </p>
+
+</form>
+</body>
+</html>
