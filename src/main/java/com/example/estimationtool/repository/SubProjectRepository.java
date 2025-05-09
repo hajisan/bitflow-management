@@ -82,7 +82,7 @@ public class SubProjectRepository implements ISubProjectRepository {
                 FROM subproject
                 WHERE id = ?
                 """;
-        return (SubProject) jdbcTemplate.query(sql, new SubProjectRowMapper(), id); // Jeg er nødt til at type caste her, for ellers skriger compileren
+        return jdbcTemplate.query(sql, new SubProjectRowMapper(), id).getFirst(); // Får en List<SubProject>, så skal kalde List.getFirst()
     }
 
     //------------------------------------ Update() ------------------------------------

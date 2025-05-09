@@ -2,6 +2,7 @@ package com.example.estimationtool.controller;
 
 import com.example.estimationtool.model.Project;
 import com.example.estimationtool.model.SubProject;
+import com.example.estimationtool.model.enums.Role;
 import com.example.estimationtool.model.enums.Status;
 import com.example.estimationtool.service.ProjectService;
 import com.example.estimationtool.service.SubProjectService;
@@ -73,11 +74,16 @@ public class SubProjectController {
             return "redirect:/login";
         }
 
+        boolean isAdmin = currentUser.getRole().equals(Role.ADMIN);
+        boolean isProjectManager = currentUser.getRole().equals(Role.PROJECT_MANAGER);
+        model.addAttribute("isAdmin", isAdmin);
+        model.addAttribute("isProjectManager", isProjectManager);
         model.addAttribute("allSubprojects", subProjectService.readAll());
 
         return "subproject/subproject-list";
     }
 
+    // TODO skal endpointet her ikke være projects/{projectId}/subprojects?
     @GetMapping("/{projectId}/subprojects")
     public String readByProjectId(HttpSession session,
                                   Model model,
@@ -110,7 +116,7 @@ public class SubProjectController {
     }
 
     //------------------------------------ Update() ------------------------------------
-    @GetMapping("/{id}/edit")
+    @GetMapping("/edit/{id}")
     public String getUpdateSubProject(HttpSession session,
                                       RedirectAttributes redirectAttributes,
                                       Model model,
@@ -120,15 +126,13 @@ public class SubProjectController {
             redirectAttributes.addFlashAttribute("error", "Log ind for at oprette et projekt.");
             return "redirect:/login";
         }
-
-
         model.addAttribute("allProjects", new ArrayList<>(projectService.readAll()));
         model.addAttribute("subproject", subProjectService.readById(id));
 
         return "subproject/edit-subproject";
     }
 
-    @PostMapping("/{id}/update")
+    @PostMapping("/update")
     public String postUpdateSubProject(HttpSession session,
                                        RedirectAttributes redirectAttributes,
                                        Model model,

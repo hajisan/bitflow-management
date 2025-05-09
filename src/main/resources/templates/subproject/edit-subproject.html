@@ -8,11 +8,10 @@
 <h1 th:text="'Rediger subprojekt: ' + ${subproject.name}"></h1>
 
 <p th:if="${error}" th:text="${error}"></p>
-<div th:if="${success}" class="success" th:text="${success}"></div>
 
-<form th:action="@{'/subprojects/' + ${subproject.subProjectId} + 'update'}" method="post" th:object="${subproject}">
+<form th:action="@{/subprojects/update}" method="post" th:object="${subproject}">
 
-    <input type="hidden" th:field="*{projectId}"/>
+    <input type="hidden" th:field="*{subProjectId}"/>
 
     <label for="project">Tilknyttede Projekt:</label>
     <select id="project" th:field="*{projectId}" required>
@@ -44,7 +43,7 @@
     <p>
         <label>Status:</label>
         <select th:field="*{status}">
-            <option th:each="s : ${T(com.example.estimationtool.enums.Status).values()}"
+            <option th:each="s : ${T(com.example.estimationtool.model.enums.Status).values()}"
                     th:value="${s}"
                     th:text="${s}"></option>
         </select>
