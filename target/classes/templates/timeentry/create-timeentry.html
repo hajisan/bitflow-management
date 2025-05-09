@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create TimeEntry</title>
+</head>
+<body>
+<h1>Opret tidsregistrering</h1>
+
+<form th:action="@{/timeentries/create}" th:object="${timeentry}" method="post">
+
+    <label>Bruger ID:</label>
+    <input type="number" th:field="*{userId}" /><br/>
+
+    <label>Opgave ID:</label>
+    <input type="number" th:field="*{taskId}" /><br/>
+
+    <label>Underopgave ID:</label>
+    <input type="number" th:field="*{subTaskId}" /><br/>
+
+    <label>Timer brugt:</label>
+    <input type="number" th:field="*{hoursSpent}" /><br/>
+
+    <label>Dato:</label>
+    <input type="date" th:field="*{date}" /><br/>
+
+    <button type="submit">Gem</button>
+</form>
+
+<a th:href="@{/timeentries}">Tilbage til oversigt</a>
+</body>
+</html>

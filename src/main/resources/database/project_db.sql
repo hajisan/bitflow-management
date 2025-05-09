@@ -21,7 +21,7 @@ DROP TABLE IF EXISTS project;
 -- Gemmer information om en User
 -- ========================
 CREATE TABLE User (
-    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     firstName VARCHAR(255),
     lastName VARCHAR(255),
     email VARCHAR(255) UNIQUE,
@@ -34,7 +34,7 @@ CREATE TABLE User (
 -- Gemmer information om et Project
 -- ========================
 CREATE TABLE Project (
-    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) UNIQUE,
     description VARCHAR(255),
     deadline DATE,
@@ -48,7 +48,7 @@ CREATE TABLE Project (
 -- Gemmer information om et subProject
 -- ========================
 CREATE TABLE Subproject (
-    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     projectID INTEGER,
     name VARCHAR(255),
     description VARCHAR(255),
@@ -65,7 +65,7 @@ CREATE TABLE Subproject (
 -- Gemmer information om en Task
 -- ========================
 CREATE TABLE Task (
-    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     subProjectID INTEGER,
     name VARCHAR(255),
     description VARCHAR(255),
@@ -81,7 +81,7 @@ CREATE TABLE Task (
 -- Gemmer information om en subTask
 -- ========================
 CREATE TABLE SubTask (
-    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     taskID INTEGER,
     name VARCHAR(255),
     description VARCHAR(255),
@@ -97,9 +97,11 @@ CREATE TABLE SubTask (
 -- Gemmer information om en timeEntry
 -- ========================
 CREATE TABLE TimeEntry (
-    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    userID INTEGER,
     date DATE,
-    hoursSpent INTEGER
+    hoursSpent INTEGER,
+    FOREIGN KEY (userID) REFERENCES User(id) ON DELETE CASCADE
 ) AUTO_INCREMENT = 10000000;
 
 -- ========================

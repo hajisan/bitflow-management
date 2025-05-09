@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Alle subprojekter</title>
+</head>
+<body>
+<table>
+    <tr>
+        <th>Status</th>
+        <th>ProjektID</th>
+        <th>SubprojektID</th>
+        <th>Navn</th>
+        <th>Beskrivelse</th>
+        <th>Estimeret tid</th>
+        <th>Tidsforbrug logget</th>
+        <th>Deadline</th>
+    </tr>
+    <tr th:each="subproject : ${allSubprojects}">
+        <td th:text="${subproject.status}"></td>
+        <td th:text="${subproject.projectId}"></td>
+        <td th:text="${subproject.subProjectId}"></td>
+        <td th:text="${subproject.name}"></td>
+        <td th:text="${subproject.description}"></td>
+        <td th:text="${subproject.estimatedTime}"></td>
+        <td th:text="${subproject.timeSpent}"></td>
+        <td th:text="${subproject.deadline}"></td>
+        <td>
+            <a th:href="@{/projects/{id}(id=${subproject.subProjectId})}">Se detaljer</a>
+        </td>
+        <td th:if="${isAdmin or isProjectManager}">
+            <a th:href="@{/subprojects/edit/{id}(id=${subproject.subProjectId})}">Rediger</a>
+        </td>
+    </tr>
+</table>
+</body>
+</html>
