@@ -1,19 +1,14 @@
 package com.example.estimationtool.controller;
 
-import com.example.estimationtool.model.User;
 import com.example.estimationtool.model.enums.Role;
 import com.example.estimationtool.toolbox.dto.UserViewDTO;
 import com.example.estimationtool.model.Project;
 import com.example.estimationtool.service.ProjectService;
 import com.example.estimationtool.toolbox.dto.UserWithProjectDTO;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.security.access.expression.SecurityExpressionHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -23,40 +18,32 @@ import java.util.List;
 public class ProjectController {
 
     private final ProjectService projectService;
-    private final SecurityExpressionHandler securityExpressionHandler;
+
 
     // Dependency injection af ProjectService i konstruktør
-    public ProjectController(ProjectService projectService, SecurityExpressionHandler securityExpressionHandler) {
+    public ProjectController(ProjectService projectService) {
         this.projectService = projectService;
-        this.securityExpressionHandler = securityExpressionHandler;
     }
 
     private UserViewDTO getCurrentUser(HttpSession session) {
         return (UserViewDTO) session.getAttribute("currentUser");
     }
 
-//    @GetMapping("/project")
-//    public String getProjectOverview(HttpSession session, RedirectAttributes redirectAttributes, Model model) {
-//
-//        UserViewDTO currentUser = getCurrentUser(session);
-//
-//        if (currentUser == null) {
-//            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at tilgå denne side");
-//            return "redirect:/login";
-//        }
-//
-//        model.addAttribute("user", currentUser);
-//        return "project/project-overview";
-//    }
 
     //--------------------------------- Hent Create() ----------------------------------
 
     @GetMapping("/create") // Vis opret formular
-    public String showCreateForm(HttpSession session,
-                                 Model model) {
+    public String showCreateForm(Model model,
+                                 HttpSession session,
+                                 RedirectAttributes redirectAttributes) {
 
         UserViewDTO currentUser = getCurrentUser(session);
-        if (currentUser == null) return "redirect:/login";
+
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Log ind for at opret et projekt.");
+            return "redirect:/login";
+        }
+
         model.addAttribute("project", new Project());
         return "project/create-project";
     }
@@ -67,9 +54,6 @@ public class ProjectController {
     public String createProject(@ModelAttribute Project project,
                                 HttpSession session,
                                 RedirectAttributes redirectAttributes) {
-
-        // Konsol besked til debug
-        System.out.println("POST - projektet er created");
 
         UserViewDTO currentUser = getCurrentUser(session);
 
@@ -118,5 +102,94 @@ public class ProjectController {
 
         return "/project/project-list";
     }
+
+    @GetMapping("/{id}")
+    public String showProject(@PathVariable int id,
+                              Model model,
+                              HttpSession session,
+                              RedirectAttributes redirectAttributes) {
+
+        UserViewDTO currentUser = getCurrentUser(session);
+
+        // Tjekker om brugeren er logget ind
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Log ind for at se et projekt.");
+            return "redirect:/login";
+        }
+
+        Project project = projectService.readById(id);
+        model.addAttribute("project", project);
+
+        return "project/project-detail";
+    }
+
+    //------------------------------------ Hent Update() -------------------------------
+
+    @GetMapping("/edit/{id}")
+    public String showEditTask(@PathVariable int id,
+                               HttpSession session,
+                               Model model,
+                               RedirectAttributes redirectAttributes) {
+
+        UserViewDTO currentUser = getCurrentUser(session);
+
+        // Tjekker om bruger er logget ind
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Log ind for at redigere en opgave.");
+            return "redirect:/login";
+        }
+
+        Project project = projectService.readById(id);
+
+        model.addAttribute("project", project);
+
+        return "project/edit-project";
+
+    }
+
+    //------------------------------------ Update() ------------------------------------
+
+    @PostMapping("/update")
+    public String updateTask(@ModelAttribute("project") Project project ,
+                             HttpSession session,
+                             RedirectAttributes redirectAttributes) {
+
+        UserViewDTO currentUser = getCurrentUser(session);
+
+        // Tjekker om bruger er logget ind
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Log ind for at opdatere et projekt.");
+            return "redirect:/login";
+        }
+
+        projectService.updateProject(project);
+
+        // Tilføj succesbesked som flash-attribut (vises efter redirect)
+        redirectAttributes.addFlashAttribute("success", "Projektet blev opdateret.");
+
+        return "redirect:/projects/" + project.getProjectId();  // Redirect til task-detail
+    }
+
+    //------------------------------------ Delete() ------------------------------------
+
+    @PostMapping("/delete/{id}")
+    public String deleteTask(@PathVariable int id,
+                             HttpSession session,
+                             RedirectAttributes redirectAttributes) {
+
+        UserViewDTO currentUser = getCurrentUser(session);
+
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne slette et projekt.");
+            return "redirect:/login";
+        }
+
+        projectService.deleteById(id);
+
+        redirectAttributes.addFlashAttribute("success", "Projektet blev slettet.");
+
+        return "redirect:/projects/list";
+    }
+
 
 }

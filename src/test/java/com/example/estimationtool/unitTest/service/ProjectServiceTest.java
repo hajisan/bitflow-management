@@ -35,7 +35,7 @@ public class ProjectServiceTest {
         testProject = new Project();
         testProject.setName("New Project");
         testProject.setDescription("New Project Description");
-        testProject.setDeadLine(LocalDate.of(2025, 5, 5));
+        testProject.setDeadline(LocalDate.of(2025, 5, 5));
         testProject.setEstimatedTime(1000);
         testProject.setTimeSpent(250);
         testProject.setStatus(ACTIVE);

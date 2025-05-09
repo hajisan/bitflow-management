@@ -34,7 +34,7 @@ public class ProjectRepository implements IProjectRepository {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setString(1, project.getName());
             ps.setString(2, project.getDescription());
-            ps.setDate(3, java.sql.Date.valueOf(project.getDeadLine())); // Sætter deadline som SQL-dato
+            ps.setDate(3, java.sql.Date.valueOf(project.getDeadline())); // Sætter deadline som SQL-dato
             ps.setInt(4, project.getEstimatedTime());
             ps.setInt(5, project.getTimeSpent());
             ps.setString(6, project.getStatus().name());
@@ -105,7 +105,22 @@ public class ProjectRepository implements IProjectRepository {
 
     @Override
     public Project update(Project project) {
-        return null;
+        String sql = """
+                UPDATE project
+                SET name = ?, description = ?, deadline = ?, estimatedTime = ?, status = ?
+                WHERE id = ?
+                """;
+
+        jdbcTemplate.update( // Henter disse værdier, så de kan opdateres
+                sql,
+                project.getName(),
+                project.getDescription(),
+                project.getDeadline(),
+                project.getEstimatedTime(),
+                project.getStatus().name(), // Konverteres til String for at gemme i databasen
+                project.getProjectId()); // Parameter -> id til WHERE
+
+        return project;
     }
 
     //------------------------------------ Delete() ------------------------------------
@@ -113,6 +128,8 @@ public class ProjectRepository implements IProjectRepository {
     @Override
     public void deleteById(Integer id) {
 
+        String sql = "DELETE FROM project WHERE id = ?";
+        jdbcTemplate.update(sql, id);
+
     }
 }
-

@@ -31,7 +31,7 @@ public class ProjectRepositoryTest {
         Project newProject = new Project();
         newProject.setName("New Project 1");
         newProject.setDescription("Et nyt projekt 1");
-        newProject.setDeadLine(LocalDate.of(2025, 5, 5));
+        newProject.setDeadline(LocalDate.of(2025, 5, 5));
         newProject.setEstimatedTime(1000);
         newProject.setTimeSpent(250);
         newProject.setStatus(ACTIVE);
@@ -97,7 +97,7 @@ public class ProjectRepositoryTest {
         Project newProject = new Project();
         newProject.setName("Projekt Integration");
         newProject.setDescription("Test af readById");
-        newProject.setDeadLine(LocalDate.of(2025, 12, 31));
+        newProject.setDeadline(LocalDate.of(2025, 12, 31));
         newProject.setEstimatedTime(200);
         newProject.setTimeSpent(50);
         newProject.setStatus(ACTIVE);
@@ -112,7 +112,7 @@ public class ProjectRepositoryTest {
         assertNotNull(fetchedProject);
         assertEquals("Projekt Integration", fetchedProject.getName());
         assertEquals("Test af readById", fetchedProject.getDescription());
-        assertEquals(LocalDate.of(2025, 12, 31), fetchedProject.getDeadLine());
+        assertEquals(LocalDate.of(2025, 12, 31), fetchedProject.getDeadline());
         assertEquals(200, fetchedProject.getEstimatedTime());
         assertEquals(50, fetchedProject.getTimeSpent());
         assertEquals(ACTIVE, fetchedProject.getStatus());
