@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>TimeEntry List</title>
+</head>
+<body>
+<h1>Alle tidsregistreringer</h1>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Bruger ID</th>
+        <th>Opgave ID</th>
+        <th>Underopgave ID</th>
+        <th>Timer</th>
+        <th>Dato</th>
+        <th>Handlinger</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="entry : ${timeentries}">
+        <td th:text="${entry.timeId}">1</td>
+        <td th:text="${entry.userId}">1</td>
+        <td th:text="${entry.taskId}">1</td>
+        <td th:text="${entry.subTaskId}">1</td>
+        <td th:text="${entry.hoursSpent}">5</td>
+        <td th:text="${entry.date}">2025-05-08</td>
+        <td>
+            <a th:href="@{|/timeentries/${entry.timeId}|}">Vis</a> |
+            <a th:href="@{|/timeentries/edit/${entry.timeId}|}">Rediger</a> |
+            <form th:action="@{|/timeentries/delete/${entry.timeId}|}" method="post" style="display:inline">
+                <button type="submit">Slet</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<a th:href="@{/timeentries/create}">Opret ny tidsregistrering</a>
+</body>
+</html>

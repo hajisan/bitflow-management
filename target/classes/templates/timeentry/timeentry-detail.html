@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>TimeEntry Detail</title>
+</head>
+<body>
+<h1>Detaljer for tidsregistrering</h1>
+
+<p><strong>ID:</strong> <span th:text="${timeentry.timeId}">1</span></p>
+<p><strong>Bruger ID:</strong> <span th:text="${timeentry.userId}">10</span></p>
+<p><strong>Opgave ID:</strong> <span th:text="${timeentry.taskId}">101</span></p>
+<p><strong>Underopgave ID:</strong> <span th:text="${timeentry.subTaskId}">1001</span></p>
+<p><strong>Timer brugt:</strong> <span th:text="${timeentry.hoursSpent}">3</span></p>
+<p><strong>Dato:</strong> <span th:text="${timeentry.date}">2025-05-08</span></p>
+
+<a th:href="@{/timeentries}">Tilbage til oversigt</a>
+</body>
+</html>

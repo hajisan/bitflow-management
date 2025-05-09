@@ -89,8 +89,8 @@ public class Task {
                 Name: %s
                 Description: %s
                 Estimated Time: %d
-                Deadline: %d
-                Status: %d
+                Deadline: %s
+                Status: %s
                 """, taskId, subProjectId, name, description, estimatedTime, deadline, status);
     }
 }

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit TimeEntry</title>
+</head>
+<body>
+<h1>Rediger tidsregistrering</h1>
+
+<form th:action="@{/timeentries/update}" th:object="${timeentry}" method="post">
+
+    <input type="hidden" th:field="*{timeId}" />
+
+    <label>Bruger ID:</label>
+    <input type="number" th:field="*{userId}" /><br/>
+
+    <label>Opgave ID:</label>
+    <input type="number" th:field="*{taskId}" /><br/>
+
+    <label>Underopgave ID:</label>
+    <input type="number" th:field="*{subTaskId}" /><br/>
+
+    <label>Timer brugt:</label>
+    <input type="number" th:field="*{hoursSpent}" /><br/>
+
+    <label>Dato:</label>
+    <input type="date" th:field="*{date}" /><br/>
+
+    <button type="submit">Opdater</button>
+</form>
+
+<a th:href="@{/timeentries}">Tilbage til oversigt</a>
+</body>
+</html>
