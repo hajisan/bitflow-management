@@ -33,6 +33,7 @@ public class SubProjectController {
     }
 
     //------------------------------------ Create() ------------------------------------
+
     @GetMapping("/create")
     public String getCreateSubProject(HttpSession session,
                                       Model model) {
@@ -62,6 +63,7 @@ public class SubProjectController {
     }
 
     //------------------------------------ Read() --------------------------------------
+
     @GetMapping("")
     public String readAllSubProjects(HttpSession session,
                                      Model model,
@@ -82,6 +84,7 @@ public class SubProjectController {
     }
 
     // TODO skal endpointet her ikke være projects/{projectId}/subprojects?
+
     @GetMapping("/{projectId}/subprojects")
     public String readByProjectId(HttpSession session,
                                   Model model,
@@ -114,6 +117,7 @@ public class SubProjectController {
     }
 
     //------------------------------------ Update() ------------------------------------
+
     @GetMapping("/edit/{id}")
     public String getUpdateSubProject(HttpSession session,
                                       RedirectAttributes redirectAttributes,
@@ -156,5 +160,26 @@ public class SubProjectController {
         redirectAttributes.addFlashAttribute("success", "Subpojekt opdateret.");
 
         return "redirect:/subproject/subproject-details";
+    }
+
+    //------------------------------------ Delete() ------------------------------------
+
+    @PostMapping("/delete/{id}")
+    public String deleteSubProject(@PathVariable int id,
+                                   HttpSession session,
+                                   RedirectAttributes redirectAttributes) {
+
+        UserViewDTO currentUser = getCurrentUser(session);
+
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne slette et projekt.");
+            return "redirect:/login";
+        }
+
+        subProjectService.deleteById(currentUser, id);
+
+        redirectAttributes.addFlashAttribute("success", "Subrojektet blev slettet.");
+
+        return "redirect:/projects/list";
     }
 }
