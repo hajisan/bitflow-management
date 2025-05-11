@@ -97,5 +97,10 @@ public class SubProjectService {
     //------------------------------------ Delete() ------------------------------------
     public void deleteById(UserViewDTO currentUser, int id) {
         RoleCheck.ensureAdminOrProjectManager(currentUser.getRole());
+        if (id <= 0) {
+            throw new IllegalArgumentException("Subprojektet med id " + id + " findes ikke, da id er 0 eller negativt.");
+        } else {
+            iSubProjectRepository.deleteById(id);
+        }
     }
 }
