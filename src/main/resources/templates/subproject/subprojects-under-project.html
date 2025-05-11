@@ -25,6 +25,12 @@
         <td th:text="${subproject.estimatedTime}"></td>
         <td th:text="${subproject.timeSpent}"></td>
         <td th:text="${subproject.deadline}"></td>
+        <td>
+            <a th:href="@{/subprojects/{id}(id=${subproject.subProjectId})}">Se detaljer</a>
+        </td>
+        <td th:if="${isAdmin or isProjectManager}">
+            <a th:href="@{/subprojects/edit/{id}(id=${subproject.subProjectId})}">Rediger</a>
+        </td>
     </tr>
 </table>
 
