@@ -53,6 +53,12 @@
         <button type="submit">Opdater</button>
     </p>
 
+    <form th:action="@{/subprojects/delete/{id}(id=${subproject.subProjectId})}" method="post">
+        <button type="submit" onclick="return confirm('Er du sikker på, at du vil slette denne opgave?')">Slet</button>
+    </form>
+
+    <p><a th:href="@{/subprojects/${subproject.projectId}/subprojects}">Tilbage til projektliste</a></p>
+
 </form>
 </body>
 </html>

@@ -95,6 +95,10 @@ public class SubProjectController {
             redirectAttributes.addFlashAttribute("error", "Log ind for at oprette et projekt.");
             return "redirect:/login";
         }
+        boolean isAdmin = currentUser.getRole().equals(Role.ADMIN);
+        boolean isProjectManager = currentUser.getRole().equals(Role.PROJECT_MANAGER);
+        model.addAttribute("isAdmin", isAdmin);
+        model.addAttribute("isProjectManager", isProjectManager);
         model.addAttribute("projectwithsubprojectdto", subProjectService.readAllFromProjectId(projectId));
 
         return "subproject/subprojects-under-project";
