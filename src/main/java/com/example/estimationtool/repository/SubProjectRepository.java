@@ -96,6 +96,7 @@ public class SubProjectRepository implements ISubProjectRepository {
 
     @Override
     public void deleteById(Integer id) {
-
+        String sql = "DELETE FROM subproject WHERE id = ?";
+        jdbcTemplate.update(sql, id);
     }
 }
