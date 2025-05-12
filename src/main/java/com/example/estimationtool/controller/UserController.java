@@ -1,11 +1,10 @@
 package com.example.estimationtool.controller;
 
-import com.example.estimationtool.toolbox.dto.UserRegistrationDTO;
-import com.example.estimationtool.toolbox.dto.UserUpdateDTO;
-import com.example.estimationtool.toolbox.dto.UserViewDTO;
+import com.example.estimationtool.toolbox.dto.*;
 import com.example.estimationtool.model.enums.Role;
 import com.example.estimationtool.service.UserService;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -110,6 +109,7 @@ public class UserController {
         return "user/user-list";
     }
 
+
     @GetMapping("/{id}")
     public String showUser(@PathVariable int id,
                            HttpSession session,
@@ -125,7 +125,9 @@ public class UserController {
         }
 
         UserViewDTO userViewDTO = userService.readById(id);
+
         model.addAttribute("user", userViewDTO);
+
         return "user/user-detail";
 
     }
@@ -197,6 +199,8 @@ public class UserController {
                              HttpSession session,
                              RedirectAttributes redirectAttributes) {
 
+
+        // Tjekker om bruger er logget ind
         UserViewDTO currentUser = getCurrentUser(session);
         if (currentUser == null) {
             redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne slette brugeren.");
@@ -213,6 +217,31 @@ public class UserController {
         return "redirect:/users/users";
 
     }
+    //---------------------------------- DTO read() ------------------------------------
+
+
+    // -------------------- Viser brugerens tilknyttede projekter ----------------------
+
+    @GetMapping("/{id}/projects")
+    public String showUserWithProjects(@PathVariable int id,
+                                       HttpSession session,
+                                       Model model,
+                                       RedirectAttributes redirectAttributes) {
+
+        // Tjekker om bruger er logget ind
+        UserViewDTO currentUser = getCurrentUser(session);
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne slette brugeren.");
+            return "redirect:/login";
+        }
+
+        UserWithProjectsDTO userWithProjectsDTO = userService.getUserWithProjects(id);
+
+        model.addAttribute("userWithProjects", userWithProjectsDTO);
+
+        return "user/user-with-projects";
+    }
+
 
 
 

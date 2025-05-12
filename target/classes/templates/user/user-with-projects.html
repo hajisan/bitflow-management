@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User With Projects</title>
+</head>
+<body>
+
+<h1>Brugeroplysninger</h1>
+
+<p>
+  Navn:
+  <span th:text="${userWithProjects.user.firstName}"></span>
+  <span th:text="${userWithProjects.user.lastName}"></span>
+</p>
+<p>ID: <span th:text="${userWithProjects.user.userId}"></span></p>
+
+<h2>Projekter</h2>
+
+<!-- Projekter (vises hvis listen ikke er tom) -->
+<ul>
+  <li th:each="project : ${userWithProjects.projectList}">
+    <span th:text="${project.name}"></span> -
+    <span th:text="${project.status}"></span>
+  </li>
+</ul>
+
+<!-- Fallback hvis listen er tom -->
+<p th:if="${#lists.isEmpty(userWithProjects.projectList)}">
+  Brugeren <span th:text="${userWithProjects.user.firstName}"></span> har ikke nogle tilknyttede projekter.
+</p>
+
+</body>
+</html>

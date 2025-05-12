@@ -55,42 +55,90 @@ public class ProjectRepository implements IProjectRepository {
 
     //------------------------------------ Read() ------------------------------------
 
+//    @Override
+//    public List<Project> readAll() {
+//
+//        /*
+//        TODO
+//        SELECT p.userId gør at Admin henter alle projekter altså, hvilket resultere i at Admin ser samme projekt flere gange
+//        da et projekt kan have flere brugere tilknyttet i user_project tabellen.
+//        Formål er dog at Admin kun skal kunne se listen over alle projekter, uden afhængigheden af user_project tabellen.
+//        Så Admin kun se en liste af Projekter uden duplikater. Se seneste chat for forslag til at løse det.
+//         */
+//
+//        String sql = """
+//                SELECT DISTINCT p.id, p.name, p.description, p.deadline, p.estimatedTime, p.timeSpent, p.status, up.userID as userId
+//                FROM project p
+//                LEFT JOIN user_project up ON p.id = up.projectID
+//                """;
+//
+//        return jdbcTemplate.query(sql, new ProjectRowMapper());
+//    }
+
     @Override
     public List<Project> readAll() {
 
-        /*
-        TODO
-        SELECT p.userId gør at Admin henter alle projekter altså, hvilket resultere i at Admin ser samme projekt flere gange
-        da et projekt kan have flere brugere tilknyttet i user_project tabellen.
-        Formål er dog at Admin kun skal kunne se listen over alle projekter, uden afhængigheden af user_project tabellen.
-        Så Admin kun se en liste af Projekter uden duplikater. Se seneste chat for forslag til at løse det.
-         */
+        // LEFT JOIN bruges, fordi alle projekter hentes - også dem uden brugerID
 
         String sql = """
-                SELECT DISTINCT p.id, p.name, p.description, p.deadline, p.estimatedTime, p.timeSpent, p.status, up.userID as userId
-                FROM project p
-                LEFT JOIN user_project up ON p.id = up.projectID
-                """;
+                SELECT
+                    project.id,
+                    user_project.userID,
+                    project.estimatedTime,
+                    project.timeSpent,
+                    project.name,
+                    project.description,
+                    project.deadline,
+                    project.status
+                FROM project
+                LEFT JOIN user_project ON project.id = user_project.projectID
+             """;
 
         return jdbcTemplate.query(sql, new ProjectRowMapper());
     }
 
+
     @Override
-    public Project readById(Integer id) {
+    public Project readById(Integer projectId) {
+
+        // LEFT JOIN bruges, fordi alle projekter hentes - også dem uden brugerID
 
         String sql = """
-                SELECT p.id, p.name, p.description, p.deadline, p.estimatedTime, p.timeSpent, p.status, up.userID as userId
-                FROM project p
-                LEFT JOIN user_project up ON p.id = up.projectID
-                WHERE p.id = ?
+                SELECT
+                    project.id,
+                    user_project.userID,
+                    project.estimatedTime,
+                    project.timeSpent,
+                    project.name,
+                    project.description,
+                    project.deadline,
+                    project.status
+                FROM project
+                LEFT JOIN user_project ON project.id = user_project.projectID
+                WHERE project.id = ?
                 """;
 
-        try {
-            return jdbcTemplate.queryForObject(sql, new ProjectRowMapper(), id);
-        } catch (EmptyResultDataAccessException e) {
-            return null;
-        }
+        return jdbcTemplate.queryForObject(sql, new ProjectRowMapper(), projectId);
+
     }
+
+
+//    @Override
+//    public Project readById(Integer id) {
+//
+//        String sql = """
+//                SELECT p.id, p.name, p.description, p.deadline, p.estimatedTime, p.timeSpent, p.status, up.userID as userId
+//                FROM project p
+//                LEFT JOIN user_project up ON p.id = up.projectID
+//                WHERE p.id = ?
+//                """;
+//
+//        try {
+//            return jdbcTemplate.queryForObject(sql, new ProjectRowMapper(), id);
+//        } catch (EmptyResultDataAccessException e) {
+//            return null;
+//        }
+//    }
 //
 //    @Override
 //    public List<Project> readByUserId(Integer userId) {
