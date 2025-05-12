@@ -1,11 +1,14 @@
 package com.example.estimationtool.service;
 
+import com.example.estimationtool.model.Project;
+import com.example.estimationtool.repository.interfaces.IProjectRepository;
 import com.example.estimationtool.toolbox.dto.UserRegistrationDTO;
 
 import com.example.estimationtool.toolbox.dto.UserUpdateDTO;
 import com.example.estimationtool.toolbox.dto.UserViewDTO;
 import com.example.estimationtool.model.enums.Role;
 import com.example.estimationtool.repository.interfaces.IUserRepository;
+import com.example.estimationtool.toolbox.dto.UserWithProjectsDTO;
 import com.example.estimationtool.toolbox.roleCheck.RoleCheck;
 import com.example.estimationtool.model.User;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -24,11 +27,15 @@ public class UserService {
 
     private final IUserRepository iUserRepository;
     private final PasswordEncoder passwordEncoder;
+    private final IProjectRepository iProjectRepository;
+    private final ProjectService projectService;
 
 
-    public UserService(IUserRepository iUserRepository, PasswordEncoder passwordEncoder) {
+    public UserService(IUserRepository iUserRepository, PasswordEncoder passwordEncoder, IProjectRepository iProjectRepository, ProjectService projectService) {
         this.iUserRepository = iUserRepository;
         this.passwordEncoder = passwordEncoder;
+        this.iProjectRepository= iProjectRepository;
+        this.projectService = projectService;
     }
 
     //------------------------------------ Create() ------------------------------------
@@ -166,5 +173,29 @@ public class UserService {
             );
         }
         throw new BadCredentialsException("Adgangskoden er forkert.");
+    }
+
+    //------------------------------------ DTO'er -------------------------------------
+
+    public UserWithProjectsDTO getUserWithProjects(int userId) {
+        User user = iUserRepository.readById(userId);
+
+        // ExceptionHandling
+//        if (user == null) {
+//            throw new NoSuchElementException("Bruger med ID " + userId + " findes ikke.");
+//        }
+
+        UserViewDTO userViewDTO = new UserViewDTO(
+                user.getUserId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getRole()
+        );
+
+        List<Project> projectList = projectService.readByUserId(userId);
+
+        return new UserWithProjectsDTO(userViewDTO, projectList);
+
     }
 }

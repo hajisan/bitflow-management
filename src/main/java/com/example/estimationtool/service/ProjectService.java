@@ -56,6 +56,8 @@ public class ProjectService {
         return project;
     }
 
+    // --- Find projekter for én bruger ---
+
     public List<Project> readByUserId(int userId) {
         // Rollevalideringslogik - en Project Manager eller Developer skal kun kunne se de projekter de knyttet til
 

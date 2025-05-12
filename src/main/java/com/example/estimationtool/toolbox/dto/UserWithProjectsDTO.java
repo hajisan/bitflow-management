@@ -4,5 +4,5 @@ import com.example.estimationtool.model.Project;
 
 import java.util.List;
 
-public record UserWithProjectDTO(UserViewDTO user, List<Project> projectList) {
+public record UserWithProjectsDTO(UserViewDTO user, List<Project> projectList) {
 }

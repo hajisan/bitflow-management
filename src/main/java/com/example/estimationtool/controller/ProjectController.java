@@ -4,7 +4,7 @@ import com.example.estimationtool.model.enums.Role;
 import com.example.estimationtool.toolbox.dto.UserViewDTO;
 import com.example.estimationtool.model.Project;
 import com.example.estimationtool.service.ProjectService;
-import com.example.estimationtool.toolbox.dto.UserWithProjectDTO;
+import com.example.estimationtool.toolbox.dto.UserWithProjectsDTO;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -94,9 +94,9 @@ public class ProjectController {
             model.addAttribute("info", "Du er ikke tilknyttet nogen projekter endnu");
         }
 
-        UserWithProjectDTO userWithProjectDTO = new UserWithProjectDTO(currentUser, projectList);
+        UserWithProjectsDTO userWithProjectsDTO = new UserWithProjectsDTO(currentUser, projectList);
 
-        model.addAttribute("userWithProjects", userWithProjectDTO);
+        model.addAttribute("userWithProjects", userWithProjectsDTO);
         model.addAttribute("isAdmin", isAdmin);
         model.addAttribute("isProjectManager", isProjectManager);
 

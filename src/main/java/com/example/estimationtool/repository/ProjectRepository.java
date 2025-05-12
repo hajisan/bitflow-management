@@ -1,8 +1,11 @@
 package com.example.estimationtool.repository;
 
+import com.example.estimationtool.model.User;
+import com.example.estimationtool.model.enums.Status;
 import com.example.estimationtool.toolbox.rowMappers.ProjectRowMapper;
 import com.example.estimationtool.repository.interfaces.IProjectRepository;
 import com.example.estimationtool.model.Project;
+import com.example.estimationtool.toolbox.rowMappers.UserRowMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -10,6 +13,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -87,19 +91,44 @@ public class ProjectRepository implements IProjectRepository {
             return null;
         }
     }
+//
+//    @Override
+//    public List<Project> readByUserId(Integer userId) {
+//
+//        String sql = """
+//                SELECT p.id, p.name, p.description, p.deadline, p.estimatedTime, p.timeSpent, p.status, up.userID as userId
+//                FROM project p
+//                LEFT JOIN user_project up ON p.id = up.projectID
+//                WHERE up.userID = ?
+//                """;
+//
+//        return jdbcTemplate.query(sql, new ProjectRowMapper(), userId);
+//    }
+
+    // --- Read() projekter ud fra bruger-ID ---
 
     @Override
     public List<Project> readByUserId(Integer userId) {
 
         String sql = """
-                SELECT p.id, p.name, p.description, p.deadline, p.estimatedTime, p.timeSpent, p.status, up.userID as userId
-                FROM project p
-                LEFT JOIN user_project up ON p.id = up.projectID
-                WHERE up.userID = ?
+                SELECT
+                    project.id,
+                    user_project.userID,
+                    project.estimatedTime,
+                    project.timeSpent,
+                    project.name,
+                    project.description,
+                    project.deadline,
+                    project.status
+                FROM project
+                JOIN user_project ON project.id = user_project.projectID
+                WHERE user_project.userID = ?
                 """;
 
-        return jdbcTemplate.query(sql, new ProjectRowMapper(), userId);
+        return jdbcTemplate.query(sql, new ProjectRowMapper(),userId);
+
     }
+
 
     //------------------------------------ Update() ------------------------------------
 
