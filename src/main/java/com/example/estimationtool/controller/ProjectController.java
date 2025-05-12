@@ -71,37 +71,57 @@ public class ProjectController {
 
     //------------------------------------ Read() --------------------------------------
 
-    @GetMapping("/list") // Lige nu ser Admin alle projekter og dermed ét specifikt projekt flere gange
-    public String showProjectList(Model model,
-                                  HttpSession session,
+    @GetMapping("/list")
+    public String showAllProjects(HttpSession session,
+                                  Model model,
                                   RedirectAttributes redirectAttributes) {
 
         UserViewDTO currentUser = getCurrentUser(session);
 
+        // Tjekker om brugeren er logget ind
         if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Log ind for at se projekter.");
+            redirectAttributes.addFlashAttribute("error", "Log ind for at se brugeroplysninger.");
             return "redirect:/login";
         }
 
-        boolean isAdmin = currentUser.getRole() == Role.ADMIN;
-        boolean isProjectManager = currentUser.getRole() == Role.PROJECT_MANAGER;
+        List<Project> projectList = projectService.readAll();
 
-        List<Project> projectList = isAdmin
-                ? projectService.readAll()
-                : projectService.readByUserId(currentUser.getUserId());
+        model.addAttribute("projectList", projectList);
 
-        if (projectList.isEmpty() && !isAdmin && !isProjectManager) {
-            model.addAttribute("info", "Du er ikke tilknyttet nogen projekter endnu");
-        }
-
-        UserWithProjectsDTO userWithProjectsDTO = new UserWithProjectsDTO(currentUser, projectList);
-
-        model.addAttribute("userWithProjects", userWithProjectsDTO);
-        model.addAttribute("isAdmin", isAdmin);
-        model.addAttribute("isProjectManager", isProjectManager);
-
-        return "/project/project-list";
+        return "project/project-list";
     }
+//
+//        @GetMapping("/list") // Lige nu ser Admin alle projekter og dermed ét specifikt projekt flere gange
+//        public String showProjectList(Model model,
+//                                      HttpSession session,
+//                                      RedirectAttributes redirectAttributes) {
+//
+//            UserViewDTO currentUser = getCurrentUser(session);
+//
+//            if (currentUser == null) {
+//                redirectAttributes.addFlashAttribute("error", "Log ind for at se projekter.");
+//                return "redirect:/login";
+//            }
+//
+//            boolean isAdmin = currentUser.getRole() == Role.ADMIN;
+//            boolean isProjectManager = currentUser.getRole() == Role.PROJECT_MANAGER;
+//
+//            List<Project> projectList = isAdmin
+//                    ? projectService.readAll()
+//                    : projectService.readByUserId(currentUser.getUserId());
+//
+//            if (projectList.isEmpty() && !isAdmin && !isProjectManager) {
+//                model.addAttribute("info", "Du er ikke tilknyttet nogen projekter endnu");
+//            }
+//
+//            UserWithProjectsDTO userWithProjectsDTO = new UserWithProjectsDTO(currentUser, projectList);
+//
+//            model.addAttribute("userWithProjects", userWithProjectsDTO);
+//            model.addAttribute("isAdmin", isAdmin);
+//            model.addAttribute("isProjectManager", isProjectManager);
+//
+//            return "/project/project-list";
+//        }
 
     @GetMapping("/{id}")
     public String showProject(@PathVariable int id,

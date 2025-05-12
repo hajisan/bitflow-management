@@ -28,6 +28,7 @@
 
         //------------------------------------ Create() ------------------------------------
 
+        @Override
         public Project create(Project project) {
 
             String sql = "INSERT INTO project (name, description, deadline, estimatedTime, timeSpent, status) VALUES (?, ?, ?, ?, ?, ?)";
@@ -49,7 +50,7 @@
             project.setProjectId(generatedId);  // Sætter ID på Project
 
 
-            // OVERFLØDIG, HVIS DETTE EXCEPTION HÅNTERES I SERVICE OG FANGES MED @CONTROLLERADVICE
+            // OVERFLØDIG, HVIS DETTE EXCEPTION HÅNdTERES I SERVICE OG FANGES MED @CONTROLLERADVICE
     //        // Tjekker først om id'et er null eller ej. Hvis det er, så sætter vi id-variable til -1
     //        int projectId = keyHolder.getKey() != null ? keyHolder.getKey().intValue() : -1;
     //        // Sætter projektets id til KeyHolderens værdi, hvis den ikke var null
@@ -83,21 +84,10 @@
         @Override
         public List<Project> readAll() {
 
-            // LEFT JOIN bruges, fordi alle projekter hentes - også dem uden brugerID
-
             String sql = """
-                    SELECT
-                        project.id,
-                        user_project.userID,
-                        project.estimatedTime,
-                        project.timeSpent,
-                        project.name,
-                        project.description,
-                        project.deadline,
-                        project.status
+                    SELECT id, estimatedTime, timeSpent, name, description, deadline, status
                     FROM project
-                    LEFT JOIN user_project ON project.id = user_project.projectID
-                 """;
+                    """;
 
             return jdbcTemplate.query(sql, new ProjectRowMapper());
         }
@@ -106,24 +96,13 @@
         @Override
         public Project readById(Integer projectId) {
 
-            // LEFT JOIN bruges, fordi ét projekter hentes - også et uden brugerID
-
             String sql = """
-                    SELECT
-                        project.id,
-                        user_project.userID,
-                        project.estimatedTime,
-                        project.timeSpent,
-                        project.name,
-                        project.description,
-                        project.deadline,
-                        project.status
+                    SELECT id,estimatedTime, timeSpent, name, description, deadline, status
                     FROM project
-                    LEFT JOIN user_project ON project.id = user_project.projectID
-                    WHERE project.id = ?
+                    WHERE id = ?
                     """;
 
-            return jdbcTemplate.query(sql, new ProjectRowMapper(), projectId);
+            return jdbcTemplate.queryForObject(sql, new ProjectRowMapper(), projectId);
 
         }
 
@@ -158,29 +137,6 @@
     //        return jdbcTemplate.query(sql, new ProjectRowMapper(), userId);
     //    }
 
-        // --- Read() projekter ud fra bruger-ID ---
-
-        @Override
-        public List<Project> readByUserId(Integer userId) {
-
-            String sql = """
-                    SELECT
-                        project.id,
-                        user_project.userID,
-                        project.estimatedTime,
-                        project.timeSpent,
-                        project.name,
-                        project.description,
-                        project.deadline,
-                        project.status
-                    FROM project
-                    JOIN user_project ON project.id = user_project.projectID
-                    WHERE user_project.userID = ?
-                    """;
-
-            return jdbcTemplate.query(sql, new ProjectRowMapper(),userId);
-
-        }
 
 
         //------------------------------------ Update() ------------------------------------
@@ -214,4 +170,31 @@
             jdbcTemplate.update(sql, id);
 
         }
+
+        //------------------------------------ DTO'er ------------------------------------
+
+        // --- Read() projekter ud fra bruger-ID ---
+
+        @Override
+        public List<Project> readByUserId(Integer userId) {
+
+            String sql = """
+                    SELECT
+                        project.id,
+                        project.estimatedTime,
+                        project.timeSpent,
+                        project.name,
+                        project.description,
+                        project.deadline,
+                        project.status
+                    FROM project
+                    JOIN user_project ON project.id = user_project.projectID
+                    WHERE user_project.userID = ?
+                    """;
+
+            return jdbcTemplate.query(sql, new ProjectRowMapper(),userId);
+
+        }
+
+
     }

@@ -13,12 +13,11 @@ public class ProjectRowMapper implements RowMapper<Project> {
     public Project mapRow(ResultSet rs, int rowNum) throws SQLException {
         return new Project(
                 rs.getInt("id"),
-                rs.getInt("userID"),
                 rs.getInt("estimatedTime"),
                 rs.getInt("timeSpent"),
                 rs.getString("name"),
                 rs.getString("description"),
-                rs.getDate(rs.getString("deadline")).toLocalDate(),
+                rs.getDate("deadline").toLocalDate(),
                 Status.valueOf(rs.getString("status"))
         );
     }

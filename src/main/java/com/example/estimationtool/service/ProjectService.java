@@ -56,13 +56,7 @@ public class ProjectService {
         return project;
     }
 
-    // --- Find projekter for én bruger ---
 
-    public List<Project> readByUserId(int userId) {
-        // Rollevalideringslogik - en Project Manager eller Developer skal kun kunne se de projekter de knyttet til
-
-        return iProjectRepository.readByUserId(userId);
-    }
 
     //------------------------------------ Update() ------------------------------------
 
@@ -74,6 +68,17 @@ public class ProjectService {
 
     public void deleteById(int id) {
         iProjectRepository.deleteById(id);
+    }
+
+    //------------------------------------ DTO'er ------------------------------------
+
+
+    // --- Find projekter for én bruger ---
+
+    public List<Project> readByUserId(int userId) {
+        // Rollevalideringslogik - en Project Manager eller Developer skal kun kunne se de projekter de knyttet til
+
+        return iProjectRepository.readByUserId(userId);
     }
 
 }
