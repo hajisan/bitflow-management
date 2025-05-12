@@ -33,7 +33,7 @@ public class ProjectController {
     //--------------------------------- Hent Create() ----------------------------------
 
     @GetMapping("/create") // Vis opret formular
-    public String showCreateForm(Model model,
+    public String showCreateProject(Model model,
                                  HttpSession session,
                                  RedirectAttributes redirectAttributes) {
 
@@ -90,38 +90,6 @@ public class ProjectController {
 
         return "project/project-list";
     }
-//
-//        @GetMapping("/list") // Lige nu ser Admin alle projekter og dermed ét specifikt projekt flere gange
-//        public String showProjectList(Model model,
-//                                      HttpSession session,
-//                                      RedirectAttributes redirectAttributes) {
-//
-//            UserViewDTO currentUser = getCurrentUser(session);
-//
-//            if (currentUser == null) {
-//                redirectAttributes.addFlashAttribute("error", "Log ind for at se projekter.");
-//                return "redirect:/login";
-//            }
-//
-//            boolean isAdmin = currentUser.getRole() == Role.ADMIN;
-//            boolean isProjectManager = currentUser.getRole() == Role.PROJECT_MANAGER;
-//
-//            List<Project> projectList = isAdmin
-//                    ? projectService.readAll()
-//                    : projectService.readByUserId(currentUser.getUserId());
-//
-//            if (projectList.isEmpty() && !isAdmin && !isProjectManager) {
-//                model.addAttribute("info", "Du er ikke tilknyttet nogen projekter endnu");
-//            }
-//
-//            UserWithProjectsDTO userWithProjectsDTO = new UserWithProjectsDTO(currentUser, projectList);
-//
-//            model.addAttribute("userWithProjects", userWithProjectsDTO);
-//            model.addAttribute("isAdmin", isAdmin);
-//            model.addAttribute("isProjectManager", isProjectManager);
-//
-//            return "/project/project-list";
-//        }
 
     @GetMapping("/{id}")
     public String showProject(@PathVariable int id,
@@ -146,7 +114,7 @@ public class ProjectController {
     //------------------------------------ Hent Update() -------------------------------
 
     @GetMapping("/edit/{id}")
-    public String showEditTask(@PathVariable int id,
+    public String showEditProject(@PathVariable int id,
                                HttpSession session,
                                Model model,
                                RedirectAttributes redirectAttributes) {
@@ -170,7 +138,7 @@ public class ProjectController {
     //------------------------------------ Update() ------------------------------------
 
     @PostMapping("/update")
-    public String updateTask(@ModelAttribute("project") Project project ,
+    public String updateProject(@ModelAttribute("project") Project project ,
                              HttpSession session,
                              RedirectAttributes redirectAttributes) {
 
@@ -193,7 +161,7 @@ public class ProjectController {
     //------------------------------------ Delete() ------------------------------------
 
     @PostMapping("/delete/{id}")
-    public String deleteTask(@PathVariable int id,
+    public String deleteProject(@PathVariable int id,
                              HttpSession session,
                              RedirectAttributes redirectAttributes) {
 

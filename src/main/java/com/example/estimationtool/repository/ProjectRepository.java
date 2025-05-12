@@ -1,19 +1,14 @@
     package com.example.estimationtool.repository;
 
-    import com.example.estimationtool.model.User;
-    import com.example.estimationtool.model.enums.Status;
     import com.example.estimationtool.toolbox.rowMappers.ProjectRowMapper;
     import com.example.estimationtool.repository.interfaces.IProjectRepository;
     import com.example.estimationtool.model.Project;
-    import com.example.estimationtool.toolbox.rowMappers.UserRowMapper;
-    import org.springframework.dao.EmptyResultDataAccessException;
     import org.springframework.jdbc.core.JdbcTemplate;
     import org.springframework.jdbc.support.GeneratedKeyHolder;
     import org.springframework.jdbc.support.KeyHolder;
     import org.springframework.stereotype.Repository;
 
     import java.sql.PreparedStatement;
-    import java.time.LocalDate;
     import java.util.List;
 
     @Repository
@@ -49,7 +44,6 @@
             int generatedId = keyHolder.getKey().intValue();
             project.setProjectId(generatedId);  // Sætter ID på Project
 
-
             // OVERFLØDIG, HVIS DETTE EXCEPTION HÅNdTERES I SERVICE OG FANGES MED @CONTROLLERADVICE
     //        // Tjekker først om id'et er null eller ej. Hvis det er, så sætter vi id-variable til -1
     //        int projectId = keyHolder.getKey() != null ? keyHolder.getKey().intValue() : -1;
@@ -58,6 +52,18 @@
 
             return project;
         }
+
+        // ----------------- Projekt tildeles en bruger efter oprettelse -----------------
+
+        @Override
+        public void assignUserToProject(Integer userId, Integer projectId) {
+
+            String sql = "INSERT INTO user_project (userID, projectID) VALUES (?, ?)";
+
+            jdbcTemplate.update(sql, userId, projectId);
+
+        }
+
 
         //------------------------------------ Read() ------------------------------------
 
@@ -170,6 +176,8 @@
             jdbcTemplate.update(sql, id);
 
         }
+
+
 
         //------------------------------------ DTO'er ------------------------------------
 

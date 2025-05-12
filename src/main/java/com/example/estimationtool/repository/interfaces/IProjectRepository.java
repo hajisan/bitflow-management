@@ -17,4 +17,6 @@ public interface IProjectRepository extends IRepository<Project, Integer> {
     Project update(Project project);
 
     void deleteById(Integer id);
+
+    void assignUserToProject(Integer userId, Integer projectId);
 }

@@ -28,7 +28,8 @@ public class UserController {
         return (UserViewDTO) session.getAttribute("currentUser");
     }
 
-
+    //--------------------------------- Efter login --------------------------------
+    
     @GetMapping("/profile")
     public String getFrontPage(HttpSession session,
                                RedirectAttributes redirectAttributes,
@@ -44,6 +45,7 @@ public class UserController {
         model.addAttribute("user", currentUser);
         return "user/front-page";
     }
+
 
 
     //--------------------------------- Hent Create() ----------------------------------

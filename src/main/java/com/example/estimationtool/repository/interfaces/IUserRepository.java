@@ -18,4 +18,6 @@ public interface IUserRepository extends IRepository<User, Integer> {
 
     User readByEmail(String email);
 
+    List<User> readByProjectId(Integer id);
+
 }

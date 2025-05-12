@@ -116,4 +116,28 @@ public class UserRepository implements IUserRepository {
 
         return jdbcTemplate.queryForObject(sql, new UserRowMapper(), email);
     }
+
+    //------------------------------------ DTO'er ------------------------------------
+
+    // --- Read() brugere ud fra projekt-ID ---
+
+    @Override
+    public List<User> readByProjectId(Integer projectId) {
+
+        String sql = """
+                SELECT
+                    user.id,
+                    user.firstName,
+                    user.lastName,
+                    user.email,
+                    user.passwordHash,
+                    user.role
+                FROM user
+                JOIN user_project on user.id = user_project.userID
+                WHERE user_project.projectID = ?
+                """;
+
+        return jdbcTemplate.query(sql, new UserRowMapper(), projectId);
+    }
+
 }
