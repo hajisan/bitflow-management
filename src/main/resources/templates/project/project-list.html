@@ -28,10 +28,7 @@
         <td th:text="${project.deadline}"></td>
         <td th:text="${project.status}"></td>
         <td>
-            <a th:href="@{/subprojects/{id}/subprojects(id=${project.projectId})}">Se subprojekter</a>
-        </td>
-        <td>
-            <a th:href="@{/projects/{id}(id=${project.projectId})}">Se detaljer</a>
+            <a th:href="@{/projects/{id}/subprojects(id=${project.projectId})}">Se subprojekter</a>
         </td>
         <td>
             <a th:href="@{/projects/{id}(id=${project.projectId})}">Se detaljer</a>

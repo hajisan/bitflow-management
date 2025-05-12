@@ -37,7 +37,7 @@ public class LoginController {
         session.setMaxInactiveInterval(1000);
         redirectAttributes.addFlashAttribute("success", "Du er nu logget ind.");
 
-        return "redirect:/users/profile";
+        return "redirect:/front-page";
     }
 
     @GetMapping("/logout")

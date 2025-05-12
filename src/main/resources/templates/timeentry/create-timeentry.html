@@ -7,7 +7,7 @@
 <body>
 <h1>Opret tidsregistrering</h1>
 
-<form th:action="@{/timeentries/create}" th:object="${timeentry}" method="post">
+<form th:action="@{/time-entries/create}" th:object="${timeentry}" method="post">
 
     <label>Bruger ID:</label>
     <input type="number" th:field="*{userId}" /><br/>
@@ -27,6 +27,6 @@
     <button type="submit">Gem</button>
 </form>
 
-<a th:href="@{/timeentries}">Tilbage til oversigt</a>
+<a th:href="@{/time-entries}">Tilbage til oversigt</a>
 </body>
 </html>

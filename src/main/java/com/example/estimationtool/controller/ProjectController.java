@@ -1,6 +1,7 @@
 package com.example.estimationtool.controller;
 
 import com.example.estimationtool.model.enums.Role;
+import com.example.estimationtool.service.SubProjectService;
 import com.example.estimationtool.toolbox.dto.UserViewDTO;
 import com.example.estimationtool.model.Project;
 import com.example.estimationtool.service.ProjectService;
@@ -18,11 +19,13 @@ import java.util.List;
 public class ProjectController {
 
     private final ProjectService projectService;
+    private final SubProjectService subProjectService;
 
 
     // Dependency injection af ProjectService i konstruktør
-    public ProjectController(ProjectService projectService) {
+    public ProjectController(ProjectService projectService, SubProjectService subProjectService) {
         this.projectService = projectService;
+        this.subProjectService = subProjectService;
     }
 
     private UserViewDTO getCurrentUser(HttpSession session) {
@@ -66,12 +69,12 @@ public class ProjectController {
         projectService.createProject(currentUser, project);
         redirectAttributes.addFlashAttribute("success", "Projektet er oprettet."); // Viser succesbesked EFTER redirect
 
-        return "redirect:/projects/list";
+        return "redirect:/projects";
     }
 
     //------------------------------------ Read() --------------------------------------
 
-    @GetMapping("/list") // Lige nu ser Admin alle projekter og dermed ét specifikt projekt flere gange
+    @GetMapping("") // Lige nu ser Admin alle projekter og dermed ét specifikt projekt flere gange
     public String showProjectList(Model model,
                                   HttpSession session,
                                   RedirectAttributes redirectAttributes) {
@@ -121,6 +124,26 @@ public class ProjectController {
         model.addAttribute("project", project);
 
         return "project/project-detail";
+    }
+
+    // TODO skal endpointet her ikke være projects/{projectId}/subprojects?
+    @GetMapping("/{projectId}/subprojects")
+    public String readByProjectId(HttpSession session,
+                                  Model model,
+                                  RedirectAttributes redirectAttributes,
+                                  @PathVariable int projectId) {
+        UserViewDTO currentUser = getCurrentUser(session);
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Log ind for at oprette et projekt.");
+            return "redirect:/login";
+        }
+        boolean isAdmin = currentUser.getRole().equals(Role.ADMIN);
+        boolean isProjectManager = currentUser.getRole().equals(Role.PROJECT_MANAGER);
+        model.addAttribute("isAdmin", isAdmin);
+        model.addAttribute("isProjectManager", isProjectManager);
+        model.addAttribute("projectwithsubprojectdto", subProjectService.readAllFromProjectId(projectId));
+
+        return "subproject/subprojects-under-project";
     }
 
     //------------------------------------ Hent Update() -------------------------------
@@ -188,7 +211,7 @@ public class ProjectController {
 
         redirectAttributes.addFlashAttribute("success", "Projektet blev slettet.");
 
-        return "redirect:/projects/list";
+        return "redirect:/projects";
     }
 
 

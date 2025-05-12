@@ -74,7 +74,7 @@ public class SubTaskController {
 
     //------------------------------------ Read() --------------------------------------
 
-    @GetMapping("subtasks")
+    @GetMapping("")
 
     public String showAllSubTasks(Model model,
                                   HttpSession session,
@@ -182,6 +182,6 @@ public class SubTaskController {
 
         redirectAttributes.addFlashAttribute("success", "Underopgaven blev slettet.");
 
-        return "redirect:/subtasks/subtasks";
+        return "redirect:/subtasks";
     }
 }

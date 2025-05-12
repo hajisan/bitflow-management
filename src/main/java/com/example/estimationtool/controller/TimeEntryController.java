@@ -12,7 +12,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.List;
 
 @Controller
-@RequestMapping("timeentries")
+@RequestMapping("time-entries")
 public class TimeEntryController {
 
     private final TimeEntryService timeEntryService;
@@ -62,7 +62,7 @@ public class TimeEntryController {
 
         redirectAttributes.addFlashAttribute("success", "Tidsregistrering lykkedes.");
 
-        return "redirect:/timeentries";
+        return "redirect:/time-entries";
     }
     //------------------------------------ Read() --------------------------------------
 
@@ -149,7 +149,7 @@ public class TimeEntryController {
         redirectAttributes.addFlashAttribute("success", "Ændring af tidsregistrering lykkedes.");
 
 
-        return "redirect:/timeentries/" + timeEntry.getTimeId(); // Redirect til timeentry-detail.html
+        return "redirect:/time-entries/" + timeEntry.getTimeId(); // Redirect til timeentry-detail.html
 
     }
     //------------------------------------ Delete() ------------------------------------
@@ -169,6 +169,6 @@ public class TimeEntryController {
 
         redirectAttributes.addFlashAttribute("success", "Tidsregistrering blev slettet.");
 
-        return "redirect:/timeentries";
+        return "redirect:/time-entries";
     }
 }

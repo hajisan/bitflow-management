@@ -7,7 +7,7 @@
 <body>
 <h1>Rediger tidsregistrering</h1>
 
-<form th:action="@{/timeentries/update}" th:object="${timeentry}" method="post">
+<form th:action="@{/time-entries/update}" th:object="${timeentry}" method="post">
 
     <input type="hidden" th:field="*{timeId}" />
 
@@ -29,6 +29,6 @@
     <button type="submit">Opdater</button>
 </form>
 
-<a th:href="@{/timeentries}">Tilbage til oversigt</a>
+<a th:href="@{/time-entries}">Tilbage til oversigt</a>
 </body>
 </html>

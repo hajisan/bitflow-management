@@ -66,13 +66,13 @@ public class TaskController {
 
         redirectAttributes.addFlashAttribute("success", "Opgaven blev oprettet");
 
-        return "redirect:/tasks/tasks";
+        return "redirect:/tasks";
 
         }
 
     //------------------------------------ Read() --------------------------------------
 
-    @GetMapping("tasks")
+    @GetMapping("")
     public String showAllTasks(Model model,
                                HttpSession session,
                                RedirectAttributes redirectAttributes) {
@@ -177,7 +177,7 @@ public class TaskController {
 
         redirectAttributes.addFlashAttribute("success", "Opgaven blev slettet.");
 
-        return "redirect:/tasks/tasks";
+        return "redirect:/tasks";
     }
 
 

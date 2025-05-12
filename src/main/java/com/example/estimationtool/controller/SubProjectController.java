@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@RequestMapping("/subprojects")
+@RequestMapping("subprojects")
 public class SubProjectController {
     private final SubProjectService subProjectService;
     private final ProjectService projectService;
@@ -81,27 +81,6 @@ public class SubProjectController {
         model.addAttribute("allSubprojects", subProjectService.readAll());
 
         return "subproject/subproject-list";
-    }
-
-    // TODO skal endpointet her ikke være projects/{projectId}/subprojects?
-
-    @GetMapping("/{projectId}/subprojects")
-    public String readByProjectId(HttpSession session,
-                                  Model model,
-                                  RedirectAttributes redirectAttributes,
-                                  @PathVariable int projectId) {
-        UserViewDTO currentUser = getCurrentUser(session);
-        if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Log ind for at oprette et projekt.");
-            return "redirect:/login";
-        }
-        boolean isAdmin = currentUser.getRole().equals(Role.ADMIN);
-        boolean isProjectManager = currentUser.getRole().equals(Role.PROJECT_MANAGER);
-        model.addAttribute("isAdmin", isAdmin);
-        model.addAttribute("isProjectManager", isProjectManager);
-        model.addAttribute("projectwithsubprojectdto", subProjectService.readAllFromProjectId(projectId));
-
-        return "subproject/subprojects-under-project";
     }
 
     @GetMapping("/{id}")

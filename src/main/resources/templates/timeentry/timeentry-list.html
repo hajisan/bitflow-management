@@ -28,9 +28,9 @@
         <td th:text="${entry.hoursSpent}">5</td>
         <td th:text="${entry.date}">2025-05-08</td>
         <td>
-            <a th:href="@{|/timeentries/${entry.timeId}|}">Vis</a> |
-            <a th:href="@{|/timeentries/edit/${entry.timeId}|}">Rediger</a> |
-            <form th:action="@{|/timeentries/delete/${entry.timeId}|}" method="post" style="display:inline">
+            <a th:href="@{|/time-entries/${entry.timeId}|}">Vis</a> |
+            <a th:href="@{|/time-entries/edit/${entry.timeId}|}">Rediger</a> |
+            <form th:action="@{|/time-entries/delete/${entry.timeId}|}" method="post" style="display:inline">
                 <button type="submit">Slet</button>
             </form>
         </td>
@@ -38,6 +38,6 @@
     </tbody>
 </table>
 
-<a th:href="@{/timeentries/create}">Opret ny tidsregistrering</a>
+<a th:href="@{/time-entries/create}">Opret ny tidsregistrering</a>
 </body>
 </html>

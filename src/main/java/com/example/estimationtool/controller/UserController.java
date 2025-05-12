@@ -29,22 +29,22 @@ public class UserController {
         return (UserViewDTO) session.getAttribute("currentUser");
     }
 
-
-    @GetMapping("/profile")
-    public String getFrontPage(HttpSession session,
-                               RedirectAttributes redirectAttributes,
-                               Model model) {
-
-        UserViewDTO currentUser = getCurrentUser(session);
-
-        if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at tilgå forsiden.");
-            return "redirect:/login";
-        }
-
-        model.addAttribute("user", currentUser);
-        return "user/front-page";
-    }
+    // TODO Her skal vi lige beslutte sammen
+//    @GetMapping("/profile")
+//    public String getFrontPage(HttpSession session,
+//                               RedirectAttributes redirectAttributes,
+//                               Model model) {
+//
+//        UserViewDTO currentUser = getCurrentUser(session);
+//
+//        if (currentUser == null) {
+//            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at tilgå forsiden.");
+//            return "redirect:/login";
+//        }
+//
+//        model.addAttribute("user", currentUser);
+//        return "user/front-page";
+//    }
 
 
     //--------------------------------- Hent Create() ----------------------------------
@@ -85,13 +85,13 @@ public class UserController {
 
         redirectAttributes.addFlashAttribute("success", "Bruger blev oprettet"); //Viser succesbesked EFTER redirect
 
-        return "redirect:/users/users"; //SKAL MÅSKE REDIRECTE TIL ADMINOVERSIGT?
+        return "redirect:/users"; //SKAL MÅSKE REDIRECTE TIL ADMINOVERSIGT?
 
     }
 
     //------------------------------------ Read() --------------------------------------
 
-    @GetMapping("users")
+    @GetMapping("")
     public String showAllUsers(HttpSession session,
                                Model model,
                                RedirectAttributes redirectAttributes) {
@@ -210,7 +210,7 @@ public class UserController {
 
         redirectAttributes.addFlashAttribute("success", "Brugeren blev slettet.");
 
-        return "redirect:/users/users";
+        return "redirect:/front-page";
 
     }
 
