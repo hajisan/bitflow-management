@@ -1,6 +1,7 @@
 package com.example.estimationtool.controller;
 
 import com.example.estimationtool.model.enums.Role;
+import com.example.estimationtool.toolbox.dto.ProjectWithUsersDTO;
 import com.example.estimationtool.toolbox.dto.UserViewDTO;
 import com.example.estimationtool.model.Project;
 import com.example.estimationtool.service.ProjectService;
@@ -177,6 +178,28 @@ public class ProjectController {
         redirectAttributes.addFlashAttribute("success", "Projektet blev slettet.");
 
         return "redirect:/projects/list";
+    }
+
+    //------------------------------------ DTO'er ------------------------------------
+
+    @GetMapping("/{id}/projectusers")
+    public String showProjectWithUsers(@PathVariable int id,
+                                       HttpSession session,
+                                       Model model,
+                                       RedirectAttributes redirectAttributes) {
+
+        UserViewDTO currentUser = getCurrentUser(session);
+
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne slette et projekt.");
+            return "redirect:/login";
+        }
+
+        ProjectWithUsersDTO projectWithUsers = projectService.getProjectWithUsers(id);
+
+        model.addAttribute("projectWithUsers", projectWithUsers);
+
+        return "project/project-with-users";
     }
 
 

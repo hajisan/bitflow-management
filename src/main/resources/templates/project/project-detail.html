@@ -14,16 +14,21 @@
 
 <!-- Viser detaljer om projekt -->
 <ul>
-  <li><strong>Navn:</strong> <span th:text="${project.name}"></span></li>
-  <li><strong>Beskrivelse:</strong> <span th:text="${project.description}"></span></li>
-  <li><strong>Deadline:</strong> <span th:text="${project.deadline}"></span></li>
-  <li><strong>Estimeret tid:</strong> <span th:text="${project.estimatedTime}"></span></li>
-  <li><strong>Status:</strong> <span th:text="${project.status}"></span></li>
+  <li>Navn: <span th:text="${project.name}"></span></li>
+  <li>Beskrivelse: <span th:text="${project.description}"></span></li>
+  <li>Deadline: <span th:text="${project.deadline}"></span></li>
+  <li>Estimeret tid: <span th:text="${project.estimatedTime}"></span></li>
+  <li>Status: <span th:text="${project.status}"></span></li>
 </ul>
 
 <!-- Rediger-link -->
 <p>
   <a th:href="@{/projects/edit/{id}(id=${project.projectId})}">Rediger</a>
+</p>
+
+<!-- Vis tilknyttede brugere -->
+<p>
+  <a th:href="@{/projects/{id}/projectusers(id=${project.projectId})}">Se tilknyttede brugere</a>
 </p>
 
 <!-- Tilbage-knap -->
