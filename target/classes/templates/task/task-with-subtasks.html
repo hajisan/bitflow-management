@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Task With SubTasks</title>
+</head>
+<body>
+
+<h1>Opgavebeskrivelse</h1>
+
+<p>ID: <span th:text="${taskWithSubTasks.task.taskId}"></span></p>
+<p>Navn: <span th:text="${taskWithSubTasks.task.name}"></span></p>
+<p>Beskrivelse: <span th:text="${taskWithSubTasks.task.description}"></span></p>
+<p>Deadline: <span th:text="${taskWithSubTasks.task.deadline}"></span></p>
+<p>Status: <span th:text="${taskWithSubTasks.task.status}"></span></p>
+
+<h2>Underopgaver</h2>
+
+<ul th:if="${!#lists.isEmpty(taskWithSubTasks.subTaskList)}">
+    <li th:each="sub : ${taskWithSubTasks.subTaskList}">
+        <strong th:text="${sub.name}"></strong> –
+        <em>Status:</em><span th:text="${sub.status}"></span>,
+        <em>Estimeret tid:</em><span th:text="${sub.estimatedTime}"></span> timer,
+        <em>Deadline:</em> <span th:text="${sub.deadline}"></span>
+    </li>
+</ul>
+
+<p th:if="${#lists.isEmpty(taskWithSubTasks.subTaskList)}">
+    Der er ingen underopgaver tilknyttet denne opgave.
+</p>
+
+<a th:href="@{/tasks/list}">Tilbage til opgaveoversigt</a>
+
+</body>
+</html>

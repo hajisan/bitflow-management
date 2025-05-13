@@ -62,7 +62,7 @@ public class TaskRepository implements ITaskRepository {
     }
 
     @Override
-    public Task readById(Integer id) {
+    public Task readById(Integer taskId) {
 
         String sql = """
         SELECT
@@ -70,7 +70,7 @@ public class TaskRepository implements ITaskRepository {
         FROM task
         WHERE id = ?
         """;
-        return jdbcTemplate.queryForObject(sql, new TaskRowMapper(), id);
+        return jdbcTemplate.queryForObject(sql, new TaskRowMapper(), taskId);
     }
 
     //------------------------------------ Update() ------------------------------------
@@ -99,10 +99,10 @@ public class TaskRepository implements ITaskRepository {
     //------------------------------------ Delete() ------------------------------------
 
     @Override
-    public void deleteById(Integer id) {
+    public void deleteById(Integer taskId) {
 
         String sql = "DELETE FROM task WHERE id = ?";
-        jdbcTemplate.update(sql, id);
+        jdbcTemplate.update(sql, taskId);
 
     }
 

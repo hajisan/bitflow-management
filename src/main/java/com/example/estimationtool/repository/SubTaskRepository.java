@@ -137,6 +137,19 @@ public class SubTaskRepository implements ISubTaskRepository {
         return jdbcTemplate.query(sql, new SubTaskRowMapper(), userId);
     }
 
+    // --- Read() subtasks ud fra task-ID ---
+
+    @Override
+    public List<SubTask> readAllByTaskId(Integer taskId) {
+        String sql = """
+            SELECT id, taskID, estimatedTime, name, description, deadline, status
+            FROM subtask
+            WHERE taskID = ?
+            """;
+
+        return jdbcTemplate.query(sql, new SubTaskRowMapper(), taskId);
+    }
+
     //---------------------------------- Assign User --------------------------------
 
 

@@ -20,6 +20,8 @@ public interface ISubTaskRepository extends IRepository<SubTask, Integer> {
 
     List<SubTask> readAllByUserId(Integer userId);
 
+    List<SubTask> readAllByTaskId(Integer taskId);
+
     // Kobler User til SubTask i mellemtabellen
     void assignUserToSubTask(Integer userId, Integer subTaskId);
 
