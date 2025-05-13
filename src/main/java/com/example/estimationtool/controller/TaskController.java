@@ -1,6 +1,7 @@
 package com.example.estimationtool.controller;
 
 import com.example.estimationtool.toolbox.dto.TaskWithSubTasksDTO;
+import com.example.estimationtool.toolbox.dto.TaskWithTimeEntriesDTO;
 import com.example.estimationtool.toolbox.dto.TaskWithUsersDTO;
 import com.example.estimationtool.toolbox.dto.UserViewDTO;
 import com.example.estimationtool.model.Task;
@@ -227,6 +228,26 @@ public class TaskController {
         model.addAttribute("taskWithSubTasks", taskWithSubTasksDTO);
 
         return "task/task-with-subtasks";
+    }
+
+    // -------------------- Viser en task's tilknyttede timeEntries  ------------------
+
+    @GetMapping("/{id}/timeentries")
+    public String showTaskWithTimeEntries(@PathVariable int id,
+                                          HttpSession session,
+                                          Model model,
+                                          RedirectAttributes redirectAttributes) {
+
+        UserViewDTO currentUser = getCurrentUser(session);
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at se timeentries for en opgave.");
+            return "redirect:/login";
+        }
+
+        TaskWithTimeEntriesDTO dto = taskService.readAllTimeEntriesByTaskId(id);
+        model.addAttribute("taskWithTimeEntries", dto);
+
+        return "task/task-with-timeentries";
     }
 
 

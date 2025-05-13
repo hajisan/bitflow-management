@@ -2,7 +2,10 @@ package com.example.estimationtool.service;
 
 
 import com.example.estimationtool.model.SubTask;
+import com.example.estimationtool.model.timeEntry.TimeEntry;
 import com.example.estimationtool.repository.interfaces.ISubTaskRepository;
+import com.example.estimationtool.repository.interfaces.ITimeEntryRepository;
+import com.example.estimationtool.toolbox.dto.SubTaskWithTimeEntriesDTO;
 import com.example.estimationtool.toolbox.dto.UserViewDTO;
 import com.example.estimationtool.toolbox.roleCheck.RoleCheck;
 import org.springframework.stereotype.Service;
@@ -12,9 +15,11 @@ import java.util.List;
 public class SubTaskService {
 
     private final ISubTaskRepository iSubTaskRepository;
+    private final ITimeEntryRepository iTimeEntryRepository;
 
-    public SubTaskService(ISubTaskRepository iSubTaskRepository) {
+    public SubTaskService(ISubTaskRepository iSubTaskRepository, ITimeEntryRepository iTimeEntryRepository) {
         this.iSubTaskRepository = iSubTaskRepository;
+        this.iTimeEntryRepository = iTimeEntryRepository;
     }
 
     //------------------------------------ Create() ------------------------------------
@@ -52,6 +57,15 @@ public class SubTaskService {
     public List<SubTask> readAllSubTasksByUserId(int userId) {
 
         return iSubTaskRepository.readAllByUserId(userId);
+    }
+
+
+    // --- Henter timeentries ud fra subtask-ID ---
+
+    public SubTaskWithTimeEntriesDTO readAllTimeEntriesBySubTaskId(int subTaskId) {
+        SubTask subTask = iSubTaskRepository.readById(subTaskId);
+        List<TimeEntry> entries = iTimeEntryRepository.readAllBySubTaskId(subTaskId);
+        return new SubTaskWithTimeEntriesDTO(subTask, entries);
     }
 
     //---------------------------------- Assign User ---------------------------------

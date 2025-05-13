@@ -3,6 +3,7 @@ package com.example.estimationtool.controller;
 import com.example.estimationtool.model.SubTask;
 import com.example.estimationtool.model.enums.Status;
 import com.example.estimationtool.service.SubTaskService;
+import com.example.estimationtool.toolbox.dto.SubTaskWithTimeEntriesDTO;
 import com.example.estimationtool.toolbox.dto.UserViewDTO;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -184,4 +185,28 @@ public class SubTaskController {
 
         return "redirect:/subtasks/subtasks";
     }
+
+    //---------------------------------- DTO read() ------------------------------------
+
+
+    // -------------------- Viser en subtask's tilknyttede timeEntries ----------------
+
+    @GetMapping("/{id}/timeentries")
+    public String showSubTaskWithTimeEntries(@PathVariable int id,
+                                             HttpSession session,
+                                             Model model,
+                                             RedirectAttributes redirectAttributes) {
+
+        UserViewDTO currentUser = getCurrentUser(session);
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at se timeentries for en underopgave.");
+            return "redirect:/login";
+        }
+
+        SubTaskWithTimeEntriesDTO dto = subTaskService.readAllTimeEntriesBySubTaskId(id);
+        model.addAttribute("subTaskWithTimeEntries", dto);
+
+        return "subtask/subtask-with-timeentries";
+    }
+
 }

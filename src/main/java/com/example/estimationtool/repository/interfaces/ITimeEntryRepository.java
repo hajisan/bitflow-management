@@ -19,4 +19,11 @@ public interface ITimeEntryRepository extends IRepository<TimeEntry, Integer> {
     void deleteById(Integer id);
 
     // CRUDS for DTO'er
+
+    List<TimeEntry> readAllByTaskId(Integer taskId);
+
+    List<TimeEntry> readAllBySubTaskId(Integer subTaskId);
+
+
+
 }

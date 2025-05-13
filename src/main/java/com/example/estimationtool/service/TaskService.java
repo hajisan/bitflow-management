@@ -3,6 +3,7 @@ package com.example.estimationtool.service;
 
 import com.example.estimationtool.model.SubTask;
 import com.example.estimationtool.model.User;
+import com.example.estimationtool.model.timeEntry.TimeEntry;
 import com.example.estimationtool.repository.interfaces.ISubTaskRepository;
 import com.example.estimationtool.repository.interfaces.ITaskRepository;
 import com.example.estimationtool.model.Task;
@@ -10,11 +11,9 @@ import com.example.estimationtool.model.Task;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.estimationtool.repository.interfaces.ITimeEntryRepository;
 import com.example.estimationtool.repository.interfaces.IUserRepository;
-import com.example.estimationtool.toolbox.dto.SubProjectWithUsersDTO;
-import com.example.estimationtool.toolbox.dto.TaskWithSubTasksDTO;
-import com.example.estimationtool.toolbox.dto.TaskWithUsersDTO;
-import com.example.estimationtool.toolbox.dto.UserViewDTO;
+import com.example.estimationtool.toolbox.dto.*;
 import com.example.estimationtool.toolbox.roleCheck.RoleCheck;
 import org.springframework.stereotype.Service;
 
@@ -24,11 +23,13 @@ public class TaskService {
     private final ITaskRepository iTaskRepository;
     private final IUserRepository iUserRepository;
     private final ISubTaskRepository iSubTaskRepository;
+    private final ITimeEntryRepository iTimeEntryRepository;
 
-    public TaskService(ITaskRepository iTaskRepository, IUserRepository iUserRepository, ISubTaskRepository iSubTaskRepository) {
+    public TaskService(ITaskRepository iTaskRepository, IUserRepository iUserRepository, ISubTaskRepository iSubTaskRepository, ITimeEntryRepository iTimeEntryRepository) {
         this.iTaskRepository = iTaskRepository;
         this.iUserRepository = iUserRepository;
         this.iSubTaskRepository = iSubTaskRepository;
+        this.iTimeEntryRepository = iTimeEntryRepository;
     }
 
     //------------------------------------ Create() ------------------------------------
@@ -107,6 +108,15 @@ public class TaskService {
         // Returnér samlet DTO
         return new TaskWithSubTasksDTO(task, subTaskList);
     }
+
+    // --- Henter timeentries ud fra task-ID -----
+
+    public TaskWithTimeEntriesDTO readAllTimeEntriesByTaskId(int taskId) {
+        Task task = iTaskRepository.readById(taskId);
+        List<TimeEntry> entries = iTimeEntryRepository.readAllByTaskId(taskId);
+        return new TaskWithTimeEntriesDTO(task, entries);
+    }
+
 
 
     //---------------------------------- Assign User --------------------------------

@@ -12,6 +12,19 @@ import java.sql.PreparedStatement;
 
 import java.util.List;
 
+/*
+------------------------- Denne klasse håndterer: ------------------------
+
+Indsættelse i mellemtabeller ved create
+
+JOINs ved readAll() og readById() for at samle relaterede data
+
+Sletning i korrekt rækkefølge for at undgå foreign key-violations
+
+Opdatering i både hoved- og mellemtabeller
+
+ */
+
 @Repository
 public class TimeEntryRepository implements ITimeEntryRepository {
 
@@ -166,4 +179,55 @@ public class TimeEntryRepository implements ITimeEntryRepository {
     }
 
 
+
+    //---------------------------------- Til DTO'er ------------------------------------
+
+    // --- Read() timeentries ud fra task-ID -----
+
+    @Override
+    public List<TimeEntry> readAllByTaskId(Integer taskId) {
+
+        // JOIN = får timeentry for et bestemt taskID
+        // LEFT JOIN = får subtaskID med, hvis det eksisterer (ellers null)
+        String sql = """
+        SELECT
+            timeentry.id,
+            timeentry.userID,
+            timeentry.date,
+            timeentry.hoursSpent,
+            timeentry_task.taskID,
+            timeentry_subtask.subTaskID
+        FROM timeentry
+        JOIN timeentry_task ON timeentry.id = timeentry_task.timeEntryID
+        LEFT JOIN timeentry_subtask ON timeentry.id = timeentry_subtask.timeEntryID
+        WHERE timeentry_task.taskID = ?
+        """;
+
+        return jdbcTemplate.query(sql, new TimeEntryRowMapper(), taskId);
+    }
+
+
+    // --- Read() timeentries ud fra subtask-ID ---
+
+    @Override
+    public List<TimeEntry> readAllBySubTaskId(Integer subTaskId) {
+
+        // JOIN = får timeentry for et bestemt subtaskID
+        // LEFT JOIN = får taskID med, hvis det eksisterer (ellers null)
+        String sql = """
+        SELECT
+            timeentry.id,
+            timeentry.userID,
+            timeentry.date,
+            timeentry.hoursSpent,
+            timeentry_task.taskID,
+            timeentry_subtask.subTaskID
+        FROM timeentry
+        JOIN timeentry_subtask ON timeentry.id = timeentry_subtask.timeEntryID
+        LEFT JOIN timeentry_task ON timeentry.id = timeentry_task.timeEntryID
+        WHERE timeentry_subtask.subTaskID = ?
+        """;
+
+        return jdbcTemplate.query(sql, new TimeEntryRowMapper(), subTaskId);
+    }
 }
