@@ -5,7 +5,7 @@ import com.example.estimationtool.repository.interfaces.ISubProjectRepository;
 import com.example.estimationtool.model.SubProject;
 import com.example.estimationtool.toolbox.dto.ProjectWithSubProjectsDTO;
 import com.example.estimationtool.toolbox.rowMappers.ProjectRowMapper;
-import com.example.estimationtool.toolbox.rowMappers.SubProjectRowMapper;
+//import com.example.estimationtool.toolbox.rowMappers.SubProjectRowMapper;
 import com.example.estimationtool.toolbox.rowMappers.SubProjectRowMapperS;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -115,7 +115,6 @@ public class SubProjectRepository implements ISubProjectRepository {
 
     // --- Read() subprojekter ud fra bruger-ID ---
 
-
     @Override
     public List<SubProject> readAllByUserId(Integer userId) {
 
@@ -137,27 +136,6 @@ public class SubProjectRepository implements ISubProjectRepository {
                 WHERE user_subproject.userID = ?
                 """;
         return jdbcTemplate.query(sql, new SubProjectRowMapperS(), userId);
-    }
-
-    @Override
-    public List<Project> readByUserId(Integer userId) {
-
-        String sql = """
-                    SELECT
-                        project.id,
-                        project.estimatedTime,
-                        project.timeSpent,
-                        project.name,
-                        project.description,
-                        project.deadline,
-                        project.status
-                    FROM project
-                    JOIN user_project ON project.id = user_project.projectID
-                    WHERE user_project.userID = ?
-                    """;
-
-        return jdbcTemplate.query(sql, new ProjectRowMapper(),userId);
-
     }
 
 

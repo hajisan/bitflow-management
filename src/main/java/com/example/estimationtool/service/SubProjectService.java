@@ -103,4 +103,12 @@ public class SubProjectService {
             iSubProjectRepository.deleteById(id);
         }
     }
+
+    //------------------------------------ DTO'er -------------------------------------
+
+    // --- Henter SubProjekter ud fra brugerID ---
+    public List<SubProject> readAllSubProjectsByUserId(int userId) {
+
+        return iSubProjectRepository.readAllByUserId(userId);
+    }
 }

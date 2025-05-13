@@ -237,7 +237,7 @@ public class UserController {
             return "redirect:/login";
         }
 
-        UserWithProjectsDTO userWithProjectsDTO = userService.getUserWithProjects(id);
+        UserWithProjectsDTO userWithProjectsDTO = userService.readAllProjectsByUserId(id);
 
         model.addAttribute("userWithProjects", userWithProjectsDTO);
 

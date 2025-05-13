@@ -1,14 +1,12 @@
 package com.example.estimationtool.service;
 
 import com.example.estimationtool.model.Project;
+import com.example.estimationtool.model.SubProject;
 import com.example.estimationtool.repository.interfaces.IProjectRepository;
-import com.example.estimationtool.toolbox.dto.UserRegistrationDTO;
+import com.example.estimationtool.toolbox.dto.*;
 
-import com.example.estimationtool.toolbox.dto.UserUpdateDTO;
-import com.example.estimationtool.toolbox.dto.UserViewDTO;
 import com.example.estimationtool.model.enums.Role;
 import com.example.estimationtool.repository.interfaces.IUserRepository;
-import com.example.estimationtool.toolbox.dto.UserWithProjectsDTO;
 import com.example.estimationtool.toolbox.roleCheck.RoleCheck;
 import com.example.estimationtool.model.User;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -27,15 +25,16 @@ public class UserService {
 
     private final IUserRepository iUserRepository;
     private final PasswordEncoder passwordEncoder;
-    private final IProjectRepository iProjectRepository;
+
     private final ProjectService projectService;
+    private final SubProjectService subProjectService;
 
 
-    public UserService(IUserRepository iUserRepository, PasswordEncoder passwordEncoder, IProjectRepository iProjectRepository, ProjectService projectService) {
+    public UserService(IUserRepository iUserRepository, PasswordEncoder passwordEncoder, ProjectService projectService, SubProjectService subProjectService) {
         this.iUserRepository = iUserRepository;
         this.passwordEncoder = passwordEncoder;
-        this.iProjectRepository= iProjectRepository;
         this.projectService = projectService;
+        this.subProjectService = subProjectService;
     }
 
     //------------------------------------ Create() ------------------------------------
@@ -177,7 +176,12 @@ public class UserService {
 
     //------------------------------------ DTO'er -------------------------------------
 
-    public UserWithProjectsDTO getUserWithProjects(int userId) {
+
+    // --- Henter projekter ud fra brugerID ---
+
+    public UserWithProjectsDTO readAllProjectsByUserId(int userId) {
+
+        // Læser én bruger
         User user = iUserRepository.readById(userId);
 
         // ExceptionHandling
@@ -185,6 +189,7 @@ public class UserService {
 //            throw new NoSuchElementException("Bruger med ID " + userId + " findes ikke.");
 //        }
 
+        // Konverterer User til UserViewDTO
         UserViewDTO userViewDTO = new UserViewDTO(
                 user.getUserId(),
                 user.getFirstName(),
@@ -193,9 +198,38 @@ public class UserService {
                 user.getRole()
         );
 
+        // Læser projekter ud fra brugerID
         List<Project> projectList = projectService.readByUserId(userId);
 
+        // Returnerer bruger + projekter i en DTO
         return new UserWithProjectsDTO(userViewDTO, projectList);
+    }
+
+
+    // --- Henter subprojekter ud fra brugerID ---
+
+    public UserWithSubProjectsDTO readAllSubProjectsByUserId(int userId) {
+
+        // Læser én bruger
+        User user = iUserRepository.readById(userId);
+
+        // ExceptionHandling
+//        if (user == null) {
+//            throw new NoSuchElementException("Bruger med ID " + userId + " findes ikke.");
+//        }
+
+        // Konverterer User til UserViewDTO
+        UserViewDTO userViewDTO = new UserViewDTO(
+                user.getUserId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getRole()
+        );
+
+        List<SubProject> subProjectList = subProjectService.readAllSubProjectsByUserId(userId);
+
+        return new UserWithSubProjectsDTO(userViewDTO, subProjectList);
 
     }
 }
