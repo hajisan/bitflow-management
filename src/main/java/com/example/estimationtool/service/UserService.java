@@ -32,7 +32,7 @@ public class UserService {
     private final ProjectService projectService;
     private final SubProjectService subProjectService;
 
-    private final ISubProjectRepository iSubProjectRepository;
+//    private final ISubProjectRepository iSubProjectRepository;
     private final TaskService taskService;
 
 
@@ -41,7 +41,7 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
         this.projectService = projectService;
         this.subProjectService = subProjectService;
-        this.iSubProjectRepository = iSubProjectRepository;
+//        this.iSubProjectRepository = iSubProjectRepository;
         this.taskService = taskService;
     }
 
@@ -240,36 +240,36 @@ public class UserService {
         return new UserWithSubProjectsDTO(userViewDTO, subProjectList);
 
     }
-
-    // --- Henter brugere ud fra subprojektID ---
-
-    public SubProjectWithUsersDTO readAllUsersBySubProjectId(int subProjectId) {
-
-        // Læser ét subprojekt
-        SubProject subProject = iSubProjectRepository.readById(subProjectId);
-
-        // Læser listen af brugere ud fra subprojektID
-        List<User> userList = iUserRepository.readAllBySubProjectId(subProjectId);
-
-        // Opretter liste af UserViewDTO
-        List<UserViewDTO> userViewDTOList = new ArrayList<>();
-
-        // Konverterer userList til UserViewDTOList ved at loope igennem userList
-        for (User user : userList) {
-            UserViewDTO userViewDTO = new UserViewDTO(
-                    user.getUserId(),
-                    user.getFirstName(),
-                    user.getLastName(),
-                    user.getEmail(),
-                    user.getRole()
-            );
-            userViewDTOList.add(userViewDTO); // Tilføjet hver UserDTO til listen
-        }
-
-
-        // Returnerer subprojekt + liste af UserViewDTO
-        return new SubProjectWithUsersDTO(subProject, userViewDTOList);
-    }
+//
+//    // --- Henter brugere ud fra subprojektID ---
+//
+//    public SubProjectWithUsersDTO readAllUsersBySubProjectId(int subProjectId) {
+//
+//        // Læser ét subprojekt
+//        SubProject subProject = iSubProjectRepository.readById(subProjectId);
+//
+//        // Læser listen af brugere ud fra subprojektID
+//        List<User> userList = iUserRepository.readAllBySubProjectId(subProjectId);
+//
+//        // Opretter liste af UserViewDTO
+//        List<UserViewDTO> userViewDTOList = new ArrayList<>();
+//
+//        // Konverterer userList til UserViewDTOList ved at loope igennem userList
+//        for (User user : userList) {
+//            UserViewDTO userViewDTO = new UserViewDTO(
+//                    user.getUserId(),
+//                    user.getFirstName(),
+//                    user.getLastName(),
+//                    user.getEmail(),
+//                    user.getRole()
+//            );
+//            userViewDTOList.add(userViewDTO); // Tilføjet hver UserDTO til listen
+//        }
+//
+//
+//        // Returnerer subprojekt + liste af UserViewDTO
+//        return new SubProjectWithUsersDTO(subProject, userViewDTOList);
+//    }
 
     // --- Henter tasks ud fra brugerID ---
 

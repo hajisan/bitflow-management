@@ -186,6 +186,9 @@
         @Override
         public List<Project> readAllByUserId(Integer userId) {
 
+            // Bruger JOIN til at joine projekt-ID'et fra mellemtabellen til projekt-ID'et fra
+            // projekt-tabellen, hvor brugerID matcher
+
             String sql = """
                     SELECT
                         project.id,

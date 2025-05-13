@@ -26,4 +26,7 @@ public interface IUserRepository extends IRepository<User, Integer> {
 
     List<User> readAllBySubProjectId(Integer subProjectId);
 
+    List<User> readAllByTaskId(Integer taskId);
+
+    User readUserBySubTaskId(Integer subTaskId);
 }

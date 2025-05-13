@@ -124,6 +124,9 @@ public class UserRepository implements IUserRepository {
     @Override
     public List<User> readAllByProjectId(Integer projectId) {
 
+        // Bruger JOIN til at joine bruger-ID'et fra mellemtabellen til bruger-ID'et fra
+        // user-tabellen, hvor projektID matcher
+
         String sql = """
                 SELECT
                     user.id,
@@ -145,6 +148,9 @@ public class UserRepository implements IUserRepository {
     @Override
     public List<User> readAllBySubProjectId(Integer subProjectId) {
 
+        // Bruger JOIN til at joine bruger-ID'et fra mellemtabellen til bruger-ID'et fra
+        // user-tabellen, hvor subprojectID matcher
+
         String sql = """
                 SELECT
                     user.id,
@@ -160,5 +166,35 @@ public class UserRepository implements IUserRepository {
 
         return jdbcTemplate.query(sql, new UserRowMapper(), subProjectId);
     }
+
+    // --- Read() brugere ud fra task-ID ---
+
+    @Override
+    public List<User> readAllByTaskId(Integer taskId) {
+
+        // Bruger JOIN til at joine bruger-ID'et fra mellemtabellen til bruger-ID'et fra
+        // bruger-tabellen, hvor brugerID matcher
+
+        String sql = """
+                SELECT
+                    user.id,
+                    user.firstName,
+                    user.lastName,
+                    user.email,
+                    user.passwordHash,
+                    user.role
+                FROM user
+                JOIN user_task ON user.id = user_task.userID
+                WHERE user_task.taskID = ?
+                """;
+
+        return jdbcTemplate.query(sql, new UserRowMapper(), taskId);
+    }
+
+    @Override
+    public User readUserBySubTaskId(Integer subTaskId) {
+        return null;
+    }
+
 
 }

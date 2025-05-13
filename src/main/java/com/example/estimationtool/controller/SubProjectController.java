@@ -26,12 +26,11 @@ public class SubProjectController {
 
     private final SubProjectService subProjectService;
     private final ProjectService projectService;
-    private final UserService userService;
 
-    public SubProjectController(SubProjectService subProjectService, ProjectController projectController, ProjectService projectService, UserService userService) {
+    public SubProjectController(SubProjectService subProjectService, ProjectService projectService) {
         this.subProjectService = subProjectService;
         this.projectService = projectService;
-        this.userService = userService;
+
     }
 
     private UserViewDTO getCurrentUser(HttpSession session) {
@@ -216,7 +215,7 @@ public class SubProjectController {
         }
 
 
-        SubProjectWithUsersDTO subProjectWithUsersDTO = userService.readAllUsersBySubProjectId(id);
+        SubProjectWithUsersDTO subProjectWithUsersDTO = subProjectService.readAllUsersBySubProjectId(id);
 
         model.addAttribute("subProjectWithUsers", subProjectWithUsersDTO);
         return "subproject/subproject-with-users";
