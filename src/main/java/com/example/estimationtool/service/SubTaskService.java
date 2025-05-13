@@ -43,7 +43,7 @@ public class SubTaskService {
         iSubTaskRepository.deleteById(id);
     }
 
-    //------------------------------------ DTO'er ------------------------------------
+    //------------------------------------ Til DTO'er ----------------------------------
 
 
     // --- Henter subtasks ud fra brugerID for UserService ---
