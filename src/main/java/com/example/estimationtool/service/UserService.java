@@ -181,7 +181,7 @@ public class UserService {
         throw new BadCredentialsException("Adgangskoden er forkert.");
     }
 
-    //------------------------------------ DTO'er -------------------------------------
+    //------------------------------------ DTO-Mappings -----------------------------------
 
 
     // --- Henter projekter ud fra brugerID ---

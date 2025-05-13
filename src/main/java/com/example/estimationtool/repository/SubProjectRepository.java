@@ -60,6 +60,8 @@ public class SubProjectRepository implements ISubProjectRepository {
         return subProject;
     }
 
+
+
     //------------------------------------ Read() ------------------------------------
 
     @Override
@@ -71,7 +73,6 @@ public class SubProjectRepository implements ISubProjectRepository {
 
         return jdbcTemplate.query(sql, new SubProjectRowMapperS());
     }
-
 
 
     @Override
@@ -112,6 +113,7 @@ public class SubProjectRepository implements ISubProjectRepository {
         return jdbcTemplate.query(sql, new SubProjectRowMapperS(), projectId);
     }
 
+
     // --- Read() subprojekter ud fra bruger-ID ---
 
     @Override
@@ -136,6 +138,17 @@ public class SubProjectRepository implements ISubProjectRepository {
                 """;
         return jdbcTemplate.query(sql, new SubProjectRowMapperS(), userId);
     }
+
+    //---------------------------------- Assign User ---------------------------------
+
+    // ----------------- Subprojekt tildeles en bruger efter oprettelse --------------
+
+    @Override
+    public void assignUserToSubProject(Integer userId, Integer subProjectId) {
+        String sql = "INSERT INTO user_subproject (userID, subProjectID) VALUES (?, ?)";
+        jdbcTemplate.update(sql, userId, subProjectId);
+    }
+
 
 
 }

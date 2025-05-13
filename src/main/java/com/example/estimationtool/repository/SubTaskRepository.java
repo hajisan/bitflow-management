@@ -136,4 +136,15 @@ public class SubTaskRepository implements ISubTaskRepository {
                 """;
         return jdbcTemplate.query(sql, new SubTaskRowMapper(), userId);
     }
+
+    //---------------------------------- Assign User --------------------------------
+
+
+
+    // ----------------- SubTask tildeles en bruger efter oprettelse ----------------
+
+    @Override
+    public void assignUserToSubTask(Integer userId, Integer subTaskId) {
+
+    }
 }

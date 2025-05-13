@@ -51,6 +51,7 @@ public class TaskRepository implements ITaskRepository {
         return task;
     }
 
+
     //------------------------------------ Read() ------------------------------------
     @Override
     public List<Task> readAll() {
@@ -131,7 +132,21 @@ public class TaskRepository implements ITaskRepository {
         return jdbcTemplate.query(sql, new TaskRowMapper(), userId);
     }
 
+    //---------------------------------- Assign User --------------------------------
+
+    // ----------------- Task tildeles en bruger efter oprettelse -------------------
+
+    @Override
+    public void assignUserToTask(Integer userId, Integer taskId) {
+
+        String sql = "INSERT INTO user_task (userID, taskID) VALUES (?, ?)";
+        jdbcTemplate.update(sql, userId, taskId);
     }
+
+
+
+
+}
 
 
 

@@ -53,18 +53,6 @@
             return project;
         }
 
-        // ----------------- Projekt tildeles en bruger efter oprettelse -----------------
-
-        @Override
-        public void assignUserToProject(Integer userId, Integer projectId) {
-
-            String sql = "INSERT INTO user_project (userID, projectID) VALUES (?, ?)";
-
-            jdbcTemplate.update(sql, userId, projectId);
-
-        }
-
-
         //------------------------------------ Read() ------------------------------------
 
         @Override
@@ -187,5 +175,17 @@
 
         }
 
+        //---------------------------------- Assign User --------------------------------
+
+        // ----------------- Projekt tildeles en bruger efter oprettelse -----------------
+
+        @Override
+        public void assignUserToProject(Integer userId, Integer projectId) {
+
+            String sql = "INSERT INTO user_project (userID, projectID) VALUES (?, ?)";
+
+            jdbcTemplate.update(sql, userId, projectId);
+
+        }
 
     }

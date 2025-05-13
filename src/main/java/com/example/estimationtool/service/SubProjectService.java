@@ -55,24 +55,6 @@ public class SubProjectService {
     }
 
 
-//    public ProjectWithSubProjectsDTO readAllFromProjectId(int projectId) {
-////        try {
-//        ProjectWithSubProjectsDTO projectWithSubProjectsDTO = new ProjectWithSubProjectsDTO(
-//                iProjectRepository.readById(projectId),
-//                iSubProjectRepository.readAllFromProjectId(projectId));
-//
-//        if (projectWithSubProjectsDTO.subProjectList().isEmpty()) {
-//            throw new NoSuchElementException("Projekt med ID "
-//                    + projectId +
-//                    " har ikke nogen subprojekter.");
-//        }
-//
-//        return projectWithSubProjectsDTO;
-////        } catch (NullPointerException e) {
-////            throw new NullPointerException("Enten findes projekt med ID " + projectId + "ikke, eller også findes subprojekterne ikke.");
-////        }
-//    }
-
     public SubProject readById(int id) {
         SubProject subProject = iSubProjectRepository.readById(id);
         if (subProject == null) throw new NoSuchElementException("Subprojekt med ID" + id + " eksisterer ikke.");
@@ -152,5 +134,21 @@ public class SubProjectService {
     }
 
 
-
+//    public ProjectWithSubProjectsDTO readAllFromProjectId(int projectId) {
+////        try {
+//        ProjectWithSubProjectsDTO projectWithSubProjectsDTO = new ProjectWithSubProjectsDTO(
+//                iProjectRepository.readById(projectId),
+//                iSubProjectRepository.readAllFromProjectId(projectId));
+//
+//        if (projectWithSubProjectsDTO.subProjectList().isEmpty()) {
+//            throw new NoSuchElementException("Projekt med ID "
+//                    + projectId +
+//                    " har ikke nogen subprojekter.");
+//        }
+//
+//        return projectWithSubProjectsDTO;
+////        } catch (NullPointerException e) {
+////            throw new NullPointerException("Enten findes projekt med ID " + projectId + "ikke, eller også findes subprojekterne ikke.");
+////        }
+//    }
 }

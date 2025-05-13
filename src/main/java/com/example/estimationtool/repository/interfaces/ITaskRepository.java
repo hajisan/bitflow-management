@@ -23,4 +23,7 @@ public interface ITaskRepository extends IRepository<Task, Integer> {
 
     List<Task> readAllTasksByUserId(Integer userId);
 
+    // Kobler User til Task i mellemtabellen
+    void assignUserToTask(Integer userId, Integer taskId);
+
 }

@@ -23,4 +23,8 @@ public interface ISubProjectRepository extends IRepository<SubProject, Integer>{
     List<SubProject> readAllFromProjectId(Integer projectId);
 
     List<SubProject> readAllByUserId(Integer userId);
+
+    // Kobler User til SubProject i mellemtabellen
+
+    void assignUserToSubProject(Integer userId, Integer SubProjectId);
 }
