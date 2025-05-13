@@ -244,6 +244,27 @@ public class UserController {
         return "user/user-with-projects";
     }
 
+    // -------------------- Viser brugerens tilknyttede subprojekter --------------------
+
+    @GetMapping("/{id}/subprojects")
+    public String showUserWithSubProjects(@PathVariable int id,
+                                          HttpSession session,
+                                          Model model,
+                                          RedirectAttributes redirectAttributes) {
+
+        // Tjekker om bruger er logget ind
+        UserViewDTO currentUser = getCurrentUser(session);
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne se en brugers subprojekter.");
+            return "redirect:/login";
+        }
+
+        UserWithSubProjectsDTO userWithSubProjectsDTO = userService.readAllSubProjectsByUserId(id);
+
+        model.addAttribute("userWithSubProjects", userWithSubProjectsDTO);
+        return "user/user-with-subprojects";
+    }
+
 
 
 
