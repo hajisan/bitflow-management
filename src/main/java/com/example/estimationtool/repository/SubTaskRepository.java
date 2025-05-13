@@ -111,4 +111,29 @@ public class SubTaskRepository implements ISubTaskRepository {
         jdbcTemplate.update(sql, id);
 
     }
+
+    //---------------------------------- Til DTO'er ------------------------------------
+
+
+    // --- Read() subtasks ud fra bruger-ID ---
+    @Override
+    public List<SubTask> readAllByUserId(Integer userId) {
+
+        // Bruger JOIN til at hente alle subtasks for ét brugerID
+
+        String sql = """
+                SELECT
+                    subtask.id,
+                    subtask.taskID,
+                    subtask.estimatedTime,
+                    subtask.name,
+                    subtask.description,
+                    subtask.deadline,
+                    subtask.status
+                FROM subtask
+                JOIN user_subtask ON subtask.id = user_subtask.subTaskID
+                WHERE user_subtask.userID = ?
+                """;
+        return jdbcTemplate.query(sql, new SubTaskRowMapper(), userId);
+    }
 }

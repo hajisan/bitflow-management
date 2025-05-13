@@ -112,14 +112,13 @@ public class SubProjectService {
 
     //------------------------------------ DTO'er -------------------------------------
 
-    // --- Henter SubProjekter ud fra brugerID ---
+    // --- Henter SubProjekter ud fra brugerID for UserService ---
     public List<SubProject> readAllSubProjectsByUserId(int userId) {
 
         return iSubProjectRepository.readAllByUserId(userId);
     }
 
     // --- Henter brugere ud fra subprojektID ---
-
     public SubProjectWithUsersDTO readAllUsersBySubProjectId(int subProjectId) {
 
         // Læser ét subprojekt

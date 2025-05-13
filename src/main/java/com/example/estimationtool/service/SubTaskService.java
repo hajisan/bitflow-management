@@ -42,4 +42,15 @@ public class SubTaskService {
     public void deleteById(int id) {
         iSubTaskRepository.deleteById(id);
     }
+
+    //------------------------------------ DTO'er ------------------------------------
+
+
+    // --- Henter subtasks ud fra brugerID for UserService ---
+    public List<SubTask> readAllSubTasksByUserId(int userId) {
+
+        return iSubTaskRepository.readAllByUserId(userId);
+    }
+
+
 }

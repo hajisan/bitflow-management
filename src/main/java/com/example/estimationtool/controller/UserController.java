@@ -288,6 +288,35 @@ public class UserController {
 
     }
 
+    // ------------------ Viser brugerens tilknyttede subtasks --------------------
+
+    @GetMapping("/{id}/subtasks")
+    public String showUserWithSubTasks(@PathVariable int id,
+                                       HttpSession session,
+                                       Model model,
+                                       RedirectAttributes redirectAttributes) {
+
+        // Tjekker om bruger er logget ind
+        UserViewDTO currentUser = getCurrentUser(session);
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne se en brugers subopgaver.");
+            return "redirect:/login";
+        }
+
+        // Henter DTO: bruger + subopgaver
+        UserWithSubTasksDTO userWithSubTasksDTO = userService.readAllSubTasksByUserId(id);
+
+        // Lægger DTO på modellen
+        model.addAttribute("userWithSubTasks", userWithSubTasksDTO);
+
+        return "user/user-with-subtasks";
+    }
+
+
+
+
+
+
 
 
 

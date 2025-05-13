@@ -1,8 +1,6 @@
 package com.example.estimationtool.service;
 
-import com.example.estimationtool.model.Project;
-import com.example.estimationtool.model.SubProject;
-import com.example.estimationtool.model.Task;
+import com.example.estimationtool.model.*;
 import com.example.estimationtool.repository.SubProjectRepository;
 import com.example.estimationtool.repository.interfaces.IProjectRepository;
 import com.example.estimationtool.repository.interfaces.ISubProjectRepository;
@@ -11,7 +9,6 @@ import com.example.estimationtool.toolbox.dto.*;
 import com.example.estimationtool.model.enums.Role;
 import com.example.estimationtool.repository.interfaces.IUserRepository;
 import com.example.estimationtool.toolbox.roleCheck.RoleCheck;
-import com.example.estimationtool.model.User;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -31,16 +28,18 @@ public class UserService {
 
     private final ProjectService projectService;
     private final SubProjectService subProjectService;
+    private final SubTaskService subTaskService;
 
 //    private final ISubProjectRepository iSubProjectRepository;
     private final TaskService taskService;
 
 
-    public UserService(IUserRepository iUserRepository, PasswordEncoder passwordEncoder, ProjectService projectService, SubProjectService subProjectService, ISubProjectRepository iSubProjectRepository, TaskService taskService) {
+    public UserService(IUserRepository iUserRepository, PasswordEncoder passwordEncoder, ProjectService projectService, SubProjectService subProjectService, ISubProjectRepository iSubProjectRepository, SubTaskService subTaskService, TaskService taskService) {
         this.iUserRepository = iUserRepository;
         this.passwordEncoder = passwordEncoder;
         this.projectService = projectService;
         this.subProjectService = subProjectService;
+        this.subTaskService = subTaskService;
 //        this.iSubProjectRepository = iSubProjectRepository;
         this.taskService = taskService;
     }
@@ -290,6 +289,29 @@ public class UserService {
         List<Task> tasks = taskService.readAllTasksByUserId(userId);
 
         return new UserWithTasksDTO(userViewDTO, tasks);
+    }
+
+    // --- Henter subtasks ud fra brugerID ---
+
+    public UserWithSubTasksDTO readAllSubTasksByUserId(int userId) {
+
+        // Læser én bruger
+        User user = iUserRepository.readById(userId);
+
+        // Konverter user til UserViewDTO
+        UserViewDTO userViewDTO = new UserViewDTO(
+                user.getUserId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getRole()
+        );
+
+        // Læser subtasks ud fra brugerID
+        List<SubTask> subTaskList = subTaskService.readAllSubTasksByUserId(userId);
+
+        // Returnerer userViewDTO + subtasks i én samlet DTO
+        return new UserWithSubTasksDTO(userViewDTO, subTaskList);
     }
 
 
