@@ -54,23 +54,24 @@ public class SubProjectService {
         return iSubProjectRepository.readAll();
     }
 
-    public ProjectWithSubProjectsDTO readAllFromProjectId(int projectId) {
-//        try {
-        ProjectWithSubProjectsDTO projectWithSubProjectsDTO = new ProjectWithSubProjectsDTO(
-                iProjectRepository.readById(projectId),
-                iSubProjectRepository.readAllFromProjectId(projectId));
 
-        if (projectWithSubProjectsDTO.subProjectList().isEmpty()) {
-            throw new NoSuchElementException("Projekt med ID "
-                    + projectId +
-                    " har ikke nogen subprojekter.");
-        }
-
-        return projectWithSubProjectsDTO;
-//        } catch (NullPointerException e) {
-//            throw new NullPointerException("Enten findes projekt med ID " + projectId + "ikke, eller også findes subprojekterne ikke.");
+//    public ProjectWithSubProjectsDTO readAllFromProjectId(int projectId) {
+////        try {
+//        ProjectWithSubProjectsDTO projectWithSubProjectsDTO = new ProjectWithSubProjectsDTO(
+//                iProjectRepository.readById(projectId),
+//                iSubProjectRepository.readAllFromProjectId(projectId));
+//
+//        if (projectWithSubProjectsDTO.subProjectList().isEmpty()) {
+//            throw new NoSuchElementException("Projekt med ID "
+//                    + projectId +
+//                    " har ikke nogen subprojekter.");
 //        }
-    }
+//
+//        return projectWithSubProjectsDTO;
+////        } catch (NullPointerException e) {
+////            throw new NullPointerException("Enten findes projekt med ID " + projectId + "ikke, eller også findes subprojekterne ikke.");
+////        }
+//    }
 
     public SubProject readById(int id) {
         SubProject subProject = iSubProjectRepository.readById(id);
@@ -110,13 +111,17 @@ public class SubProjectService {
         }
     }
 
-    //------------------------------------ DTO'er -------------------------------------
+    //---------------------------------- Til DTO'er -----------------------------------
 
     // --- Henter SubProjekter ud fra brugerID for UserService ---
     public List<SubProject> readAllSubProjectsByUserId(int userId) {
 
         return iSubProjectRepository.readAllByUserId(userId);
     }
+
+
+    //------------------------------------ DTO-Mappings -------------------------------
+
 
     // --- Henter brugere ud fra subprojektID ---
     public SubProjectWithUsersDTO readAllUsersBySubProjectId(int subProjectId) {

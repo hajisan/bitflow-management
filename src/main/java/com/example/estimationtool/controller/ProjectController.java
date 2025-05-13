@@ -1,6 +1,7 @@
 package com.example.estimationtool.controller;
 
 import com.example.estimationtool.model.enums.Role;
+import com.example.estimationtool.toolbox.dto.ProjectWithSubProjectsDTO;
 import com.example.estimationtool.toolbox.dto.ProjectWithUsersDTO;
 import com.example.estimationtool.toolbox.dto.UserViewDTO;
 import com.example.estimationtool.model.Project;
@@ -183,8 +184,8 @@ public class ProjectController {
     //------------------------------------ DTO'er ------------------------------------
 
 
-    // --- Viser bruger tilknyttede ét projekt ---
-    @GetMapping("/{id}/projectusers")
+    // --- Viser brugere tilknyttet ét projekt ---
+    @GetMapping("/{id}/users")
     public String showProjectWithUsers(@PathVariable int id,
                                        HttpSession session,
                                        Model model,
@@ -202,6 +203,27 @@ public class ProjectController {
         model.addAttribute("projectWithUsers", projectWithUsers);
 
         return "project/project-with-users";
+    }
+
+    // --- Viser subprojekter tilknyttet ét projekt ---
+    @GetMapping("/{id}/subprojects")
+    public String showSubProjectWithUsers(@PathVariable int id,
+                                          HttpSession session,
+                                          Model model,
+                                          RedirectAttributes redirectAttributes) {
+
+        UserViewDTO currentUser = getCurrentUser(session);
+
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne se brugere til et projekt.");
+            return "redirect:/login";
+        }
+
+        ProjectWithSubProjectsDTO projectWithSubProjectsDTO = projectService.readAllFromProjectId(id);
+
+        model.addAttribute("projectWithSubProjects", projectWithSubProjectsDTO);
+
+        return "project/project-with-subprojects";
     }
 
 

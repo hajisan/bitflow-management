@@ -28,8 +28,18 @@
 
 <!-- Vis tilknyttede brugere -->
 <p>
-  <a th:href="@{/projects/{id}/projectusers(id=${project.projectId})}">Se tilknyttede brugere</a>
+  <a th:href="@{/projects/{id}/users(id=${project.projectId})}">Se tilknyttede brugere</a>
 </p>
+
+
+<!-- Vis tilknyttede subprojekter -->
+<p>
+  <a th:href="@{/projects/{id}/subprojects(id=${project.projectId})}">
+    Se tilknyttede subprojekter
+  </a>
+
+</p>
+
 
 <!-- Tilbage-knap -->
 <p><a th:href="@{/projects/list}">Tilbage til projektliste</a></p>

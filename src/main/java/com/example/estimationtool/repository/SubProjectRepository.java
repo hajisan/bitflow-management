@@ -101,7 +101,6 @@ public class SubProjectRepository implements ISubProjectRepository {
 
     //---------------------------------- Til DTO'er ------------------------------------
 
-
     @Override
     public List<SubProject> readAllFromProjectId(Integer projectId) {
         String sql = """
