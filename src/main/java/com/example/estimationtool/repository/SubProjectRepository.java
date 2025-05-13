@@ -1,9 +1,12 @@
 package com.example.estimationtool.repository;
 
+import com.example.estimationtool.model.Project;
 import com.example.estimationtool.repository.interfaces.ISubProjectRepository;
 import com.example.estimationtool.model.SubProject;
 import com.example.estimationtool.toolbox.dto.ProjectWithSubProjectsDTO;
+import com.example.estimationtool.toolbox.rowMappers.ProjectRowMapper;
 import com.example.estimationtool.toolbox.rowMappers.SubProjectRowMapper;
+import com.example.estimationtool.toolbox.rowMappers.SubProjectRowMapperS;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -44,11 +47,16 @@ public class SubProjectRepository implements ISubProjectRepository {
             return ps;
         }, keyHolder);
 
-        // Tjekker om ID'et er null og hvis det er sættes det til -1
-        int id = keyHolder.getKey() != null ? keyHolder.getKey().intValue() : -1;
-        // Sætter subprojektets ID til keyHolderens næste værdi, hvis den ikke er -1
-        if (id != -1) subProject.setSubProjectId(id);
-        // Returnerer subprojekt-instansen så den kan sendes videre
+        int id = keyHolder.getKey().intValue();
+        subProject.setSubProjectId(id);
+
+
+        // SKAL FJERNES HVIS EXCEPTION HÅNDTERES I SERVICE
+//        // Tjekker om ID'et er null og hvis det er sættes det til -1
+//        int id = keyHolder.getKey() != null ? keyHolder.getKey().intValue() : -1;
+//        // Sætter subprojektets ID til keyHolderens næste værdi, hvis den ikke er -1
+//        if (id != -1) subProject.setSubProjectId(id);
+//        // Returnerer subprojekt-instansen så den kan sendes videre
         return subProject;
     }
 
@@ -61,28 +69,19 @@ public class SubProjectRepository implements ISubProjectRepository {
                 FROM subproject
                 """;
 
-        return jdbcTemplate.query(sql, new SubProjectRowMapper());
+        return jdbcTemplate.query(sql, new SubProjectRowMapperS());
     }
 
-    @Override
-    public List<SubProject> readAllFromProjectId(int projectId) {
-        String sql = """
-                SELECT id, projectID, name, description, deadline, estimatedTime, timeSpent, status
-                FROM subproject
-                WHERE projectID = ?
-                """;
 
-        return jdbcTemplate.query(sql, new SubProjectRowMapper(), projectId);
-    }
 
     @Override
-    public SubProject readById(Integer id) {
+    public SubProject readById(Integer subProjectId) {
         String sql = """
                 SELECT id, projectID, name, description, deadline, estimatedTime, timeSpent, status
                 FROM subproject
                 WHERE id = ?
                 """;
-        return jdbcTemplate.query(sql, new SubProjectRowMapper(), id).getFirst(); // Får en List<SubProject>, så skal kalde List.getFirst()
+        return jdbcTemplate.query(sql, new SubProjectRowMapperS(), subProjectId).getFirst(); // Får en List<SubProject>, så skal kalde List.getFirst()
     }
 
     //------------------------------------ Update() ------------------------------------
@@ -95,8 +94,71 @@ public class SubProjectRepository implements ISubProjectRepository {
     //------------------------------------ Delete() ------------------------------------
 
     @Override
-    public void deleteById(Integer id) {
+    public void deleteById(Integer subProjectId) {
         String sql = "DELETE FROM subproject WHERE id = ?";
-        jdbcTemplate.update(sql, id);
+        jdbcTemplate.update(sql, subProjectId);
     }
+
+    //---------------------------------- Til DTO'er ------------------------------------
+
+
+    @Override
+    public List<SubProject> readAllFromProjectId(Integer projectId) {
+        String sql = """
+                SELECT id, projectID, name, description, deadline, estimatedTime, timeSpent, status
+                FROM subproject
+                WHERE projectID = ?
+                """;
+
+        return jdbcTemplate.query(sql, new SubProjectRowMapperS(), projectId);
+    }
+
+    // --- Read() subprojekter ud fra bruger-ID ---
+
+
+    @Override
+    public List<SubProject> readAllByUserId(Integer userId) {
+
+        // Bruger JOIN til at joine subprojekt-ID'et fra mellemtabellen til subprojekt-ID'et fra
+        // subprojekt-tabellen, hvor brugerID matcher
+
+        String sql = """
+                SELECT
+                    subproject.id,
+                    subproject.projectID,
+                    subproject.estimatedTime,
+                    subproject.timeSpent,
+                    subproject.name,
+                    subproject.description,
+                    subproject.deadline,
+                    subproject.status
+                FROM subproject
+                JOIN user_subproject ON subproject.id = user_subproject.subProjectID
+                WHERE user_subproject.userID = ?
+                """;
+        return jdbcTemplate.query(sql, new SubProjectRowMapperS(), userId);
+    }
+
+    @Override
+    public List<Project> readByUserId(Integer userId) {
+
+        String sql = """
+                    SELECT
+                        project.id,
+                        project.estimatedTime,
+                        project.timeSpent,
+                        project.name,
+                        project.description,
+                        project.deadline,
+                        project.status
+                    FROM project
+                    JOIN user_project ON project.id = user_project.projectID
+                    WHERE user_project.userID = ?
+                    """;
+
+        return jdbcTemplate.query(sql, new ProjectRowMapper(),userId);
+
+    }
+
+
 }

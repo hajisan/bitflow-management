@@ -179,12 +179,12 @@
 
 
 
-        //------------------------------------ DTO'er ------------------------------------
+        //--------------------------------- Til DTO'er ------------------------------------
 
         // --- Read() projekter ud fra bruger-ID ---
 
         @Override
-        public List<Project> readByUserId(Integer userId) {
+        public List<Project> readAllByUserId(Integer userId) {
 
             String sql = """
                     SELECT

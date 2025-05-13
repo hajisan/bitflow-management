@@ -117,12 +117,12 @@ public class UserRepository implements IUserRepository {
         return jdbcTemplate.queryForObject(sql, new UserRowMapper(), email);
     }
 
-    //------------------------------------ DTO'er ------------------------------------
+    //---------------------------------- Til DTO'er ------------------------------------
 
     // --- Read() brugere ud fra projekt-ID ---
 
     @Override
-    public List<User> readByProjectId(Integer projectId) {
+    public List<User> readAllByProjectId(Integer projectId) {
 
         String sql = """
                 SELECT

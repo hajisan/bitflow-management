@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface IUserRepository extends IRepository<User, Integer> {
 
+    // CRUDS
+
     User create(User user);
 
     List<User> readAll();
@@ -16,8 +18,10 @@ public interface IUserRepository extends IRepository<User, Integer> {
 
     void deleteById(Integer id);
 
+    // CRUDS for DTO'er
+
     User readByEmail(String email);
 
-    List<User> readByProjectId(Integer id);
+    List<User> readAllByProjectId(Integer id);
 
 }

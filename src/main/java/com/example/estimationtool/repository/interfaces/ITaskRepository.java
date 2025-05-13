@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface ITaskRepository extends IRepository<Task, Integer> {
 
+    // CRUDS
+
     Task create(Task task);
 
     List<Task> readAll();
@@ -16,5 +18,7 @@ public interface ITaskRepository extends IRepository<Task, Integer> {
     Task update(Task task);
 
     void deleteById(Integer id);
+
+    // CRUDS for DTO'er
 
 }

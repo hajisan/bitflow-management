@@ -35,29 +35,31 @@ public class SubProjectController {
     //------------------------------------ Create() ------------------------------------
 
     @GetMapping("/create")
-    public String getCreateSubProject(HttpSession session,
+    public String showCreateSubProject(HttpSession session,
                                       Model model) {
+
         UserViewDTO currentUser = getCurrentUser(session);
         if (currentUser == null) return "redirect:/login";
+
         model.addAttribute("allProjects", new ArrayList<>(projectService.readAll()));
         model.addAttribute("subproject", new SubProject());
         return "subproject/create-subproject";
     }
 
     @PostMapping("/create")
-    public String postCreateSubProject(@ModelAttribute SubProject subProject,
+    public String createSubProject(@ModelAttribute SubProject subProject,
                                        HttpSession session,
                                        RedirectAttributes redirectAttributes) {
 
         // Tjekker om brugeren har en aktiv session
         UserViewDTO currentUser = getCurrentUser(session);
         if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Log ind for at oprette et projekt.");
+            redirectAttributes.addFlashAttribute("error", "Log ind for at oprette et delprojekt.");
             return "redirect:/login";
         }
 
         subProjectService.create(currentUser, subProject);
-        redirectAttributes.addFlashAttribute("success", "Subprojektet er oprettet.");
+        redirectAttributes.addFlashAttribute("success", "Delprojektet er oprettet.");
 
         return "subproject/subproject-list";
     }
@@ -65,12 +67,13 @@ public class SubProjectController {
     //------------------------------------ Read() --------------------------------------
 
     @GetMapping("")
-    public String readAllSubProjects(HttpSession session,
+    public String showAllSubProjects(HttpSession session,
                                      Model model,
                                      RedirectAttributes redirectAttributes) {
+
         UserViewDTO currentUser = getCurrentUser(session);
         if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Log ind for at oprette et projekt.");
+            redirectAttributes.addFlashAttribute("error", "Log ind for at oprette et delprojekt.");
             return "redirect:/login";
         }
 
@@ -92,7 +95,7 @@ public class SubProjectController {
                                   @PathVariable int projectId) {
         UserViewDTO currentUser = getCurrentUser(session);
         if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Log ind for at oprette et projekt.");
+            redirectAttributes.addFlashAttribute("error", "Log ind for at oprette et delprojekt.");
             return "redirect:/login";
         }
         boolean isAdmin = currentUser.getRole().equals(Role.ADMIN);
@@ -105,13 +108,13 @@ public class SubProjectController {
     }
 
     @GetMapping("/{id}")
-    public String readById(HttpSession session,
+    public String showSubProject(HttpSession session,
                            Model model,
                            RedirectAttributes redirectAttributes,
                            @PathVariable int id) {
         UserViewDTO currentUser = getCurrentUser(session);
         if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Log ind for at oprette et projekt.");
+            redirectAttributes.addFlashAttribute("error", "Log ind for at oprette et delprojekt.");
             return "redirect:/login";
         }
 
@@ -123,13 +126,13 @@ public class SubProjectController {
     //------------------------------------ Update() ------------------------------------
 
     @GetMapping("/edit/{id}")
-    public String getUpdateSubProject(HttpSession session,
+    public String showEditSubProject(HttpSession session,
                                       RedirectAttributes redirectAttributes,
                                       Model model,
                                       @PathVariable int id) {
         UserViewDTO currentUser = getCurrentUser(session);
         if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Log ind for at oprette et projekt.");
+            redirectAttributes.addFlashAttribute("error", "Log ind for at oprette et delprojekt.");
             return "redirect:/login";
         }
         model.addAttribute("allProjects", new ArrayList<>(projectService.readAll()));
@@ -139,7 +142,7 @@ public class SubProjectController {
     }
 
     @PostMapping("/update")
-    public String postUpdateSubProject(HttpSession session,
+    public String updateSubProject(HttpSession session,
                                        RedirectAttributes redirectAttributes,
                                        Model model, int id,
                                        @RequestParam int newProjectId,
@@ -152,7 +155,7 @@ public class SubProjectController {
 
         UserViewDTO currentUser = getCurrentUser(session);
         if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Log ind for at oprette et projekt.");
+            redirectAttributes.addFlashAttribute("error", "Log ind for at oprette et delprojekt.");
             return "redirect:/login";
         }
 
@@ -161,7 +164,7 @@ public class SubProjectController {
                 newProjectId, newEstimatedTime, newTimeSpent, newName, newDescription, newDeadline, newStatus
         )));
 
-        redirectAttributes.addFlashAttribute("success", "Subpojekt opdateret.");
+        redirectAttributes.addFlashAttribute("success", "Delprojekt blev opdateret.");
 
         return "redirect:/subproject/subproject-details";
     }
@@ -176,13 +179,13 @@ public class SubProjectController {
         UserViewDTO currentUser = getCurrentUser(session);
 
         if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne slette et projekt.");
+            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne slette et delprojekt.");
             return "redirect:/login";
         }
 
         subProjectService.deleteById(currentUser, id);
 
-        redirectAttributes.addFlashAttribute("success", "Subrojektet blev slettet.");
+        redirectAttributes.addFlashAttribute("success", "Delprojektet blev slettet.");
 
         return "redirect:/projects/list";
     }
