@@ -133,11 +133,32 @@ public class UserRepository implements IUserRepository {
                     user.passwordHash,
                     user.role
                 FROM user
-                JOIN user_project on user.id = user_project.userID
+                JOIN user_project ON user.id = user_project.userID
                 WHERE user_project.projectID = ?
                 """;
 
         return jdbcTemplate.query(sql, new UserRowMapper(), projectId);
+    }
+
+    // --- Read() brugere ud fra subprojekt-ID ---
+
+    @Override
+    public List<User> readAllBySubProjectId(Integer subProjectId) {
+
+        String sql = """
+                SELECT
+                    user.id,
+                    user.firstName,
+                    user.lastName,
+                    user.email,
+                    user.passwordHash,
+                    user.role
+                FROM user
+                JOIN user_subproject ON user.id = user_subproject.userID
+                WHERE user_subproject.subProjectID = ?
+                """;
+
+        return jdbcTemplate.query(sql, new UserRowMapper(), subProjectId);
     }
 
 }

@@ -44,14 +44,13 @@ public class TaskService {
         iTaskRepository.deleteById(id);
     }
 
-    //------------------------------------ Create() ------------------------------------
+    //------------------------------------ DTO'er -------------------------------------
 
+    // --- Henter tasks ud fra brugerID ---
 
-    //------------------------------------ Read() --------------------------------------
+    public List<Task> readAllTasksByUserId(int userId) {
 
-    //------------------------------------ Update() ------------------------------------
-
-    //------------------------------------ Delete() ------------------------------------
-
+        return iTaskRepository.readAllTasksByUserId(userId);
+    }
 
 }

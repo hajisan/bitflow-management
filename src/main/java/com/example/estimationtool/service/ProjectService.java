@@ -99,7 +99,7 @@ public class ProjectService {
     }
 
     // --- Find brugere for ét projekt ---
-    public ProjectWithUsersDTO getProjectWithUsers(int projectId) {
+    public ProjectWithUsersDTO readALlUsersByProjectId(int projectId) {
 
 
         // Henter ét projekt

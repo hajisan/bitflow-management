@@ -1,5 +1,6 @@
 package com.example.estimationtool.repository;
 
+import com.example.estimationtool.model.enums.Status;
 import com.example.estimationtool.repository.interfaces.ITaskRepository;
 import com.example.estimationtool.model.Task;
 import com.example.estimationtool.toolbox.rowMappers.TaskRowMapper;
@@ -9,6 +10,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -102,4 +104,34 @@ public class TaskRepository implements ITaskRepository {
         jdbcTemplate.update(sql, id);
 
     }
-}
+
+
+    //---------------------------------- Til DTO'er ------------------------------------
+
+    // --- Read() tasks ud fra bruger-ID ---
+
+    @Override
+    public List<Task> readAllTasksByUserId(Integer userId) {
+
+        // Bruger JOIN til at hente alle tasks for ét brugerID
+        String sql = """
+                SELECT
+                    task.subProjectID,
+                    task.id,
+                    task.estimatedTime,
+                    task.name,
+                    task.description,
+                    task.deadline,
+                    task.status
+                FROM task
+                JOIN user_task ON task.id = user_task.taskID
+                WHERE user_task.userID = ?
+                """;
+
+        return jdbcTemplate.query(sql, new TaskRowMapper(), userId);
+    }
+
+    }
+
+
+

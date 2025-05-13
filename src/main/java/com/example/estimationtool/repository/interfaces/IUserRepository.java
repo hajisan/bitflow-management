@@ -22,6 +22,8 @@ public interface IUserRepository extends IRepository<User, Integer> {
 
     User readByEmail(String email);
 
-    List<User> readAllByProjectId(Integer id);
+    List<User> readAllByProjectId(Integer projectId);
+
+    List<User> readAllBySubProjectId(Integer subProjectId);
 
 }

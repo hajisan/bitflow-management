@@ -13,12 +13,14 @@ public interface ITaskRepository extends IRepository<Task, Integer> {
 
     List<Task> readAll();
 
-    Task readById(Integer id);
+    Task readById(Integer taskId);
 
     Task update(Task task);
 
-    void deleteById(Integer id);
+    void deleteById(Integer taskId);
 
     // CRUDS for DTO'er
+
+    List<Task> readAllTasksByUserId(Integer userId);
 
 }

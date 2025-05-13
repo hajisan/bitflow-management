@@ -265,6 +265,29 @@ public class UserController {
         return "user/user-with-subprojects";
     }
 
+    // -------------------- Viser brugerens tilknyttede tasks --------------------
+
+    @GetMapping("/{id}/tasks")
+    public String showUserWithTasks(@PathVariable int id,
+                                    HttpSession session,
+                                    Model model,
+                                    RedirectAttributes redirectAttributes) {
+
+        // Tjekker om bruger er logget ind
+        UserViewDTO currentUser = getCurrentUser(session);
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne se en brugers opgaver.");
+            return "redirect:/login";
+        }
+
+        UserWithTasksDTO userWithTasksDTO = userService.readAllTasksByUserId(id);
+
+        model.addAttribute("userWithTasks", userWithTasksDTO);
+
+        return "user/user-with-tasks";
+
+    }
+
 
 
 

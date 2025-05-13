@@ -2,7 +2,10 @@ package com.example.estimationtool.service;
 
 import com.example.estimationtool.model.Project;
 import com.example.estimationtool.model.SubProject;
+import com.example.estimationtool.model.Task;
+import com.example.estimationtool.repository.SubProjectRepository;
 import com.example.estimationtool.repository.interfaces.IProjectRepository;
+import com.example.estimationtool.repository.interfaces.ISubProjectRepository;
 import com.example.estimationtool.toolbox.dto.*;
 
 import com.example.estimationtool.model.enums.Role;
@@ -29,12 +32,17 @@ public class UserService {
     private final ProjectService projectService;
     private final SubProjectService subProjectService;
 
+    private final ISubProjectRepository iSubProjectRepository;
+    private final TaskService taskService;
 
-    public UserService(IUserRepository iUserRepository, PasswordEncoder passwordEncoder, ProjectService projectService, SubProjectService subProjectService) {
+
+    public UserService(IUserRepository iUserRepository, PasswordEncoder passwordEncoder, ProjectService projectService, SubProjectService subProjectService, ISubProjectRepository iSubProjectRepository, TaskService taskService) {
         this.iUserRepository = iUserRepository;
         this.passwordEncoder = passwordEncoder;
         this.projectService = projectService;
         this.subProjectService = subProjectService;
+        this.iSubProjectRepository = iSubProjectRepository;
+        this.taskService = taskService;
     }
 
     //------------------------------------ Create() ------------------------------------
@@ -232,4 +240,57 @@ public class UserService {
         return new UserWithSubProjectsDTO(userViewDTO, subProjectList);
 
     }
+
+    // --- Henter brugere ud fra subprojektID ---
+
+    public SubProjectWithUsersDTO readAllUsersBySubProjectId(int subProjectId) {
+
+        // Læser ét subprojekt
+        SubProject subProject = iSubProjectRepository.readById(subProjectId);
+
+        // Læser listen af brugere ud fra subprojektID
+        List<User> userList = iUserRepository.readAllBySubProjectId(subProjectId);
+
+        // Opretter liste af UserViewDTO
+        List<UserViewDTO> userViewDTOList = new ArrayList<>();
+
+        // Konverterer userList til UserViewDTOList ved at loope igennem userList
+        for (User user : userList) {
+            UserViewDTO userViewDTO = new UserViewDTO(
+                    user.getUserId(),
+                    user.getFirstName(),
+                    user.getLastName(),
+                    user.getEmail(),
+                    user.getRole()
+            );
+            userViewDTOList.add(userViewDTO); // Tilføjet hver UserDTO til listen
+        }
+
+
+        // Returnerer subprojekt + liste af UserViewDTO
+        return new SubProjectWithUsersDTO(subProject, userViewDTOList);
+    }
+
+    // --- Henter tasks ud fra brugerID ---
+
+    public UserWithTasksDTO readAllTasksByUserId(int userId) {
+
+        // Henter bruger ud fra brugerID
+        User user = iUserRepository.readById(userId);
+
+        // Konverterer User til UserViewDTO
+        UserViewDTO userViewDTO = new UserViewDTO(
+                user.getUserId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getRole()
+        );
+
+        List<Task> tasks = taskService.readAllTasksByUserId(userId);
+
+        return new UserWithTasksDTO(userViewDTO, tasks);
+    }
+
+
 }
