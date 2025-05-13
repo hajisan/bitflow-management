@@ -1,14 +1,18 @@
 package com.example.estimationtool.service;
 
+import com.example.estimationtool.model.User;
 import com.example.estimationtool.model.enums.Status;
 import com.example.estimationtool.repository.interfaces.IProjectRepository;
 import com.example.estimationtool.repository.interfaces.ISubProjectRepository;
 import com.example.estimationtool.model.SubProject;
+import com.example.estimationtool.repository.interfaces.IUserRepository;
 import com.example.estimationtool.toolbox.dto.ProjectWithSubProjectsDTO;
+import com.example.estimationtool.toolbox.dto.SubProjectWithUsersDTO;
 import com.example.estimationtool.toolbox.dto.UserViewDTO;
 import com.example.estimationtool.toolbox.roleCheck.RoleCheck;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -16,10 +20,12 @@ import java.util.NoSuchElementException;
 public class SubProjectService {
     private final ISubProjectRepository iSubProjectRepository;
     private final IProjectRepository iProjectRepository;
+    private final IUserRepository iUserRepository;
 
-    public SubProjectService(ISubProjectRepository iSubProjectRepository, IProjectRepository iProjectRepository) {
+    public SubProjectService(ISubProjectRepository iSubProjectRepository, IProjectRepository iProjectRepository, IUserRepository iUserRepository) {
         this.iSubProjectRepository = iSubProjectRepository;
         this.iProjectRepository = iProjectRepository;
+        this.iUserRepository = iUserRepository;
     }
 
     //------------------------------------ Create() ------------------------------------
@@ -103,4 +109,44 @@ public class SubProjectService {
             iSubProjectRepository.deleteById(id);
         }
     }
+
+    //------------------------------------ DTO'er -------------------------------------
+
+    // --- Henter SubProjekter ud fra brugerID ---
+    public List<SubProject> readAllSubProjectsByUserId(int userId) {
+
+        return iSubProjectRepository.readAllByUserId(userId);
+    }
+
+    // --- Henter brugere ud fra subprojektID ---
+
+    public SubProjectWithUsersDTO readAllUsersBySubProjectId(int subProjectId) {
+
+        // Læser ét subprojekt
+        SubProject subProject = iSubProjectRepository.readById(subProjectId);
+
+        // Læser listen af brugere ud fra subprojektID
+        List<User> userList = iUserRepository.readAllBySubProjectId(subProjectId);
+
+        // Opretter liste af UserViewDTO
+        List<UserViewDTO> userViewDTOList = new ArrayList<>();
+
+        // Konverterer userList til UserViewDTOList ved at loope igennem userList
+        for (User user : userList) {
+            UserViewDTO userViewDTO = new UserViewDTO(
+                    user.getUserId(),
+                    user.getFirstName(),
+                    user.getLastName(),
+                    user.getEmail(),
+                    user.getRole()
+            );
+            userViewDTOList.add(userViewDTO); // Tilføjer hver UserDTO til listen
+        }
+
+        // Returnerer subprojekt + liste af UserViewDTO
+        return new SubProjectWithUsersDTO(subProject, userViewDTOList);
+    }
+
+
+
 }

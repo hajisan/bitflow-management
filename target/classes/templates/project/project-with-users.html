@@ -17,6 +17,7 @@
 
 <h2>Brugere tilknyttet projektet</h2>
 
+<!-- Hvis listen ikke er tom -->
 <p>Brugere:</p>
 <ul th:if="${!#lists.isEmpty(projectWithUsers.userViewDTOList)}">
   <li th:each="user : ${projectWithUsers.userViewDTOList}">
@@ -25,9 +26,7 @@
 </ul>
 
 
-
-
-
+<!-- Hvis listen er tom -->
 <p th:if="${#lists.isEmpty(projectWithUsers.userViewDTOList)}">
   Der er ingen brugere tilknyttet dette projekt.
 </p>

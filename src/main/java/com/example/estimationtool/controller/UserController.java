@@ -237,11 +237,55 @@ public class UserController {
             return "redirect:/login";
         }
 
-        UserWithProjectsDTO userWithProjectsDTO = userService.getUserWithProjects(id);
+        UserWithProjectsDTO userWithProjectsDTO = userService.readAllProjectsByUserId(id);
 
         model.addAttribute("userWithProjects", userWithProjectsDTO);
 
         return "user/user-with-projects";
+    }
+
+    // -------------------- Viser brugerens tilknyttede subprojekter --------------------
+
+    @GetMapping("/{id}/subprojects")
+    public String showUserWithSubProjects(@PathVariable int id,
+                                          HttpSession session,
+                                          Model model,
+                                          RedirectAttributes redirectAttributes) {
+
+        // Tjekker om bruger er logget ind
+        UserViewDTO currentUser = getCurrentUser(session);
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne se en brugers subprojekter.");
+            return "redirect:/login";
+        }
+
+        UserWithSubProjectsDTO userWithSubProjectsDTO = userService.readAllSubProjectsByUserId(id);
+
+        model.addAttribute("userWithSubProjects", userWithSubProjectsDTO);
+        return "user/user-with-subprojects";
+    }
+
+    // -------------------- Viser brugerens tilknyttede tasks --------------------
+
+    @GetMapping("/{id}/tasks")
+    public String showUserWithTasks(@PathVariable int id,
+                                    HttpSession session,
+                                    Model model,
+                                    RedirectAttributes redirectAttributes) {
+
+        // Tjekker om bruger er logget ind
+        UserViewDTO currentUser = getCurrentUser(session);
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne se en brugers opgaver.");
+            return "redirect:/login";
+        }
+
+        UserWithTasksDTO userWithTasksDTO = userService.readAllTasksByUserId(id);
+
+        model.addAttribute("userWithTasks", userWithTasksDTO);
+
+        return "user/user-with-tasks";
+
     }
 
 

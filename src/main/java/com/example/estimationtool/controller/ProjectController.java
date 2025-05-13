@@ -35,8 +35,8 @@ public class ProjectController {
 
     @GetMapping("/create") // Vis opret formular
     public String showCreateProject(Model model,
-                                 HttpSession session,
-                                 RedirectAttributes redirectAttributes) {
+                                    HttpSession session,
+                                    RedirectAttributes redirectAttributes) {
 
         UserViewDTO currentUser = getCurrentUser(session);
 
@@ -116,9 +116,9 @@ public class ProjectController {
 
     @GetMapping("/edit/{id}")
     public String showEditProject(@PathVariable int id,
-                               HttpSession session,
-                               Model model,
-                               RedirectAttributes redirectAttributes) {
+                                  HttpSession session,
+                                  Model model,
+                                  RedirectAttributes redirectAttributes) {
 
         UserViewDTO currentUser = getCurrentUser(session);
 
@@ -139,9 +139,9 @@ public class ProjectController {
     //------------------------------------ Update() ------------------------------------
 
     @PostMapping("/update")
-    public String updateProject(@ModelAttribute("project") Project project ,
-                             HttpSession session,
-                             RedirectAttributes redirectAttributes) {
+    public String updateProject(@ModelAttribute("project") Project project,
+                                HttpSession session,
+                                RedirectAttributes redirectAttributes) {
 
         UserViewDTO currentUser = getCurrentUser(session);
 
@@ -163,8 +163,8 @@ public class ProjectController {
 
     @PostMapping("/delete/{id}")
     public String deleteProject(@PathVariable int id,
-                             HttpSession session,
-                             RedirectAttributes redirectAttributes) {
+                                HttpSession session,
+                                RedirectAttributes redirectAttributes) {
 
         UserViewDTO currentUser = getCurrentUser(session);
 
@@ -182,6 +182,8 @@ public class ProjectController {
 
     //------------------------------------ DTO'er ------------------------------------
 
+
+    // --- Viser bruger tilknyttede ét projekt ---
     @GetMapping("/{id}/projectusers")
     public String showProjectWithUsers(@PathVariable int id,
                                        HttpSession session,
@@ -191,11 +193,11 @@ public class ProjectController {
         UserViewDTO currentUser = getCurrentUser(session);
 
         if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne slette et projekt.");
+            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne se brugere til et projekt.");
             return "redirect:/login";
         }
 
-        ProjectWithUsersDTO projectWithUsers = projectService.getProjectWithUsers(id);
+        ProjectWithUsersDTO projectWithUsers = projectService.readALlUsersByProjectId(id);
 
         model.addAttribute("projectWithUsers", projectWithUsers);
 

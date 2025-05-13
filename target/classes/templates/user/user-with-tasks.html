@@ -2,9 +2,35 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>User With Tasks</title>
 </head>
 <body>
+<h1>Brugeroplysninger</h1>
 
+<p>
+    Navn:
+    <span th:text="${userWithTasks.user.firstName}"></span>
+    <span th:text="${userWithTasks.user.lastName}"></span>
+</p>
+<p>ID: <span th:text="${userWithTasks.user.userId}"></span></p>
+<p>Email: <span th:text="${userWithTasks.user.email}"></span></p>
+<p>Rolle: <span th:text="${userWithTasks.user.role}"></span></p>
+
+<h2>Opgaver</h2>
+
+<!-- Opgaver hvis listen ikke er tom -->
+<ul>
+    <li th:each="task : ${userWithTasks.taskList}">
+        <strong th:text="${task.name}"></strong> –
+        <em>Status:</em><span th:text="${task.status}"></span>,
+        <em>Estimeret tid:</em><span th:text="${task.estimatedTime}"></span> timer,
+        <em>Deadline:</em> <span th:text="${task.deadline}"></span>
+    </li>
+</ul>
+
+<!-- Hvis listen er tom -->
+<p th:if="${#lists.isEmpty(userWithTasks.taskList)}">
+    Brugeren<span th:text="${userWithTasks.user.firstName}"></span> har ikke nogle tilknyttede opgaver.
+</p>
 </body>
 </html>

@@ -6,6 +6,9 @@ import com.example.estimationtool.model.enums.Role;
 import com.example.estimationtool.model.enums.Status;
 import com.example.estimationtool.service.ProjectService;
 import com.example.estimationtool.service.SubProjectService;
+import com.example.estimationtool.service.UserService;
+import com.example.estimationtool.toolbox.dto.ProjectWithUsersDTO;
+import com.example.estimationtool.toolbox.dto.SubProjectWithUsersDTO;
 import com.example.estimationtool.toolbox.dto.UserViewDTO;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -20,12 +23,14 @@ import java.util.List;
 @Controller
 @RequestMapping("/subprojects")
 public class SubProjectController {
+
     private final SubProjectService subProjectService;
     private final ProjectService projectService;
 
-    public SubProjectController(SubProjectService subProjectService, ProjectController projectController, ProjectService projectService) {
+    public SubProjectController(SubProjectService subProjectService, ProjectService projectService) {
         this.subProjectService = subProjectService;
         this.projectService = projectService;
+
     }
 
     private UserViewDTO getCurrentUser(HttpSession session) {
@@ -35,29 +40,31 @@ public class SubProjectController {
     //------------------------------------ Create() ------------------------------------
 
     @GetMapping("/create")
-    public String getCreateSubProject(HttpSession session,
-                                      Model model) {
+    public String showCreateSubProject(HttpSession session,
+                                       Model model) {
+
         UserViewDTO currentUser = getCurrentUser(session);
         if (currentUser == null) return "redirect:/login";
+
         model.addAttribute("allProjects", new ArrayList<>(projectService.readAll()));
         model.addAttribute("subproject", new SubProject());
         return "subproject/create-subproject";
     }
 
     @PostMapping("/create")
-    public String postCreateSubProject(@ModelAttribute SubProject subProject,
-                                       HttpSession session,
-                                       RedirectAttributes redirectAttributes) {
+    public String createSubProject(@ModelAttribute SubProject subProject,
+                                   HttpSession session,
+                                   RedirectAttributes redirectAttributes) {
 
         // Tjekker om brugeren har en aktiv session
         UserViewDTO currentUser = getCurrentUser(session);
         if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Log ind for at oprette et projekt.");
+            redirectAttributes.addFlashAttribute("error", "Log ind for at oprette et delprojekt.");
             return "redirect:/login";
         }
 
         subProjectService.create(currentUser, subProject);
-        redirectAttributes.addFlashAttribute("success", "Subprojektet er oprettet.");
+        redirectAttributes.addFlashAttribute("success", "Delprojektet er oprettet.");
 
         return "subproject/subproject-list";
     }
@@ -65,12 +72,13 @@ public class SubProjectController {
     //------------------------------------ Read() --------------------------------------
 
     @GetMapping("")
-    public String readAllSubProjects(HttpSession session,
+    public String showAllSubProjects(HttpSession session,
                                      Model model,
                                      RedirectAttributes redirectAttributes) {
+
         UserViewDTO currentUser = getCurrentUser(session);
         if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Log ind for at oprette et projekt.");
+            redirectAttributes.addFlashAttribute("error", "Log ind for at oprette et delprojekt.");
             return "redirect:/login";
         }
 
@@ -92,7 +100,7 @@ public class SubProjectController {
                                   @PathVariable int projectId) {
         UserViewDTO currentUser = getCurrentUser(session);
         if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Log ind for at oprette et projekt.");
+            redirectAttributes.addFlashAttribute("error", "Log ind for at oprette et delprojekt.");
             return "redirect:/login";
         }
         boolean isAdmin = currentUser.getRole().equals(Role.ADMIN);
@@ -105,13 +113,13 @@ public class SubProjectController {
     }
 
     @GetMapping("/{id}")
-    public String readById(HttpSession session,
-                           Model model,
-                           RedirectAttributes redirectAttributes,
-                           @PathVariable int id) {
+    public String showSubProject(HttpSession session,
+                                 Model model,
+                                 RedirectAttributes redirectAttributes,
+                                 @PathVariable int id) {
         UserViewDTO currentUser = getCurrentUser(session);
         if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Log ind for at oprette et projekt.");
+            redirectAttributes.addFlashAttribute("error", "Log ind for at oprette et delprojekt.");
             return "redirect:/login";
         }
 
@@ -123,13 +131,13 @@ public class SubProjectController {
     //------------------------------------ Update() ------------------------------------
 
     @GetMapping("/edit/{id}")
-    public String getUpdateSubProject(HttpSession session,
-                                      RedirectAttributes redirectAttributes,
-                                      Model model,
-                                      @PathVariable int id) {
+    public String showEditSubProject(HttpSession session,
+                                     RedirectAttributes redirectAttributes,
+                                     Model model,
+                                     @PathVariable int id) {
         UserViewDTO currentUser = getCurrentUser(session);
         if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Log ind for at oprette et projekt.");
+            redirectAttributes.addFlashAttribute("error", "Log ind for at oprette et delprojekt.");
             return "redirect:/login";
         }
         model.addAttribute("allProjects", new ArrayList<>(projectService.readAll()));
@@ -139,20 +147,20 @@ public class SubProjectController {
     }
 
     @PostMapping("/update")
-    public String postUpdateSubProject(HttpSession session,
-                                       RedirectAttributes redirectAttributes,
-                                       Model model, int id,
-                                       @RequestParam int newProjectId,
-                                       @RequestParam String newName,
-                                       @RequestParam String newDescription,
-                                       @RequestParam LocalDate newDeadline,
-                                       @RequestParam int newEstimatedTime,
-                                       @RequestParam int newTimeSpent,
-                                       @RequestParam Status newStatus) {
+    public String updateSubProject(HttpSession session,
+                                   RedirectAttributes redirectAttributes,
+                                   Model model, int id,
+                                   @RequestParam int newProjectId,
+                                   @RequestParam String newName,
+                                   @RequestParam String newDescription,
+                                   @RequestParam LocalDate newDeadline,
+                                   @RequestParam int newEstimatedTime,
+                                   @RequestParam int newTimeSpent,
+                                   @RequestParam Status newStatus) {
 
         UserViewDTO currentUser = getCurrentUser(session);
         if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Log ind for at oprette et projekt.");
+            redirectAttributes.addFlashAttribute("error", "Log ind for at oprette et delprojekt.");
             return "redirect:/login";
         }
 
@@ -161,7 +169,7 @@ public class SubProjectController {
                 newProjectId, newEstimatedTime, newTimeSpent, newName, newDescription, newDeadline, newStatus
         )));
 
-        redirectAttributes.addFlashAttribute("success", "Subpojekt opdateret.");
+        redirectAttributes.addFlashAttribute("success", "Delprojekt blev opdateret.");
 
         return "redirect:/subproject/subproject-details";
     }
@@ -176,14 +184,42 @@ public class SubProjectController {
         UserViewDTO currentUser = getCurrentUser(session);
 
         if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne slette et projekt.");
+            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne slette et delprojekt.");
             return "redirect:/login";
         }
 
         subProjectService.deleteById(currentUser, id);
 
-        redirectAttributes.addFlashAttribute("success", "Subrojektet blev slettet.");
+        redirectAttributes.addFlashAttribute("success", "Delprojektet blev slettet.");
 
         return "redirect:/projects/list";
     }
+
+    //------------------------------------ DTO'er ------------------------------------
+
+
+    // --- Viser bruger tilknyttede ét subprojekt ---
+
+    @GetMapping("/{id}/subprojectusers")
+    public String showSubProjectWithUsers(@PathVariable int id,
+                                          HttpSession session,
+                                          Model model,
+                                          RedirectAttributes redirectAttributes) {
+
+        // Tjekker at bruger er logget ind
+        UserViewDTO currentUser = getCurrentUser(session);
+
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne se et delprojekts brugere.");
+            return "redirect:/login";
+        }
+
+
+        SubProjectWithUsersDTO subProjectWithUsersDTO = subProjectService.readAllUsersBySubProjectId(id);
+
+        model.addAttribute("subProjectWithUsers", subProjectWithUsersDTO);
+        return "subproject/subproject-with-users";
+
+    }
+
 }

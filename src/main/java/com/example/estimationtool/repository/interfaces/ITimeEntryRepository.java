@@ -5,6 +5,9 @@ import com.example.estimationtool.model.timeEntry.TimeEntry;
 import java.util.List;
 
 public interface ITimeEntryRepository extends IRepository<TimeEntry, Integer> {
+
+    // CRUDS
+
     TimeEntry create(TimeEntry timeEntry);
 
     List<TimeEntry> readAll();
@@ -14,4 +17,6 @@ public interface ITimeEntryRepository extends IRepository<TimeEntry, Integer> {
     TimeEntry update(TimeEntry timeEntry);
 
     void deleteById(Integer id);
+
+    // CRUDS for DTO'er
 }

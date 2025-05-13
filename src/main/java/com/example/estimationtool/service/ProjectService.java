@@ -95,18 +95,18 @@ public class ProjectService {
     public List<Project> readByUserId(int userId) {
         // Rollevalideringslogik - en Project Manager eller Developer skal kun kunne se de projekter de knyttet til
 
-        return iProjectRepository.readByUserId(userId);
+        return iProjectRepository.readAllByUserId(userId);
     }
 
     // --- Find brugere for ét projekt ---
-    public ProjectWithUsersDTO getProjectWithUsers(int projectId) {
+    public ProjectWithUsersDTO readALlUsersByProjectId(int projectId) {
 
 
         // Henter ét projekt
         Project project = iProjectRepository.readById(projectId);
 
         // Henter tilknyttede brugere for dét projekt
-        List<User> userList = iUserRepository.readByProjectId(projectId);
+        List<User> userList = iUserRepository.readAllByProjectId(projectId);
 
         // Hver User konverteres til UserViewDTO
         List<UserViewDTO> userViewDTOList = new ArrayList<>();

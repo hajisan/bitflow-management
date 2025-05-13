@@ -7,16 +7,20 @@ import java.util.List;
 
 public interface ISubProjectRepository extends IRepository<SubProject, Integer>{
 
+    // CRUDS
     SubProject create(SubProject subProject);
 
     List<SubProject> readAll();
 
-    SubProject readById(Integer id);
+    SubProject readById(Integer subProjectId);
 
     SubProject update(SubProject subProject);
 
-    void deleteById(Integer id);
+    void deleteById(Integer subProjectId);
 
-    // Ikke fra IRepository
-    List<SubProject> readAllFromProjectId(int projectId);
+    // CRUDS for DTO'er
+
+    List<SubProject> readAllFromProjectId(Integer projectId);
+
+    List<SubProject> readAllByUserId(Integer userId);
 }
