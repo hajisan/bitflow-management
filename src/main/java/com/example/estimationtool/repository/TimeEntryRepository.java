@@ -9,7 +9,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
-import java.sql.Time;
+
 import java.util.List;
 
 @Repository
@@ -77,7 +77,7 @@ public class TimeEntryRepository implements ITimeEntryRepository {
                 FROM timeentry
                 JOIN timeentry_task ON timeentry.id = timeentry_task.timeEntryID
                 JOIN timeentry_subtask ON timeentry.id = timeentry_subtask.timeEntryID
-                """; // Finder dét taskID/subtaskID, der hører til en timeentry
+                """; // Finder dét taskID/subtaskID, der hører til en timeEntry
         return jdbcTemplate.query(sql, new TimeEntryRowMapper());
     }
 
@@ -155,8 +155,6 @@ public class TimeEntryRepository implements ITimeEntryRepository {
         String sqlSubTask = "DELETE FROM timeentry_subtask WHERE timeEntryID = ?";
 
         String sqlTask = "DELETE FROM timeentry_task WHERE timeEntryID = ?";
-
-
 
         String sqlTimeEntry = "DELETE FROM timeentry WHERE id = ?";
 

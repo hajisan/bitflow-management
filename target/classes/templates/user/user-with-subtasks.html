@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User With SubTasks</title>
+</head>
+<body>
+<h1>Brugeroplysninger</h1>
+
+<p>
+    Navn:
+    <span th:text="${userWithSubTasks.user.firstName}"></span>
+    <span th:text="${userWithSubTasks.user.lastName}"></span>
+</p>
+<p>ID: <span th:text="${userWithSubTasks.user.userId}"></span></p>
+<p>Email: <span th:text="${userWithSubTasks.user.email}"></span></p>
+<p>Rolle: <span th:text="${userWithSubTasks.user.role}"></span></p>
+
+<h2>Underopgaver</h2>
+
+<!-- Underopgaver hvis listen ikke er tom -->
+<ul>
+    <li th:each="subtask : ${userWithSubTasks.subTaskList}">
+        <strong th:text="${subtask.name}"></strong> –
+        <em>Status:</em> <span th:text="${subtask.status}"></span>,
+        <em>Estimeret tid:</em> <span th:text="${subtask.estimatedTime}"></span> timer,
+        <em>Deadline:</em> <span th:text="${subtask.deadline}"></span>
+    </li>
+</ul>
+
+<!-- Hvis listen er tom -->
+<p th:if="${#lists.isEmpty(userWithSubTasks.subTaskList)}">
+    Brugeren <span th:text="${userWithSubTasks.user.firstName}"></span> har ikke nogle tilknyttede underopgaver.
+</p>
+</body>
+</html>

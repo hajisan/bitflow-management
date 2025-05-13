@@ -43,10 +43,14 @@ public class UserRepository implements IUserRepository {
             return ps;
         }, keyHolder);
 
-        // Tjekker først om id'et er null eller ej. Hvis det er, så sætter vi id-variablen til -1
-        int userId = keyHolder.getKey() != null ? keyHolder.getKey().intValue() : -1;
-        // Sætter profilens id til KeyHolderens værdi, hvis den ikke var null
-        if (userId != -1) user.setUserId(userId);
+        int generatedId = keyHolder.getKey().intValue();
+        user.setUserId(generatedId);  // Sætter ID på User
+
+// SKAL FJERNES HVIS EXCEPTION HÅNDTERES I SERVICE OG MED @CONTROLLERADVICE
+//        // Tjekker først om id'et er null eller ej. Hvis det er, så sætter vi id-variablen til -1
+//        int userId = keyHolder.getKey() != null ? keyHolder.getKey().intValue() : -1;
+//        // Sætter profilens id til KeyHolderens værdi, hvis den ikke var null
+//        if (userId != -1) user.setUserId(userId);
 
         return user;
     }
@@ -112,4 +116,85 @@ public class UserRepository implements IUserRepository {
 
         return jdbcTemplate.queryForObject(sql, new UserRowMapper(), email);
     }
+
+    //---------------------------------- Til DTO'er ------------------------------------
+
+    // --- Read() brugere ud fra projekt-ID ---
+
+    @Override
+    public List<User> readAllByProjectId(Integer projectId) {
+
+        // Bruger JOIN til at joine bruger-ID'et fra mellemtabellen til bruger-ID'et fra
+        // user-tabellen, hvor projektID matcher
+
+        String sql = """
+                SELECT
+                    user.id,
+                    user.firstName,
+                    user.lastName,
+                    user.email,
+                    user.passwordHash,
+                    user.role
+                FROM user
+                JOIN user_project ON user.id = user_project.userID
+                WHERE user_project.projectID = ?
+                """;
+
+        return jdbcTemplate.query(sql, new UserRowMapper(), projectId);
+    }
+
+    // --- Read() brugere ud fra subprojekt-ID ---
+
+    @Override
+    public List<User> readAllBySubProjectId(Integer subProjectId) {
+
+        // Bruger JOIN til at joine bruger-ID'et fra mellemtabellen til bruger-ID'et fra
+        // user-tabellen, hvor subprojectID matcher
+
+        String sql = """
+                SELECT
+                    user.id,
+                    user.firstName,
+                    user.lastName,
+                    user.email,
+                    user.passwordHash,
+                    user.role
+                FROM user
+                JOIN user_subproject ON user.id = user_subproject.userID
+                WHERE user_subproject.subProjectID = ?
+                """;
+
+        return jdbcTemplate.query(sql, new UserRowMapper(), subProjectId);
+    }
+
+    // --- Read() brugere ud fra task-ID ---
+
+    @Override
+    public List<User> readAllByTaskId(Integer taskId) {
+
+        // Bruger JOIN til at joine bruger-ID'et fra mellemtabellen til bruger-ID'et fra
+        // bruger-tabellen, hvor brugerID matcher
+
+        String sql = """
+                SELECT
+                    user.id,
+                    user.firstName,
+                    user.lastName,
+                    user.email,
+                    user.passwordHash,
+                    user.role
+                FROM user
+                JOIN user_task ON user.id = user_task.userID
+                WHERE user_task.taskID = ?
+                """;
+
+        return jdbcTemplate.query(sql, new UserRowMapper(), taskId);
+    }
+
+    @Override
+    public User readUserBySubTaskId(Integer subTaskId) {
+        return null;
+    }
+
+
 }

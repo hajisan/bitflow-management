@@ -1,5 +1,7 @@
 package com.example.estimationtool.controller;
 
+import com.example.estimationtool.toolbox.dto.TaskWithSubTasksDTO;
+import com.example.estimationtool.toolbox.dto.TaskWithUsersDTO;
 import com.example.estimationtool.toolbox.dto.UserViewDTO;
 import com.example.estimationtool.model.Task;
 import com.example.estimationtool.service.TaskService;
@@ -179,6 +181,55 @@ public class TaskController {
 
         return "redirect:/tasks";
     }
+
+    //---------------------------------- DTO read() ------------------------------------
+
+    // -------------------- Viser en task's tilknyttede brugere ------------------------
+
+    @GetMapping("/{id}/users")
+    public String showTaskWithUsers(@PathVariable int id,
+                                    HttpSession session,
+                                    Model model,
+                                    RedirectAttributes redirectAttributes) {
+
+        // Tjek om bruger er logget ind
+        UserViewDTO currentUser = getCurrentUser(session);
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at se brugere tilknyttet en opgave.");
+            return "redirect:/login";
+        }
+
+        // Henter task + brugere
+        TaskWithUsersDTO taskWithUsersDTO = taskService.readAllUsersByTaskId(id);
+
+        // Tilføjer til model
+        model.addAttribute("taskWithUsers", taskWithUsersDTO);
+
+        // Returnerer HTML-side
+        return "task/task-with-users";
+    }
+
+    // -------------------- Viser en task's tilknyttede subtasks ---------------------
+
+    @GetMapping("/{id}/subtasks")
+    public String showTaskWithSubTasks(@PathVariable int id,
+                                       HttpSession session,
+                                       Model model,
+                                       RedirectAttributes redirectAttributes) {
+
+        UserViewDTO currentUser = getCurrentUser(session);
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at se en opgaves tilknyttede underopgaver.");
+            return "redirect:/login";
+        }
+
+        TaskWithSubTasksDTO taskWithSubTasksDTO = taskService.readAllSubTasksByTaskId(id);
+        model.addAttribute("taskWithSubTasks", taskWithSubTasksDTO);
+
+        return "task/task-with-subtasks";
+    }
+
+
 
 
 }

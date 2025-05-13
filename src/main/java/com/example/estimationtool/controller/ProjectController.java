@@ -2,10 +2,12 @@ package com.example.estimationtool.controller;
 
 import com.example.estimationtool.model.enums.Role;
 import com.example.estimationtool.service.SubProjectService;
+import com.example.estimationtool.toolbox.dto.ProjectWithSubProjectsDTO;
+import com.example.estimationtool.toolbox.dto.ProjectWithUsersDTO;
 import com.example.estimationtool.toolbox.dto.UserViewDTO;
 import com.example.estimationtool.model.Project;
 import com.example.estimationtool.service.ProjectService;
-import com.example.estimationtool.toolbox.dto.UserWithProjectDTO;
+import com.example.estimationtool.toolbox.dto.UserWithProjectsDTO;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,9 +38,9 @@ public class ProjectController {
     //--------------------------------- Hent Create() ----------------------------------
 
     @GetMapping("/create") // Vis opret formular
-    public String showCreateForm(Model model,
-                                 HttpSession session,
-                                 RedirectAttributes redirectAttributes) {
+    public String showCreateProject(Model model,
+                                    HttpSession session,
+                                    RedirectAttributes redirectAttributes) {
 
         UserViewDTO currentUser = getCurrentUser(session);
 
@@ -74,36 +76,24 @@ public class ProjectController {
 
     //------------------------------------ Read() --------------------------------------
 
-    @GetMapping("") // Lige nu ser Admin alle projekter og dermed ét specifikt projekt flere gange
-    public String showProjectList(Model model,
-                                  HttpSession session,
+    @GetMapping("")
+    public String showAllProjects(HttpSession session,
+                                  Model model,
                                   RedirectAttributes redirectAttributes) {
 
         UserViewDTO currentUser = getCurrentUser(session);
 
+        // Tjekker om brugeren er logget ind
         if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Log ind for at se projekter.");
+            redirectAttributes.addFlashAttribute("error", "Log ind for at se brugeroplysninger.");
             return "redirect:/login";
         }
 
-        boolean isAdmin = currentUser.getRole() == Role.ADMIN;
-        boolean isProjectManager = currentUser.getRole() == Role.PROJECT_MANAGER;
+        List<Project> projectList = projectService.readAll();
 
-        List<Project> projectList = isAdmin
-                ? projectService.readAll()
-                : projectService.readByUserId(currentUser.getUserId());
+        model.addAttribute("projectList", projectList);
 
-        if (projectList.isEmpty() && !isAdmin && !isProjectManager) {
-            model.addAttribute("info", "Du er ikke tilknyttet nogen projekter endnu");
-        }
-
-        UserWithProjectDTO userWithProjectDTO = new UserWithProjectDTO(currentUser, projectList);
-
-        model.addAttribute("userWithProjects", userWithProjectDTO);
-        model.addAttribute("isAdmin", isAdmin);
-        model.addAttribute("isProjectManager", isProjectManager);
-
-        return "/project/project-list";
+        return "project/project-list";
     }
 
     @GetMapping("/{id}")
@@ -149,10 +139,10 @@ public class ProjectController {
     //------------------------------------ Hent Update() -------------------------------
 
     @GetMapping("/edit/{id}")
-    public String showEditTask(@PathVariable int id,
-                               HttpSession session,
-                               Model model,
-                               RedirectAttributes redirectAttributes) {
+    public String showEditProject(@PathVariable int id,
+                                  HttpSession session,
+                                  Model model,
+                                  RedirectAttributes redirectAttributes) {
 
         UserViewDTO currentUser = getCurrentUser(session);
 
@@ -173,9 +163,9 @@ public class ProjectController {
     //------------------------------------ Update() ------------------------------------
 
     @PostMapping("/update")
-    public String updateTask(@ModelAttribute("project") Project project ,
-                             HttpSession session,
-                             RedirectAttributes redirectAttributes) {
+    public String updateProject(@ModelAttribute("project") Project project,
+                                HttpSession session,
+                                RedirectAttributes redirectAttributes) {
 
         UserViewDTO currentUser = getCurrentUser(session);
 
@@ -196,9 +186,9 @@ public class ProjectController {
     //------------------------------------ Delete() ------------------------------------
 
     @PostMapping("/delete/{id}")
-    public String deleteTask(@PathVariable int id,
-                             HttpSession session,
-                             RedirectAttributes redirectAttributes) {
+    public String deleteProject(@PathVariable int id,
+                                HttpSession session,
+                                RedirectAttributes redirectAttributes) {
 
         UserViewDTO currentUser = getCurrentUser(session);
 
@@ -212,6 +202,51 @@ public class ProjectController {
         redirectAttributes.addFlashAttribute("success", "Projektet blev slettet.");
 
         return "redirect:/projects";
+    }
+
+    //------------------------------------ DTO'er ------------------------------------
+
+
+    // --- Viser brugere tilknyttet ét projekt ---
+    @GetMapping("/{id}/users")
+    public String showProjectWithUsers(@PathVariable int id,
+                                       HttpSession session,
+                                       Model model,
+                                       RedirectAttributes redirectAttributes) {
+
+        UserViewDTO currentUser = getCurrentUser(session);
+
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne se brugere til et projekt.");
+            return "redirect:/login";
+        }
+
+        ProjectWithUsersDTO projectWithUsers = projectService.readALlUsersByProjectId(id);
+
+        model.addAttribute("projectWithUsers", projectWithUsers);
+
+        return "project/project-with-users";
+    }
+
+    // --- Viser subprojekter tilknyttet ét projekt ---
+    @GetMapping("/{id}/subprojects")
+    public String showSubProjectWithUsers(@PathVariable int id,
+                                          HttpSession session,
+                                          Model model,
+                                          RedirectAttributes redirectAttributes) {
+
+        UserViewDTO currentUser = getCurrentUser(session);
+
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne se brugere til et projekt.");
+            return "redirect:/login";
+        }
+
+        ProjectWithSubProjectsDTO projectWithSubProjectsDTO = projectService.readAllFromProjectId(id);
+
+        model.addAttribute("projectWithSubProjects", projectWithSubProjectsDTO);
+
+        return "project/project-with-subprojects";
     }
 
 

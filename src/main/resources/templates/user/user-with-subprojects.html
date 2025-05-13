@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User With SubProjects</title>
+</head>
+<body>
+<h1>Brugeroplysninger</h1>
+
+<p>
+    Navn:
+    <span th:text="${userWithSubProjects.user.firstName}"></span>
+    <span th:text="${userWithSubProjects.user.lastName}"></span>
+</p>
+<p>ID: <span th:text="${userWithSubProjects.user.userId}"></span></p>
+<p>Email: <span th:text="${userWithSubProjects.user.email}"></span></p>
+<p>Rolle: <span th:text="${userWithSubProjects.user.role}"></span></p>
+
+<h2>Subprojekter</h2>
+
+<!-- Subprojekter hvis listen ikke er tom -->
+<ul>
+    <li th:each="sub : ${userWithSubProjects.subProjectList}">
+        <strong th:text="${sub.name}"></strong> –
+        <em>Status:</em> <span th:text="${sub.status}"></span>,
+        <em>Tidsestimat:</em> <span th:text="${sub.estimatedTime}"></span> timer,
+        <em>Deadline:</em> <span th:text="${sub.deadline}"></span>
+    </li>
+</ul>
+
+<!-- Hvis listen er tom -->
+<p th:if="${#lists.isEmpty(userWithSubProjects.subProjectList)}">
+    Brugeren <span th:text="${userWithSubProjects.user.firstName}"></span> har ikke nogle tilknyttede subprojekter.
+</p>
+
+</body>
+</html>

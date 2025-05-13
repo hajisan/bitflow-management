@@ -37,6 +37,12 @@
 <br>
 <a th:href="@{/users/edit/{id}(id=${user.userId})}"><button>Rediger bruger</button></a>
 
+<a th:href="@{/users/{id}/projects(id=${user.userId})}">
+    <button>Vis tilknyttede projekter</button>
+</a>
+
+
+
 <a th:href="@{/users}">Tilbage til brugeroversigt</a>
 
 </body>

@@ -4,5 +4,5 @@ import com.example.estimationtool.model.SubTask;
 import com.example.estimationtool.model.timeEntry.TimeEntry;
 import java.util.List;
 
-public record SubTaskWithTimeEntryDTO(SubTask subTask, List<TimeEntry> timeEntries) {
+public record SubTaskWithTimeEntriesDTO(SubTask subTask, List<TimeEntry> timeEntries) {
 }

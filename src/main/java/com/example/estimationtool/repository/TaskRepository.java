@@ -1,5 +1,6 @@
 package com.example.estimationtool.repository;
 
+import com.example.estimationtool.model.enums.Status;
 import com.example.estimationtool.repository.interfaces.ITaskRepository;
 import com.example.estimationtool.model.Task;
 import com.example.estimationtool.toolbox.rowMappers.TaskRowMapper;
@@ -9,6 +10,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -49,6 +51,7 @@ public class TaskRepository implements ITaskRepository {
         return task;
     }
 
+
     //------------------------------------ Read() ------------------------------------
     @Override
     public List<Task> readAll() {
@@ -59,7 +62,7 @@ public class TaskRepository implements ITaskRepository {
     }
 
     @Override
-    public Task readById(Integer id) {
+    public Task readById(Integer taskId) {
 
         String sql = """
         SELECT
@@ -67,7 +70,7 @@ public class TaskRepository implements ITaskRepository {
         FROM task
         WHERE id = ?
         """;
-        return jdbcTemplate.queryForObject(sql, new TaskRowMapper(), id);
+        return jdbcTemplate.queryForObject(sql, new TaskRowMapper(), taskId);
     }
 
     //------------------------------------ Update() ------------------------------------
@@ -96,10 +99,78 @@ public class TaskRepository implements ITaskRepository {
     //------------------------------------ Delete() ------------------------------------
 
     @Override
-    public void deleteById(Integer id) {
+    public void deleteById(Integer taskId) {
 
         String sql = "DELETE FROM task WHERE id = ?";
-        jdbcTemplate.update(sql, id);
+        jdbcTemplate.update(sql, taskId);
 
     }
+
+
+    //---------------------------------- Til DTO'er ------------------------------------
+
+    // --- Read() tasks ud fra bruger-ID ---
+
+    @Override
+    public List<Task> readAllByUserId(Integer userId) {
+
+        // Bruger JOIN til at hente alle tasks for ét brugerID
+        String sql = """
+                SELECT
+                    task.subProjectID,
+                    task.id,
+                    task.estimatedTime,
+                    task.name,
+                    task.description,
+                    task.deadline,
+                    task.status
+                FROM task
+                JOIN user_task ON task.id = user_task.taskID
+                WHERE user_task.userID = ?
+                """;
+
+        return jdbcTemplate.query(sql, new TaskRowMapper(), userId);
+    }
+
+    // --- Read() tasks ud fra subprojekt-ID ---
+
+    @Override
+    public List<Task> readAllBySubProjectId(Integer subProjectId) {
+
+        String sql = """
+        SELECT
+            id,
+            subProjectID,
+            estimatedTime,
+            name,
+            description,
+            deadline,
+            status
+        FROM task
+        WHERE subProjectID = ?
+        """;
+
+        return jdbcTemplate.query(sql, new TaskRowMapper(), subProjectId);
+    }
+
+
+
+
+    //---------------------------------- Assign User --------------------------------
+
+    // ----------------- Task tildeles en bruger efter oprettelse -------------------
+
+    @Override
+    public void assignUserToTask(Integer userId, Integer taskId) {
+
+        String sql = "INSERT INTO user_task (userID, taskID) VALUES (?, ?)";
+        jdbcTemplate.update(sql, userId, taskId);
+    }
+
+
+
+
 }
+
+
+

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SubProject With Tasks</title>
+</head>
+<body>
+<h1>Delprojektbeskrivelse</h1>
+
+<p>ID: <span th:text="${subProjectWithTasks.subProject.subProjectId}"></span></p>
+<p>Navn: <span th:text="${subProjectWithTasks.subProject.name}"></span></p>
+<p>Beskrivelse: <span th:text="${subProjectWithTasks.subProject.description}"></span></p>
+<p>Deadline: <span th:text="${subProjectWithTasks.subProject.deadline}"></span></p>
+<p>Status: <span th:text="${subProjectWithTasks.subProject.status}"></span></p>
+
+<h2>Opgaver tilknyttet delprojektet</h2>
+
+<!-- Hvis listen ikke er tom -->
+<ul th:if="${!#lists.isEmpty(subProjectWithTasks.taskList)}">
+    <li th:each="task : ${subProjectWithTasks.taskList}">
+        <strong th:text="${task.name}"></strong> –
+        <em>Status:</em> <span th:text="${task.status}"></span>,
+        <em>Estimeret tid:</em> <span th:text="${task.estimatedTime}"></span> timer,
+        <em>Deadline:</em> <span th:text="${task.deadline}"></span>
+    </li>
+</ul>
+
+<!-- Hvis listen er tom -->
+<p th:if="${#lists.isEmpty(subProjectWithTasks.taskList)}">
+    Der er ingen opgaver tilknyttet dette delprojekt.
+</p>
+
+<a th:href="@{/subprojects/list}">Tilbage til delprojektoversigt</a>
+</body>
+</html>

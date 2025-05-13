@@ -6,25 +6,11 @@ import java.time.LocalDate;
 
 public class Project {
 
-    private int projectId, userId, estimatedTime, timeSpent;
+    private int projectId, estimatedTime, timeSpent;
     private String name, description;
     private LocalDate deadline;
     private Status status;
 
-    public Project(int projectId, int userId, int estimatedTime, int timeSpent,
-                   String name, String description, LocalDate deadline,
-                   Status status) {
-        setProjectId(projectId);
-        setUserId(userId);
-        setEstimatedTime(estimatedTime);
-        setTimeSpent(timeSpent);
-        setName(name);
-        setDescription(description);
-        setDeadline(deadline);
-        setStatus(status);
-    }
-
-    // Konstruktør til Admin, som ikke har brug for et userId, for at undgå duplikater
     public Project(int projectId, int estimatedTime, int timeSpent,
                    String name, String description, LocalDate deadline,
                    Status status) {
@@ -37,6 +23,19 @@ public class Project {
         setStatus(status);
     }
 
+    // Konstruktør til Admin, som ikke har brug for et userId, for at undgå duplikater
+//    public Project(int projectId, int estimatedTime, int timeSpent,
+//                   String name, String description, LocalDate deadline,
+//                   Status status) {
+//        setProjectId(projectId);
+//        setEstimatedTime(estimatedTime);
+//        setTimeSpent(timeSpent);
+//        setName(name);
+//        setDescription(description);
+//        setDeadline(deadline);
+//        setStatus(status);
+//    }
+
     // Tom konstruktør til integrationstest
     public Project() {
 
@@ -47,9 +46,7 @@ public class Project {
     public int getProjectId() {
         return projectId;
     }
-    public int getUserId() {
-        return userId;
-    }
+
     public int getEstimatedTime() {
         return estimatedTime;
     }
@@ -74,9 +71,7 @@ public class Project {
     public void setProjectId(int projectId) {
         this.projectId = projectId;
     }
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
+
     public void setEstimatedTime(int estimatedTime) {
         this.estimatedTime = estimatedTime;
     }
@@ -100,7 +95,6 @@ public class Project {
     public String toString() {
         return "Project{" +
                 "projectId=" + projectId +
-                ", userId=" + userId +
                 ", estimatedTime=" + estimatedTime +
                 ", timeSpent=" + timeSpent +
                 ", name='" + name + '\'' +

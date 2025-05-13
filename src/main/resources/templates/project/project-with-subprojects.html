@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Project With SubProjects</title>
+</head>
+<body>
+<h1>Projektoplysninger</h1>
+
+<p>ID: <span th:text="${projectWithSubProjects.project.projectId}"></span></p>
+<p>Navn: <span th:text="${projectWithSubProjects.project.name}"></span></p>
+<p>Beskrivelse: <span th:text="${projectWithSubProjects.project.description}"></span></p>
+<p>Deadline: <span th:text="${projectWithSubProjects.project.deadline}"></span></p>
+<p>Status: <span th:text="${projectWithSubProjects.project.status}"></span></p>
+<p>Estimeret tid:<span th:text="${projectWithSubProjects.project.estimatedTime}"></span> timer</p>
+<p>Tid brugt:<span th:text="${projectWithSubProjects.project.timeSpent}"></span> timer</p>
+
+<h2>Subprojekter</h2>
+
+<ul th:if="${!#lists.isEmpty(projectWithSubProjects.subProjectList)}">
+  <li th:each="sub : ${projectWithSubProjects.subProjectList}">
+    <p>Subprojekt ID: <span th:text="${sub.subProjectId}"></span></p>
+    <p>Projekt ID: <span th:text="${sub.projectId}"></span></p>
+    <p>Navn: <span th:text="${sub.name}"></span></p>
+    <p>Beskrivelse: <span th:text="${sub.description}"></span></p>
+    <p>Deadline: <span th:text="${sub.deadline}"></span></p>
+    <p>Status: <span th:text="${sub.status}"></span></p>
+    <p>Estimeret tid: <span th:text="${sub.estimatedTime}"></span> timer</p>
+    <p>Tid brugt: <span th:text="${sub.timeSpent}"></span> timer</p>
+    <hr/>
+  </li>
+</ul>
+
+<p th:if="${#lists.isEmpty(projectWithSubProjects.subProjectList)}">
+  Projektet har ingen tilknyttede subprojekter.
+</p>
+
+<a th:href="@{/projects/list}">Tilbage til projektoversigt</a>
+
+</body>
+</html>

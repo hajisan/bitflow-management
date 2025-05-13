@@ -67,13 +67,12 @@ INSERT INTO TimeEntry (userID, date, hoursSpent) VALUES
 (4, '2025-05-01', 2),
 (4, '2025-05-01', 2),
 (4, '2025-05-01', 4),
-
 (5, '2025-05-01', 2),
 (5, '2025-05-01', 2),
 (5, '2025-05-01', 4),
 (5, '2025-05-01', 2),
 (5, '2025-05-01', 2),
-(5, '2025-05-01', 4);TimeEntry
+(5, '2025-05-01', 4);
 
 -- Knyt time entries til tasks
 INSERT INTO TimeEntry_Task (timeEntryID, taskID) VALUES

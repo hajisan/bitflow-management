@@ -1,31 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Project List</title>
+</head>
+<body>
+
 <h1>Projektliste</h1>
 
-<!-- Vis lidt brugerinfo -->
-<p th:text="'Logget ind som: ' + ${userWithProjects.user.firstName} + ' ' + ${userWithProjects.user.lastName} + ' (' + ${userWithProjects.user.role} + ')'"></p>
+<!-- Fejl-/infobeskeder -->
+<p th:if="${error}" th:text="${error}"></p>
+<p th:if="${success}" th:text="${success}"></p>
 
-<!-- Info-besked -->
-<div th:if="${info}">
-    <p th:text="${info}" style="color: darkorange; font-weight: bold;"></p>
-</div>
+<!-- Knap til at oprette nyt projekt -->
+<p>
+    <a th:href="@{/projects/create}">
+        <button>Opret nyt projekt</button>
+    </a>
+</p>
 
+<!-- Tabel med projekter -->
 <table>
+    <thead>
     <tr>
-        <th>ProjektID</th>
+        <th>ID</th>
         <th>Navn</th>
         <th>Beskrivelse</th>
-        <th>Estimeret Tid</th>
-        <th>Forbrugt Tid</th>
         <th>Deadline</th>
+        <th>Estimeret tid</th>
+        <th>Forbrugt tid</th>
         <th>Status</th>
         <th>Handling</th>
     </tr>
-    <tr th:each="project : ${userWithProjects.projectList}">
+    </thead>
+    <tbody>
+    <tr th:each="project : ${projectList}">
         <td th:text="${project.projectId}"></td>
         <td th:text="${project.name}"></td>
         <td th:text="${project.description}"></td>
+        <td th:text="${project.deadline}"></td>
         <td th:text="${project.estimatedTime} + ' t.'"></td>
         <td th:text="${project.timeSpent} + ' t.'"></td>
-        <td th:text="${project.deadline}"></td>
         <td th:text="${project.status}"></td>
         <td>
             <a th:href="@{/projects/{id}/subprojects(id=${project.projectId})}">Se subprojekter</a>
@@ -33,12 +48,9 @@
         <td>
             <a th:href="@{/projects/{id}(id=${project.projectId})}">Se detaljer</a>
         </td>
-        <td th:if="${isAdmin or isProjectManager}">
-            <a th:href="@{/projects/edit/{id}(id=${project.projectId})}">Rediger</a>
-        </td>
     </tr>
+    </tbody>
 </table>
 
-<div th:if="${isAdmin or isProjectManager}">
-    <a href="/projects/create">Opret nyt projekt</a>
-</div>
+</body>
+</html>

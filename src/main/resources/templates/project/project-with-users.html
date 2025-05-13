@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Project With Users</title>
+</head>
+<body>
+
+
+<h1>Projektbeskrivelse</h1>
+
+<p>ID: <span th:text="${projectWithUsers.project.projectId}"></span></p>
+<p>Navn: <span th:text="${projectWithUsers.project.name}"></span></p>
+<p>Beskrivelse: <span th:text="${projectWithUsers.project.description}"></span></p>
+<p>Deadline: <span th:text="${projectWithUsers.project.deadline}"></span></p>
+<p>Status: <span th:text="${projectWithUsers.project.status}"></span></p>
+
+<h2>Brugere tilknyttet projektet</h2>
+
+<!-- Hvis listen ikke er tom -->
+<p>Brugere:</p>
+<ul th:if="${!#lists.isEmpty(projectWithUsers.userViewDTOList)}">
+  <li th:each="user : ${projectWithUsers.userViewDTOList}">
+    <span th:text="${user.firstName + ' ' + user.lastName + ' (' + user.role + ')'}"></span>
+  </li>
+</ul>
+
+
+<!-- Hvis listen er tom -->
+<p th:if="${#lists.isEmpty(projectWithUsers.userViewDTOList)}">
+  Der er ingen brugere tilknyttet dette projekt.
+</p>
+
+<a th:href="@{/projects/list}">Tilbage til projektoversigt</a>
+</body>
+</html>

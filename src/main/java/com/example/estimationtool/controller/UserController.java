@@ -1,11 +1,10 @@
 package com.example.estimationtool.controller;
 
-import com.example.estimationtool.toolbox.dto.UserRegistrationDTO;
-import com.example.estimationtool.toolbox.dto.UserUpdateDTO;
-import com.example.estimationtool.toolbox.dto.UserViewDTO;
+import com.example.estimationtool.toolbox.dto.*;
 import com.example.estimationtool.model.enums.Role;
 import com.example.estimationtool.service.UserService;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +28,8 @@ public class UserController {
         return (UserViewDTO) session.getAttribute("currentUser");
     }
 
-    // TODO Her skal vi lige beslutte sammen
+    //--------------------------------- Efter login --------------------------------
+//    TODO Her skal vi lige beslutte sammen
 //    @GetMapping("/profile")
 //    public String getFrontPage(HttpSession session,
 //                               RedirectAttributes redirectAttributes,
@@ -45,6 +45,7 @@ public class UserController {
 //        model.addAttribute("user", currentUser);
 //        return "user/front-page";
 //    }
+
 
 
     //--------------------------------- Hent Create() ----------------------------------
@@ -110,6 +111,7 @@ public class UserController {
         return "user/user-list";
     }
 
+
     @GetMapping("/{id}")
     public String showUser(@PathVariable int id,
                            HttpSession session,
@@ -125,7 +127,9 @@ public class UserController {
         }
 
         UserViewDTO userViewDTO = userService.readById(id);
+
         model.addAttribute("user", userViewDTO);
+
         return "user/user-detail";
 
     }
@@ -197,6 +201,8 @@ public class UserController {
                              HttpSession session,
                              RedirectAttributes redirectAttributes) {
 
+
+        // Tjekker om bruger er logget ind
         UserViewDTO currentUser = getCurrentUser(session);
         if (currentUser == null) {
             redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne slette brugeren.");
@@ -213,7 +219,97 @@ public class UserController {
         return "redirect:/front-page";
 
     }
+    //---------------------------------- DTO read() ------------------------------------
 
 
+    // -------------------- Viser brugerens tilknyttede projekter ----------------------
+
+    @GetMapping("/{id}/projects")
+    public String showUserWithProjects(@PathVariable int id,
+                                       HttpSession session,
+                                       Model model,
+                                       RedirectAttributes redirectAttributes) {
+
+        // Tjekker om bruger er logget ind
+        UserViewDTO currentUser = getCurrentUser(session);
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne slette brugeren.");
+            return "redirect:/login";
+        }
+
+        UserWithProjectsDTO userWithProjectsDTO = userService.readAllProjectsByUserId(id);
+
+        model.addAttribute("userWithProjects", userWithProjectsDTO);
+
+        return "user/user-with-projects";
+    }
+
+    // -------------------- Viser brugerens tilknyttede subprojekter --------------------
+
+    @GetMapping("/{id}/subprojects")
+    public String showUserWithSubProjects(@PathVariable int id,
+                                          HttpSession session,
+                                          Model model,
+                                          RedirectAttributes redirectAttributes) {
+
+        // Tjekker om bruger er logget ind
+        UserViewDTO currentUser = getCurrentUser(session);
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne se en brugers subprojekter.");
+            return "redirect:/login";
+        }
+
+        UserWithSubProjectsDTO userWithSubProjectsDTO = userService.readAllSubProjectsByUserId(id);
+
+        model.addAttribute("userWithSubProjects", userWithSubProjectsDTO);
+        return "user/user-with-subprojects";
+    }
+
+    // -------------------- Viser brugerens tilknyttede tasks --------------------
+
+    @GetMapping("/{id}/tasks")
+    public String showUserWithTasks(@PathVariable int id,
+                                    HttpSession session,
+                                    Model model,
+                                    RedirectAttributes redirectAttributes) {
+
+        // Tjekker om bruger er logget ind
+        UserViewDTO currentUser = getCurrentUser(session);
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne se en brugers opgaver.");
+            return "redirect:/login";
+        }
+
+        UserWithTasksDTO userWithTasksDTO = userService.readAllTasksByUserId(id);
+
+        model.addAttribute("userWithTasks", userWithTasksDTO);
+
+        return "user/user-with-tasks";
+
+    }
+
+    // ------------------ Viser brugerens tilknyttede subtasks --------------------
+
+    @GetMapping("/{id}/subtasks")
+    public String showUserWithSubTasks(@PathVariable int id,
+                                       HttpSession session,
+                                       Model model,
+                                       RedirectAttributes redirectAttributes) {
+
+        // Tjekker om bruger er logget ind
+        UserViewDTO currentUser = getCurrentUser(session);
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne se en brugers subopgaver.");
+            return "redirect:/login";
+        }
+
+        // Henter DTO: bruger + subopgaver
+        UserWithSubTasksDTO userWithSubTasksDTO = userService.readAllSubTasksByUserId(id);
+
+        // Lægger DTO på modellen
+        model.addAttribute("userWithSubTasks", userWithSubTasksDTO);
+
+        return "user/user-with-subtasks";
+    }
 
 }
