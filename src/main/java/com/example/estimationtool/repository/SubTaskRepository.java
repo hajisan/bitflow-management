@@ -146,5 +146,10 @@ public class SubTaskRepository implements ISubTaskRepository {
     @Override
     public void assignUserToSubTask(Integer userId, Integer subTaskId) {
 
+        String sql = "INSERT INTO user_subtask (userID, subTaskID) VALUES (?, ?)";
+        jdbcTemplate.update(sql, userId, subTaskId);
+
     }
+
+
 }

@@ -3,6 +3,8 @@ package com.example.estimationtool.service;
 
 import com.example.estimationtool.model.SubTask;
 import com.example.estimationtool.repository.interfaces.ISubTaskRepository;
+import com.example.estimationtool.toolbox.dto.UserViewDTO;
+import com.example.estimationtool.toolbox.roleCheck.RoleCheck;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -51,6 +53,18 @@ public class SubTaskService {
 
         return iSubTaskRepository.readAllByUserId(userId);
     }
+
+    //---------------------------------- Assign User ---------------------------------
+
+    // ----------------- SubTask tildeles en bruger efter oprettelse -----------------
+
+    public void assignUserToSubTask(UserViewDTO currentUser, int userId, int subTaskId) {
+
+        RoleCheck.ensureAdminOrProjectManager(currentUser.getRole());
+
+        iSubTaskRepository.assignUserToSubTask(userId, subTaskId);
+    }
+
 
 
 }

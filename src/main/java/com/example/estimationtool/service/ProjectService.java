@@ -37,6 +37,7 @@ public class ProjectService {
 
         Project projectWithUser = iProjectRepository.create(project);
 
+        // TODO - OBS! Projekt tildeles bruger ved oprettelse. Det er et forretningsvalg.
         iProjectRepository.assignUserToProject(currentUser.getUserId(), project.getProjectId());
 
         return projectWithUser;

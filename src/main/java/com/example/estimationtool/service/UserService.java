@@ -29,9 +29,10 @@ public class UserService {
     private final ProjectService projectService;
     private final SubProjectService subProjectService;
     private final SubTaskService subTaskService;
+    private final TaskService taskService;
 
 //    private final ISubProjectRepository iSubProjectRepository;
-    private final TaskService taskService;
+
 
 
     public UserService(IUserRepository iUserRepository, PasswordEncoder passwordEncoder, ProjectService projectService, SubProjectService subProjectService, ISubProjectRepository iSubProjectRepository, SubTaskService subTaskService, TaskService taskService) {

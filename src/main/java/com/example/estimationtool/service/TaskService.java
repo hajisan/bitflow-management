@@ -12,6 +12,7 @@ import com.example.estimationtool.repository.interfaces.IUserRepository;
 import com.example.estimationtool.toolbox.dto.SubProjectWithUsersDTO;
 import com.example.estimationtool.toolbox.dto.TaskWithUsersDTO;
 import com.example.estimationtool.toolbox.dto.UserViewDTO;
+import com.example.estimationtool.toolbox.roleCheck.RoleCheck;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -59,7 +60,7 @@ public class TaskService {
 
     public List<Task> readAllTasksByUserId(int userId) {
 
-        return iTaskRepository.readAllTasksByUserId(userId);
+        return iTaskRepository.readAllByUserId(userId);
     }
 
     // --- Henter brugere ud fra taskID ---
@@ -88,4 +89,14 @@ public class TaskService {
         return new TaskWithUsersDTO(task, userViewDTOList);
 
     }
+
+    //---------------------------------- Assign User --------------------------------
+
+    // ----------------- Task tildeles en bruger efter oprettelse -------------------
+
+    public void assignUserToTask(UserViewDTO currentUser, int userId, int taskId) {
+        RoleCheck.ensureAdminOrProjectManager(currentUser.getRole());
+        iTaskRepository.assignUserToTask(userId, taskId);
+    }
+
 }

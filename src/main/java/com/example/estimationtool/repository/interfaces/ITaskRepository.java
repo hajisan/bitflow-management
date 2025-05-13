@@ -21,7 +21,9 @@ public interface ITaskRepository extends IRepository<Task, Integer> {
 
     // CRUDS for DTO'er
 
-    List<Task> readAllTasksByUserId(Integer userId);
+    List<Task> readAllByUserId(Integer userId);
+
+    List<Task> readAllBySubProjectId(Integer subProjectId);
 
     // Kobler User til Task i mellemtabellen
     void assignUserToTask(Integer userId, Integer taskId);

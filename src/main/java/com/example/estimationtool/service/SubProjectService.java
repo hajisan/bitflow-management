@@ -1,12 +1,15 @@
 package com.example.estimationtool.service;
 
+import com.example.estimationtool.model.Task;
 import com.example.estimationtool.model.User;
 import com.example.estimationtool.model.enums.Status;
 import com.example.estimationtool.repository.interfaces.IProjectRepository;
 import com.example.estimationtool.repository.interfaces.ISubProjectRepository;
 import com.example.estimationtool.model.SubProject;
+import com.example.estimationtool.repository.interfaces.ITaskRepository;
 import com.example.estimationtool.repository.interfaces.IUserRepository;
 import com.example.estimationtool.toolbox.dto.ProjectWithSubProjectsDTO;
+import com.example.estimationtool.toolbox.dto.SubProjectWithTasksDTO;
 import com.example.estimationtool.toolbox.dto.SubProjectWithUsersDTO;
 import com.example.estimationtool.toolbox.dto.UserViewDTO;
 import com.example.estimationtool.toolbox.roleCheck.RoleCheck;
@@ -21,11 +24,13 @@ public class SubProjectService {
     private final ISubProjectRepository iSubProjectRepository;
     private final IProjectRepository iProjectRepository;
     private final IUserRepository iUserRepository;
+    private final ITaskRepository iTaskRepository;
 
-    public SubProjectService(ISubProjectRepository iSubProjectRepository, IProjectRepository iProjectRepository, IUserRepository iUserRepository) {
+    public SubProjectService(ISubProjectRepository iSubProjectRepository, IProjectRepository iProjectRepository, IUserRepository iUserRepository, ITaskRepository iTaskRepository) {
         this.iSubProjectRepository = iSubProjectRepository;
         this.iProjectRepository = iProjectRepository;
         this.iUserRepository = iUserRepository;
+        this.iTaskRepository = iTaskRepository;
     }
 
     //------------------------------------ Create() ------------------------------------
@@ -132,6 +137,33 @@ public class SubProjectService {
         // Returnerer subprojekt + liste af UserViewDTO
         return new SubProjectWithUsersDTO(subProject, userViewDTOList);
     }
+
+
+    // --- Henter tasks ud fra subprojektID ---
+    public SubProjectWithTasksDTO readAllTasksBySubProjectId(int subProjectId) {
+
+        // Læser subprojekt
+        SubProject subProject = iSubProjectRepository.readById(subProjectId);
+
+        // Læser tilknyttede tasks
+        List<Task> taskList = iTaskRepository.readAllBySubProjectId(subProjectId);
+
+        // Returnerer subprojekt + tasks som én samlet DTO
+        return new SubProjectWithTasksDTO(subProject, taskList);
+    }
+
+
+
+
+    //---------------------------------- Assign User ---------------------------------
+
+    // ----------------- Subprojekt tildeles en bruger efter oprettelse --------------
+
+    public void assignUserToSubProject(UserViewDTO currentUser, int userId, int subProjectId) {
+        RoleCheck.ensureAdminOrProjectManager(currentUser.getRole());
+        iSubProjectRepository.assignUserToSubProject(userId, subProjectId);
+    }
+
 
 
 //    public ProjectWithSubProjectsDTO readAllFromProjectId(int projectId) {

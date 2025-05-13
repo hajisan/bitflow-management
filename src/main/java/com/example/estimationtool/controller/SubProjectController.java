@@ -8,6 +8,7 @@ import com.example.estimationtool.service.ProjectService;
 import com.example.estimationtool.service.SubProjectService;
 import com.example.estimationtool.service.UserService;
 import com.example.estimationtool.toolbox.dto.ProjectWithUsersDTO;
+import com.example.estimationtool.toolbox.dto.SubProjectWithTasksDTO;
 import com.example.estimationtool.toolbox.dto.SubProjectWithUsersDTO;
 import com.example.estimationtool.toolbox.dto.UserViewDTO;
 import jakarta.servlet.http.HttpSession;
@@ -202,6 +203,32 @@ public class SubProjectController {
         return "subproject/subproject-with-users";
 
     }
+
+    // --- Viser tasks tilknyttede ét subprojekt ---
+
+    @GetMapping("/{id}/tasks")
+    public String showSubProjectWithTasks(@PathVariable int id,
+                                          HttpSession session,
+                                          Model model,
+                                          RedirectAttributes redirectAttributes) {
+        // Tjekker at bruger er logget ind
+        UserViewDTO currentUser = getCurrentUser(session);
+
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne se et delprojekts opgaver.");
+            return "redirect:/login";
+        }
+
+        // Henter subprojekt + tilknyttede tasks
+        SubProjectWithTasksDTO subProjectWithTasksDTO = subProjectService.readAllTasksBySubProjectId(id);
+
+        // Tilføjer til model
+        model.addAttribute("subProjectWithTasks", subProjectWithTasksDTO);
+
+        return "subproject/subproject-with-tasks";
+    }
+
+
 
 
 // TODO LIGGER I PROJECTCONTROLLER NU

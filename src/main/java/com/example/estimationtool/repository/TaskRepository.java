@@ -112,7 +112,7 @@ public class TaskRepository implements ITaskRepository {
     // --- Read() tasks ud fra bruger-ID ---
 
     @Override
-    public List<Task> readAllTasksByUserId(Integer userId) {
+    public List<Task> readAllByUserId(Integer userId) {
 
         // Bruger JOIN til at hente alle tasks for ét brugerID
         String sql = """
@@ -131,6 +131,30 @@ public class TaskRepository implements ITaskRepository {
 
         return jdbcTemplate.query(sql, new TaskRowMapper(), userId);
     }
+
+    // --- Read() tasks ud fra subprojekt-ID ---
+
+    @Override
+    public List<Task> readAllBySubProjectId(Integer subProjectId) {
+
+        String sql = """
+        SELECT
+            id,
+            subProjectID,
+            estimatedTime,
+            name,
+            description,
+            deadline,
+            status
+        FROM task
+        WHERE subProjectID = ?
+        """;
+
+        return jdbcTemplate.query(sql, new TaskRowMapper(), subProjectId);
+    }
+
+
+
 
     //---------------------------------- Assign User --------------------------------
 
