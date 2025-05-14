@@ -61,7 +61,7 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- Hash'er password -->
+        <!-- Hash'er password vha. Spring Security-biblioteket -->
        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>

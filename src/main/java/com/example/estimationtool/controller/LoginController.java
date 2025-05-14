@@ -20,12 +20,8 @@ public class LoginController {
         this.userService = userService;
     }
 
-    private UserViewDTO getCurrentUser(HttpSession session) {
-        return (UserViewDTO) session.getAttribute("currentUser");
-    }
 
     //--------------------------------- Login ----------------------------------
-
 
     @GetMapping("/login")
     public String getLogin() {
