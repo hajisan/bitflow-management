@@ -211,8 +211,8 @@ public class UserController {
 
         userService.deleteById(id, currentUser);
 
-        // @TODO - KUN ADMIN må slette en bruger. Der er roleCheck i Service ->
-        //  @TODO - Måske skal den sendes med her?
+        // TODO - KUN ADMIN må slette en bruger. Der er roleCheck i Service ->
+        //  TODO - Måske skal den sendes med her?
 
         redirectAttributes.addFlashAttribute("success", "Brugeren blev slettet.");
 
