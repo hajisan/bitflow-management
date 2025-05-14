@@ -89,7 +89,24 @@ public class SubProjectRepository implements ISubProjectRepository {
 
     @Override
     public SubProject update(SubProject subProject) {
-        return null;
+        String sql = """
+                    UPDATE subproject
+                    SET projectID = ?, name = ?, description = ?, deadline = ?, estimatedTime = ?, timeSpent = ?, status = ?
+                    WHERE id = ?
+                    """;
+
+        jdbcTemplate.update( // Henter disse værdier, så de kan opdateres
+                sql,
+                subProject.getProjectId(),
+                subProject.getName(),
+                subProject.getDescription(),
+                subProject.getDeadline(),
+                subProject.getEstimatedTime(),
+                subProject.getTimeSpent(),
+                subProject.getStatus().name(),
+                subProject.getSubProjectId());
+
+        return subProject;
     }
 
     //------------------------------------ Delete() ------------------------------------
