@@ -248,9 +248,9 @@ public class UserService {
         return new UserWithSubProjectsDTO(userViewDTO, subProjectList);
 
     }
-//
-//    // --- Henter brugere ud fra subprojektID ---
-//
+
+    // --- Henter brugere ud fra subprojektID ---
+
 //    public SubProjectWithUsersDTO readAllUsersBySubProjectId(int subProjectId) {
 //
 //        // Læser ét subprojekt
@@ -273,7 +273,6 @@ public class UserService {
 //            );
 //            userViewDTOList.add(userViewDTO); // Tilføjet hver UserDTO til listen
 //        }
-//
 //
 //        // Returnerer subprojekt + liste af UserViewDTO
 //        return new SubProjectWithUsersDTO(subProject, userViewDTOList);
