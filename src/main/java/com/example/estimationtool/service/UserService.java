@@ -87,8 +87,9 @@ public class UserService {
 
     public UserViewDTO readById(int id) {
         User user = iUserRepository.readById(id);
+
         if (user == null) {
-            throw new NoSuchElementException("Bruger med ID " + id + " eksisterer ikke.");
+            throw new UserFriendlyException("Brugeren blev ikke fundet.", "/users/users"); // <-- Ret URL når vi har det på plads
         }
 
         return new UserViewDTO(
