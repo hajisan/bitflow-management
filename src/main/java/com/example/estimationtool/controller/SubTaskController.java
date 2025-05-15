@@ -3,6 +3,7 @@ package com.example.estimationtool.controller;
 import com.example.estimationtool.model.SubTask;
 import com.example.estimationtool.model.enums.Status;
 import com.example.estimationtool.service.SubTaskService;
+import com.example.estimationtool.service.UserService;
 import com.example.estimationtool.toolbox.dto.SubTaskWithTimeEntriesDTO;
 import com.example.estimationtool.toolbox.dto.UserViewDTO;
 import jakarta.servlet.http.HttpSession;
@@ -17,9 +18,11 @@ import java.util.List;
 public class SubTaskController {
 
     private final SubTaskService subTaskService;
+    private final UserService userService;
 
-    public SubTaskController(SubTaskService subTaskService) {
+    public SubTaskController(SubTaskService subTaskService, UserService userService) {
         this.subTaskService = subTaskService;
+        this.userService = userService;
     }
 
     //------------------------------------ Sætter sessionen ----------------------------
@@ -111,9 +114,19 @@ public class SubTaskController {
             return "redirect:/login";
         }
 
+        // Henter alle subtasks
         SubTask subTask = subTaskService.readById(id);
 
+        // Henter alle brugere (for dropdown menu)
+        List<UserViewDTO> allUserList = userService.readAll();
+
+        // Henter brugeren tilknyttet subtask
+        UserViewDTO assignedUser = subTaskService.readAssignedUserBySubTaskId(id); // denne metode laver vi straks
+
+
         model.addAttribute("subtask", subTask);
+        model.addAttribute("allUserList", allUserList);
+        model.addAttribute("assignedUser", assignedUser);
 
         return "subtask/subtask-detail";
 
@@ -208,5 +221,49 @@ public class SubTaskController {
 
         return "subtask/subtask-with-timeentries";
     }
+
+    //------------------------- POST Assign mig selv til SubTask -----------------------
+
+    @PostMapping("/{id}/assignme")
+    public String assignSelfToSubTask(@PathVariable int id,
+                                      HttpSession session,
+                                      RedirectAttributes redirectAttributes) {
+
+        UserViewDTO currentUser = (UserViewDTO) session.getAttribute("currentUser");
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind.");
+            return "redirect:/login";
+        }
+
+        subTaskService.assignUserToSubTask(currentUser, currentUser.getUserId(), id);
+
+        redirectAttributes.addFlashAttribute("success", "Du er nu tildelt denne subtask.");
+        return "redirect:/subtasks/" + id;
+
+    }
+
+    //------------------------- POST Assign User til SubTask --------------------------
+
+    @PostMapping("/{id}/assign")
+    public String assignOtherUserToSubTask(@PathVariable int id,
+                                           @RequestParam("userId") int userId,
+                                           HttpSession session,
+                                           RedirectAttributes redirectAttributes) {
+
+        UserViewDTO currentUser = (UserViewDTO) session.getAttribute("currentUser");
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Login kræves.");
+            return "redirect:/login";
+        }
+
+        subTaskService.assignUserToSubTask(currentUser, userId, id);
+
+        redirectAttributes.addFlashAttribute("success", "Subtasken blev tildelt brugeren.");
+        return "redirect:/subtasks/" + id;
+    }
+
+
+
+
 
 }

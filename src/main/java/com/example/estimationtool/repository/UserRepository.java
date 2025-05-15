@@ -3,8 +3,10 @@ package com.example.estimationtool.repository;
 import com.example.estimationtool.repository.interfaces.IUserRepository;
 import com.example.estimationtool.model.User;
 import com.example.estimationtool.toolbox.rowMappers.UserRowMapper;
+
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -212,11 +214,34 @@ public class UserRepository implements IUserRepository {
         }
     }
 
+
     // @TODO Mangler der ikke en --- Read() brugere ud fra subTask-ID --- ????
+
+    // Read() bruger ud fra subtask-ID (fordi der er en mange-til-mange relation i databasen)
 
     @Override
     public User readUserBySubTaskId(Integer subTaskId) {
-        return null;
+
+        String sql = """
+        SELECT
+            user.id,
+            user.firstName,
+            user.lastName,
+            user.email,
+            user.passwordHash,
+            user.role
+        FROM user
+        JOIN user_subtask ON user.id = user_subtask.userID
+        WHERE user_subtask.subTaskID = ?
+    """;
+
+        List<User> users = jdbcTemplate.query(sql, new UserRowMapper(), subTaskId);
+
+        if (users.isEmpty()) {
+            return null;
+        } else {
+            return users.get(0); // Returnerer den første (og eneste) bruger tilknyttet
+        }
     }
 
 

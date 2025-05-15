@@ -8,29 +8,27 @@ import com.example.estimationtool.repository.interfaces.ISubProjectRepository;
 import com.example.estimationtool.model.SubProject;
 import com.example.estimationtool.repository.interfaces.ITaskRepository;
 import com.example.estimationtool.repository.interfaces.IUserRepository;
-import com.example.estimationtool.toolbox.dto.ProjectWithSubProjectsDTO;
+import com.example.estimationtool.toolbox.check.StatusCheck;
 import com.example.estimationtool.toolbox.dto.SubProjectWithTasksDTO;
 import com.example.estimationtool.toolbox.dto.SubProjectWithUsersDTO;
 import com.example.estimationtool.toolbox.dto.UserViewDTO;
-import com.example.estimationtool.toolbox.roleCheck.RoleCheck;
+import com.example.estimationtool.toolbox.check.RoleCheck;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 @Service
 public class SubProjectService {
     private final ISubProjectRepository iSubProjectRepository;
-    private final IProjectRepository iProjectRepository;
     private final IUserRepository iUserRepository;
     private final ITaskRepository iTaskRepository;
+    private final StatusCheck statusCheck;
 
-    public SubProjectService(ISubProjectRepository iSubProjectRepository, IProjectRepository iProjectRepository, IUserRepository iUserRepository, ITaskRepository iTaskRepository) {
+    public SubProjectService(ISubProjectRepository iSubProjectRepository, IUserRepository iUserRepository, ITaskRepository iTaskRepository, StatusCheck statusCheck) {
         this.iSubProjectRepository = iSubProjectRepository;
-        this.iProjectRepository = iProjectRepository;
         this.iUserRepository = iUserRepository;
         this.iTaskRepository = iTaskRepository;
+        this.statusCheck = statusCheck;
     }
 
     //------------------------------------ Create() ------------------------------------
@@ -69,6 +67,8 @@ public class SubProjectService {
 
     //------------------------------------ Update() ------------------------------------
     public SubProject update(UserViewDTO currentUser, SubProject subProject) {
+
+        // Kun admin eller projektleder må redigere et subprojekt
         RoleCheck.ensureAdminOrProjectManager(currentUser.getRole());
 
         // Inputvalidering til update
@@ -81,8 +81,21 @@ public class SubProjectService {
         if (subProject.getDeadline() == null) {
             throw new IllegalArgumentException("Subprojektets deadline må ikke være null eller tom.");
         }
-        if (subProject.getStatus() != Status.ACTIVE && subProject.getStatus() != Status.INACTIVE && subProject.getStatus() != Status.DONE) {
+        if (subProject.getStatus() != Status.ACTIVE &&
+                subProject.getStatus() != Status.INACTIVE &&
+                subProject.getStatus() != Status.DONE) {
             throw new IllegalArgumentException("Subprojektets status skal være sat til enten Active, Inactive eller Done.");
+        }
+
+        // Statusvalidering: SubProject må kun sættes til DONE, hvis alle Tasks er DONE
+        if (subProject.getStatus() == Status.DONE) {
+            List<Task> tasks = iTaskRepository.readAllBySubProjectId(subProject.getSubProjectId());
+            // Konverterer SubProject + Task's til DTO
+            SubProjectWithTasksDTO dto = new SubProjectWithTasksDTO(subProject, tasks);
+
+            if (!statusCheck.canMarkSubProjectAsDone(dto)) {
+                throw new IllegalStateException("Subprojektet kan ikke markeres som færdigt, før alle tasks er færdige.");
+            }
         }
 
         return iSubProjectRepository.update(subProject);
@@ -153,15 +166,66 @@ public class SubProjectService {
     }
 
 
-
-
     //---------------------------------- Assign User ---------------------------------
 
-    // ----------------- Subprojekt tildeles en bruger efter oprettelse --------------
 
-    public void assignUserToSubProject(UserViewDTO currentUser, int userId, int subProjectId) {
+    // ---------------------- Viser kun ikke-tilknyttede brugere ---------------------
+
+    public List<UserViewDTO> readAllUnAssignedUsers(int subProjectId) {
+
+        // Læser alle brugere
+        List<User> allUserList = iUserRepository.readAll();
+
+        // Læser subprojektets allerede tilknyttede brugere
+        List<User> assignedUserList = iUserRepository.readAllBySubProjectId(subProjectId);
+
+        // Samler ID'er på de allerede tildelte brugere
+        Set<Integer> assignedUserIds = new HashSet<>();
+        for (User user : assignedUserList) {
+            assignedUserIds.add(user.getUserId());
+        }
+
+        // Tilføjer kun de brugere, der IKKE allerede er tildelt subprojektet
+        List<UserViewDTO> unassignedUserDTO = new ArrayList<>();
+        for (User user : allUserList) {
+            if (!assignedUserIds.contains(user.getUserId())) {
+                unassignedUserDTO.add(new UserViewDTO(
+                        user.getUserId(),
+                        user.getFirstName(),
+                        user.getLastName(),
+                        user.getEmail(),
+                        user.getRole()
+                ));
+            }
+        }
+
+        return unassignedUserDTO;
+    }
+
+    // ----------------- Subprojekt tildeles en bruger efter oprettelse ---------------
+
+    public void assignUsersToSubProject(UserViewDTO currentUser, List<Integer> userIds, int subProjectId) {
+
+        // Kun admin og projektleder må assign bruger til subprojekt
         RoleCheck.ensureAdminOrProjectManager(currentUser.getRole());
-        iSubProjectRepository.assignUserToSubProject(userId, subProjectId);
+
+        // Henter de brugere, der allerede er tilknyttet subprojektet
+        List<User> existingUsers = iUserRepository.readAllBySubProjectId(subProjectId);
+
+        // Opretter et tomt Set af brugerID'er
+        Set<Integer> existingUserIds = new HashSet<>();
+
+        // BrugerID'er gemmes i Settet (undgår duplikater)
+        for (User user : existingUsers) {
+            existingUserIds.add(user.getUserId());
+        }
+
+        // Tjekker om brugerID'et allerede ligger i databasen
+        for (Integer userId : userIds) {
+            if (!existingUserIds.contains(userId)) {
+                iSubProjectRepository.assignUserToSubProject(userId, subProjectId);
+            }
+        }
     }
 
 

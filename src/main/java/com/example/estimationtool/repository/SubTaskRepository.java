@@ -27,8 +27,8 @@ public class SubTaskRepository implements ISubTaskRepository {
 
         String sql = """
                 INSERT INTO
-                subtask (taskID, name, description, deadline, estimatedTime, status)
-                VALUES (?, ?, ?, ?, ?, ?)
+                subtask (taskID, name, description, deadline, estimatedTime, timeSpent status)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
                 """;
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -41,9 +41,10 @@ public class SubTaskRepository implements ISubTaskRepository {
             ps.setString(3, subTask.getDescription());
             ps.setDate(4, java.sql.Date.valueOf(subTask.getDeadline()));// Konverterer LocalDate til java.sql.Date
             ps.setInt(5, subTask.getEstimatedTime());
-            ps.setString(6, subTask.getStatus().name());
+            ps.setInt(6, subTask.getTimeSpent());
+            ps.setString(7, subTask.getStatus().name());
             return ps;
-            }, keyHolder);
+        }, keyHolder);
 
         int generatedId = keyHolder.getKey().intValue();
         subTask.setTaskId(generatedId);  // Sæt det genererede ID i objektet
@@ -58,7 +59,7 @@ public class SubTaskRepository implements ISubTaskRepository {
     public List<SubTask> readAll() {
 
         String sql = """
-                SELECT id, taskID, estimatedTime, name, description, deadline, status
+                SELECT id, taskID, estimatedTime, timeSpent, name, description, deadline, status
                 FROM subtask
                 """;
 
@@ -70,7 +71,7 @@ public class SubTaskRepository implements ISubTaskRepository {
 
         String sql = """
                 SELECT
-                id, taskID, estimatedTime, name, description, deadline, status
+                id, taskID, estimatedTime, timeSpent, name, description, deadline, status
                 FROM subtask
                 WHERE id = ?
                 """;
@@ -85,18 +86,19 @@ public class SubTaskRepository implements ISubTaskRepository {
 
         String sql = """
                 UPDATE subtask
-                SET estimatedTime = ?, name = ?, description = ?, deadline = ?, status = ?
+                SET estimatedTime = ?, timeSpent = ?, name = ?, description = ?, deadline = ?, status = ?
                 WHERE id = ?
                 """;
 
         jdbcTemplate.update( // Henter disse værdier, så de kan opdateres
-             sql,
-             subTask.getEstimatedTime(),
-             subTask.getName(),
-             subTask.getDescription(),
-             subTask.getDeadline(),
-             subTask.getStatus().name(), // Konverteres til String for at gemmes i databasen
-             subTask.getSubTaskId()); // Parameter -> id til WHERE
+                sql,
+                subTask.getEstimatedTime(),
+                subTask.getTimeSpent(),
+                subTask.getName(),
+                subTask.getDescription(),
+                subTask.getDeadline(),
+                subTask.getStatus().name(), // Konverteres til String for at gemmes i databasen
+                subTask.getSubTaskId()); // Parameter -> id til WHERE
 
         return subTask;
     }
@@ -126,6 +128,7 @@ public class SubTaskRepository implements ISubTaskRepository {
                     subtask.id,
                     subtask.taskID,
                     subtask.estimatedTime,
+                    subTask.timeSpent
                     subtask.name,
                     subtask.description,
                     subtask.deadline,
@@ -142,10 +145,10 @@ public class SubTaskRepository implements ISubTaskRepository {
     @Override
     public List<SubTask> readAllByTaskId(Integer taskId) {
         String sql = """
-            SELECT id, taskID, estimatedTime, name, description, deadline, status
-            FROM subtask
-            WHERE taskID = ?
-            """;
+                SELECT id, taskID, estimatedTime, timeSpent, name, description, deadline, status
+                FROM subtask
+                WHERE taskID = ?
+                """;
 
         return jdbcTemplate.query(sql, new SubTaskRowMapper(), taskId);
     }
@@ -153,16 +156,21 @@ public class SubTaskRepository implements ISubTaskRepository {
     //---------------------------------- Assign User --------------------------------
 
 
-
     // ----------------- SubTask tildeles en bruger efter oprettelse ----------------
 
     @Override
     public void assignUserToSubTask(Integer userId, Integer subTaskId) {
 
+        // Slet eksisterende tildeling først
+        String deleteSql = "DELETE FROM user_subtask WHERE subTaskID = ?";
+        jdbcTemplate.update(deleteSql, subTaskId);
+
+        // Indsæt ny tildeling
         String sql = "INSERT INTO user_subtask (userID, subTaskID) VALUES (?, ?)";
         jdbcTemplate.update(sql, userId, subTaskId);
 
     }
+
 
 
 }

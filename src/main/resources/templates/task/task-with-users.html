@@ -13,6 +13,8 @@
 <p>Deadline: <span th:text="${taskWithUsers.task.deadline}"></span></p>
 <p>Status: <span th:text="${taskWithUsers.task.status}"></span></p>
 <p>Estimeret tid: <span th:text="${taskWithUsers.task.estimatedTime}"></span> timer</p>
+<p>Forbrugt tid: <span th:text="${taskWithUsers.task.timeSpent}"></span> timer</p>
+
 
 <h2>Brugere tilknyttet opgaven</h2>
 
@@ -27,6 +29,23 @@
 <p th:if="${#lists.isEmpty(taskWithUsers.userViewDTOList)}">
   Der er ingen brugere tilknyttet denne opgave.
 </p>
+
+<!-- Tilknyt brugere til task -->
+<h2>Tildel nye brugere</h2>
+
+<form th:action="@{'/tasks/tasks/' + ${taskWithUsers.task.taskId} + '/assignusers'}" method="post">
+
+    <label for="user-select">Vælg én eller flere brugere:</label><br/>
+    <select name="userIds" multiple size="5" id="user-select">
+        <option th:each="user : ${unassignedUsers}"
+                th:value="${user.userId}"
+                th:text="${user.firstName + ' ' + user.lastName + ' (' + user.role + ')'}">
+        </option>
+    </select>
+
+    <br/><br/>
+    <button type="submit">Tildel valgte brugere</button>
+</form>
 
 <a th:href="@{/tasks/list}">Tilbage til opgaveliste</a>
 </body>

@@ -40,6 +40,11 @@
     </p>
 
     <p>
+        <label>Forbrugt tid (timer):</label>
+        <input type="number" th:field="*{timeSpent}" required/>
+    </p>
+
+    <p>
         <label>Status:</label>
         <select th:field="*{status}">
             <option th:each="s : ${T(com.example.estimationtool.model.enums.Status).values()}"

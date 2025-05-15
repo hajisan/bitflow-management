@@ -2,12 +2,17 @@ package com.example.estimationtool.service;
 
 
 import com.example.estimationtool.model.SubTask;
+import com.example.estimationtool.model.User;
+import com.example.estimationtool.model.enums.Role;
+import com.example.estimationtool.model.enums.Status;
 import com.example.estimationtool.model.timeEntry.TimeEntry;
 import com.example.estimationtool.repository.interfaces.ISubTaskRepository;
 import com.example.estimationtool.repository.interfaces.ITimeEntryRepository;
+import com.example.estimationtool.repository.interfaces.IUserRepository;
+import com.example.estimationtool.toolbox.check.StatusCheck;
 import com.example.estimationtool.toolbox.dto.SubTaskWithTimeEntriesDTO;
 import com.example.estimationtool.toolbox.dto.UserViewDTO;
-import com.example.estimationtool.toolbox.roleCheck.RoleCheck;
+import com.example.estimationtool.toolbox.check.RoleCheck;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -16,10 +21,14 @@ public class SubTaskService {
 
     private final ISubTaskRepository iSubTaskRepository;
     private final ITimeEntryRepository iTimeEntryRepository;
+    private final IUserRepository iUserRepository;
+    private final StatusCheck statusCheck;
 
-    public SubTaskService(ISubTaskRepository iSubTaskRepository, ITimeEntryRepository iTimeEntryRepository) {
+    public SubTaskService(ISubTaskRepository iSubTaskRepository, ITimeEntryRepository iTimeEntryRepository, IUserRepository iUserRepository, StatusCheck statusCheck) {
         this.iSubTaskRepository = iSubTaskRepository;
         this.iTimeEntryRepository = iTimeEntryRepository;
+        this.iUserRepository = iUserRepository;
+        this.statusCheck = statusCheck;
     }
 
     //------------------------------------ Create() ------------------------------------
@@ -41,6 +50,13 @@ public class SubTaskService {
     //------------------------------------ Update() ------------------------------------
 
    public SubTask updateSubTask(SubTask subtask) {
+
+        // Statusvalidering: formelt for konsistens i struktur. En SubTask har ingen underopgaver tilknyttet
+        if (subtask.getStatus() == Status.DONE) {
+            if (!statusCheck.canMarkSubTaskAsDone(subtask)) {
+                throw new IllegalStateException("Subtasken kan ikke markeres som færdig");
+            }
+        }
         return iSubTaskRepository.update(subtask);
    }
 
@@ -74,10 +90,34 @@ public class SubTaskService {
 
     public void assignUserToSubTask(UserViewDTO currentUser, int userId, int subTaskId) {
 
-        RoleCheck.ensureAdminOrProjectManager(currentUser.getRole());
+        // Developer må kun tildele sig selv
+        if (currentUser.getRole() == Role.DEVELOPER && currentUser.getUserId() != userId) {
+            throw new SecurityException("Udviklere må kun tildele sig selv til en subtask.");
+        }
 
         iSubTaskRepository.assignUserToSubTask(userId, subTaskId);
     }
+
+    // ---------------- Read() hvem der er assignet til subtask ---------------------
+
+
+
+    public UserViewDTO readAssignedUserBySubTaskId(int subTaskId) {
+
+        // Find bruger på subTask
+        User user = iUserRepository.readUserBySubTaskId(subTaskId);
+        if (user == null) {
+            return null;
+        }
+        return new UserViewDTO(
+                user.getUserId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getRole()
+        );
+    }
+
 
 
 

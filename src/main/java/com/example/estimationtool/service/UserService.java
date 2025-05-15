@@ -1,8 +1,6 @@
 package com.example.estimationtool.service;
 
 import com.example.estimationtool.model.*;
-import com.example.estimationtool.repository.SubProjectRepository;
-import com.example.estimationtool.repository.interfaces.IProjectRepository;
 import com.example.estimationtool.repository.interfaces.ISubProjectRepository;
 import com.example.estimationtool.toolbox.dto.*;
 
@@ -10,6 +8,7 @@ import com.example.estimationtool.model.enums.Role;
 import com.example.estimationtool.repository.interfaces.IUserRepository;
 import com.example.estimationtool.toolbox.exceptionHandler.UserFriendlyException;
 import com.example.estimationtool.toolbox.roleCheck.RoleCheck;
+import com.example.estimationtool.toolbox.check.RoleCheck;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -32,12 +31,17 @@ public class UserService {
     private final SubTaskService subTaskService;
     private final TaskService taskService;
 
-//    private final ISubProjectRepository iSubProjectRepository;
 
     public UserService(IUserRepository iUserRepository, PasswordEncoder passwordEncoder,
                        ProjectService projectService, SubProjectService subProjectService,
                        ISubProjectRepository iSubProjectRepository, SubTaskService subTaskService,
                        TaskService taskService) {
+
+
+
+    public UserService(IUserRepository iUserRepository, PasswordEncoder passwordEncoder,
+                       ProjectService projectService, SubProjectService subProjectService,
+                       SubTaskService subTaskService, TaskService taskService) {
 
         this.iUserRepository = iUserRepository;
         this.passwordEncoder = passwordEncoder;
@@ -125,23 +129,11 @@ public class UserService {
             if (!currentUser.getRole().equals(existingUser.getRole())) {
                 throw new UserFriendlyException("Du har ikke rettigheder til at ændre denne brugers rolle.", "/users/edit/" + userUpdateDTO.getUserId()); // <-- Ret URL når vi har det på plads
             }
-
-            role = existingUser.getRole(); // Beholder nuværende rolle
-        }
+          
+        RoleCheck.ensureAdmin(currentUser.getRole());
 
         // Håndterer password
-        String passwordHash;
-
-        if (userUpdateDTO.getPassword() == null || userUpdateDTO.getPassword().isBlank()) {
-            // Hvis intet password er angivet, behold eksisterende hash
-            passwordHash = existingUser.getPasswordHash();
-        } else if (passwordEncoder.matches(userUpdateDTO.getPassword(), existingUser.getPasswordHash())) {
-            // Hvis brugeren indtaster det samme password = behold det
-            passwordHash = existingUser.getPasswordHash();
-        } else {
-            // Hash opdaterede password
-            passwordHash = passwordEncoder.encode(userUpdateDTO.getPassword());
-        }
+        String passwordHash = getPasswordHash(userUpdateDTO, existingUser);
 
         // Mapper UserUpdateDTO til User-objekt med opdateret bruger
         User updatedUser = new User(
@@ -150,12 +142,14 @@ public class UserService {
                 userUpdateDTO.getLastName(),
                 userUpdateDTO.getEmail(),
                 passwordHash,
-                role
+                existingUser.getRole() // TODO Måske virker currentuser.getRole()
         );
 
         return iUserRepository.update(updatedUser);
 
     }
+
+
 
     //------------------------------------ Delete() ------------------------------------
 
@@ -191,6 +185,25 @@ public class UserService {
         );
     }
 
+
+    //------------------------------------ Password ----------------------------------
+
+
+    private String getPasswordHash(UserUpdateDTO userUpdateDTO, User existingUser) {
+        String passwordHash;
+
+        if (userUpdateDTO.getPassword() == null || userUpdateDTO.getPassword().isBlank()) {
+            // Hvis intet password er angivet, behold eksisterende hash
+            passwordHash = existingUser.getPasswordHash();
+        } else if (passwordEncoder.matches(userUpdateDTO.getPassword(), existingUser.getPasswordHash())) {
+            // Hvis brugeren indtaster det samme password = behold det
+            passwordHash = existingUser.getPasswordHash();
+        } else {
+            // Hash opdaterede password
+            passwordHash = passwordEncoder.encode(userUpdateDTO.getPassword());
+        }
+        return passwordHash;
+    }
 
     //------------------------------------ DTO-Mappings -----------------------------------
 
