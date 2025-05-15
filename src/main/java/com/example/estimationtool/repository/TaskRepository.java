@@ -28,8 +28,8 @@ public class TaskRepository implements ITaskRepository {
     public Task create(Task task) {
 
         String sql = """
-        INSERT INTO task (subProjectID, name, description, deadline, estimatedTime, status) VALUES (?, ?, ?, ?, ?, ?)
-        """;
+                INSERT INTO task (subProjectID, name, description, deadline, estimatedTime, timeSpent, status) VALUES (?, ?, ?, ?, ?, ?, ?)
+                """;
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -41,7 +41,8 @@ public class TaskRepository implements ITaskRepository {
             ps.setString(3, task.getDescription());
             ps.setDate(4, java.sql.Date.valueOf(task.getDeadline())); // Konverterer LocalDate til java.sql.Date
             ps.setInt(5, task.getEstimatedTime());
-            ps.setString(6, task.getStatus().name());
+            ps.setInt(6, task.getTimeSpent());
+            ps.setString(7, task.getStatus().name());
             return ps;
         }, keyHolder);
 
@@ -56,7 +57,7 @@ public class TaskRepository implements ITaskRepository {
     @Override
     public List<Task> readAll() {
 
-        String sql = "SELECT id, subProjectID, name, description, deadline, estimatedTime, status FROM task";
+        String sql = "SELECT id, subProjectID, name, description, deadline, estimatedTime, timeSpent, status FROM task";
 
         return jdbcTemplate.query(sql, new TaskRowMapper());
     }
@@ -65,11 +66,11 @@ public class TaskRepository implements ITaskRepository {
     public Task readById(Integer taskId) {
 
         String sql = """
-        SELECT
-        id, subProjectID, name, description, deadline, estimatedTime, status
-        FROM task
-        WHERE id = ?
-        """;
+                SELECT
+                id, subProjectID, name, description, deadline, estimatedTime, timeSpent, status
+                FROM task
+                WHERE id = ?
+                """;
         return jdbcTemplate.queryForObject(sql, new TaskRowMapper(), taskId);
     }
 
@@ -79,10 +80,10 @@ public class TaskRepository implements ITaskRepository {
     public Task update(Task task) {
 
         String sql = """
-        UPDATE task
-        SET name = ?, description = ?, deadline = ?, estimatedTime = ?, status = ?
-        WHERE id = ?
-        """;
+                UPDATE task
+                SET name = ?, description = ?, deadline = ?, estimatedTime = ?, timeSpent = ?, status = ?
+                WHERE id = ?
+                """;
 
         jdbcTemplate.update( // Henter disse værdier, så de kan opdateres
                 sql,
@@ -90,6 +91,7 @@ public class TaskRepository implements ITaskRepository {
                 task.getDescription(),
                 task.getDeadline(),
                 task.getEstimatedTime(),
+                task.getTimeSpent(),
                 task.getStatus().name(), // Konverteres til String for at gemmes i databasen
                 task.getTaskId()); // Parameter -> id til WHERE
 
@@ -120,6 +122,7 @@ public class TaskRepository implements ITaskRepository {
                     task.subProjectID,
                     task.id,
                     task.estimatedTime,
+                    task.timeSpent
                     task.name,
                     task.description,
                     task.deadline,
@@ -138,22 +141,21 @@ public class TaskRepository implements ITaskRepository {
     public List<Task> readAllBySubProjectId(Integer subProjectId) {
 
         String sql = """
-        SELECT
-            id,
-            subProjectID,
-            estimatedTime,
-            name,
-            description,
-            deadline,
-            status
-        FROM task
-        WHERE subProjectID = ?
-        """;
+                SELECT
+                    id,
+                    subProjectID,
+                    estimatedTime,
+                    timeSpent,
+                    name,
+                    description,
+                    deadline,
+                    status
+                FROM task
+                WHERE subProjectID = ?
+                """;
 
         return jdbcTemplate.query(sql, new TaskRowMapper(), subProjectId);
     }
-
-
 
 
     //---------------------------------- Assign User --------------------------------
@@ -166,8 +168,6 @@ public class TaskRepository implements ITaskRepository {
         String sql = "INSERT INTO user_task (userID, taskID) VALUES (?, ?)";
         jdbcTemplate.update(sql, userId, taskId);
     }
-
-
 
 
 }
