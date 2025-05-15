@@ -149,7 +149,11 @@ public class UserRepository implements IUserRepository {
                 WHERE user_project.projectID = ?
                 """;
 
-        return jdbcTemplate.query(sql, new UserRowMapper(), projectId);
+        try {
+            return jdbcTemplate.query(sql, new UserRowMapper(), projectId);
+        } catch (IncorrectResultSizeDataAccessException e) {
+            return null;
+        }
     }
 
     // --- Read() brugere ud fra subprojekt-ID ---
@@ -173,7 +177,11 @@ public class UserRepository implements IUserRepository {
                 WHERE user_subproject.subProjectID = ?
                 """;
 
-        return jdbcTemplate.query(sql, new UserRowMapper(), subProjectId);
+        try {
+            return jdbcTemplate.query(sql, new UserRowMapper(), subProjectId);
+        } catch (IncorrectResultSizeDataAccessException e) {
+            return null;
+        }
     }
 
     // --- Read() brugere ud fra task-ID ---
@@ -197,7 +205,11 @@ public class UserRepository implements IUserRepository {
                 WHERE user_task.taskID = ?
                 """;
 
-        return jdbcTemplate.query(sql, new UserRowMapper(), taskId);
+        try {
+            return jdbcTemplate.query(sql, new UserRowMapper(), taskId);
+        } catch (IncorrectResultSizeDataAccessException e) {
+            return null;
+        }
     }
 
     @Override
