@@ -99,6 +99,8 @@ public class SubProjectController {
                                  Model model,
                                  RedirectAttributes redirectAttributes,
                                  @PathVariable int id) {
+
+
         UserViewDTO currentUser = getCurrentUser(session);
         if (currentUser == null) {
             redirectAttributes.addFlashAttribute("error", "Log ind for at oprette et delprojekt.");
@@ -171,9 +173,9 @@ public class SubProjectController {
     //------------------------------------ DTO'er ------------------------------------
 
 
-    // --- Viser bruger tilknyttede ét subprojekt ---
+    // --- Viser brugere tilknyttet ét subprojekt ---
 
-    @GetMapping("/{id}/subprojects")
+    @GetMapping("/{id}/users")
     public String showSubProjectWithUsers(@PathVariable int id,
                                           HttpSession session,
                                           Model model,
@@ -187,15 +189,19 @@ public class SubProjectController {
             return "redirect:/login";
         }
 
-
+        // Viser allerede tilknyttede brugere
         SubProjectWithUsersDTO subProjectWithUsersDTO = subProjectService.readAllUsersBySubProjectId(id);
 
+        // Viser ikke-tilknyttede brugere (til POST-formularen)
+        List<UserViewDTO> unassignedUsers = subProjectService.readAllUnAssignedUsers(id);
+
         model.addAttribute("subProjectWithUsers", subProjectWithUsersDTO);
+        model.addAttribute("unassignedUsers", unassignedUsers);
         return "subproject/subproject-with-users";
 
     }
 
-    // --- Viser tasks tilknyttede ét subprojekt ---
+    // --- Viser tasks tilknyttet ét subprojekt ---
 
     @GetMapping("/{id}/tasks")
     public String showSubProjectWithTasks(@PathVariable int id,
@@ -218,6 +224,27 @@ public class SubProjectController {
 
         return "subproject/subproject-with-tasks";
     }
+
+    //---------------------------- POST Assign User to Subproject -------------------------
+
+    @PostMapping("/subprojects/{id}/assignusers")
+    public String assignUsersToSubProject(@PathVariable int id,
+                                          @RequestParam("userIds") List<Integer> userIds,
+                                          HttpSession session,
+                                          RedirectAttributes redirectAttributes) {
+
+        UserViewDTO currentUser = getCurrentUser(session);
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Du skal logge ind for at kunne tildele brugere et subprojekt.");
+            return "redirect:/login";
+        }
+
+        subProjectService.assignUsersToSubProject(currentUser, userIds, id);
+
+        redirectAttributes.addFlashAttribute("success", "Brugere blev tildelt subprojektet.");
+        return "redirect:/subprojects/" + id + "/users";
+    }
+
 
 
 

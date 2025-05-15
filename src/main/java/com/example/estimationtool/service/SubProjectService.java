@@ -15,9 +15,7 @@ import com.example.estimationtool.toolbox.dto.UserViewDTO;
 import com.example.estimationtool.toolbox.check.RoleCheck;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 @Service
 public class SubProjectService {
@@ -168,15 +166,66 @@ public class SubProjectService {
     }
 
 
-
-
     //---------------------------------- Assign User ---------------------------------
 
-    // ----------------- Subprojekt tildeles en bruger efter oprettelse --------------
 
-    public void assignUserToSubProject(UserViewDTO currentUser, int userId, int subProjectId) {
+    // ---------------------- Viser kun ikke-tilknyttede brugere ---------------------
+
+    public List<UserViewDTO> readAllUnAssignedUsers(int subProjectId) {
+
+        // Læser alle brugere
+        List<User> allUserList = iUserRepository.readAll();
+
+        // Læser subprojektets allerede tilknyttede brugere
+        List<User> assignedUserList = iUserRepository.readAllBySubProjectId(subProjectId);
+
+        // Samler ID'er på de allerede tildelte brugere
+        Set<Integer> assignedUserIds = new HashSet<>();
+        for (User user : assignedUserList) {
+            assignedUserIds.add(user.getUserId());
+        }
+
+        // Tilføjer kun de brugere, der IKKE allerede er tildelt subprojektet
+        List<UserViewDTO> unassignedUserDTO = new ArrayList<>();
+        for (User user : allUserList) {
+            if (!assignedUserIds.contains(user.getUserId())) {
+                unassignedUserDTO.add(new UserViewDTO(
+                        user.getUserId(),
+                        user.getFirstName(),
+                        user.getLastName(),
+                        user.getEmail(),
+                        user.getRole()
+                ));
+            }
+        }
+
+        return unassignedUserDTO;
+    }
+
+    // ----------------- Subprojekt tildeles en bruger efter oprettelse ---------------
+
+    public void assignUsersToSubProject(UserViewDTO currentUser, List<Integer> userIds, int subProjectId) {
+
+        // Kun admin og projektleder må assign bruger til subprojekt
         RoleCheck.ensureAdminOrProjectManager(currentUser.getRole());
-        iSubProjectRepository.assignUserToSubProject(userId, subProjectId);
+
+        // Henter de brugere, der allerede er tilknyttet subprojektet
+        List<User> existingUsers = iUserRepository.readAllBySubProjectId(subProjectId);
+
+        // Opretter et tomt Set af brugerID'er
+        Set<Integer> existingUserIds = new HashSet<>();
+
+        // BrugerID'er gemmes i Settet (undgår duplikater)
+        for (User user : existingUsers) {
+            existingUserIds.add(user.getUserId());
+        }
+
+        // Tjekker om brugerID'et allerede ligger i databasen
+        for (Integer userId : userIds) {
+            if (!existingUserIds.contains(userId)) {
+                iSubProjectRepository.assignUserToSubProject(userId, subProjectId);
+            }
+        }
     }
 
 

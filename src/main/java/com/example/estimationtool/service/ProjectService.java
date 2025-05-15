@@ -17,9 +17,7 @@ import com.example.estimationtool.toolbox.check.RoleCheck;
 import com.example.estimationtool.toolbox.dto.UserWithProjectsDTO;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 @Service
 public class ProjectService {
@@ -151,5 +149,66 @@ public class ProjectService {
 
 
 
+    //----------------------- Assign User til Project GET-mapping -------------------------
+
+
+    public List<UserViewDTO> readAllUnAssignedUsers(int projectId) {
+
+        // Læser alle brugere
+        List<User> allUserList = iUserRepository.readAll();
+
+
+        // Læser projektets allerede tilknyttede brugere
+        List<User> assignedUserList = iUserRepository.readAllByProjectId(projectId);
+
+        // Samler ID'er på de allerede tildelte brugere
+        Set<Integer> assignedUserIds = new HashSet<>();
+        for (User user : assignedUserList) {
+            assignedUserIds.add(user.getUserId());
+        }
+
+        // Tilføjer kun de brugere, der IKKE allerede er tildelt projektet
+        List<UserViewDTO> unassignedUserDTO = new ArrayList<>();
+        for (User user : allUserList) {
+            if (!assignedUserIds.contains(user.getUserId())) {
+                unassignedUserDTO.add(new UserViewDTO(
+                        user.getUserId(),
+                        user.getFirstName(),
+                        user.getLastName(),
+                        user.getEmail(),
+                        user.getRole()
+                ));
+
+            }
+        }
+        return unassignedUserDTO;
+    }
+
+    //------------------------- Assign User til Project POST-mapping ------------------------
+
+
+    public void assignUserToProject(UserViewDTO currentUser, List<Integer> userIds, int projectId) {
+
+        // Kun admin og projektleder må assign bruger til projekt
+        RoleCheck.ensureAdminOrProjectManager(currentUser.getRole());
+
+        // Henter de brugere, der allerede er tilknyttet projektet
+        List<User> existingUsers = iUserRepository.readAllByProjectId(projectId);
+
+        // Opretter et tomt Set af brugerID'er
+        Set<Integer> existingUserIds = new HashSet<>();
+
+        // BrugerID'er gemmes i Settet (undgår duplikater)
+        for (User user : existingUsers) {
+            existingUserIds.add(user.getUserId());
+        }
+
+        // Tjekker om brugerID'et allerede ligger i databasen
+        for (Integer userId : userIds) {
+            if (!existingUserIds.contains(userId)) {
+                iProjectRepository.assignUserToProject(userId, projectId);
+            }
+        }
+    }
 
 }

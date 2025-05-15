@@ -161,10 +161,16 @@ public class SubTaskRepository implements ISubTaskRepository {
     @Override
     public void assignUserToSubTask(Integer userId, Integer subTaskId) {
 
+        // Slet eksisterende tildeling først
+        String deleteSql = "DELETE FROM user_subtask WHERE subTaskID = ?";
+        jdbcTemplate.update(deleteSql, subTaskId);
+
+        // Indsæt ny tildeling
         String sql = "INSERT INTO user_subtask (userID, subTaskID) VALUES (?, ?)";
         jdbcTemplate.update(sql, userId, subTaskId);
 
     }
+
 
 
 }
