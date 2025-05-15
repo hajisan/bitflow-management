@@ -5,17 +5,18 @@ import com.example.estimationtool.model.enums.Status;
 import java.time.LocalDate;
 
 public class Task {
-    private int subProjectId, taskId, estimatedTime;
+    private int subProjectId, taskId, estimatedTime, timeSpent;
     private String name, description;
     private LocalDate deadline;
     private Status status;
 
-    public Task(int subProjectId, int taskId, int estimatedTime,
+    public Task(int subProjectId, int taskId, int estimatedTime, int timeSpent,
                 String name, String description, LocalDate deadline,
                 Status status) {
         setSubProjectId(subProjectId);
         setTaskId(taskId);
         setEstimatedTime(estimatedTime);
+        setTimeSpent(timeSpent);
         setName(name);
         setDescription(description);
         setDeadline(deadline);
@@ -35,6 +36,10 @@ public class Task {
 
     public int getEstimatedTime() {
         return estimatedTime;
+    }
+
+    public int getTimeSpent() {
+        return timeSpent;
     }
 
     public String getName() {
@@ -65,6 +70,10 @@ public class Task {
         this.estimatedTime = estimatedTime;
     }
 
+    public void setTimeSpent(int timeSpent) {
+        this.timeSpent = timeSpent;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -89,8 +98,9 @@ public class Task {
                 Name: %s
                 Description: %s
                 Estimated Time: %d
+                Time Spent: %d
                 Deadline: %s
                 Status: %s
-                """, taskId, subProjectId, name, description, estimatedTime, deadline, status);
+                """, taskId, subProjectId, name, description, estimatedTime, timeSpent, deadline, status);
     }
 }
