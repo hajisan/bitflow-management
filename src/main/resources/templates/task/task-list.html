@@ -27,6 +27,7 @@
         <th>Beskrivelse</th>
         <th>Deadline</th>
         <th>Estimeret Tid</th>
+        <th>Forbrugt Tid</th>
         <th>Status</th>
     </tr>
     </thead>
@@ -38,6 +39,7 @@
         <td th:text="${task.description}"></td>
         <td th:text="${task.deadline}"></td>
         <td th:text="${task.estimatedTime}"></td>
+        <td th:text="${task.timeSpent}"></td>
         <td th:text="${task.status}"></td>
 
         <td>

@@ -131,14 +131,8 @@ public class SubProjectController {
     @PostMapping("/update")
     public String updateSubProject(HttpSession session,
                                    RedirectAttributes redirectAttributes,
-                                   Model model, int id,
-                                   @RequestParam int newProjectId,
-                                   @RequestParam String newName,
-                                   @RequestParam String newDescription,
-                                   @RequestParam LocalDate newDeadline,
-                                   @RequestParam int newEstimatedTime,
-                                   @RequestParam int newTimeSpent,
-                                   @RequestParam Status newStatus) {
+                                   Model model,
+                                   @ModelAttribute("subproject") SubProject subProject) {
 
         UserViewDTO currentUser = getCurrentUser(session);
         if (currentUser == null) {
@@ -146,14 +140,11 @@ public class SubProjectController {
             return "redirect:/login";
         }
 
-        model.addAttribute("oldsubproject", subProjectService.readById(id));
-        model.addAttribute("updatedsubproject", subProjectService.update(currentUser, new SubProject(
-                newProjectId, newEstimatedTime, newTimeSpent, newName, newDescription, newDeadline, newStatus
-        )));
+        subProjectService.update(currentUser, subProject);
 
         redirectAttributes.addFlashAttribute("success", "Delprojekt blev opdateret.");
 
-        return "redirect:/subproject/subproject-details";
+        return "redirect:/subprojects/" + subProject.getSubProjectId();
     }
 
     //------------------------------------ Delete() ------------------------------------

@@ -22,6 +22,7 @@ public class TaskRowMapper implements RowMapper<Task> {
                 rs.getInt("subProjectID"),
                 rs.getInt("id"),
                 rs.getInt("estimatedTime"),
+                rs.getInt("timeSpent"),
                 rs.getString("name"),
                 rs.getString("description"),
                 deadline,
