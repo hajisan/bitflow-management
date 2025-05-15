@@ -171,17 +171,23 @@ public class UserService {
 
         User user = iUserRepository.readByEmail(email);
 
-        if (passwordEncoder.matches(inputPassword, user.getPasswordHash())) {
-            return new UserViewDTO(
-                    user.getUserId(),
-                    user.getFirstName(),
-                    user.getLastName(),
-                    user.getEmail(),
-                    user.getRole()
-            );
+        if (user == null) {
+            throw new UserFriendlyException("Brugeren blev ikke fundet.", "/login");
         }
-        throw new BadCredentialsException("Adgangskoden er forkert.");
+
+        if (!passwordEncoder.matches(inputPassword, user.getPasswordHash())) {
+            throw new UserFriendlyException("Adgangskoden er forkert", "/login");
+        }
+
+        return new UserViewDTO(
+                user.getUserId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getRole()
+        );
     }
+
 
     //------------------------------------ DTO-Mappings -----------------------------------
 
