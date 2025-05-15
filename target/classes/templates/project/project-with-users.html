@@ -25,11 +25,26 @@
   </li>
 </ul>
 
-
 <!-- Hvis listen er tom -->
 <p th:if="${#lists.isEmpty(projectWithUsers.userViewDTOList)}">
   Der er ingen brugere tilknyttet dette projekt.
 </p>
+
+<h3>Tildel bruger(e) til projekt</h3>
+
+<form th:action="@{'/projects/' + ${projectWithUsers.project.projectId} + '/assignusers'}" method="post">
+    <label for="user-select">Vælg én eller flere brugere:</label><br/>
+    <select id="user-select" name="userIds" multiple size="5">
+        <option th:each="user : ${unassignedUsers}"
+                th:value="${user.userId}"
+                th:text="${user.firstName + ' ' + user.lastName + ' (' + user.role + ')'}">
+        </option>
+    </select>
+    <br/><br/>
+    <button type="submit">Tildel valgte brugere</button>
+</form>
+
+
 
 <a th:href="@{/projects/list}">Tilbage til projektoversigt</a>
 </body>
