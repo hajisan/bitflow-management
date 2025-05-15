@@ -3,6 +3,7 @@ package com.example.estimationtool.service;
 
 import com.example.estimationtool.model.SubTask;
 import com.example.estimationtool.model.User;
+import com.example.estimationtool.model.enums.Status;
 import com.example.estimationtool.model.timeEntry.TimeEntry;
 import com.example.estimationtool.repository.interfaces.ISubTaskRepository;
 import com.example.estimationtool.repository.interfaces.ITaskRepository;
@@ -13,6 +14,7 @@ import java.util.List;
 
 import com.example.estimationtool.repository.interfaces.ITimeEntryRepository;
 import com.example.estimationtool.repository.interfaces.IUserRepository;
+import com.example.estimationtool.toolbox.check.StatusCheck;
 import com.example.estimationtool.toolbox.dto.*;
 import com.example.estimationtool.toolbox.check.RoleCheck;
 import org.springframework.stereotype.Service;
@@ -24,12 +26,16 @@ public class TaskService {
     private final IUserRepository iUserRepository;
     private final ISubTaskRepository iSubTaskRepository;
     private final ITimeEntryRepository iTimeEntryRepository;
+    private final StatusCheck statusCheck;
 
-    public TaskService(ITaskRepository iTaskRepository, IUserRepository iUserRepository, ISubTaskRepository iSubTaskRepository, ITimeEntryRepository iTimeEntryRepository) {
+    public TaskService(ITaskRepository iTaskRepository,
+                       IUserRepository iUserRepository, ISubTaskRepository iSubTaskRepository,
+                       ITimeEntryRepository iTimeEntryRepository, StatusCheck statusCheck) {
         this.iTaskRepository = iTaskRepository;
         this.iUserRepository = iUserRepository;
         this.iSubTaskRepository = iSubTaskRepository;
         this.iTimeEntryRepository = iTimeEntryRepository;
+        this.statusCheck = statusCheck;
     }
 
     //------------------------------------ Create() ------------------------------------
@@ -52,6 +58,17 @@ public class TaskService {
     //------------------------------------ Update() ------------------------------------
 
     public Task updateTask(Task task) {
+
+        if (task.getStatus() == Status.DONE) {
+            List<SubTask> subTaskList = iSubTaskRepository.readAllByTaskId(task.getTaskId());
+            // Konverterer Task + SubTasks til DTO
+            TaskWithSubTasksDTO taskWithSubTasksDTO = new TaskWithSubTasksDTO(task, subTaskList);
+
+            if (!statusCheck.canMarkTaskAsDone(taskWithSubTasksDTO)) {
+                throw new IllegalStateException("Status for task kan ikke markeres som færdig, før alle SubTasks er færdige.");
+            }
+        }
+
         return iTaskRepository.update(task);
     }
     //------------------------------------ Delete() ------------------------------------

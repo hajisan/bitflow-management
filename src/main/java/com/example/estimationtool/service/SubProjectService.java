@@ -92,6 +92,7 @@ public class SubProjectService {
         // Statusvalidering: SubProject må kun sættes til DONE, hvis alle Tasks er DONE
         if (subProject.getStatus() == Status.DONE) {
             List<Task> tasks = iTaskRepository.readAllBySubProjectId(subProject.getSubProjectId());
+            // Konverterer SubProject + Task's til DTO
             SubProjectWithTasksDTO dto = new SubProjectWithTasksDTO(subProject, tasks);
 
             if (!statusCheck.canMarkSubProjectAsDone(dto)) {
