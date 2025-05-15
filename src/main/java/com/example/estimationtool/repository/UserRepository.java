@@ -4,6 +4,7 @@ import com.example.estimationtool.repository.interfaces.IUserRepository;
 import com.example.estimationtool.model.User;
 import com.example.estimationtool.toolbox.rowMappers.UserRowMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -68,7 +69,11 @@ public class UserRepository implements IUserRepository {
     public User readById(Integer id) {
         String sql = "SELECT id, firstName, lastName, email, passwordHash, role FROM user WHERE id = ?";
 
-        return jdbcTemplate.queryForObject(sql, new UserRowMapper(), id);
+        try {
+            return jdbcTemplate.queryForObject(sql, new UserRowMapper(), id);
+        } catch (IncorrectResultSizeDataAccessException e) {
+            return null;
+        }
 
     }
 
