@@ -1,14 +1,12 @@
 package com.example.estimationtool.service;
 
 import com.example.estimationtool.model.*;
-import com.example.estimationtool.repository.SubProjectRepository;
-import com.example.estimationtool.repository.interfaces.IProjectRepository;
 import com.example.estimationtool.repository.interfaces.ISubProjectRepository;
 import com.example.estimationtool.toolbox.dto.*;
 
 import com.example.estimationtool.model.enums.Role;
 import com.example.estimationtool.repository.interfaces.IUserRepository;
-import com.example.estimationtool.toolbox.roleCheck.RoleCheck;
+import com.example.estimationtool.toolbox.check.RoleCheck;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -31,17 +29,16 @@ public class UserService {
     private final SubTaskService subTaskService;
     private final TaskService taskService;
 
-//    private final ISubProjectRepository iSubProjectRepository;
 
 
-
-    public UserService(IUserRepository iUserRepository, PasswordEncoder passwordEncoder, ProjectService projectService, SubProjectService subProjectService, ISubProjectRepository iSubProjectRepository, SubTaskService subTaskService, TaskService taskService) {
+    public UserService(IUserRepository iUserRepository, PasswordEncoder passwordEncoder,
+                       ProjectService projectService, SubProjectService subProjectService,
+                       SubTaskService subTaskService, TaskService taskService) {
         this.iUserRepository = iUserRepository;
         this.passwordEncoder = passwordEncoder;
         this.projectService = projectService;
         this.subProjectService = subProjectService;
         this.subTaskService = subTaskService;
-//        this.iSubProjectRepository = iSubProjectRepository;
         this.taskService = taskService;
     }
 
