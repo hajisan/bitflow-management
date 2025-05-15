@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+// @Component = hjælpeklasse
+
 @Component // Så Spring kan oprette instans af klassen (@Bean), som nu kan injiceres i Service-laget
 public class StatusCheck {
 
