@@ -20,16 +20,19 @@
 
 <!-- Hvis listen ikke er tom -->
 <ul th:if="${!#lists.isEmpty(subTaskWithTimeEntries.timeEntries)}">
-  <li th:each="entry : ${subTaskWithTimeEntries.timeEntries}">
-    <strong>Dato:</strong> <span th:text="${entry.date}"></span> –
-    <strong>Timer brugt:</strong> <span th:text="${entry.hoursSpent}"></span> timer –
-    <strong>Bruger-ID:</strong> <span th:text="${entry.userId}"></span>
-  </li>
+    <li th:each="entry : ${subTaskWithTimeEntries.timeEntries}">
+        <strong>Dato:</strong> <span th:text="${entry.date}"></span> –
+        <strong>Timer brugt:</strong> <span th:text="${entry.hoursSpent}"></span> timer –
+        <strong>Bruger-ID:</strong> <span th:text="${entry.userId}"></span>
+    </li>
+    <li>
+        <strong th:text="'Timer brugt i alt på ' + ${subTaskWithTimeEntries.subTask().name}"></strong>
+    </li>
 </ul>
 
 <!-- Hvis listen er tom -->
 <p th:if="${#lists.isEmpty(subTaskWithTimeEntries.timeEntries)}">
-  Der er endnu ikke registreret timer for denne underopgave.
+    Der er endnu ikke registreret timer for denne underopgave.
 </p>
 
 <a th:href="@{/subtasks/list}">Tilbage til underopgaveoversigt</a>

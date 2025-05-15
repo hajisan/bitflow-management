@@ -1,18 +1,15 @@
 package com.example.estimationtool.toolbox.timeCalc;
 
-import com.example.estimationtool.model.Project;
-import com.example.estimationtool.model.SubProject;
-import com.example.estimationtool.model.SubTask;
-import com.example.estimationtool.model.Task;
 import com.example.estimationtool.model.timeEntry.TimeEntry;
+
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import java.util.Collection;
 import java.util.List;
 
 public abstract class TimeCalculator {
+
+    //------------------------------------------ Tid Brugt ------------------------------------------
 
     public static int calculateTimeSpent(List<TimeEntry> entries) {
         if (!entries.isEmpty()) {
@@ -28,9 +25,21 @@ public abstract class TimeCalculator {
         }
     }
 
+//    public static int timeSpentOnSubTask(SubTaskWithTimeEntriesDTO subTaskWithTimeEntriesDTO) {
+//        int timeSpent = 0;
+//        for (TimeEntry timeEntry : subTaskWithTimeEntriesDTO.timeEntries()) {
+//            timeSpent += timeEntry.getHoursSpent();
+//        }
+//        return timeSpent;
+//    }
+
+    //------------------------------------ Tid tilbage i TIMER ------------------------------------
+
     public static double calculateRemainingTime(LocalDate deadline) {
         return countWorkDays(deadline) * (37 / 5.0); // Vi antager at en arbejdsuge er 37 timer med 5 hverdage
     }
+
+    //---------------------------- Tid i TIMER pr. DAG m. hjælpemetode ----------------------------
 
     public static double calculateHoursPerDay(int remainingHours, LocalDate deadline) {
         // until-metoden hos LocalDate returnerer longs og ikke ints, hvilket er grunden til at værdien bliver castet
@@ -56,27 +65,9 @@ public abstract class TimeCalculator {
         return workingDays;
     }
 
-    public static double calculateHoursPerDayForProject(Project project) {
-        double remainingHours = calculateRemainingTime(project.getDeadline());
-        LocalDate deadline = project.getDeadline();
-        return calculateHoursPerDay((int) remainingHours, deadline);
-    }
-
-    public static double calculateHoursPerDayForSubProject(SubProject subProject) {
-        double remainingHours = calculateRemainingTime(subProject.getDeadline());
-        LocalDate deadline = subProject.getDeadline();
-        return calculateHoursPerDay((int) remainingHours, deadline);
-    }
-
-    public static double calculateHoursPerDayForTask(Task task) {
-        double remainingHours = calculateRemainingTime(task.getDeadline());
-        LocalDate deadline = task.getDeadline();
-        return calculateHoursPerDay((int) remainingHours, deadline);
-    }
-
-    public static double calculateHoursPerDayForSubTask(SubTask subTask) {
-        double remainingHours = calculateRemainingTime(subTask.getDeadline());
-        LocalDate deadline = subTask.getDeadline();
-        return calculateHoursPerDay((int) remainingHours, deadline);
-    }
+//    public static double calculateHoursPerDayForEstimable(Estimable estimable) {
+//        LocalDate deadline = estimable.getDeadline();
+//        double remainingHours = calculateRemainingTime(deadline);
+//        return calculateHoursPerDay((int) remainingHours, deadline);
+//    }
 }
