@@ -27,6 +27,24 @@
   Der er ingen brugere tilknyttet dette delprojekt.
 </p>
 
+<!-- Tilknyt brugere til subprojekt -->
+<h2>Tildel nye brugere</h2>
+
+<form th:action="@{'/subprojects/' + ${subProjectWithUsers.subProject.subProjectId} + '/assignusers'}"
+      method="post">
+
+    <label for="user-select">Vælg én eller flere brugere:</label><br/>
+    <select name="userIds" multiple size="5" id="user-select">
+        <option th:each="user : ${unassignedUsers}"
+                th:value="${user.userId}"
+                th:text="${user.firstName + ' ' + user.lastName + ' (' + user.role + ')'}">
+        </option>
+    </select>
+
+    <br/><br/>
+    <button type="submit">Tildel valgte brugere</button>
+</form>
+
 <a th:href="@{/subprojects/list}">Tilbage til delprojektoversigt</a>
 </body>
 </html>

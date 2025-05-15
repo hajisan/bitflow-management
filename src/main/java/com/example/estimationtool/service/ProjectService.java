@@ -187,7 +187,10 @@ public class ProjectService {
     //------------------------- Assign User til Project POST-mapping ------------------------
 
 
-    public void assignUserToProject(List<Integer> userIds, int projectId) {
+    public void assignUserToProject(UserViewDTO currentUser, List<Integer> userIds, int projectId) {
+
+        // Kun admin og projektleder må assign bruger til projekt
+        RoleCheck.ensureAdminOrProjectManager(currentUser.getRole());
 
         // Henter de brugere, der allerede er tilknyttet projektet
         List<User> existingUsers = iUserRepository.readAllByProjectId(projectId);
@@ -207,8 +210,5 @@ public class ProjectService {
             }
         }
     }
-
-
-
 
 }

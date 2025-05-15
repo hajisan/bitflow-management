@@ -246,11 +246,11 @@ public class ProjectController {
         UserViewDTO currentUser = getCurrentUser(session);
 
         if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne se brugere til et projekt.");
+            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne tildele brugere et projekt.");
             return "redirect:/login";
         }
 
-        projectService.assignUserToProject(userIds, id);
+        projectService.assignUserToProject(currentUser,userIds, id);
 
         redirectAttributes.addFlashAttribute("success", "Bruger(e) blev tildelt projektet.");
 
