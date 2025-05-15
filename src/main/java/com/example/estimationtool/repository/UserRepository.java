@@ -119,7 +119,11 @@ public class UserRepository implements IUserRepository {
             WHERE email = ?
             """;
 
-        return jdbcTemplate.queryForObject(sql, new UserRowMapper(), email);
+        try {
+            return jdbcTemplate.queryForObject(sql, new UserRowMapper(), email);
+        } catch (IncorrectResultSizeDataAccessException e) {
+            return null;
+        }
     }
 
     //---------------------------------- Til DTO'er ------------------------------------
