@@ -71,6 +71,7 @@ CREATE TABLE Task (
     description VARCHAR(255),
     deadline DATE,
     estimatedTime INTEGER,
+    timeSpent INTEGER,
     status VARCHAR(255) CHECK (status IN ('ACTIVE', 'INACTIVE', 'DONE')),
     UNIQUE (subProjectID, name),
     FOREIGN KEY (subProjectID) REFERENCES Subproject(id) ON DELETE CASCADE
@@ -87,6 +88,7 @@ CREATE TABLE SubTask (
     description VARCHAR(255),
     deadline DATE,
     estimatedTime INTEGER,
+    timeSpent INTEGER,
     status VARCHAR(255) CHECK (status IN ('ACTIVE', 'INACTIVE', 'DONE')),
     UNIQUE (taskID, name),
     FOREIGN KEY (taskID) REFERENCES Task(id) ON DELETE CASCADE
