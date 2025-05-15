@@ -2,9 +2,11 @@ package com.example.estimationtool.service;
 
 
 import com.example.estimationtool.model.SubTask;
+import com.example.estimationtool.model.enums.Status;
 import com.example.estimationtool.model.timeEntry.TimeEntry;
 import com.example.estimationtool.repository.interfaces.ISubTaskRepository;
 import com.example.estimationtool.repository.interfaces.ITimeEntryRepository;
+import com.example.estimationtool.toolbox.check.StatusCheck;
 import com.example.estimationtool.toolbox.dto.SubTaskWithTimeEntriesDTO;
 import com.example.estimationtool.toolbox.dto.UserViewDTO;
 import com.example.estimationtool.toolbox.check.RoleCheck;
@@ -16,10 +18,12 @@ public class SubTaskService {
 
     private final ISubTaskRepository iSubTaskRepository;
     private final ITimeEntryRepository iTimeEntryRepository;
+    private final StatusCheck statusCheck;
 
-    public SubTaskService(ISubTaskRepository iSubTaskRepository, ITimeEntryRepository iTimeEntryRepository) {
+    public SubTaskService(ISubTaskRepository iSubTaskRepository, ITimeEntryRepository iTimeEntryRepository, StatusCheck statusCheck) {
         this.iSubTaskRepository = iSubTaskRepository;
         this.iTimeEntryRepository = iTimeEntryRepository;
+        this.statusCheck = statusCheck;
     }
 
     //------------------------------------ Create() ------------------------------------
@@ -41,6 +45,13 @@ public class SubTaskService {
     //------------------------------------ Update() ------------------------------------
 
    public SubTask updateSubTask(SubTask subtask) {
+
+        // Statusvalidering: formelt for konsistens i struktur. En SubTask har ingen underopgaver tilknyttet
+        if (subtask.getStatus() == Status.DONE) {
+            if (!statusCheck.canMarkSubTaskAsDone(subtask)) {
+                throw new IllegalStateException("Subtasken kan ikke markers som færdig");
+            }
+        }
         return iSubTaskRepository.update(subtask);
    }
 
