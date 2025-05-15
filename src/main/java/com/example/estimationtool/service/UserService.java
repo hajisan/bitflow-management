@@ -199,10 +199,9 @@ public class UserService {
         // Læser én bruger
         User user = iUserRepository.readById(userId);
 
-        // ExceptionHandling
-//        if (user == null) {
-//            throw new NoSuchElementException("Bruger med ID " + userId + " findes ikke.");
-//        }
+        if (user == null) {
+            throw new UserFriendlyException("Brugeren findes ikke", "/users/profile");
+        }
 
         // Konverterer User til UserViewDTO
         UserViewDTO userViewDTO = new UserViewDTO(
@@ -228,10 +227,9 @@ public class UserService {
         // Læser én bruger
         User user = iUserRepository.readById(userId);
 
-        // ExceptionHandling
-//        if (user == null) {
-//            throw new NoSuchElementException("Bruger med ID " + userId + " findes ikke.");
-//        }
+        if (user == null) {
+            throw new UserFriendlyException("Brugeren findes ikke", "/users/profile");
+        }
 
         // Konverterer User til UserViewDTO
         UserViewDTO userViewDTO = new UserViewDTO(
@@ -285,6 +283,10 @@ public class UserService {
         // Henter bruger ud fra brugerID
         User user = iUserRepository.readById(userId);
 
+        if (user == null) {
+            throw new UserFriendlyException("Brugeren findes ikke", "/users/profile");
+        }
+
         // Konverterer User til UserViewDTO
         UserViewDTO userViewDTO = new UserViewDTO(
                 user.getUserId(),
@@ -305,6 +307,10 @@ public class UserService {
 
         // Læser én bruger
         User user = iUserRepository.readById(userId);
+
+        if (user == null) {
+            throw new UserFriendlyException("Brugeren findes ikke", "/users/profile");
+        }
 
         // Konverter user til UserViewDTO
         UserViewDTO userViewDTO = new UserViewDTO(
