@@ -69,6 +69,8 @@ public class ProjectService {
 
     public Project updateProject(Project project) {
 
+
+        // Statusvalidering: Project må kun sættes til DONE, hvis alle SubProjects er DONE
         if (project.getStatus() == Status.DONE) {
             List<SubProject> subProjectList = iSubProjectRepository.readAllFromProjectId(project.getProjectId());
             ProjectWithSubProjectsDTO projectWithSubProjectsDTO = new ProjectWithSubProjectsDTO(project, subProjectList);
