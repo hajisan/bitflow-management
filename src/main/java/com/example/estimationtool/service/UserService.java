@@ -29,17 +29,16 @@ public class UserService {
     private final SubTaskService subTaskService;
     private final TaskService taskService;
 
-//    private final ISubProjectRepository iSubProjectRepository;
 
 
-
-    public UserService(IUserRepository iUserRepository, PasswordEncoder passwordEncoder, ProjectService projectService, SubProjectService subProjectService, ISubProjectRepository iSubProjectRepository, SubTaskService subTaskService, TaskService taskService) {
+    public UserService(IUserRepository iUserRepository, PasswordEncoder passwordEncoder,
+                       ProjectService projectService, SubProjectService subProjectService,
+                       SubTaskService subTaskService, TaskService taskService) {
         this.iUserRepository = iUserRepository;
         this.passwordEncoder = passwordEncoder;
         this.projectService = projectService;
         this.subProjectService = subProjectService;
         this.subTaskService = subTaskService;
-//        this.iSubProjectRepository = iSubProjectRepository;
         this.taskService = taskService;
     }
 
