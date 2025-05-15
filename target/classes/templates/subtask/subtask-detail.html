@@ -7,23 +7,55 @@
 <body>
 <h1>Detaljer for Underopgave</h1>
 
-<!-- Fejlbesked -->
+<!-- Fejl-/succesbesked -->
 <p th:if="${error}" th:text="${error}"></p>
+<p th:if="${success}" th:text="${success}" style="color: green;"></p>
 
 <ul>
-    <li><strong>ID:</strong> <span th:text="${subtask.subTaskId}"></span></li>
-    <li><strong>Opgave ID:</strong> <span th:text="${subtask.taskId}"></span></li>
-    <li><strong>Navn:</strong> <span th:text="${subtask.name}"></span></li>
-    <li><strong>Beskrivelse:</strong> <span th:text="${subtask.description}"></span></li>
-    <li><strong>Deadline:</strong> <span th:text="${subtask.deadline}"></span></li>
-    <li><strong>Estimeret Tid:</strong> <span th:text="${subtask.estimatedTime}"></span></li>
-    <li><strong>Status:</strong> <span th:text="${subtask.status}"></span></li>
+    <li>ID: <span th:text="${subtask.subTaskId}"></span></li>
+    <li>Opgave ID: <span th:text="${subtask.taskId}"></span></li>
+    <li>Navn: <span th:text="${subtask.name}"></span></li>
+    <li>Beskrivelse: <span th:text="${subtask.description}"></span></li>
+    <li>Deadline: <span th:text="${subtask.deadline}"></span></li>
+    <li>Estimeret Tid: <span th:text="${subtask.estimatedTime}"></span></li>
+    <li>Status: <span th:text="${subtask.status}"></span></li>
 </ul>
 
 <!-- Redigér subtask-knap -->
 <p>
     <a th:href="@{'/subtasks/edit/' + ${subtask.subTaskId}}">Redigér</a>
 </p>
+
+<!-- Vis tilknyttet bruger -->
+
+<h2>Tildelt bruger</h2>
+<p th:if="${assignedUser != null}">
+    <span th:text="${assignedUser.firstName + ' ' + assignedUser.lastName + ' (' + assignedUser.role + ')'}"></span>
+</p>
+<p th:if="${assignedUser == null}">
+    Ingen bruger er endnu tildelt denne underopgave.
+</p>
+
+
+
+<!-- Tildel mig selv -->
+<h2>Tildel mig selv</h2>
+<form th:action="@{'/subtasks/' + ${subtask.subTaskId} + '/assignme'}" method="post">
+    <button type="submit">Tildel mig</button>
+</form>
+
+<!-- Tildel anden bruger -->
+<h2>Tildel en anden bruger</h2>
+<form th:action="@{'/subtasks/' + ${subtask.subTaskId} + '/assign'}" method="post">
+    <label for="userId">Vælg bruger:</label>
+    <select name="userId" id="userId">
+        <option th:each="user : ${allUserList}"
+                th:value="${user.userId}"
+                th:text="${user.firstName + ' ' + user.lastName + ' (' + user.role + ')'}">
+        </option>
+    </select>
+    <button type="submit">Tildel</button>
+</form>
 
 
 <p><a th:href="@{/subtasks}">Tilbage til underopgaveliste</a></p>

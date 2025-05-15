@@ -190,9 +190,31 @@ public class UserRepository implements IUserRepository {
         return jdbcTemplate.query(sql, new UserRowMapper(), taskId);
     }
 
+    // Read() bruger ud fra subtask-ID (fordi der er en mange-til-mange relation i databasen)
+
     @Override
     public User readUserBySubTaskId(Integer subTaskId) {
-        return null;
+
+        String sql = """
+        SELECT
+            user.id,
+            user.firstName,
+            user.lastName,
+            user.email,
+            user.passwordHash,
+            user.role
+        FROM user
+        JOIN user_subtask ON user.id = user_subtask.userID
+        WHERE user_subtask.subTaskID = ?
+    """;
+
+        List<User> users = jdbcTemplate.query(sql, new UserRowMapper(), subTaskId);
+
+        if (users.isEmpty()) {
+            return null;
+        } else {
+            return users.get(0); // Returnerer den første (og eneste) bruger tilknyttet
+        }
     }
 
 
