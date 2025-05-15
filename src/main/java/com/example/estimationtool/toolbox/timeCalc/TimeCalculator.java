@@ -48,16 +48,15 @@ public abstract class TimeCalculator {
         return calculateHoursPerDay(remainingHours, deadline);
     }
 
-//    TODO Jeg ved ikke om disse 4 overhovedet er nødvendige, men lige nu har hverken tasks eller subtasks en timeSpent-attribut. Desuden skal der nok også bruges DTO'er her, så måske skal de bare væk :3
-//    public static double calculateHoursPerDayForTask(Task task) {
-//        int remainingHours = task.getEstimatedTime() - task.getTimeSpent();
-//        LocalDate deadline = task.getDeadline();
-//        return calculateHoursPerDay(remainingHours, deadline);
-//    }
+    public static double calculateHoursPerDayForTask(Task task) {
+        int remainingHours = task.getEstimatedTime() - task.getTimeSpent();
+        LocalDate deadline = task.getDeadline();
+        return calculateHoursPerDay(remainingHours, deadline);
+    }
 
-//    public static double calculateHoursPerDayForSubTask(SubTask subTask) {
-//        int remainingHours = subTask.getEstimatedTime() - subTask.getTimeSpent();
-//        LocalDate deadline = subTask.getDeadline();
-//        return calculateHoursPerDay(remainingHours, deadline);
-//    }
+    public static double calculateHoursPerDayForSubTask(SubTask subTask) {
+        int remainingHours = subTask.getEstimatedTime() - subTask.getTimeSpent();
+        LocalDate deadline = subTask.getDeadline();
+        return calculateHoursPerDay(remainingHours, deadline);
+    }
 }
