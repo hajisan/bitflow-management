@@ -4,33 +4,17 @@ import com.example.estimationtool.model.Project;
 import com.example.estimationtool.model.SubProject;
 import com.example.estimationtool.model.SubTask;
 import com.example.estimationtool.model.Task;
-import com.example.estimationtool.repository.interfaces.IProjectRepository;
-import com.example.estimationtool.repository.interfaces.ISubProjectRepository;
-import com.example.estimationtool.repository.interfaces.ISubTaskRepository;
-import com.example.estimationtool.repository.interfaces.ITaskRepository;
 import com.example.estimationtool.toolbox.dto.UserWithProjectsDTO;
 import com.example.estimationtool.toolbox.dto.UserWithSubProjectsDTO;
 import com.example.estimationtool.toolbox.dto.UserWithSubTasksDTO;
 import com.example.estimationtool.toolbox.dto.UserWithTasksDTO;
 
-// ------------------------------------ Tjekker om bruger er tilknyttet en model -----------------------
+// Tjekker om bruger er tilknyttet en bestemt model
+// DTO'erne indeholder brugerens tildelte modeller
 
 public class AssignCheck {
 
-    private final IProjectRepository projectRepository;
-    private final ISubProjectRepository subProjectRepository;
-    private final ITaskRepository taskRepository;
-    private final ISubTaskRepository subTaskRepository;
 
-    public AssignCheck(IProjectRepository projectRepository,
-                         ISubProjectRepository subProjectRepository,
-                         ITaskRepository taskRepository,
-                         ISubTaskRepository subTaskRepository) {
-        this.projectRepository = projectRepository;
-        this.subProjectRepository = subProjectRepository;
-        this.taskRepository = taskRepository;
-        this.subTaskRepository = subTaskRepository;
-    }
 
     // ------------------------------------ User med Projects ------------------------------------------
 

@@ -8,9 +8,12 @@
 
 <h1>Rediger Projekt</h1>
 
+<!-- Vis logget ind bruger og rolle -->
+<p th:if="${session.currentUser != null}"> Du er logget ind som <span th:text="${session.currentUser.role}"></span></p>
+
 <!-- Fejl-/succesbesked -->
 <p th:if="${error}" th:text="${error}"></p>
-<div th:if="${success}" class="success" th:text="${success}"></div>
+<p th:if="${success}" th:text="${success}"></p>
 
 <!-- Formular til redigering af projekt -->
 <form th:action="@{/projects/update}" th:object="${project}" method="post">
@@ -40,9 +43,9 @@
   <p>
     <label>Status:</label>
     <select th:field="*{status}">
-      <option th:each="s : ${T(com.example.estimationtool.model.enums.Status).values()}"
-              th:value="${s}"
-              th:text="${s}"></option>
+      <option th:each="status : ${T(com.example.estimationtool.model.enums.Status).values()}"
+              th:value="${status}"
+              th:text="${status}"></option>
     </select>
   </p>
 

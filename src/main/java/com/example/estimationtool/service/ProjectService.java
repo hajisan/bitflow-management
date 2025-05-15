@@ -8,11 +8,13 @@ import com.example.estimationtool.repository.interfaces.IProjectRepository;
 import com.example.estimationtool.model.Project;
 import com.example.estimationtool.repository.interfaces.ISubProjectRepository;
 import com.example.estimationtool.repository.interfaces.IUserRepository;
+import com.example.estimationtool.toolbox.check.AssignCheck;
 import com.example.estimationtool.toolbox.check.StatusCheck;
 import com.example.estimationtool.toolbox.dto.ProjectWithSubProjectsDTO;
 import com.example.estimationtool.toolbox.dto.ProjectWithUsersDTO;
 import com.example.estimationtool.toolbox.dto.UserViewDTO;
 import com.example.estimationtool.toolbox.check.RoleCheck;
+import com.example.estimationtool.toolbox.dto.UserWithProjectsDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -67,7 +69,16 @@ public class ProjectService {
 
     //------------------------------------ Update() ------------------------------------
 
-    public Project updateProject(Project project) {
+    public Project updateProject(UserViewDTO currentUser, Project project) {
+
+        // Rollevalidering: Kun admin eller projektleder må redigere projekt
+        RoleCheck.ensureAdminOrProjectManager(currentUser.getRole());
+
+        // Assign-tjek:
+        List<Project> userProjects = iProjectRepository.readAllByUserId(currentUser.getUserId());
+        // Konverterer User + projects til DTO
+        UserWithProjectsDTO userWithProjectsDTO = new UserWithProjectsDTO(currentUser, userProjects);
+        AssignCheck.ensureUserAssignedToProject(userWithProjectsDTO, project.getProjectId());
 
 
         // Statusvalidering: Project må kun sættes til DONE, hvis alle SubProjects er DONE
