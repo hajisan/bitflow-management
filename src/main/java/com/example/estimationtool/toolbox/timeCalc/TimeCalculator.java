@@ -57,26 +57,26 @@ public abstract class TimeCalculator {
     }
 
     public static double calculateHoursPerDayForProject(Project project) {
-        int remainingHours = project.getEstimatedTime() - project.getTimeSpent();
+        double remainingHours = calculateRemainingTime(project.getDeadline());
         LocalDate deadline = project.getDeadline();
-        return calculateHoursPerDay(remainingHours, deadline);
+        return calculateHoursPerDay((int) remainingHours, deadline);
     }
 
     public static double calculateHoursPerDayForSubProject(SubProject subProject) {
-        int remainingHours = subProject.getEstimatedTime() - subProject.getTimeSpent();
+        double remainingHours = calculateRemainingTime(subProject.getDeadline());
         LocalDate deadline = subProject.getDeadline();
-        return calculateHoursPerDay(remainingHours, deadline);
+        return calculateHoursPerDay((int) remainingHours, deadline);
     }
 
     public static double calculateHoursPerDayForTask(Task task) {
-        int remainingHours = task.getEstimatedTime() - task.getTimeSpent();
+        double remainingHours = calculateRemainingTime(task.getDeadline());
         LocalDate deadline = task.getDeadline();
-        return calculateHoursPerDay(remainingHours, deadline);
+        return calculateHoursPerDay((int) remainingHours, deadline);
     }
 
     public static double calculateHoursPerDayForSubTask(SubTask subTask) {
-        int remainingHours = subTask.getEstimatedTime() - subTask.getTimeSpent();
+        double remainingHours = calculateRemainingTime(subTask.getDeadline());
         LocalDate deadline = subTask.getDeadline();
-        return calculateHoursPerDay(remainingHours, deadline);
+        return calculateHoursPerDay((int) remainingHours, deadline);
     }
 }
