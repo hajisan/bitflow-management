@@ -6,6 +6,8 @@ import com.example.estimationtool.toolbox.dto.*;
 
 import com.example.estimationtool.model.enums.Role;
 import com.example.estimationtool.repository.interfaces.IUserRepository;
+import com.example.estimationtool.toolbox.exceptionHandler.UserFriendlyException;
+import com.example.estimationtool.toolbox.roleCheck.RoleCheck;
 import com.example.estimationtool.toolbox.check.RoleCheck;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,15 +32,23 @@ public class UserService {
     private final TaskService taskService;
 
 
+    public UserService(IUserRepository iUserRepository, PasswordEncoder passwordEncoder,
+                       ProjectService projectService, SubProjectService subProjectService,
+                       ISubProjectRepository iSubProjectRepository, SubTaskService subTaskService,
+                       TaskService taskService) {
+
+
 
     public UserService(IUserRepository iUserRepository, PasswordEncoder passwordEncoder,
                        ProjectService projectService, SubProjectService subProjectService,
                        SubTaskService subTaskService, TaskService taskService) {
+
         this.iUserRepository = iUserRepository;
         this.passwordEncoder = passwordEncoder;
         this.projectService = projectService;
         this.subProjectService = subProjectService;
         this.subTaskService = subTaskService;
+        // this.iSubProjectRepository = iSubProjectRepository;
         this.taskService = taskService;
     }
 
@@ -84,8 +94,9 @@ public class UserService {
 
     public UserViewDTO readById(int id) {
         User user = iUserRepository.readById(id);
+
         if (user == null) {
-            throw new NoSuchElementException("Bruger med ID " + id + " eksisterer ikke.");
+            throw new UserFriendlyException("Brugeren blev ikke fundet.", "/users/users"); // <-- Ret URL når vi har det på plads
         }
 
         return new UserViewDTO(
@@ -106,12 +117,20 @@ public class UserService {
 
         // Tjekker om bruger findes
         if (existingUser == null) {
-            throw new RuntimeException("Bruger med ID: " + userUpdateDTO.getUserId() + " eksisterer ikke.");
+            throw new UserFriendlyException("Brugeren du forsøger at ændre, findes ikke.", "/users"); // <-- Ret URL når vi har det på plads
         }
 
         // Håndterer rolle
-        RoleCheck.ensureAdmin(currentUser.getRole());
+        Role role;
 
+        if (currentUser.getRole() == Role.ADMIN) {
+            role = existingUser.getRole(); // Kun admin må ændre rolle
+        } else {
+            if (!currentUser.getRole().equals(existingUser.getRole())) {
+                throw new UserFriendlyException("Du har ikke rettigheder til at ændre denne brugers rolle.", "/users/edit/" + userUpdateDTO.getUserId()); // <-- Ret URL når vi har det på plads
+            }
+          
+        RoleCheck.ensureAdmin(currentUser.getRole());
 
         // Håndterer password
         String passwordHash = getPasswordHash(userUpdateDTO, existingUser);
@@ -149,17 +168,23 @@ public class UserService {
 
         User user = iUserRepository.readByEmail(email);
 
-        if (passwordEncoder.matches(inputPassword, user.getPasswordHash())) {
-            return new UserViewDTO(
-                    user.getUserId(),
-                    user.getFirstName(),
-                    user.getLastName(),
-                    user.getEmail(),
-                    user.getRole()
-            );
+        if (user == null) {
+            throw new UserFriendlyException("Brugeren blev ikke fundet.", "/login");
         }
-        throw new BadCredentialsException("Adgangskoden er forkert.");
+
+        if (!passwordEncoder.matches(inputPassword, user.getPasswordHash())) {
+            throw new UserFriendlyException("Adgangskoden er forkert", "/login");
+        }
+
+        return new UserViewDTO(
+                user.getUserId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getRole()
+        );
     }
+
 
     //------------------------------------ Password ----------------------------------
 
@@ -190,10 +215,9 @@ public class UserService {
         // Læser én bruger
         User user = iUserRepository.readById(userId);
 
-        // ExceptionHandling
-//        if (user == null) {
-//            throw new NoSuchElementException("Bruger med ID " + userId + " findes ikke.");
-//        }
+        if (user == null) {
+            throw new UserFriendlyException("Brugeren findes ikke", "/users/profile");
+        }
 
         // Konverterer User til UserViewDTO
         UserViewDTO userViewDTO = new UserViewDTO(
@@ -219,10 +243,9 @@ public class UserService {
         // Læser én bruger
         User user = iUserRepository.readById(userId);
 
-        // ExceptionHandling
-//        if (user == null) {
-//            throw new NoSuchElementException("Bruger med ID " + userId + " findes ikke.");
-//        }
+        if (user == null) {
+            throw new UserFriendlyException("Brugeren findes ikke", "/users/profile");
+        }
 
         // Konverterer User til UserViewDTO
         UserViewDTO userViewDTO = new UserViewDTO(
@@ -238,9 +261,9 @@ public class UserService {
         return new UserWithSubProjectsDTO(userViewDTO, subProjectList);
 
     }
-//
-//    // --- Henter brugere ud fra subprojektID ---
-//
+
+    // --- Henter brugere ud fra subprojektID ---
+
 //    public SubProjectWithUsersDTO readAllUsersBySubProjectId(int subProjectId) {
 //
 //        // Læser ét subprojekt
@@ -264,7 +287,6 @@ public class UserService {
 //            userViewDTOList.add(userViewDTO); // Tilføjet hver UserDTO til listen
 //        }
 //
-//
 //        // Returnerer subprojekt + liste af UserViewDTO
 //        return new SubProjectWithUsersDTO(subProject, userViewDTOList);
 //    }
@@ -275,6 +297,10 @@ public class UserService {
 
         // Henter bruger ud fra brugerID
         User user = iUserRepository.readById(userId);
+
+        if (user == null) {
+            throw new UserFriendlyException("Brugeren findes ikke", "/users/profile");
+        }
 
         // Konverterer User til UserViewDTO
         UserViewDTO userViewDTO = new UserViewDTO(
@@ -296,6 +322,10 @@ public class UserService {
 
         // Læser én bruger
         User user = iUserRepository.readById(userId);
+
+        if (user == null) {
+            throw new UserFriendlyException("Brugeren findes ikke", "/users/profile");
+        }
 
         // Konverter user til UserViewDTO
         UserViewDTO userViewDTO = new UserViewDTO(
