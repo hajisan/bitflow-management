@@ -166,12 +166,10 @@ public class SubProjectService {
     }
 
 
-
-
     //---------------------------------- Assign User ---------------------------------
 
-    // ----------------- Subprojekt tildeles en bruger efter oprettelse --------------
 
+    // ---------------------- Viser kun ikke-tilknyttede brugere ---------------------
 
     public List<UserViewDTO> readAllUnAssignedUsers(int subProjectId) {
 
@@ -204,6 +202,8 @@ public class SubProjectService {
         return unassignedUserDTO;
     }
 
+    // ----------------- Subprojekt tildeles en bruger efter oprettelse ---------------
+
     public void assignUsersToSubProject(UserViewDTO currentUser, List<Integer> userIds, int subProjectId) {
 
         // Kun admin og projektleder må assign bruger til subprojekt
@@ -227,6 +227,8 @@ public class SubProjectService {
             }
         }
     }
+
+
 
 //    public ProjectWithSubProjectsDTO readAllFromProjectId(int projectId) {
 ////        try {

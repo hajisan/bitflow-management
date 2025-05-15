@@ -203,8 +203,13 @@ public class TaskController {
         // Henter task + brugere
         TaskWithUsersDTO taskWithUsersDTO = taskService.readAllUsersByTaskId(id);
 
+
+        // Viser ikke-tilknyttede brugere (til POST-formularen)
+        List<UserViewDTO> unassignedUsers = taskService.readAllUnAssignedUsers(id);
+
         // Tilføjer til model
         model.addAttribute("taskWithUsers", taskWithUsersDTO);
+        model.addAttribute("unassignedUsers", unassignedUsers);
 
         // Returnerer HTML-side
         return "task/task-with-users";
@@ -250,6 +255,26 @@ public class TaskController {
         return "task/task-with-timeentries";
     }
 
+
+    //---------------------------- POST Assign User to Task ---------------------------
+
+    @PostMapping("/tasks/{id}/assignusers")
+    public String assignUsersToTask(@PathVariable int id,
+                                    @RequestParam("userIds") List<Integer> userIds,
+                                    HttpSession session,
+                                    RedirectAttributes redirectAttributes) {
+
+        UserViewDTO currentUser = getCurrentUser(session);
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne tildele brugere til en task.");
+            return "redirect:/login";
+        }
+
+        taskService.assignUsersToTask(currentUser, userIds, id);
+
+        redirectAttributes.addFlashAttribute("success", "Brugere blev tildelt opgaven.");
+        return "redirect:/tasks/" + id + "/users";
+    }
 
 
 

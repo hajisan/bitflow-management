@@ -10,7 +10,9 @@ import com.example.estimationtool.repository.interfaces.ITaskRepository;
 import com.example.estimationtool.model.Task;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.example.estimationtool.repository.interfaces.ITimeEntryRepository;
 import com.example.estimationtool.repository.interfaces.IUserRepository;
@@ -138,11 +140,73 @@ public class TaskService {
 
     //---------------------------------- Assign User --------------------------------
 
+    // ---------------------- Viser kun ikke-tilknyttede brugere --------------------
+
+
+
+    public List<UserViewDTO> readAllUnAssignedUsers(int taskId) {
+
+        // Læser alle brugere
+        List<User> allUserList = iUserRepository.readAll();
+
+        // Læser taskens allerede tilknyttede brugere
+        List<User> assignedUserList = iUserRepository.readAllByTaskId(taskId);
+
+        // Samler ID'er på de allerede tildelte brugere
+        Set<Integer> assignedUserIds = new HashSet<>();
+        for (User user : assignedUserList) {
+            assignedUserIds.add(user.getUserId());
+        }
+
+        // Tilføjer kun de brugere, der IKKE allerede er tildelt task
+        List<UserViewDTO> unassignedUserDTO = new ArrayList<>();
+        for (User user : allUserList) {
+            if (!assignedUserIds.contains(user.getUserId())) {
+                unassignedUserDTO.add(new UserViewDTO(
+                        user.getUserId(),
+                        user.getFirstName(),
+                        user.getLastName(),
+                        user.getEmail(),
+                        user.getRole()
+                ));
+            }
+        }
+
+        return unassignedUserDTO;
+    }
+
+    // ------------------- Task tildeles en bruger efter oprettelse -----------------
+
+
+    public void assignUsersToTask(UserViewDTO currentUser, List<Integer> userIds, int taskId) {
+
+        // Kun admin og projektleder må assign bruger til task
+        RoleCheck.ensureAdminOrProjectManager(currentUser.getRole());
+
+        // Henter de brugere, der allerede er tilknyttet task
+        List<User> existingUsers = iUserRepository.readAllByTaskId(taskId);
+
+        // Opretter et Set af allerede tildelte bruger-ID'er
+        Set<Integer> existingUserIds = new HashSet<>();
+        for (User user : existingUsers) {
+            existingUserIds.add(user.getUserId());
+        }
+
+        // Tildeler kun brugere, som ikke allerede er tilknyttet task
+        for (Integer userId : userIds) {
+            if (!existingUserIds.contains(userId)) {
+                iTaskRepository.assignUserToTask(userId, taskId);
+            }
+        }
+    }
+
+
+
+
+
     // ----------------- Task tildeles en bruger efter oprettelse -------------------
 
-    public void assignUserToTask(UserViewDTO currentUser, int userId, int taskId) {
-        RoleCheck.ensureAdminOrProjectManager(currentUser.getRole());
-        iTaskRepository.assignUserToTask(userId, taskId);
-    }
+
+
 
 }
