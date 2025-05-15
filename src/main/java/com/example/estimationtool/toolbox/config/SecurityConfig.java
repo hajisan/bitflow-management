@@ -7,27 +7,37 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-@Configuration
+@Configuration // Spring læser configuration-classes ved applikationsopstart
 public class SecurityConfig {
     // MIDLERTIDIGT, FOR AT KOBLE SPRING BOOTS LOGIN-METODE FRA I WEBBROWSER
 
-    @Bean
+
+
+    // ------ Alle sikkerhedsmekanismer er slået fra - kun password hashes ------
+
+    @Bean // SecurituFilterChain definerer hvordan HTTP-anmodninger håndteres sikkert
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
                         .anyRequest().permitAll()
                 )
-                .csrf().disable()
-                .formLogin().disable()
-                .httpBasic().disable()
-                .logout().disable();
+                .csrf().disable() // Nu blokeres POST-formularer ikke
+                .formLogin().disable() // Deaktiverer automatisk login-side fra Spring Security
+                .httpBasic().disable() // Deaktiverer browser-popup til login
+                .logout().disable(); // Deaktiverer Spring Security's logout-funktionalitet
 
         return http.build();
     }
 
-    @Bean
+    // -------------------------------- Hasher password ------------------------------------
+
+    @Bean // Nu kan bcrypt's password-hasher indsprøjtes i UserService
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+
+        // PasswordEncoder: Interface i Spring Security
+        // BCryptPasswordEncoder: klasse der implementerer interfacet, som vi instantierer ved brug
+
     }
 
 
