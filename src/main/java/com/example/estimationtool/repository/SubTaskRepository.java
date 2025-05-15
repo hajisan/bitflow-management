@@ -153,7 +153,6 @@ public class SubTaskRepository implements ISubTaskRepository {
     //---------------------------------- Assign User --------------------------------
 
 
-
     // ----------------- SubTask tildeles en bruger efter oprettelse ----------------
 
     @Override

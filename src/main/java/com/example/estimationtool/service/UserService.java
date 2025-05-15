@@ -110,31 +110,11 @@ public class UserService {
         }
 
         // Håndterer rolle
-        Role role;
+        RoleCheck.ensureAdmin(currentUser.getRole());
 
-        if (currentUser.getRole() == Role.ADMIN) {
-            role = existingUser.getRole(); // Kun admin må ændre rolle
-        } else {
-            if (!currentUser.getRole().equals(existingUser.getRole())) {
-                throw new SecurityException("Du har ikke tilladelse til ændre en brugers rolle.");
-            }
-
-            role = existingUser.getRole(); // Beholder nuværende rolle
-        }
 
         // Håndterer password
-        String passwordHash;
-
-        if (userUpdateDTO.getPassword() == null || userUpdateDTO.getPassword().isBlank()) {
-            // Hvis intet password er angivet, behold eksisterende hash
-            passwordHash = existingUser.getPasswordHash();
-        } else if (passwordEncoder.matches(userUpdateDTO.getPassword(), existingUser.getPasswordHash())) {
-            // Hvis brugeren indtaster det samme password = behold det
-            passwordHash = existingUser.getPasswordHash();
-        } else {
-            // Hash opdaterede password
-            passwordHash = passwordEncoder.encode(userUpdateDTO.getPassword());
-        }
+        String passwordHash = getPasswordHash(userUpdateDTO, existingUser);
 
         // Mapper UserUpdateDTO til User-objekt med opdateret bruger
         User updatedUser = new User(
@@ -143,12 +123,14 @@ public class UserService {
                 userUpdateDTO.getLastName(),
                 userUpdateDTO.getEmail(),
                 passwordHash,
-                role
+                existingUser.getRole() // TODO Måske virker currentuser.getRole()
         );
 
         return iUserRepository.update(updatedUser);
 
     }
+
+
 
     //------------------------------------ Delete() ------------------------------------
 
@@ -177,6 +159,25 @@ public class UserService {
             );
         }
         throw new BadCredentialsException("Adgangskoden er forkert.");
+    }
+
+    //------------------------------------ Password ----------------------------------
+
+
+    private String getPasswordHash(UserUpdateDTO userUpdateDTO, User existingUser) {
+        String passwordHash;
+
+        if (userUpdateDTO.getPassword() == null || userUpdateDTO.getPassword().isBlank()) {
+            // Hvis intet password er angivet, behold eksisterende hash
+            passwordHash = existingUser.getPasswordHash();
+        } else if (passwordEncoder.matches(userUpdateDTO.getPassword(), existingUser.getPasswordHash())) {
+            // Hvis brugeren indtaster det samme password = behold det
+            passwordHash = existingUser.getPasswordHash();
+        } else {
+            // Hash opdaterede password
+            passwordHash = passwordEncoder.encode(userUpdateDTO.getPassword());
+        }
+        return passwordHash;
     }
 
     //------------------------------------ DTO-Mappings -----------------------------------

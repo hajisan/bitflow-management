@@ -16,7 +16,7 @@ public class TaskRowMapper implements RowMapper<Task> {
         LocalDate deadline = null; // Sætter deadline til null
 
         if (sqlDate != null) {
-            deadline = sqlDate.toLocalDate(); // Hvis deadline ikke er null, konverter til til LocalDate
+            deadline = sqlDate.toLocalDate(); // Hvis deadline ikke er null, konverter til LocalDate
         }
         return new Task(
                 rs.getInt("subProjectID"),

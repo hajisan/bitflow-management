@@ -181,10 +181,12 @@ public class ProjectController {
         return "redirect:/projects/list";
     }
 
+
     //------------------------------------ DTO'er ------------------------------------
 
 
-    // --- Viser brugere tilknyttet ét projekt ---
+    // --- Viser brugere tilknyttet/ikke-tilknyttet ét projekt ---
+
     @GetMapping("/{id}/users")
     public String showProjectWithUsers(@PathVariable int id,
                                        HttpSession session,
@@ -198,14 +200,20 @@ public class ProjectController {
             return "redirect:/login";
         }
 
+        // Viser allerede tilknyttede brugere
         ProjectWithUsersDTO projectWithUsers = projectService.readALlUsersByProjectId(id);
 
+        // Viser ikke-tilknyttede brugere (til POST-formularen)
+        List<UserViewDTO> unassignedUsers = projectService.readAllUnAssignedUsers(id);
+
         model.addAttribute("projectWithUsers", projectWithUsers);
+        model.addAttribute("unassignedUsers", unassignedUsers);
 
         return "project/project-with-users";
     }
 
     // --- Viser subprojekter tilknyttet ét projekt ---
+
     @GetMapping("/{id}/subprojects")
     public String showSubProjectWithUsers(@PathVariable int id,
                                           HttpSession session,
@@ -225,6 +233,30 @@ public class ProjectController {
 
         return "project/project-with-subprojects";
     }
+
+
+    //---------------------------- POST Assign User to Project ----------------------------
+
+    @PostMapping("/{id}/assignusers")
+    public String assignUsersToProject(@PathVariable int id,
+                                       @RequestParam("userIds") List<Integer> userIds,
+                                       HttpSession session,
+                                       RedirectAttributes redirectAttributes) {
+
+        UserViewDTO currentUser = getCurrentUser(session);
+
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne se brugere til et projekt.");
+            return "redirect:/login";
+        }
+
+        projectService.assignUserToProject(userIds, id);
+
+        redirectAttributes.addFlashAttribute("success", "Bruger(e) blev tildelt projektet.");
+
+        return "redirect:/projects/" + id + "/users";
+    }
+
 
 
 }

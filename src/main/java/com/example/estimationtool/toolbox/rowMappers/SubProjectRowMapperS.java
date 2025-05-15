@@ -14,6 +14,13 @@ public class SubProjectRowMapperS implements RowMapper<SubProject> {
 
     @Override
     public SubProject mapRow(ResultSet rs, int rowNum) throws SQLException {
+
+        java.sql.Date sqlDate = rs.getDate("deadline");
+        LocalDate deadline = null; // Sætter deadline til null
+
+        if (sqlDate != null) {
+            deadline = sqlDate.toLocalDate(); // Hvis deadline ikke er null, konverter til LocalDate
+        }
         return new SubProject(
                 rs.getInt("id"),
                 rs.getInt("projectID"),
@@ -21,7 +28,7 @@ public class SubProjectRowMapperS implements RowMapper<SubProject> {
                 rs.getInt("timeSpent"),
                 rs.getString("name"),
                 rs.getString("description"),
-                rs.getDate("deadline").toLocalDate(),
+                deadline,
                 Status.valueOf(rs.getString("status"))
         );
     }
