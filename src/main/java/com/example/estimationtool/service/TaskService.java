@@ -14,7 +14,7 @@ import java.util.List;
 import com.example.estimationtool.repository.interfaces.ITimeEntryRepository;
 import com.example.estimationtool.repository.interfaces.IUserRepository;
 import com.example.estimationtool.toolbox.dto.*;
-import com.example.estimationtool.toolbox.roleCheck.RoleCheck;
+import com.example.estimationtool.toolbox.check.RoleCheck;
 import org.springframework.stereotype.Service;
 
 @Service

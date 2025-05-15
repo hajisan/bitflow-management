@@ -8,11 +8,10 @@ import com.example.estimationtool.repository.interfaces.ISubProjectRepository;
 import com.example.estimationtool.model.SubProject;
 import com.example.estimationtool.repository.interfaces.ITaskRepository;
 import com.example.estimationtool.repository.interfaces.IUserRepository;
-import com.example.estimationtool.toolbox.dto.ProjectWithSubProjectsDTO;
 import com.example.estimationtool.toolbox.dto.SubProjectWithTasksDTO;
 import com.example.estimationtool.toolbox.dto.SubProjectWithUsersDTO;
 import com.example.estimationtool.toolbox.dto.UserViewDTO;
-import com.example.estimationtool.toolbox.roleCheck.RoleCheck;
+import com.example.estimationtool.toolbox.check.RoleCheck;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

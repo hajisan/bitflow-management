@@ -1,4 +1,4 @@
-package com.example.estimationtool.toolbox.roleCheck;
+package com.example.estimationtool.toolbox.check;
 
 import com.example.estimationtool.model.enums.Role;
 

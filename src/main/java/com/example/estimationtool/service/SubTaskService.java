@@ -7,7 +7,7 @@ import com.example.estimationtool.repository.interfaces.ISubTaskRepository;
 import com.example.estimationtool.repository.interfaces.ITimeEntryRepository;
 import com.example.estimationtool.toolbox.dto.SubTaskWithTimeEntriesDTO;
 import com.example.estimationtool.toolbox.dto.UserViewDTO;
-import com.example.estimationtool.toolbox.roleCheck.RoleCheck;
+import com.example.estimationtool.toolbox.check.RoleCheck;
 import org.springframework.stereotype.Service;
 import java.util.List;
 

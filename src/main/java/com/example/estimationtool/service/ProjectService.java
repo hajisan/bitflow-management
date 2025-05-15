@@ -10,7 +10,7 @@ import com.example.estimationtool.repository.interfaces.IUserRepository;
 import com.example.estimationtool.toolbox.dto.ProjectWithSubProjectsDTO;
 import com.example.estimationtool.toolbox.dto.ProjectWithUsersDTO;
 import com.example.estimationtool.toolbox.dto.UserViewDTO;
-import com.example.estimationtool.toolbox.roleCheck.RoleCheck;
+import com.example.estimationtool.toolbox.check.RoleCheck;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -64,6 +64,7 @@ public class ProjectService {
     //------------------------------------ Update() ------------------------------------
 
     public Project updateProject(Project project) {
+
         return iProjectRepository.update(project);
     }
 
