@@ -110,7 +110,7 @@ public class UserService {
 
         // Tjekker om bruger findes
         if (existingUser == null) {
-            throw new RuntimeException("Bruger med ID: " + userUpdateDTO.getUserId() + " eksisterer ikke.");
+            throw new UserFriendlyException("Brugeren du forsøger at ændre, findes ikke.", "/users"); // <-- Ret URL når vi har det på plads
         }
 
         // Håndterer rolle
@@ -120,7 +120,7 @@ public class UserService {
             role = existingUser.getRole(); // Kun admin må ændre rolle
         } else {
             if (!currentUser.getRole().equals(existingUser.getRole())) {
-                throw new SecurityException("Du har ikke tilladelse til ændre en brugers rolle.");
+                throw new UserFriendlyException("Du har ikke rettigheder til at ændre denne brugers rolle.", "/users/edit/" + userUpdateDTO.getUserId()); // <-- Ret URL når vi har det på plads
             }
 
             role = existingUser.getRole(); // Beholder nuværende rolle
