@@ -152,7 +152,7 @@ public class ProjectController {
             return "redirect:/login";
         }
 
-        projectService.updateProject(project);
+        projectService.updateProject(currentUser, project);
 
         // Tilføj succesbesked som flash-attribut (vises efter redirect)
         redirectAttributes.addFlashAttribute("success", "Projektet blev opdateret.");

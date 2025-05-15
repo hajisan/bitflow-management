@@ -8,11 +8,11 @@ import com.example.estimationtool.repository.interfaces.ISubProjectRepository;
 import com.example.estimationtool.model.SubProject;
 import com.example.estimationtool.repository.interfaces.ITaskRepository;
 import com.example.estimationtool.repository.interfaces.IUserRepository;
-import com.example.estimationtool.toolbox.dto.ProjectWithSubProjectsDTO;
+import com.example.estimationtool.toolbox.check.StatusCheck;
 import com.example.estimationtool.toolbox.dto.SubProjectWithTasksDTO;
 import com.example.estimationtool.toolbox.dto.SubProjectWithUsersDTO;
 import com.example.estimationtool.toolbox.dto.UserViewDTO;
-import com.example.estimationtool.toolbox.roleCheck.RoleCheck;
+import com.example.estimationtool.toolbox.check.RoleCheck;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,15 +22,15 @@ import java.util.NoSuchElementException;
 @Service
 public class SubProjectService {
     private final ISubProjectRepository iSubProjectRepository;
-    private final IProjectRepository iProjectRepository;
     private final IUserRepository iUserRepository;
     private final ITaskRepository iTaskRepository;
+    private final StatusCheck statusCheck;
 
-    public SubProjectService(ISubProjectRepository iSubProjectRepository, IProjectRepository iProjectRepository, IUserRepository iUserRepository, ITaskRepository iTaskRepository) {
+    public SubProjectService(ISubProjectRepository iSubProjectRepository, IUserRepository iUserRepository, ITaskRepository iTaskRepository, StatusCheck statusCheck) {
         this.iSubProjectRepository = iSubProjectRepository;
-        this.iProjectRepository = iProjectRepository;
         this.iUserRepository = iUserRepository;
         this.iTaskRepository = iTaskRepository;
+        this.statusCheck = statusCheck;
     }
 
     //------------------------------------ Create() ------------------------------------
@@ -69,6 +69,8 @@ public class SubProjectService {
 
     //------------------------------------ Update() ------------------------------------
     public SubProject update(UserViewDTO currentUser, SubProject subProject) {
+
+        // Kun admin eller projektleder må redigere et subprojekt
         RoleCheck.ensureAdminOrProjectManager(currentUser.getRole());
 
         // Inputvalidering til update
@@ -81,8 +83,21 @@ public class SubProjectService {
         if (subProject.getDeadline() == null) {
             throw new IllegalArgumentException("Subprojektets deadline må ikke være null eller tom.");
         }
-        if (subProject.getStatus() != Status.ACTIVE && subProject.getStatus() != Status.INACTIVE && subProject.getStatus() != Status.DONE) {
+        if (subProject.getStatus() != Status.ACTIVE &&
+                subProject.getStatus() != Status.INACTIVE &&
+                subProject.getStatus() != Status.DONE) {
             throw new IllegalArgumentException("Subprojektets status skal være sat til enten Active, Inactive eller Done.");
+        }
+
+        // Statusvalidering: SubProject må kun sættes til DONE, hvis alle Tasks er DONE
+        if (subProject.getStatus() == Status.DONE) {
+            List<Task> tasks = iTaskRepository.readAllBySubProjectId(subProject.getSubProjectId());
+            // Konverterer SubProject + Task's til DTO
+            SubProjectWithTasksDTO dto = new SubProjectWithTasksDTO(subProject, tasks);
+
+            if (!statusCheck.canMarkSubProjectAsDone(dto)) {
+                throw new IllegalStateException("Subprojektet kan ikke markeres som færdigt, før alle tasks er færdige.");
+            }
         }
 
         return iSubProjectRepository.update(subProject);
