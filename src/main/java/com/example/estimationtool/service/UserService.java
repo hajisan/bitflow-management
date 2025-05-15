@@ -8,6 +8,7 @@ import com.example.estimationtool.toolbox.dto.*;
 
 import com.example.estimationtool.model.enums.Role;
 import com.example.estimationtool.repository.interfaces.IUserRepository;
+import com.example.estimationtool.toolbox.exceptionHandler.UserFriendlyException;
 import com.example.estimationtool.toolbox.roleCheck.RoleCheck;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,15 +34,17 @@ public class UserService {
 
 //    private final ISubProjectRepository iSubProjectRepository;
 
+    public UserService(IUserRepository iUserRepository, PasswordEncoder passwordEncoder,
+                       ProjectService projectService, SubProjectService subProjectService,
+                       ISubProjectRepository iSubProjectRepository, SubTaskService subTaskService,
+                       TaskService taskService) {
 
-
-    public UserService(IUserRepository iUserRepository, PasswordEncoder passwordEncoder, ProjectService projectService, SubProjectService subProjectService, ISubProjectRepository iSubProjectRepository, SubTaskService subTaskService, TaskService taskService) {
         this.iUserRepository = iUserRepository;
         this.passwordEncoder = passwordEncoder;
         this.projectService = projectService;
         this.subProjectService = subProjectService;
         this.subTaskService = subTaskService;
-//        this.iSubProjectRepository = iSubProjectRepository;
+        // this.iSubProjectRepository = iSubProjectRepository;
         this.taskService = taskService;
     }
 
