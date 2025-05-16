@@ -44,7 +44,7 @@ INSERT INTO SubTask (taskID, name, description, deadline, estimatedTime, timeSpe
 (100006, 'Task_7_Sub_2', 'Underopgave 2', '2025-05-31', 2, 0, 'ACTIVE'),
 (100007, 'Task_8_Sub_1', 'Underopgave 1', '2025-05-31', 2, 0, 'ACTIVE'),
 (100007, 'Task_8_Sub_2', 'Underopgave 2', '2025-05-31', 2, 0, 'ACTIVE');
-
+/*
 -- Indsæt time entries med userID
 INSERT INTO TimeEntry (userID, date, hoursSpent) VALUES
 (2, '2025-05-01', 2),
@@ -103,7 +103,7 @@ INSERT INTO TimeEntry_SubTask (timeEntryID, subTaskID) VALUES
 (10000013, 1000013),
 (10000014, 1000014),
 (10000015, 1000015);
-
+*/
 -- Knyt user til projekt
 INSERT INTO User_Project (userID, projectID) VALUES
 (2, 1000), -- Projektleder ID 1

@@ -12,7 +12,9 @@
 <p>Beskrivelse: <span th:text="${taskWithUsers.task.description}"></span></p>
 <p>Deadline: <span th:text="${taskWithUsers.task.deadline}"></span></p>
 <p>Status: <span th:text="${taskWithUsers.task.status}"></span></p>
-<p>Estimeret tid: <span th:text="${taskWithUsers.task.estimatedTime}"></span>timer</p>
+<p>Estimeret tid: <span th:text="${taskWithUsers.task.estimatedTime}"></span> timer</p>
+<p>Forbrugt tid: <span th:text="${taskWithUsers.task.timeSpent}"></span> timer</p>
+
 
 <h2>Brugere tilknyttet opgaven</h2>
 

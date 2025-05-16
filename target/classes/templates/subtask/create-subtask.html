@@ -12,7 +12,7 @@
 <p th:if="${success}" th:text="${success}"></p>
 
 <!-- Formular til at oprette en SubTask -->
-<form th:action="@{/subtasks}" th:object="${subtask}" method="post">
+<form th:action="@{/subtasks/create}" th:object="${subtask}" method="post">
 
     <p>
         <label>Opgave ID (Task):</label>
@@ -37,6 +37,11 @@
     <p>
         <label>Estimeret tid (timer):</label>
         <input type="number" th:field="*{estimatedTime}" required/>
+    </p>
+
+    <p>
+        <label>Forbrugt tid (timer):</label>
+        <input type="number" th:field="*{timeSpent}" required/>
     </p>
 
     <p>

@@ -16,35 +16,35 @@ INSERT INTO Subproject (projectID, name, description, deadline, estimatedTime, t
 (1000, 'Frontend', 'Delprojekt: Frontend', '2025-05-31', 80, 0, 'ACTIVE');
 
 -- Indsæt tasks
-INSERT INTO Task (subProjectID, name, description, deadline, estimatedTime, status) VALUES
-(10000, 'Backend_Task_1', 'Opgave 1', '2025-05-31', 10, 'ACTIVE'),
-(10000, 'Backend_Task_2', 'Opgave 2', '2025-05-31', 10, 'ACTIVE'),
-(10000, 'Backend_Task_3', 'Opgave 3', '2025-05-31', 10, 'ACTIVE'),
-(10000, 'Backend_Task_4', 'Opgave 4', '2025-05-31', 10, 'ACTIVE'),
-(10001, 'Frontend_Task_1', 'Opgave 1', '2025-05-31', 10, 'ACTIVE'),
-(10001, 'Frontend_Task_2', 'Opgave 2', '2025-05-31', 10, 'ACTIVE'),
-(10001, 'Frontend_Task_3', 'Opgave 3', '2025-05-31', 10, 'ACTIVE'),
-(10001, 'Frontend_Task_4', 'Opgave 4', '2025-05-31', 10, 'ACTIVE');
+INSERT INTO Task (subProjectID, name, description, deadline, estimatedTime, timeSpent, status) VALUES
+(10000, 'Backend_Task_1', 'Opgave 1', '2025-05-31', 10, 0, 'ACTIVE'),
+(10000, 'Backend_Task_2', 'Opgave 2', '2025-05-31', 10, 0, 'ACTIVE'),
+(10000, 'Backend_Task_3', 'Opgave 3', '2025-05-31', 10, 0, 'ACTIVE'),
+(10000, 'Backend_Task_4', 'Opgave 4', '2025-05-31', 10, 0, 'ACTIVE'),
+(10001, 'Frontend_Task_1', 'Opgave 1', '2025-05-31', 10, 0, 'ACTIVE'),
+(10001, 'Frontend_Task_2', 'Opgave 2', '2025-05-31', 10, 0, 'ACTIVE'),
+(10001, 'Frontend_Task_3', 'Opgave 3', '2025-05-31', 10, 0, 'ACTIVE'),
+(10001, 'Frontend_Task_4', 'Opgave 4', '2025-05-31', 10, 0, 'ACTIVE');
 
 -- Indsæt subtasks
-INSERT INTO SubTask (taskID, name, description, deadline, estimatedTime, status) VALUES
-(100000, 'Task_1_Sub_1', 'Underopgave 1', '2025-05-31', 2, 'ACTIVE'),
-(100000, 'Task_1_Sub_2', 'Underopgave 2', '2025-05-31', 2, 'ACTIVE'),
-(100001, 'Task_2_Sub_1', 'Underopgave 1', '2025-05-31', 2, 'ACTIVE'),
-(100001, 'Task_2_Sub_2', 'Underopgave 2', '2025-05-31', 2, 'ACTIVE'),
-(100002, 'Task_3_Sub_1', 'Underopgave 1', '2025-05-31', 2, 'ACTIVE'),
-(100002, 'Task_3_Sub_2', 'Underopgave 2', '2025-05-31', 2, 'ACTIVE'),
-(100003, 'Task_4_Sub_1', 'Underopgave 1', '2025-05-31', 2, 'ACTIVE'),
-(100003, 'Task_4_Sub_2', 'Underopgave 2', '2025-05-31', 2, 'ACTIVE'),
-(100004, 'Task_5_Sub_1', 'Underopgave 1', '2025-05-31', 2, 'ACTIVE'),
-(100004, 'Task_5_Sub_2', 'Underopgave 2', '2025-05-31', 2, 'ACTIVE'),
-(100005, 'Task_6_Sub_1', 'Underopgave 1', '2025-05-31', 2, 'ACTIVE'),
-(100005, 'Task_6_Sub_2', 'Underopgave 2', '2025-05-31', 2, 'ACTIVE'),
-(100006, 'Task_7_Sub_1', 'Underopgave 1', '2025-05-31', 2, 'ACTIVE'),
-(100006, 'Task_7_Sub_2', 'Underopgave 2', '2025-05-31', 2, 'ACTIVE'),
-(100007, 'Task_8_Sub_1', 'Underopgave 1', '2025-05-31', 2, 'ACTIVE'),
-(100007, 'Task_8_Sub_2', 'Underopgave 2', '2025-05-31', 2, 'ACTIVE');
-
+INSERT INTO SubTask (taskID, name, description, deadline, estimatedTime, timeSpent, status) VALUES
+(100000, 'Task_1_Sub_1', 'Underopgave 1', '2025-05-31', 2, 0, 'ACTIVE'),
+(100000, 'Task_1_Sub_2', 'Underopgave 2', '2025-05-31', 2, 0, 'ACTIVE'),
+(100001, 'Task_2_Sub_1', 'Underopgave 1', '2025-05-31', 2, 0, 'ACTIVE'),
+(100001, 'Task_2_Sub_2', 'Underopgave 2', '2025-05-31', 2, 0, 'ACTIVE'),
+(100002, 'Task_3_Sub_1', 'Underopgave 1', '2025-05-31', 2, 0, 'ACTIVE'),
+(100002, 'Task_3_Sub_2', 'Underopgave 2', '2025-05-31', 2, 0, 'ACTIVE'),
+(100003, 'Task_4_Sub_1', 'Underopgave 1', '2025-05-31', 2, 0, 'ACTIVE'),
+(100003, 'Task_4_Sub_2', 'Underopgave 2', '2025-05-31', 2, 0,'ACTIVE'),
+(100004, 'Task_5_Sub_1', 'Underopgave 1', '2025-05-31', 2, 0, 'ACTIVE'),
+(100004, 'Task_5_Sub_2', 'Underopgave 2', '2025-05-31', 2, 0, 'ACTIVE'),
+(100005, 'Task_6_Sub_1', 'Underopgave 1', '2025-05-31', 2, 0, 'ACTIVE'),
+(100005, 'Task_6_Sub_2', 'Underopgave 2', '2025-05-31', 2, 0, 'ACTIVE'),
+(100006, 'Task_7_Sub_1', 'Underopgave 1', '2025-05-31', 2, 0, 'ACTIVE'),
+(100006, 'Task_7_Sub_2', 'Underopgave 2', '2025-05-31', 2, 0, 'ACTIVE'),
+(100007, 'Task_8_Sub_1', 'Underopgave 1', '2025-05-31', 2, 0, 'ACTIVE'),
+(100007, 'Task_8_Sub_2', 'Underopgave 2', '2025-05-31', 2, 0, 'ACTIVE');
+/*
 -- Indsæt time entries med userID
 INSERT INTO TimeEntry (userID, date, hoursSpent) VALUES
 (2, '2025-05-01', 2),
@@ -103,7 +103,7 @@ INSERT INTO TimeEntry_SubTask (timeEntryID, subTaskID) VALUES
 (10000013, 1000013),
 (10000014, 1000014),
 (10000015, 1000015);
-
+*/
 -- Knyt user til projekt
 INSERT INTO User_Project (userID, projectID) VALUES
 (2, 1000), -- Projektleder ID 1

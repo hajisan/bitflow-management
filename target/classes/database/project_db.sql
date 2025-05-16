@@ -7,10 +7,10 @@ DROP TABLE IF EXISTS user_subtask;
 DROP TABLE IF EXISTS user_task;
 DROP TABLE IF EXISTS user_subproject;
 DROP TABLE IF EXISTS user_project;
-DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS timeentry_subtask;
 DROP TABLE IF EXISTS timeentry_task;
 DROP TABLE IF EXISTS timeentry;
+DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS subtask;
 DROP TABLE IF EXISTS task;
 DROP TABLE IF EXISTS subproject;
@@ -71,6 +71,7 @@ CREATE TABLE Task (
     description VARCHAR(255),
     deadline DATE,
     estimatedTime INTEGER,
+    timeSpent INTEGER,
     status VARCHAR(255) CHECK (status IN ('ACTIVE', 'INACTIVE', 'DONE')),
     UNIQUE (subProjectID, name),
     FOREIGN KEY (subProjectID) REFERENCES Subproject(id) ON DELETE CASCADE
@@ -87,6 +88,7 @@ CREATE TABLE SubTask (
     description VARCHAR(255),
     deadline DATE,
     estimatedTime INTEGER,
+    timeSpent INTEGER,
     status VARCHAR(255) CHECK (status IN ('ACTIVE', 'INACTIVE', 'DONE')),
     UNIQUE (taskID, name),
     FOREIGN KEY (taskID) REFERENCES Task(id) ON DELETE CASCADE
@@ -99,11 +101,14 @@ CREATE TABLE SubTask (
 CREATE TABLE TimeEntry (
     id INT AUTO_INCREMENT PRIMARY KEY,
     userID INTEGER,
+    taskID INTEGER,
+    subtaskID INTEGER,
     date DATE,
     hoursSpent INTEGER,
     FOREIGN KEY (userID) REFERENCES User(id) ON DELETE CASCADE
 ) AUTO_INCREMENT = 10000000;
 
+/*
 -- ========================
 -- Tabel: TimeEntry_Task
 -- Knytter en TimeEntry til en Task
@@ -127,7 +132,7 @@ CREATE TABLE TimeEntry_SubTask (
     FOREIGN KEY (timeEntryID) REFERENCES TimeEntry(id) ON DELETE CASCADE,
     FOREIGN KEY (subTaskID) REFERENCES SubTask(id) ON DELETE CASCADE
 );
-
+*/
 -- ========================
 -- Tabel: User_Project
 -- Knytter en User til et Project

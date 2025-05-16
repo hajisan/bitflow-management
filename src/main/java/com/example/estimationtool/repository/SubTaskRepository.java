@@ -27,7 +27,7 @@ public class SubTaskRepository implements ISubTaskRepository {
 
         String sql = """
                 INSERT INTO
-                subtask (taskID, name, description, deadline, estimatedTime, timeSpent status)
+                subtask (taskID, name, description, deadline, estimatedTime, timeSpent, status)
                 VALUES (?, ?, ?, ?, ?, ?, ?)
                 """;
 
@@ -128,7 +128,7 @@ public class SubTaskRepository implements ISubTaskRepository {
                     subtask.id,
                     subtask.taskID,
                     subtask.estimatedTime,
-                    subTask.timeSpent
+                    subTask.timeSpent,
                     subtask.name,
                     subtask.description,
                     subtask.deadline,
