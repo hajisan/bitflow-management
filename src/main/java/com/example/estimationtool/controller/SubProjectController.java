@@ -26,11 +26,11 @@ import java.util.List;
 public class SubProjectController {
 
     private final SubProjectService subProjectService;
-    private final ProjectService projectService;
+    //private final ProjectService projectService;
 
     public SubProjectController(SubProjectService subProjectService, ProjectService projectService) {
         this.subProjectService = subProjectService;
-        this.projectService = projectService;
+        //this.projectService = projectService;
 
     }
 
@@ -47,7 +47,7 @@ public class SubProjectController {
         UserViewDTO currentUser = getCurrentUser(session);
         if (currentUser == null) return "redirect:/login";
 
-        model.addAttribute("allProjects", new ArrayList<>(projectService.readAll()));
+        //model.addAttribute("allProjects", new ArrayList<>(projectService.readAll(currentUser)));
         model.addAttribute("subproject", new SubProject());
         return "subproject/create-subproject";
     }
@@ -83,7 +83,7 @@ public class SubProjectController {
             return "redirect:/login";
         }
 
-        boolean isAdmin = currentUser.getRole().equals(Role.ADMIN);
+        boolean isAdmin = currentUser.getRole().equals(Role.ADMIN); // TODO - Hvorfor disse to kontroller?
         boolean isProjectManager = currentUser.getRole().equals(Role.PROJECT_MANAGER);
         model.addAttribute("isAdmin", isAdmin);
         model.addAttribute("isProjectManager", isProjectManager);
@@ -124,7 +124,8 @@ public class SubProjectController {
             redirectAttributes.addFlashAttribute("error", "Log ind for at oprette et delprojekt.");
             return "redirect:/login";
         }
-        model.addAttribute("allProjects", new ArrayList<>(projectService.readAll()));
+
+        //model.addAttribute("allProjects", projectService.readAll(currentUser));
         model.addAttribute("subproject", subProjectService.readById(id));
 
         return "subproject/edit-subproject";
@@ -245,30 +246,5 @@ public class SubProjectController {
         return "redirect:/subprojects/" + id + "/users";
     }
 
-
-
-
-
-// TODO LIGGER I PROJECTCONTROLLER NU
-    // TODO skal endpointet her ikke være projects/{projectId}/subprojects?
-//
-//    @GetMapping("/{projectId}/subprojects")
-//    public String readByProjectId(HttpSession session,
-//                                  Model model,
-//                                  RedirectAttributes redirectAttributes,
-//                                  @PathVariable int projectId) {
-//        UserViewDTO currentUser = getCurrentUser(session);
-//        if (currentUser == null) {
-//            redirectAttributes.addFlashAttribute("error", "Log ind for at oprette et delprojekt.");
-//            return "redirect:/login";
-//        }
-//        boolean isAdmin = currentUser.getRole().equals(Role.ADMIN);
-//        boolean isProjectManager = currentUser.getRole().equals(Role.PROJECT_MANAGER);
-//        model.addAttribute("isAdmin", isAdmin);
-//        model.addAttribute("isProjectManager", isProjectManager);
-//        model.addAttribute("projectwithsubprojectdto", subProjectService.readAllFromProjectId(projectId));
-//
-//        return "subproject/subprojects-under-project";
-//    }
 
 }

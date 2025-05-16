@@ -84,9 +84,9 @@ public class UserController {
 
         userService.createUser(currentUser, userDTO);
 
-        redirectAttributes.addFlashAttribute("success", "Bruger blev oprettet"); //Viser succesbesked EFTER redirect
+        redirectAttributes.addFlashAttribute("success", "Bruger blev oprettet");
 
-        return "redirect:/users/users"; //SKAL MÅSKE REDIRECTE TIL ADMINOVERSIGT?
+        return "redirect:/users/users";
 
     }
 
@@ -150,22 +150,11 @@ public class UserController {
             return "redirect:/login";
         }
 
-        // @TODO - Ryk nedenstående til service-klassen. Vi skal ikke mappe DTO'er her
 
-        UserViewDTO userViewDTO = userService.readById(id);
-
-        // Konverterer UserViewDTO til UserUpdateDTO — password = tomt (vises ikke)
-        UserUpdateDTO userUpdateDTO = new UserUpdateDTO(
-                userViewDTO.getUserId(),
-                userViewDTO.getFirstName(),
-                userViewDTO.getLastName(),
-                userViewDTO.getEmail(),
-                "", // Tomt felt, skal indtastes igen
-                userViewDTO.getRole()
-        );
+        // Kalder metode, der konverterer UserViewDTO til en UserUpdateDTO
+       UserUpdateDTO userUpdateDTO = userService.getUserUpdateDTOById(id);
 
         model.addAttribute("userUpdateDTO", userUpdateDTO);
-        model.addAttribute("isAdmin", currentUser.getRole() == Role.ADMIN); // Så admin kan se rolle-felter
         return "user/edit-user";
 
     }
@@ -211,9 +200,6 @@ public class UserController {
 
         userService.deleteById(id, currentUser);
 
-        // TODO - KUN ADMIN må slette en bruger. Der er roleCheck i Service ->
-        //  TODO - Måske skal den sendes med her?
-
         redirectAttributes.addFlashAttribute("success", "Brugeren blev slettet.");
 
         return "redirect:/users/users";
@@ -233,7 +219,7 @@ public class UserController {
         // Tjekker om bruger er logget ind
         UserViewDTO currentUser = getCurrentUser(session);
         if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne slette brugeren.");
+            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne se brugerens projekter.");
             return "redirect:/login";
         }
 
@@ -276,7 +262,7 @@ public class UserController {
         // Tjekker om bruger er logget ind
         UserViewDTO currentUser = getCurrentUser(session);
         if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne se en brugers opgaver.");
+            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne se en brugers tasks.");
             return "redirect:/login";
         }
 
@@ -299,7 +285,7 @@ public class UserController {
         // Tjekker om bruger er logget ind
         UserViewDTO currentUser = getCurrentUser(session);
         if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne se en brugers subopgaver.");
+            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne se en brugers subtasks.");
             return "redirect:/login";
         }
 

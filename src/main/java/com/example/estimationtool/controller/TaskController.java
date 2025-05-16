@@ -42,7 +42,7 @@ public class TaskController {
 
         // Tjekker om brugeren er logget ind
         if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Log ind for at oprette en opgave.");
+            redirectAttributes.addFlashAttribute("error", "Log ind for at oprette en task.");
             return "redirect:/login";
         }
 
@@ -61,7 +61,7 @@ public class TaskController {
 
         // Tjekker om brugeren er logget ind
         if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Log ind for at oprette en ny opgave.");
+            redirectAttributes.addFlashAttribute("error", "Log ind for at oprette en ny task.");
             return "redirect:/login";
         }
 
@@ -84,7 +84,7 @@ public class TaskController {
 
         // Tjekker om brugeren er logget ind
         if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Log ind for at se opgaver.");
+            redirectAttributes.addFlashAttribute("error", "Log ind for at se alle tasks.");
             return "redirect:/login";
         }
 
@@ -106,7 +106,7 @@ public class TaskController {
 
         // Tjekker om brugeren er logget ind
         if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Log ind for at se en opgave.");
+            redirectAttributes.addFlashAttribute("error", "Log ind for at se en task.");
             return "redirect:/login";
         }
 
@@ -128,7 +128,7 @@ public class TaskController {
 
         // Tjekker om bruger er logget ind
         if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Log ind for at redigere en opgave.");
+            redirectAttributes.addFlashAttribute("error", "Log ind for at redigere en task.");
             return "redirect:/login";
         }
 
@@ -150,14 +150,14 @@ public class TaskController {
 
         // Tjekker om bruger er logget ind
         if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Log ind for at opdatere en opgave.");
+            redirectAttributes.addFlashAttribute("error", "Log ind for at opdatere en task.");
             return "redirect:/login";
         }
 
         taskService.updateTask(task);
 
         // Tilføj succesbesked som flash-attribut (vises efter redirect)
-        redirectAttributes.addFlashAttribute("success", "Opgaven blev opdateret.");
+        redirectAttributes.addFlashAttribute("success", "Task blev opdateret.");
 
         return "redirect:/tasks/" + task.getTaskId(); // Redirect til task-detail
 
@@ -172,13 +172,13 @@ public class TaskController {
         UserViewDTO currentUser = getCurrentUser(session);
 
         if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne slette opgaven.");
+            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne slette en task.");
             return "redirect:/login";
         }
 
         taskService.deleteById(id);
 
-        redirectAttributes.addFlashAttribute("success", "Opgaven blev slettet.");
+        redirectAttributes.addFlashAttribute("success", "Task blev slettet.");
 
         return "redirect:/tasks/tasks";
     }
@@ -196,7 +196,7 @@ public class TaskController {
         // Tjek om bruger er logget ind
         UserViewDTO currentUser = getCurrentUser(session);
         if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at se brugere tilknyttet en opgave.");
+            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at se brugere tilknyttet en task.");
             return "redirect:/login";
         }
 
@@ -225,7 +225,7 @@ public class TaskController {
 
         UserViewDTO currentUser = getCurrentUser(session);
         if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at se en opgaves tilknyttede underopgaver.");
+            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at se en task's tilknyttede subtasks.");
             return "redirect:/login";
         }
 
@@ -245,7 +245,7 @@ public class TaskController {
 
         UserViewDTO currentUser = getCurrentUser(session);
         if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at se timeentries for en opgave.");
+            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at se tidsregistreringer for en task.");
             return "redirect:/login";
         }
 
@@ -266,13 +266,13 @@ public class TaskController {
 
         UserViewDTO currentUser = getCurrentUser(session);
         if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne tildele brugere til en task.");
+            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne tildele brugere en task.");
             return "redirect:/login";
         }
 
         taskService.assignUsersToTask(currentUser, userIds, id);
 
-        redirectAttributes.addFlashAttribute("success", "Brugere blev tildelt opgaven.");
+        redirectAttributes.addFlashAttribute("success", "Brugere blev tildelt en task.");
         return "redirect:/tasks/" + id + "/users";
     }
 

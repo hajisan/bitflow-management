@@ -37,6 +37,8 @@ public class ProjectService {
     //------------------------------------ Create() ------------------------------------
 
     public Project createProject(UserViewDTO currentUser, Project project) {
+
+        // Kun admin og projektleder må oprette et projekt
         RoleCheck.ensureAdminOrProjectManager(currentUser.getRole());
 
         Project projectWithUser = iProjectRepository.create(project);
@@ -50,15 +52,18 @@ public class ProjectService {
 
     //------------------------------------ Read() ------------------------------------
 
-    public List<Project> readAll() {
-        // Rollevalideringslogik - Det skal kun være en Admin som kan se alle projekter
+    public List<Project> readAll(UserViewDTO currentUser) {
+
+        // Kun admin må se alle projekter
+        //RoleCheck.ensureAdmin(currentUser.getRole());
 
         return iProjectRepository.readAll();
     }
 
     public Project readById(int id) {
+
         Project project = iProjectRepository.readById(id);
-        if (project == null) throw new NoSuchElementException("Projekt med ID" + id + " eksistere ikke.");
+        if (project == null) throw new NoSuchElementException("Projekt med ID" + id + " eksisterer ikke.");
 
         return project;
     }
@@ -69,7 +74,7 @@ public class ProjectService {
 
     public Project updateProject(UserViewDTO currentUser, Project project) {
 
-        // Rollevalidering: Kun admin eller projektleder må redigere projekt
+        // Kun admin eller projektleder må redigere projekt
         RoleCheck.ensureAdminOrProjectManager(currentUser.getRole());
 
         // Assign-tjek:
@@ -94,7 +99,10 @@ public class ProjectService {
 
     //------------------------------------ Delete() ------------------------------------
 
-    public void deleteById(int id) {
+    public void deleteById(int id, UserViewDTO currentUser) {
+
+        // Kun admin og projektleder må slette et projekt
+        RoleCheck.ensureAdminOrProjectManager(currentUser.getRole());
         iProjectRepository.deleteById(id);
     }
 
@@ -104,7 +112,6 @@ public class ProjectService {
     // --- Find projekter for én bruger ---
 
     public List<Project> readByUserId(int userId) {
-        // Rollevalideringslogik - en Project Manager eller Developer skal kun kunne se de projekter de knyttet til
 
         return iProjectRepository.readAllByUserId(userId);
     }

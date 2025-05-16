@@ -86,7 +86,7 @@ public class ProjectController {
             return "redirect:/login";
         }
 
-        List<Project> projectList = projectService.readAll();
+        List<Project> projectList = projectService.readAll(currentUser);
 
         model.addAttribute("projectList", projectList);
 
@@ -174,7 +174,7 @@ public class ProjectController {
             return "redirect:/login";
         }
 
-        projectService.deleteById(id);
+        projectService.deleteById(id, currentUser);
 
         redirectAttributes.addFlashAttribute("success", "Projektet blev slettet.");
 
@@ -215,7 +215,7 @@ public class ProjectController {
     // --- Viser subprojekter tilknyttet ét projekt ---
 
     @GetMapping("/{id}/subprojects")
-    public String showSubProjectWithUsers(@PathVariable int id,
+    public String showProjectWithSubProjects(@PathVariable int id,
                                           HttpSession session,
                                           Model model,
                                           RedirectAttributes redirectAttributes) {
@@ -227,6 +227,7 @@ public class ProjectController {
             return "redirect:/login";
         }
 
+        // Henter subprojekter for ét projekt
         ProjectWithSubProjectsDTO projectWithSubProjectsDTO = projectService.readAllFromProjectId(id);
 
         model.addAttribute("projectWithSubProjects", projectWithSubProjectsDTO);

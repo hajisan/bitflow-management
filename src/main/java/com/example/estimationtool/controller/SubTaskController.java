@@ -44,7 +44,7 @@ public class SubTaskController {
 
         // Tjekker om brugeren er logget ind
         if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Log ind for at oprette en underopgave.");
+            redirectAttributes.addFlashAttribute("error", "Log ind for at oprette en subtask.");
             return "redirect:/login";
         }
 
@@ -64,13 +64,13 @@ public class SubTaskController {
 
         // Tjekker om brugeren er logget ind
         if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Log ind for at oprette en underopgave.");
+            redirectAttributes.addFlashAttribute("error", "Log ind for at oprette en subtask.");
             return "redirect:/login";
         }
 
         subTaskService.createSubTask(subTask);
 
-        redirectAttributes.addFlashAttribute("success", "Underopgaven blev oprettet");
+        redirectAttributes.addFlashAttribute("success", "Subtask blev oprettet.");
 
         return "redirect:/subtasks/subtasks";
 
@@ -88,7 +88,7 @@ public class SubTaskController {
 
         // Tjekker om brugeren er logget ind
         if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Log ind for at se underopgaver.");
+            redirectAttributes.addFlashAttribute("error", "Log ind for at se alle subtasks.");
             return "redirect:/login";
         }
 
@@ -110,7 +110,7 @@ public class SubTaskController {
 
         // Tjekker om brugeren er logget ind
         if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Log ind for at se en underopgave");
+            redirectAttributes.addFlashAttribute("error", "Log ind for at se en subtask.");
             return "redirect:/login";
         }
 
@@ -143,7 +143,7 @@ public class SubTaskController {
 
         // Tjekker om brugeren er logget ind
         if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Log ind for at redigere en underopgave");
+            redirectAttributes.addFlashAttribute("error", "Log ind for at redigere en subtask.");
             return "redirect:/login";
         }
 
@@ -166,7 +166,7 @@ public class SubTaskController {
 
         // Tjekker om bruger er logget ind
         if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Log ind for at opdatere en underopgave.");
+            redirectAttributes.addFlashAttribute("error", "Log ind for at opdatere en subtask.");
             return "redirect:/login";
         }
 
@@ -188,13 +188,13 @@ public class SubTaskController {
         UserViewDTO currentUser = getCurrentUser(session);
 
         if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne slette underopgaven.");
+            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne slette en subtask.");
             return "redirect:/login";
         }
 
         subTaskService.deleteById(id);
 
-        redirectAttributes.addFlashAttribute("success", "Underopgaven blev slettet.");
+        redirectAttributes.addFlashAttribute("success", "Subtask blev slettet.");
 
         return "redirect:/subtasks/subtasks";
     }
@@ -212,7 +212,7 @@ public class SubTaskController {
 
         UserViewDTO currentUser = getCurrentUser(session);
         if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at se timeentries for en underopgave.");
+            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at se tidsregistreringer for en subtask.");
             return "redirect:/login";
         }
 
