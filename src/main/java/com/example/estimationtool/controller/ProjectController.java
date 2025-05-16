@@ -86,7 +86,7 @@ public class ProjectController {
             return "redirect:/login";
         }
 
-        List<Project> projectList = projectService.readAll();
+        List<Project> projectList = projectService.readAll(currentUser);
 
         model.addAttribute("projectList", projectList);
 
@@ -174,7 +174,7 @@ public class ProjectController {
             return "redirect:/login";
         }
 
-        projectService.deleteById(id);
+        projectService.deleteById(id, currentUser);
 
         redirectAttributes.addFlashAttribute("success", "Projektet blev slettet.");
 

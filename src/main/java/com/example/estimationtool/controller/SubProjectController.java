@@ -26,11 +26,11 @@ import java.util.List;
 public class SubProjectController {
 
     private final SubProjectService subProjectService;
-    private final ProjectService projectService;
+    //private final ProjectService projectService;
 
     public SubProjectController(SubProjectService subProjectService, ProjectService projectService) {
         this.subProjectService = subProjectService;
-        this.projectService = projectService;
+        //this.projectService = projectService;
 
     }
 
@@ -47,7 +47,7 @@ public class SubProjectController {
         UserViewDTO currentUser = getCurrentUser(session);
         if (currentUser == null) return "redirect:/login";
 
-        model.addAttribute("allProjects", new ArrayList<>(projectService.readAll()));
+        //model.addAttribute("allProjects", new ArrayList<>(projectService.readAll(currentUser)));
         model.addAttribute("subproject", new SubProject());
         return "subproject/create-subproject";
     }
@@ -124,7 +124,8 @@ public class SubProjectController {
             redirectAttributes.addFlashAttribute("error", "Log ind for at oprette et delprojekt.");
             return "redirect:/login";
         }
-        model.addAttribute("allProjects", new ArrayList<>(projectService.readAll()));
+
+        //model.addAttribute("allProjects", projectService.readAll(currentUser));
         model.addAttribute("subproject", subProjectService.readById(id));
 
         return "subproject/edit-subproject";
