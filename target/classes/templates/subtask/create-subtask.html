@@ -12,7 +12,7 @@
 <p th:if="${success}" th:text="${success}"></p>
 
 <!-- Formular til at oprette en SubTask -->
-<form th:action="@{/subtasks}" th:object="${subtask}" method="post">
+<form th:action="@{/subtasks/create}" th:object="${subtask}" method="post">
 
     <p>
         <label>Opgave ID (Task):</label>

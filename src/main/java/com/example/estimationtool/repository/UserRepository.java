@@ -3,6 +3,7 @@ package com.example.estimationtool.repository;
 import com.example.estimationtool.repository.interfaces.IUserRepository;
 import com.example.estimationtool.model.User;
 import com.example.estimationtool.toolbox.rowMappers.UserRowMapper;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -59,9 +60,11 @@ public class UserRepository implements IUserRepository {
 
     @Override
     public User readById(Integer id) {
+
         String sql = "SELECT id, firstName, lastName, email, passwordHash, role FROM user WHERE id = ?";
 
-        return jdbcTemplate.queryForObject(sql, new UserRowMapper(), id);
+            return jdbcTemplate.queryForObject(sql, new UserRowMapper(), id);
+
 
     }
 
@@ -107,7 +110,8 @@ public class UserRepository implements IUserRepository {
             WHERE email = ?
             """;
 
-        return jdbcTemplate.queryForObject(sql, new UserRowMapper(), email);
+            return jdbcTemplate.queryForObject(sql, new UserRowMapper(), email);
+
     }
 
     //---------------------------------- Til DTO'er ------------------------------------
@@ -133,7 +137,8 @@ public class UserRepository implements IUserRepository {
                 WHERE user_project.projectID = ?
                 """;
 
-        return jdbcTemplate.query(sql, new UserRowMapper(), projectId);
+            return jdbcTemplate.query(sql, new UserRowMapper(), projectId);
+
     }
 
     // --- Read() brugere ud fra subprojekt-ID ---
@@ -157,7 +162,8 @@ public class UserRepository implements IUserRepository {
                 WHERE user_subproject.subProjectID = ?
                 """;
 
-        return jdbcTemplate.query(sql, new UserRowMapper(), subProjectId);
+            return jdbcTemplate.query(sql, new UserRowMapper(), subProjectId);
+
     }
 
     // --- Read() brugere ud fra task-ID ---
@@ -181,8 +187,10 @@ public class UserRepository implements IUserRepository {
                 WHERE user_task.taskID = ?
                 """;
 
-        return jdbcTemplate.query(sql, new UserRowMapper(), taskId);
+            return jdbcTemplate.query(sql, new UserRowMapper(), taskId);
+
     }
+
 
     // Read() bruger ud fra subtask-ID (fordi der er en mange-til-mange relation i databasen)
 

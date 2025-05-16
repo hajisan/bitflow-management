@@ -81,7 +81,7 @@
         public Project update(Project project) {
             String sql = """
                     UPDATE project
-                    SET name = ?, description = ?, deadline = ?, estimatedTime = ?, status = ?
+                    SET name = ?, description = ?, deadline = ?, estimatedTime = ?, timeSpent = ?, status = ?
                     WHERE id = ?
                     """;
 
@@ -91,6 +91,7 @@
                     project.getDescription(),
                     project.getDeadline(),
                     project.getEstimatedTime(),
+                    project.getTimeSpent(),
                     project.getStatus().name(), // Konverteres til String for at gemme i databasen
                     project.getProjectId()); // Parameter -> id til WHERE
 

@@ -9,7 +9,7 @@
 <!-- DEBUGGER, hvis siden ikke vises for specifik bruger-rolle -->
 <h1>Her skal den dynamiske forside laves til admin, project manager og developer :)</h1>
 
-
+<div th:if="${error}" class="error" th:text="${error}"></div>
 <h1>Velkommen, <span th:text="${user.firstName} + ' ' + ${user.lastName}">Navn</span>!</h1>
 <p>Din rolle: <strong th:text="${user.role}">ROLLE</strong></p>
 

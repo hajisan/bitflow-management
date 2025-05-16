@@ -13,6 +13,7 @@ import com.example.estimationtool.toolbox.check.StatusCheck;
 import com.example.estimationtool.toolbox.dto.SubTaskWithTimeEntriesDTO;
 import com.example.estimationtool.toolbox.dto.UserViewDTO;
 import com.example.estimationtool.toolbox.check.RoleCheck;
+import com.example.estimationtool.toolbox.timeCalc.TimeCalculator;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -81,8 +82,9 @@ public class SubTaskService {
     public SubTaskWithTimeEntriesDTO readAllTimeEntriesBySubTaskId(int subTaskId) {
 
         SubTask subTask = iSubTaskRepository.readById(subTaskId);
-
         List<TimeEntry> entries = iTimeEntryRepository.readAllBySubTaskId(subTaskId);
+        // Bruger TimeCalculatorens statiske metode til at sætte timeSpent ud fra de loggede TimeEntries
+        subTask.setTimeSpent(TimeCalculator.calculateTimeSpent(entries));
 
         return new SubTaskWithTimeEntriesDTO(subTask, entries);
     }
@@ -107,7 +109,7 @@ public class SubTaskService {
 
     public UserViewDTO readAssignedUserBySubTaskId(int subTaskId) {
 
-        // Find bruger for subtask
+        // Find bruger på subTask
         User user = iUserRepository.readUserBySubTaskId(subTaskId);
         if (user == null) {
             return null;
