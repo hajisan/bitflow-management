@@ -7,6 +7,7 @@ package com.example.estimationtool.toolbox.exceptionHandler;
  */
 
 public class UserFriendlyException extends RuntimeException {
+
     private final String redirectPath;
 
     public UserFriendlyException(String message, String redirectPath) {

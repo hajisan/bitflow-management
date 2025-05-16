@@ -4,9 +4,6 @@ import com.example.estimationtool.repository.interfaces.IUserRepository;
 import com.example.estimationtool.model.User;
 import com.example.estimationtool.toolbox.rowMappers.UserRowMapper;
 
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.dao.IncorrectResultSizeDataAccessException;
-
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -49,12 +46,6 @@ public class UserRepository implements IUserRepository {
         int generatedId = keyHolder.getKey().intValue();
         user.setUserId(generatedId);  // Sætter ID på User
 
-// SKAL FJERNES HVIS EXCEPTION HÅNDTERES I SERVICE OG MED @CONTROLLERADVICE
-//        // Tjekker først om id'et er null eller ej. Hvis det er, så sætter vi id-variablen til -1
-//        int userId = keyHolder.getKey() != null ? keyHolder.getKey().intValue() : -1;
-//        // Sætter profilens id til KeyHolderens værdi, hvis den ikke var null
-//        if (userId != -1) user.setUserId(userId);
-
         return user;
     }
 
@@ -69,13 +60,11 @@ public class UserRepository implements IUserRepository {
 
     @Override
     public User readById(Integer id) {
+
         String sql = "SELECT id, firstName, lastName, email, passwordHash, role FROM user WHERE id = ?";
 
-        try {
             return jdbcTemplate.queryForObject(sql, new UserRowMapper(), id);
-        } catch (IncorrectResultSizeDataAccessException e) {
-            return null;
-        }
+
 
     }
 
@@ -121,11 +110,8 @@ public class UserRepository implements IUserRepository {
             WHERE email = ?
             """;
 
-        try {
             return jdbcTemplate.queryForObject(sql, new UserRowMapper(), email);
-        } catch (IncorrectResultSizeDataAccessException e) {
-            return null;
-        }
+
     }
 
     //---------------------------------- Til DTO'er ------------------------------------
@@ -151,11 +137,8 @@ public class UserRepository implements IUserRepository {
                 WHERE user_project.projectID = ?
                 """;
 
-        try {
             return jdbcTemplate.query(sql, new UserRowMapper(), projectId);
-        } catch (IncorrectResultSizeDataAccessException e) {
-            return null;
-        }
+
     }
 
     // --- Read() brugere ud fra subprojekt-ID ---
@@ -179,11 +162,8 @@ public class UserRepository implements IUserRepository {
                 WHERE user_subproject.subProjectID = ?
                 """;
 
-        try {
             return jdbcTemplate.query(sql, new UserRowMapper(), subProjectId);
-        } catch (IncorrectResultSizeDataAccessException e) {
-            return null;
-        }
+
     }
 
     // --- Read() brugere ud fra task-ID ---
@@ -207,15 +187,10 @@ public class UserRepository implements IUserRepository {
                 WHERE user_task.taskID = ?
                 """;
 
-        try {
             return jdbcTemplate.query(sql, new UserRowMapper(), taskId);
-        } catch (IncorrectResultSizeDataAccessException e) {
-            return null;
-        }
+
     }
 
-
-    // @TODO Mangler der ikke en --- Read() brugere ud fra subTask-ID --- ????
 
     // Read() bruger ud fra subtask-ID (fordi der er en mange-til-mange relation i databasen)
 

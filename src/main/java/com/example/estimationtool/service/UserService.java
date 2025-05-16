@@ -112,16 +112,6 @@ public class UserService {
             throw new UserFriendlyException("Brugeren du forsøger at ændre, findes ikke.", "/users"); // <-- Ret URL når vi har det på plads
         }
 
-        // Håndterer rolle
-        Role role;
-
-        if (currentUser.getRole() == Role.ADMIN) {
-            role = existingUser.getRole(); // Kun admin må ændre rolle
-        } else {
-            if (!currentUser.getRole().equals(existingUser.getRole())) {
-                throw new UserFriendlyException("Du har ikke rettigheder til at ændre denne brugers rolle.", "/users/edit/" + userUpdateDTO.getUserId()); // <-- Ret URL når vi har det på plads
-            }
-
             RoleCheck.ensureAdmin(currentUser.getRole());
 
             // Håndterer password
@@ -139,7 +129,7 @@ public class UserService {
 
             return iUserRepository.update(updatedUser);
         }
-    }
+
 
 
 
