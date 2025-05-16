@@ -35,6 +35,11 @@
         <input type="number" th:field="*{estimatedTime}" required/>
     </label><br/>
 
+    <p>
+        <label>Forbrugt tid (timer):</label>
+        <input type="number" th:field="*{timeSpent}" required/>
+    </p>
+
     <label>Status:
         <select th:field="*{status}">
             <option th:each="s : ${statuses}"

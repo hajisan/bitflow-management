@@ -109,7 +109,7 @@ public class UserService {
             throw new RuntimeException("Bruger med ID: " + userUpdateDTO.getUserId() + " eksisterer ikke.");
         }
 
-        // Håndterer rolle
+        // Kun admin må redigere en bruger
         RoleCheck.ensureAdmin(currentUser.getRole());
 
 
@@ -123,7 +123,7 @@ public class UserService {
                 userUpdateDTO.getLastName(),
                 userUpdateDTO.getEmail(),
                 passwordHash,
-                existingUser.getRole() // TODO Måske virker currentuser.getRole()
+                userUpdateDTO.getRole() // Kun admin må ændre brugerens rolle
         );
 
         return iUserRepository.update(updatedUser);
@@ -143,7 +143,7 @@ public class UserService {
     }
 
 
-    //------------------------------------ Login() -------------------------------------
+    //---------------------------------- Henter Login() -----------------------------------
 
     public UserViewDTO login(String email, String inputPassword) {
 
@@ -161,7 +161,7 @@ public class UserService {
         throw new BadCredentialsException("Adgangskoden er forkert.");
     }
 
-    //------------------------------------ Password ----------------------------------
+    //--------------------------------- Henter PasswordHash --------------------------------
 
 
     private String getPasswordHash(UserUpdateDTO userUpdateDTO, User existingUser) {
@@ -179,6 +179,23 @@ public class UserService {
         }
         return passwordHash;
     }
+
+    //----------------- Henter UserUpdateDTO for GET-mapping: showEditUser() --------------
+
+    public UserUpdateDTO getUserUpdateDTOById(int id) {
+        UserViewDTO userViewDTO = readById(id);
+
+        return new UserUpdateDTO(
+                userViewDTO.getUserId(),
+                userViewDTO.getFirstName(),
+                userViewDTO.getLastName(),
+                userViewDTO.getEmail(),
+                "", // Tomt passwordfelt, skal indtastes af brugeren
+                userViewDTO.getRole()
+        );
+    }
+
+
 
     //------------------------------------ DTO-Mappings -----------------------------------
 
