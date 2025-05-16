@@ -178,7 +178,15 @@ public class TimeEntryRepository implements ITimeEntryRepository {
 
     }
 
-
+    //-------------------------------- Til TimeSpent -----------------------------------
+//
+//    public int sumTimeSpentBySubTaskId(int subTaskId) {
+//        String sql = """
+//                SELECT COALESCE(SUM(timeSpent), 0)
+//                FROM timeentry
+//                WHERE
+//                """;
+//    }
 
     //---------------------------------- Til DTO'er ------------------------------------
 
@@ -230,4 +238,6 @@ public class TimeEntryRepository implements ITimeEntryRepository {
 
         return jdbcTemplate.query(sql, new TimeEntryRowMapper(), subTaskId);
     }
+
+
 }

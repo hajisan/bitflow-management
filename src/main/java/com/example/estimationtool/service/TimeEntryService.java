@@ -132,7 +132,7 @@ public class TimeEntryService {
 
     //-------------------- Opdatering af tidsforbrug hos subprojekter --------------------
 
-    public void updateTimeSpentForSubProject(TimeEntry timeEntry) {
+    private void updateTimeSpentForSubProject(TimeEntry timeEntry) {
         // Henter taskId fra timeEntry
         int taskId = timeEntry.getTaskId();
         // Henter Task fra taskId så vi kan hente subProjectId fra task
@@ -156,7 +156,7 @@ public class TimeEntryService {
 
     //-------------------- Opdatering af tidsforbrug hos projekter -----------------------
 
-    public void updateTimeSpentForProject(TimeEntry timeEntry) {
+    private void updateTimeSpentForProject(TimeEntry timeEntry) {
         // Henter taskId fra timeEntry
         int taskId = timeEntry.getTaskId();
         // Henter Task fra taskId så vi kan hente subProjectId fra task
@@ -181,4 +181,14 @@ public class TimeEntryService {
         project.setTimeSpent(timeSpentOnProject);
         iProjectRepository.update(project);
     }
+
+    //-------------------- Opdatering af tidsforbrug ved sletning -----------------------
+//
+//    private void updateSubTaskOnDelete(SubTask subTask) {
+//        int subTaskId = subTask.getSubTaskId();
+//        List<TimeEntry> timeEntries = iTimeEntryRepository.readAllBySubTaskId(subTask.getSubTaskId());
+//        for (TimeEntry timeEntry : timeEntries) {
+//            timeEntry.setHoursSpent(0);
+//        }
+//    }
 }
