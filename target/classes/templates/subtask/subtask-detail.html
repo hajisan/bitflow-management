@@ -12,13 +12,14 @@
 <p th:if="${success}" th:text="${success}" style="color: green;"></p>
 
 <ul>
-    <li>ID: <span th:text="${subtask.subTaskId}"></span></li>
-    <li>Opgave ID: <span th:text="${subtask.taskId}"></span></li>
-    <li>Navn: <span th:text="${subtask.name}"></span></li>
-    <li>Beskrivelse: <span th:text="${subtask.description}"></span></li>
-    <li>Deadline: <span th:text="${subtask.deadline}"></span></li>
-    <li>Estimeret Tid: <span th:text="${subtask.estimatedTime}"></span></li>
-    <li>Status: <span th:text="${subtask.status}"></span></li>
+    <li><strong>ID:</strong> <span th:text="${subtask.subTaskId}"></span></li>
+    <li><strong>Opgave ID:</strong> <span th:text="${subtask.taskId}"></span></li>
+    <li><strong>Navn:</strong> <span th:text="${subtask.name}"></span></li>
+    <li><strong>Beskrivelse:</strong> <span th:text="${subtask.description}"></span></li>
+    <li><strong>Deadline:</strong> <span th:text="${subtask.deadline}"></span></li>
+    <li><strong>Estimeret Tid:</strong> <span th:text="${subtask.estimatedTime}"></span></li>
+    <li><strong>Forbrugt Tid:</strong> <span th:text="${subtask.timeSpent}"></span></li>
+    <li><strong>Status:</strong> <span th:text="${subtask.status}"></span></li>
 </ul>
 
 <!-- Redigér subtask-knap -->

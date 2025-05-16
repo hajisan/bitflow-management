@@ -18,6 +18,7 @@ import com.example.estimationtool.repository.interfaces.ITimeEntryRepository;
 import com.example.estimationtool.repository.interfaces.IUserRepository;
 import com.example.estimationtool.toolbox.check.StatusCheck;
 import com.example.estimationtool.toolbox.dto.*;
+import com.example.estimationtool.toolbox.timeCalc.TimeCalculator;
 import com.example.estimationtool.toolbox.check.RoleCheck;
 import org.springframework.stereotype.Service;
 
@@ -133,9 +134,10 @@ public class TaskService {
     public TaskWithTimeEntriesDTO readAllTimeEntriesByTaskId(int taskId) {
         Task task = iTaskRepository.readById(taskId);
         List<TimeEntry> entries = iTimeEntryRepository.readAllByTaskId(taskId);
+        // Bruger TimeCalculatorens statiske metode til at sætte timeSpent ud fra de loggede TimeEntries
+        task.setTimeSpent(TimeCalculator.calculateTimeSpent(entries));
         return new TaskWithTimeEntriesDTO(task, entries);
     }
-
 
 
     //---------------------------------- Assign User --------------------------------

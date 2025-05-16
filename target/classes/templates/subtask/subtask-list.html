@@ -7,6 +7,8 @@
 <body>
 <h1>Underopgaveliste</h1>
 
+<!-- Skal have en SubTaskWithTimeEntriesDTO ind i stedet? -->
+
 <!-- Fejl- eller succesbesked -->
 <p th:if="${error}" th:text="${error}"></p>
 <p th:if="${success}" th:text="${success}"></p>
@@ -28,6 +30,7 @@
         <th>Beskrivelse</th>
         <th>Deadline</th>
         <th>Estimeret Tid</th>
+        <th>Forbrugt Tid</th>
         <th>Status</th>
     </tr>
     </thead>
@@ -39,6 +42,7 @@
         <td th:text="${subtask.description}"></td>
         <td th:text="${subtask.deadline}"></td>
         <td th:text="${subtask.estimatedTime}"></td>
+        <td th:text="${subtask.timeSpent}"></td>
         <td th:text="${subtask.status}"></td>
 
         <!-- Link til subtask-detail -->
