@@ -101,11 +101,14 @@ CREATE TABLE SubTask (
 CREATE TABLE TimeEntry (
     id INT AUTO_INCREMENT PRIMARY KEY,
     userID INTEGER,
+    taskID INTEGER,
+    subtaskID INTEGER,
     date DATE,
     hoursSpent INTEGER,
     FOREIGN KEY (userID) REFERENCES User(id) ON DELETE CASCADE
 ) AUTO_INCREMENT = 10000000;
 
+/*
 -- ========================
 -- Tabel: TimeEntry_Task
 -- Knytter en TimeEntry til en Task
@@ -129,7 +132,7 @@ CREATE TABLE TimeEntry_SubTask (
     FOREIGN KEY (timeEntryID) REFERENCES TimeEntry(id) ON DELETE CASCADE,
     FOREIGN KEY (subTaskID) REFERENCES SubTask(id) ON DELETE CASCADE
 );
-
+*/
 -- ========================
 -- Tabel: User_Project
 -- Knytter en User til et Project

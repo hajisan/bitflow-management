@@ -11,6 +11,7 @@ import com.example.estimationtool.repository.interfaces.*;
 import com.example.estimationtool.toolbox.timeCalc.TimeCalculator;
 import org.springframework.stereotype.Service;
 
+import java.sql.Time;
 import java.util.List;
 
 @Service
@@ -61,6 +62,11 @@ public class TimeEntryService {
 
     //------------- Opdatering af tidsforbrug hos alle projektkomponenter --------------
 
+    // TODO HER SKAL METODEN FOR ID LIGGE
+    public int updateTimeSpentForAll(Project project) {
+        return updateTimeSpentForProjectWithId(project.getProjectId());
+    }
+
     public void updateTimeSpentForAll(TimeEntry timeEntry) {
         updateTimeSpentForTask(timeEntry);
         updateTimeSpentForSubProject(timeEntry);
@@ -69,6 +75,51 @@ public class TimeEntryService {
 
     //----------------- Opdatering af tidsforbrug hos tasks og subtasks -----------------
 
+    //                                  --- SUBTASK M. ID ---
+    // Metoden tager et subtask-id og opdaterer timeSpent for den givne subtask
+    public int updateTimeSpentForSubTaskWithId(int subTaskId) {
+        List<TimeEntry> timeEntries = iTimeEntryRepository.readAllBySubTaskId(subTaskId);
+        int timeSpentOnSubTask = TimeCalculator.calculateTimeSpent(timeEntries);
+        SubTask subTask = iSubTaskRepository.readById(subTaskId);
+        subTask.setTimeSpent(timeSpentOnSubTask);
+        iSubTaskRepository.update(subTask);
+        return timeSpentOnSubTask;
+    }
+
+    //                                    --- TASK M. ID ---
+    // Metoden tager et task-id og opdaterer timeSpent for den givne task
+    public int updateTimeSpentForTaskWithId(int taskId) {
+        Task task = iTaskRepository.readById(taskId);
+        int timeSpentOnTask = 0;
+        if (iSubTaskRepository.readAllByTaskId(task.getTaskId()).isEmpty()) {
+            timeSpentOnTask = updateTimeSpentForTaskWithIdAndTimeEntries(taskId, task);
+        } else {
+            timeSpentOnTask = updateTimeSpentForTaskWithIdAndSubTasks(taskId);
+        }
+        return timeSpentOnTask;
+    }
+
+    // Hjælpemetode til at opdatere timeSpent for task med id. Køres hvis tasken indeholder subtasks
+    private int updateTimeSpentForTaskWithIdAndSubTasks(int taskId) {
+        List<SubTask> subTasks = iSubTaskRepository.readAllByTaskId(taskId);
+        int timeSpentOnTask = 0;
+        for (SubTask subTask : subTasks) {
+            timeSpentOnTask += updateTimeSpentForSubTaskWithId(subTask.getSubTaskId());
+        }
+        return timeSpentOnTask;
+    }
+
+    // Hjælpemetode til at opdatere timeSpent for task med id. Køres hvis tasken ikke indeholder subtasks, men time entries
+    private int updateTimeSpentForTaskWithIdAndTimeEntries(int taskId, Task task) {
+        List<TimeEntry> timeEntries = iTimeEntryRepository.readAllByTaskId(taskId);
+        int timeSpentOnTask = TimeCalculator.calculateTimeSpent(timeEntries);
+        task.setTimeSpent(timeSpentOnTask);
+        iTaskRepository.update(task);
+        return timeSpentOnTask;
+    }
+
+    //                               --- TASK M. TIMEENTRY ---
+    // Metoden tager en TimeEntry og opdaterer timeSpent for den tilhørende task
     public void updateTimeSpentForTask(TimeEntry timeEntry) {
         // TODO Dette tjek skal jeg ændre på et tidspunkt, for vores H2-testdatabase kører ikke med de samme ID'er som vores normale database x.x
         // Først tjekkes om taskens id findes
@@ -85,6 +136,7 @@ public class TimeEntryService {
         }
     }
 
+    // Hjælpemetode til at opdatere timeSpent for en task vha. en TimeEntry
     // Extracted fra updateTimeSpentForTask for bedre læsbarhed
     // Bruger TimeEntries der ligger direkte hos en Task, som ikke har nogle underliggende SubTasks
     private void updateTimeSpentForTaskWithTimeEntries(TimeEntry timeEntry) {
@@ -102,6 +154,7 @@ public class TimeEntryService {
         iTaskRepository.update(task);
     }
 
+    // Hjælpemetode til at opdatere timeSpent for en task vha. en TimeEntry
     // Extracted fra updateTimeSpentForTask for bedre læsbarhed
     // Bruger SubTasks under en Task til
     private void updateTimeSpentForTaskWithSubTasks(TimeEntry timeEntry) {
@@ -132,13 +185,9 @@ public class TimeEntryService {
 
     //-------------------- Opdatering af tidsforbrug hos subprojekter --------------------
 
-    private void updateTimeSpentForSubProject(TimeEntry timeEntry) {
-        // Henter taskId fra timeEntry
-        int taskId = timeEntry.getTaskId();
-        // Henter Task fra taskId så vi kan hente subProjectId fra task
-        Task taskForGettingSubProjectId = iTaskRepository.readById(taskId);
-        // Henter subProjectId fra task
-        int subProjectId = taskForGettingSubProjectId.getSubProjectId();
+    //                               --- SUBPROJEKT M. ID ---
+    // Metoden tager et subprojekt-id og opdaterer timeSpent hos det givne subprojekt
+    public int updateTimeSpentForSubProjectWithId(int subProjectId) {
         // Henter SubProjekt fra subProjectId
         SubProject subProject = iSubProjectRepository.readById(subProjectId);
         // Henter listen af Tasks under et SubProject med subProjectId
@@ -147,15 +196,51 @@ public class TimeEntryService {
         int timeSpentOnSubProject = 0;
         // timeSpent bliver summeret i et for-each loop ud fra hver Task i listen af Tasks under et SubProject
         for (Task task : tasksUnderSubProject) {
-            timeSpentOnSubProject += task.getTimeSpent();
+            timeSpentOnSubProject += updateTimeSpentForTaskWithId(task.getTaskId());
         }
         // Den opsummerede timeSpent-værdi sættes i project og værdien opdateres i databasetabellen
         subProject.setTimeSpent(timeSpentOnSubProject);
         iSubProjectRepository.update(subProject);
+        return timeSpentOnSubProject;
     }
+
+    //                           --- SUBPROJEKT M. TIMEENTRY ---
+    // Metoden tager en TimeEntry og opdaterer det subprojekt, som den TimeEntry er logget under
+    private void updateTimeSpentForSubProject(TimeEntry timeEntry) {
+        // Henter taskId fra timeEntry
+        int taskId = timeEntry.getTaskId();
+        // Henter Task fra taskId så vi kan hente subProjectId fra task
+        Task taskForGettingSubProjectId = iTaskRepository.readById(taskId);
+        // Henter subProjectId fra task
+        int subProjectId = taskForGettingSubProjectId.getSubProjectId();
+        // Kalder ovenstående update-metode for subprojekter vha. subprojekt-id
+        updateTimeSpentForSubProjectWithId(subProjectId);
+    }
+
 
     //-------------------- Opdatering af tidsforbrug hos projekter -----------------------
 
+    //                               --- PROJEKT M. ID ---
+    // Metoden tager et projekt-id og opdaterer timeSpent hos det givne projekt
+    public int updateTimeSpentForProjectWithId(int projectId) {
+        // Henter Project fra projectId
+        Project project = iProjectRepository.readById(projectId);
+        // Henter listen af SubProjects under et Project med projectId
+        List<SubProject> subProjectsUnderProject = iSubProjectRepository.readAllFromProjectId(projectId);
+        // Opretter lokal variabel til at opbevare det summerede tidsforbrug på projektet
+        int timeSpentOnProject = 0;
+        // timeSpent bliver summeret i et for-each loop ud fra hvert SubProject i listen af SubProjects under et Project
+        for (SubProject subProject : subProjectsUnderProject) {
+            timeSpentOnProject += updateTimeSpentForSubProjectWithId(subProject.getSubProjectId());
+        }
+        // Den opsummerede timeSpent-værdi sættes i project og værdien opdateres i databasetabellen
+        project.setTimeSpent(timeSpentOnProject);
+        iProjectRepository.update(project);
+        return timeSpentOnProject;
+    }
+
+    //                            --- SUBPROJEKT M. TIMEENTRY ---
+    // Metoden tager en TimeEntry og opdaterer det projekt, som den TimeEntry er logget under
     private void updateTimeSpentForProject(TimeEntry timeEntry) {
         // Henter taskId fra timeEntry
         int taskId = timeEntry.getTaskId();
@@ -167,28 +252,8 @@ public class TimeEntryService {
         SubProject subProjectForGettingProjectId = iSubProjectRepository.readById(subProjectId);
         // Henter projectId fra subProject
         int projectId = subProjectForGettingProjectId.getProjectId();
-        // Henter Project fra projectId
-        Project project = iProjectRepository.readById(projectId);
-        // Henter listen af SubProjects under et Project med projectId
-        List<SubProject> subProjectsUnderProject = iSubProjectRepository.readAllFromProjectId(projectId);
-        // Opretter lokal variabel til at opbevare det summerede tidsforbrug på projektet
-        int timeSpentOnProject = 0;
-        // timeSpent bliver summeret i et for-each loop ud fra hvert SubProject i listen af SubProjects under et Project
-        for (SubProject subProject : subProjectsUnderProject) {
-            timeSpentOnProject += subProject.getTimeSpent();
-        }
-        // Den opsummerede timeSpent-værdi sættes i project og værdien opdateres i databasetabellen
-        project.setTimeSpent(timeSpentOnProject);
-        iProjectRepository.update(project);
     }
 
     //-------------------- Opdatering af tidsforbrug ved sletning -----------------------
-//
-//    private void updateSubTaskOnDelete(SubTask subTask) {
-//        int subTaskId = subTask.getSubTaskId();
-//        List<TimeEntry> timeEntries = iTimeEntryRepository.readAllBySubTaskId(subTask.getSubTaskId());
-//        for (TimeEntry timeEntry : timeEntries) {
-//            timeEntry.setHoursSpent(0);
-//        }
-//    }
+
 }

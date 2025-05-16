@@ -12,7 +12,7 @@ public abstract class TimeCalculator {
     //------------------------------------------ Tid Brugt ------------------------------------------
 
     public static int calculateTimeSpent(List<TimeEntry> entries) {
-        if (!entries.isEmpty()) {
+//        if (!entries.isEmpty()) {
             int totalTimeSpent = 0;
 
             for (TimeEntry timeEntry : entries) {
@@ -20,18 +20,10 @@ public abstract class TimeCalculator {
             }
 
             return totalTimeSpent;
-        } else {
-            throw new NullPointerException("Listen af Time Entries er tom.");
-        }
-    }
-
-//    public static int timeSpentOnSubTask(SubTaskWithTimeEntriesDTO subTaskWithTimeEntriesDTO) {
-//        int timeSpent = 0;
-//        for (TimeEntry timeEntry : subTaskWithTimeEntriesDTO.timeEntries()) {
-//            timeSpent += timeEntry.getHoursSpent();
+//        } else {
+//            throw new NullPointerException("Listen af Time Entries er tom.");
 //        }
-//        return timeSpent;
-//    }
+    }
 
     //------------------------------------ Tid tilbage i TIMER ------------------------------------
 
@@ -64,10 +56,4 @@ public abstract class TimeCalculator {
 
         return workingDays;
     }
-
-//    public static double calculateHoursPerDayForEstimable(Estimable estimable) {
-//        LocalDate deadline = estimable.getDeadline();
-//        double remainingHours = calculateRemainingTime(deadline);
-//        return calculateHoursPerDay((int) remainingHours, deadline);
-//    }
 }

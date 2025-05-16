@@ -41,8 +41,8 @@ public class TimeEntryRepository implements ITimeEntryRepository {
     public TimeEntry create(TimeEntry timeEntry) {
 
         String sql = """
-                INSERT INTO timeentry (userID, date, hoursSpent)
-                VALUES (?, ?, ?)
+                INSERT INTO timeentry (userID, taskID, subtaskID, date, hoursSpent)
+                VALUES (?, ?, ?, ?, ?)
                 """;
 
 
@@ -53,21 +53,16 @@ public class TimeEntryRepository implements ITimeEntryRepository {
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setInt(1, timeEntry.getUserId());
-            ps.setDate(2, java.sql.Date.valueOf(timeEntry.getDate()));
-            ps.setInt(3, timeEntry.getHoursSpent());
+            ps.setInt(2, timeEntry.getTaskId());
+            ps.setInt(3, timeEntry.getSubTaskId());
+            ps.setDate(4, java.sql.Date.valueOf(timeEntry.getDate()));
+            ps.setInt(5, timeEntry.getHoursSpent());
             return ps;
 
             }, keyHolder);
 
         int generatedId = keyHolder.getKey().intValue();
         timeEntry.setTimeId(generatedId);  // Sætter ID på timeEntry
-
-        // Indsætter de eksisterende ID'er fra Task og SubTask
-        jdbcTemplate.update("INSERT INTO timeentry_task (timeEntryID, taskID) VALUES (?, ?)",
-                generatedId, timeEntry.getTaskId());
-
-        jdbcTemplate.update("INSERT INTO timeentry_subtask (timeEntryID, subTaskID) VALUES (?, ?)",
-                generatedId, timeEntry.getSubTaskId());
 
         return timeEntry;
     }
@@ -83,13 +78,11 @@ public class TimeEntryRepository implements ITimeEntryRepository {
                 SELECT
                 timeentry.id,
                 timeentry.userID,
+                timeentry.taskID,
+                timeentry.subtaskID,
                 timeentry.date,
-                timeentry.hoursSpent,
-                timeentry_task.taskID,
-                timeentry_subtask.subTaskID
+                timeentry.hoursSpent
                 FROM timeentry
-                JOIN timeentry_task ON timeentry.id = timeentry_task.timeEntryID
-                JOIN timeentry_subtask ON timeentry.id = timeentry_subtask.timeEntryID
                 """; // Finder dét taskID/subtaskID, der hører til en timeEntry
         return jdbcTemplate.query(sql, new TimeEntryRowMapper());
     }
@@ -101,13 +94,11 @@ public class TimeEntryRepository implements ITimeEntryRepository {
                 SELECT
                 timeentry.id,
                 timeentry.userID,
+                timeentry.taskID,
+                timeentry.subtaskID,
                 timeentry.date,
-                timeentry.hoursSpent,
-                timeentry_task.taskID,
-                timeentry_subtask.subTaskID
+                timeentry.hoursSpent
                 FROM timeentry
-                JOIN timeentry_task ON timeentry.id = timeentry_task.timeEntryID
-                JOIN timeentry_subtask ON timeentry.id = timeentry_subtask.timeEntryID
                 WHERE timeentry.id = ?
                 """; // Finder task/subtask for en timeEntry
         return jdbcTemplate.queryForObject(sql, new TimeEntryRowMapper(), id);
@@ -120,39 +111,16 @@ public class TimeEntryRepository implements ITimeEntryRepository {
 
         String sql = """
                 UPDATE timeentry
-                SET userID = ?, date = ?, hoursSpent = ?
+                SET userID = ?, taskID = ?, subtaskID = ?, date = ?, hoursSpent = ?
                 WHERE id = ?
                 """;
 
         jdbcTemplate.update(sql,
                 timeEntry.getUserId(),
+                timeEntry.getTaskId(),
+                timeEntry.getSubTaskId(),
                 java.sql.Date.valueOf(timeEntry.getDate()),
                 timeEntry.getHoursSpent(),
-                timeEntry.getTimeId()
-        );
-
-        // Opdaterer timeEntry i tabellen: timeentry_task
-        String sqlTask = """
-                UPDATE timeentry_task
-                SET taskID = ?
-                WHERE timeEntryID = ?
-                """;
-
-
-        jdbcTemplate.update(sqlTask,
-                timeEntry.getTaskId(),
-                timeEntry.getTimeId()
-        );
-
-        // Opdaterer timeEntry i tabellen: timeentry_subtask
-        String sqlSubTask = """
-                UPDATE timeentry_subtask
-                SET subTaskID = ?
-                WHERE timeEntryID = ?
-                """;
-
-        jdbcTemplate.update(sqlSubTask,
-                timeEntry.getSubTaskId(),
                 timeEntry.getTimeId()
         );
 
@@ -165,16 +133,9 @@ public class TimeEntryRepository implements ITimeEntryRepository {
     @Override
     public void deleteById(Integer id) {
 
-        String sqlSubTask = "DELETE FROM timeentry_subtask WHERE timeEntryID = ?";
+        String sql = "DELETE FROM timeentry WHERE id = ?";
 
-        String sqlTask = "DELETE FROM timeentry_task WHERE timeEntryID = ?";
-
-        String sqlTimeEntry = "DELETE FROM timeentry WHERE id = ?";
-
-        //Relationstabeller slettes FØR timeEntry (ellers = foreign key violation)
-        jdbcTemplate.update(sqlSubTask, id);
-        jdbcTemplate.update(sqlTask, id);
-        jdbcTemplate.update(sqlTimeEntry, id);
+        jdbcTemplate.update(sql, id);
 
     }
 
@@ -195,20 +156,16 @@ public class TimeEntryRepository implements ITimeEntryRepository {
     @Override
     public List<TimeEntry> readAllByTaskId(Integer taskId) {
 
-        // JOIN = får timeentry for et bestemt taskID
-        // LEFT JOIN = får subtaskID med, hvis det eksisterer (ellers null)
         String sql = """
         SELECT
             timeentry.id,
             timeentry.userID,
+            timeentry.taskID,
+            timeentry.subtaskID,
             timeentry.date,
-            timeentry.hoursSpent,
-            timeentry_task.taskID,
-            timeentry_subtask.subTaskID
+            timeentry.hoursSpent
         FROM timeentry
-        JOIN timeentry_task ON timeentry.id = timeentry_task.timeEntryID
-        LEFT JOIN timeentry_subtask ON timeentry.id = timeentry_subtask.timeEntryID
-        WHERE timeentry_task.taskID = ?
+        WHERE timeentry.taskID = ?
         """;
 
         return jdbcTemplate.query(sql, new TimeEntryRowMapper(), taskId);
@@ -220,24 +177,18 @@ public class TimeEntryRepository implements ITimeEntryRepository {
     @Override
     public List<TimeEntry> readAllBySubTaskId(Integer subTaskId) {
 
-        // JOIN = får timeentry for et bestemt subtaskID
-        // LEFT JOIN = får taskID med, hvis det eksisterer (ellers null)
         String sql = """
         SELECT
             timeentry.id,
             timeentry.userID,
+            timeentry.taskID,
+            timeentry.subtaskID,
             timeentry.date,
-            timeentry.hoursSpent,
-            timeentry_task.taskID,
-            timeentry_subtask.subTaskID
+            timeentry.hoursSpent
         FROM timeentry
-        JOIN timeentry_subtask ON timeentry.id = timeentry_subtask.timeEntryID
-        LEFT JOIN timeentry_task ON timeentry.id = timeentry_task.timeEntryID
-        WHERE timeentry_subtask.subTaskID = ?
+        WHERE timeentry.subTaskID = ?
         """;
 
         return jdbcTemplate.query(sql, new TimeEntryRowMapper(), subTaskId);
     }
-
-
 }
