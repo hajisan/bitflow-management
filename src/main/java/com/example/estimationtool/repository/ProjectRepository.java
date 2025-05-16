@@ -44,12 +44,6 @@
             int generatedId = keyHolder.getKey().intValue();
             project.setProjectId(generatedId);  // Sætter ID på Project
 
-            // OVERFLØDIG, HVIS DETTE EXCEPTION HÅNdTERES I SERVICE OG FANGES MED @CONTROLLERADVICE
-    //        // Tjekker først om id'et er null eller ej. Hvis det er, så sætter vi id-variable til -1
-    //        int projectId = keyHolder.getKey() != null ? keyHolder.getKey().intValue() : -1;
-    //        // Sætter projektets id til KeyHolderens værdi, hvis den ikke var null
-    //        if (projectId != -1) project.setProjectId(projectId);
-
             return project;
         }
 
@@ -79,38 +73,6 @@
             return jdbcTemplate.queryForObject(sql, new ProjectRowMapper(), projectId);
 
         }
-
-
-    //    @Override
-    //    public Project readById(Integer id) {
-    //
-    //        String sql = """
-    //                SELECT p.id, p.name, p.description, p.deadline, p.estimatedTime, p.timeSpent, p.status, up.userID as userId
-    //                FROM project p
-    //                LEFT JOIN user_project up ON p.id = up.projectID
-    //                WHERE p.id = ?
-    //                """;
-    //
-    //        try {
-    //            return jdbcTemplate.queryForObject(sql, new ProjectRowMapper(), id);
-    //        } catch (EmptyResultDataAccessException e) {
-    //            return null;
-    //        }
-    //    }
-    //
-    //    @Override
-    //    public List<Project> readByUserId(Integer userId) {
-    //
-    //        String sql = """
-    //                SELECT p.id, p.name, p.description, p.deadline, p.estimatedTime, p.timeSpent, p.status, up.userID as userId
-    //                FROM project p
-    //                LEFT JOIN user_project up ON p.id = up.projectID
-    //                WHERE up.userID = ?
-    //                """;
-    //
-    //        return jdbcTemplate.query(sql, new ProjectRowMapper(), userId);
-    //    }
-
 
 
         //------------------------------------ Update() ------------------------------------
@@ -144,7 +106,6 @@
             jdbcTemplate.update(sql, id);
 
         }
-
 
 
         //--------------------------------- Til DTO'er ------------------------------------

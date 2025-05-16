@@ -4,7 +4,6 @@ import com.example.estimationtool.model.timeEntry.TimeEntry;
 import com.example.estimationtool.service.TimeEntryService;
 import com.example.estimationtool.toolbox.dto.UserViewDTO;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +34,7 @@ public class TimeEntryController {
         UserViewDTO currentUser = getCurrentUser(session);
 
         if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne tilgå tidsregistrering.");
+            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne oprette en tidsregistrering.");
             return "redirect:/login";
         }
 
@@ -74,7 +73,7 @@ public class TimeEntryController {
         UserViewDTO currentUser = getCurrentUser(session);
 
         if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne se tidsregistreringer");
+            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne se tidsregistreringer.");
             return "redirect:/login";
         }
 
@@ -95,7 +94,7 @@ public class TimeEntryController {
         UserViewDTO currentUser = getCurrentUser(session);
 
         if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne se en tidsregistrering");
+            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne se en tidsregistrering.");
             return "redirect:/login";
         }
 
@@ -117,7 +116,7 @@ public class TimeEntryController {
         UserViewDTO currentUser = getCurrentUser(session);
 
         if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne se en tidsregistrering");
+            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne ændre en tidsregistrering.");
             return "redirect:/login";
         }
 
@@ -139,7 +138,7 @@ public class TimeEntryController {
         UserViewDTO currentUser = getCurrentUser(session);
 
         if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne se en tidsregistrering");
+            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne ændre en tidsregistrering.");
             return "redirect:/login";
         }
 

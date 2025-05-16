@@ -79,8 +79,11 @@ public class SubTaskService {
     // --- Henter timeentries ud fra subtask-ID ---
 
     public SubTaskWithTimeEntriesDTO readAllTimeEntriesBySubTaskId(int subTaskId) {
+
         SubTask subTask = iSubTaskRepository.readById(subTaskId);
+
         List<TimeEntry> entries = iTimeEntryRepository.readAllBySubTaskId(subTaskId);
+
         return new SubTaskWithTimeEntriesDTO(subTask, entries);
     }
 
@@ -104,7 +107,7 @@ public class SubTaskService {
 
     public UserViewDTO readAssignedUserBySubTaskId(int subTaskId) {
 
-        // Find bruger på subTask
+        // Find bruger for subtask
         User user = iUserRepository.readUserBySubTaskId(subTaskId);
         if (user == null) {
             return null;

@@ -122,7 +122,7 @@ public class TaskRepository implements ITaskRepository {
                     task.subProjectID,
                     task.id,
                     task.estimatedTime,
-                    task.timeSpent
+                    task.timeSpent,
                     task.name,
                     task.description,
                     task.deadline,

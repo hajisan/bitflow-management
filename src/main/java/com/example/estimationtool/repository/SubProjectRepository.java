@@ -50,16 +50,8 @@ public class SubProjectRepository implements ISubProjectRepository {
         int id = keyHolder.getKey().intValue();
         subProject.setSubProjectId(id);
 
-
-        // SKAL FJERNES HVIS EXCEPTION HÅNDTERES I SERVICE
-//        // Tjekker om ID'et er null og hvis det er sættes det til -1
-//        int id = keyHolder.getKey() != null ? keyHolder.getKey().intValue() : -1;
-//        // Sætter subprojektets ID til keyHolderens næste værdi, hvis den ikke er -1
-//        if (id != -1) subProject.setSubProjectId(id);
-//        // Returnerer subprojekt-instansen så den kan sendes videre
         return subProject;
     }
-
 
 
     //------------------------------------ Read() ------------------------------------

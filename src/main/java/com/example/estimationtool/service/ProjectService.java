@@ -37,6 +37,8 @@ public class ProjectService {
     //------------------------------------ Create() ------------------------------------
 
     public Project createProject(UserViewDTO currentUser, Project project) {
+
+        // Kun admin og projektleder må oprette et projekt
         RoleCheck.ensureAdminOrProjectManager(currentUser.getRole());
 
         Project projectWithUser = iProjectRepository.create(project);
@@ -58,7 +60,7 @@ public class ProjectService {
 
     public Project readById(int id) {
         Project project = iProjectRepository.readById(id);
-        if (project == null) throw new NoSuchElementException("Projekt med ID" + id + " eksistere ikke.");
+        if (project == null) throw new NoSuchElementException("Projekt med ID" + id + " eksisterer ikke.");
 
         return project;
     }

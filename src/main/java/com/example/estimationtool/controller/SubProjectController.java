@@ -83,7 +83,7 @@ public class SubProjectController {
             return "redirect:/login";
         }
 
-        boolean isAdmin = currentUser.getRole().equals(Role.ADMIN);
+        boolean isAdmin = currentUser.getRole().equals(Role.ADMIN); // TODO - Hvorfor disse to kontroller?
         boolean isProjectManager = currentUser.getRole().equals(Role.PROJECT_MANAGER);
         model.addAttribute("isAdmin", isAdmin);
         model.addAttribute("isProjectManager", isProjectManager);
@@ -245,30 +245,5 @@ public class SubProjectController {
         return "redirect:/subprojects/" + id + "/users";
     }
 
-
-
-
-
-// TODO LIGGER I PROJECTCONTROLLER NU
-    // TODO skal endpointet her ikke være projects/{projectId}/subprojects?
-//
-//    @GetMapping("/{projectId}/subprojects")
-//    public String readByProjectId(HttpSession session,
-//                                  Model model,
-//                                  RedirectAttributes redirectAttributes,
-//                                  @PathVariable int projectId) {
-//        UserViewDTO currentUser = getCurrentUser(session);
-//        if (currentUser == null) {
-//            redirectAttributes.addFlashAttribute("error", "Log ind for at oprette et delprojekt.");
-//            return "redirect:/login";
-//        }
-//        boolean isAdmin = currentUser.getRole().equals(Role.ADMIN);
-//        boolean isProjectManager = currentUser.getRole().equals(Role.PROJECT_MANAGER);
-//        model.addAttribute("isAdmin", isAdmin);
-//        model.addAttribute("isProjectManager", isProjectManager);
-//        model.addAttribute("projectwithsubprojectdto", subProjectService.readAllFromProjectId(projectId));
-//
-//        return "subproject/subprojects-under-project";
-//    }
 
 }

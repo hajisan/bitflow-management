@@ -1,10 +1,9 @@
 package com.example.estimationtool.service;
 
 import com.example.estimationtool.model.*;
-import com.example.estimationtool.repository.interfaces.ISubProjectRepository;
+
 import com.example.estimationtool.toolbox.dto.*;
 
-import com.example.estimationtool.model.enums.Role;
 import com.example.estimationtool.repository.interfaces.IUserRepository;
 import com.example.estimationtool.toolbox.check.RoleCheck;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -54,7 +53,7 @@ public class UserService {
                 userDTO.getFirstName(),
                 userDTO.getLastName(),
                 userDTO.getEmail(),
-                passwordEncoder.encode(userDTO.getPassword()), // hashing
+                passwordEncoder.encode(userDTO.getPassword()), // Hashing
                 userDTO.getRole()
         );
 
@@ -65,9 +64,11 @@ public class UserService {
     //------------------------------------ Read() --------------------------------------
 
     public List<UserViewDTO> readAll() {
+
         List<User> userList = iUserRepository.readAll();
         List<UserViewDTO> userViewDTOList = new ArrayList<>();
 
+        // Konverterer userList til userViewDTOList
         for (User user : userList) {
             UserViewDTO userViewDTO = new UserViewDTO(
                     user.getUserId(),
@@ -88,6 +89,7 @@ public class UserService {
             throw new NoSuchElementException("Bruger med ID " + id + " eksisterer ikke.");
         }
 
+        // Konverterer User til UserViewDTO
         return new UserViewDTO(
                 user.getUserId(),
                 user.getFirstName(),
@@ -102,6 +104,7 @@ public class UserService {
 
     public User updateUser(UserUpdateDTO userUpdateDTO, UserViewDTO currentUser) {
 
+        // Henter eksisterende bruger
         User existingUser = iUserRepository.readById(userUpdateDTO.getUserId());
 
         // Tjekker om bruger findes
@@ -136,6 +139,7 @@ public class UserService {
 
     public void deleteById(int id, UserViewDTO currentUser) {
 
+        // Kun admin må slette en bruger
         RoleCheck.ensureAdmin(currentUser.getRole());
 
         iUserRepository.deleteById(id);
@@ -149,6 +153,7 @@ public class UserService {
 
         User user = iUserRepository.readByEmail(email);
 
+        // Matcher input-password med databasens hashet password
         if (passwordEncoder.matches(inputPassword, user.getPasswordHash())) {
             return new UserViewDTO(
                     user.getUserId(),
@@ -159,25 +164,6 @@ public class UserService {
             );
         }
         throw new BadCredentialsException("Adgangskoden er forkert.");
-    }
-
-    //--------------------------------- Henter PasswordHash --------------------------------
-
-
-    private String getPasswordHash(UserUpdateDTO userUpdateDTO, User existingUser) {
-        String passwordHash;
-
-        if (userUpdateDTO.getPassword() == null || userUpdateDTO.getPassword().isBlank()) {
-            // Hvis intet password er angivet, behold eksisterende hash
-            passwordHash = existingUser.getPasswordHash();
-        } else if (passwordEncoder.matches(userUpdateDTO.getPassword(), existingUser.getPasswordHash())) {
-            // Hvis brugeren indtaster det samme password = behold det
-            passwordHash = existingUser.getPasswordHash();
-        } else {
-            // Hash opdaterede password
-            passwordHash = passwordEncoder.encode(userUpdateDTO.getPassword());
-        }
-        return passwordHash;
     }
 
     //----------------- Henter UserUpdateDTO for GET-mapping: showEditUser() --------------
@@ -195,6 +181,26 @@ public class UserService {
         );
     }
 
+    //--------------------------------- Henter PasswordHash --------------------------------
+
+
+    private String getPasswordHash(UserUpdateDTO userUpdateDTO, User existingUser) {
+        String passwordHash;
+
+        if (userUpdateDTO.getPassword() == null || userUpdateDTO.getPassword().isBlank()) {
+            // Hvis intet password er angivet, behold eksisterende hash
+            passwordHash = existingUser.getPasswordHash();
+
+        } else if (passwordEncoder.matches(userUpdateDTO.getPassword(), existingUser.getPasswordHash())) {
+            // Hvis brugeren indtaster det samme password = behold det
+            passwordHash = existingUser.getPasswordHash();
+
+        } else {
+            // Hash opdaterede password
+            passwordHash = passwordEncoder.encode(userUpdateDTO.getPassword());
+        }
+        return passwordHash;
+    }
 
 
     //------------------------------------ DTO-Mappings -----------------------------------
@@ -255,36 +261,6 @@ public class UserService {
         return new UserWithSubProjectsDTO(userViewDTO, subProjectList);
 
     }
-//
-//    // --- Henter brugere ud fra subprojektID ---
-//
-//    public SubProjectWithUsersDTO readAllUsersBySubProjectId(int subProjectId) {
-//
-//        // Læser ét subprojekt
-//        SubProject subProject = iSubProjectRepository.readById(subProjectId);
-//
-//        // Læser listen af brugere ud fra subprojektID
-//        List<User> userList = iUserRepository.readAllBySubProjectId(subProjectId);
-//
-//        // Opretter liste af UserViewDTO
-//        List<UserViewDTO> userViewDTOList = new ArrayList<>();
-//
-//        // Konverterer userList til UserViewDTOList ved at loope igennem userList
-//        for (User user : userList) {
-//            UserViewDTO userViewDTO = new UserViewDTO(
-//                    user.getUserId(),
-//                    user.getFirstName(),
-//                    user.getLastName(),
-//                    user.getEmail(),
-//                    user.getRole()
-//            );
-//            userViewDTOList.add(userViewDTO); // Tilføjet hver UserDTO til listen
-//        }
-//
-//
-//        // Returnerer subprojekt + liste af UserViewDTO
-//        return new SubProjectWithUsersDTO(subProject, userViewDTOList);
-//    }
 
     // --- Henter tasks ud fra brugerID ---
 

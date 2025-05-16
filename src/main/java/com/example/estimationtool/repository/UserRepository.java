@@ -45,12 +45,6 @@ public class UserRepository implements IUserRepository {
         int generatedId = keyHolder.getKey().intValue();
         user.setUserId(generatedId);  // Sætter ID på User
 
-// SKAL FJERNES HVIS EXCEPTION HÅNDTERES I SERVICE OG MED @CONTROLLERADVICE
-//        // Tjekker først om id'et er null eller ej. Hvis det er, så sætter vi id-variablen til -1
-//        int userId = keyHolder.getKey() != null ? keyHolder.getKey().intValue() : -1;
-//        // Sætter profilens id til KeyHolderens værdi, hvis den ikke var null
-//        if (userId != -1) user.setUserId(userId);
-
         return user;
     }
 

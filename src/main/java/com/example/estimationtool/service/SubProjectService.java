@@ -33,6 +33,8 @@ public class SubProjectService {
 
     //------------------------------------ Create() ------------------------------------
     public SubProject create(UserViewDTO currentUser, SubProject subProject) {
+
+        // Kun admin og projektleder må oprette et subprojekt
         RoleCheck.ensureAdminOrProjectManager(currentUser.getRole());
 
         // Inputvalidering
@@ -54,11 +56,13 @@ public class SubProjectService {
 
     //------------------------------------ Read() ------------------------------------
     public List<SubProject> readAll() {
+
         return iSubProjectRepository.readAll();
     }
 
 
     public SubProject readById(int id) {
+
         SubProject subProject = iSubProjectRepository.readById(id);
         if (subProject == null) throw new NoSuchElementException("Subprojekt med ID" + id + " eksisterer ikke.");
 
@@ -102,7 +106,10 @@ public class SubProjectService {
     }
 
     //------------------------------------ Delete() ------------------------------------
+
     public void deleteById(UserViewDTO currentUser, int id) {
+
+        // Kun admin eller projektleder må slette et subprojekt
         RoleCheck.ensureAdminOrProjectManager(currentUser.getRole());
         if (id <= 0) {
             throw new IllegalArgumentException("Subprojektet med id " + id + " findes ikke, da id er 0 eller negativt.");
@@ -228,23 +235,4 @@ public class SubProjectService {
         }
     }
 
-
-
-//    public ProjectWithSubProjectsDTO readAllFromProjectId(int projectId) {
-////        try {
-//        ProjectWithSubProjectsDTO projectWithSubProjectsDTO = new ProjectWithSubProjectsDTO(
-//                iProjectRepository.readById(projectId),
-//                iSubProjectRepository.readAllFromProjectId(projectId));
-//
-//        if (projectWithSubProjectsDTO.subProjectList().isEmpty()) {
-//            throw new NoSuchElementException("Projekt med ID "
-//                    + projectId +
-//                    " har ikke nogen subprojekter.");
-//        }
-//
-//        return projectWithSubProjectsDTO;
-////        } catch (NullPointerException e) {
-////            throw new NullPointerException("Enten findes projekt med ID " + projectId + "ikke, eller også findes subprojekterne ikke.");
-////        }
-//    }
 }
