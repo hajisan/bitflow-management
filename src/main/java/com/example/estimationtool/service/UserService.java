@@ -6,6 +6,7 @@ import com.example.estimationtool.toolbox.dto.*;
 
 import com.example.estimationtool.model.enums.Role;
 import com.example.estimationtool.repository.interfaces.IUserRepository;
+import com.example.estimationtool.toolbox.exceptionHandler.UserFriendlyException;
 import com.example.estimationtool.toolbox.check.RoleCheck;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,15 +31,16 @@ public class UserService {
     private final TaskService taskService;
 
 
-
     public UserService(IUserRepository iUserRepository, PasswordEncoder passwordEncoder,
                        ProjectService projectService, SubProjectService subProjectService,
                        SubTaskService subTaskService, TaskService taskService) {
+
         this.iUserRepository = iUserRepository;
         this.passwordEncoder = passwordEncoder;
         this.projectService = projectService;
         this.subProjectService = subProjectService;
         this.subTaskService = subTaskService;
+        // this.iSubProjectRepository = iSubProjectRepository;
         this.taskService = taskService;
     }
 
@@ -84,8 +86,9 @@ public class UserService {
 
     public UserViewDTO readById(int id) {
         User user = iUserRepository.readById(id);
+
         if (user == null) {
-            throw new NoSuchElementException("Bruger med ID " + id + " eksisterer ikke.");
+            throw new UserFriendlyException("Brugeren blev ikke fundet.", "/users/users"); // <-- Ret URL når vi har det på plads
         }
 
         return new UserViewDTO(
@@ -106,141 +109,155 @@ public class UserService {
 
         // Tjekker om bruger findes
         if (existingUser == null) {
-            throw new RuntimeException("Bruger med ID: " + userUpdateDTO.getUserId() + " eksisterer ikke.");
+            throw new UserFriendlyException("Brugeren du forsøger at ændre, findes ikke.", "/users"); // <-- Ret URL når vi har det på plads
         }
 
         // Håndterer rolle
-        RoleCheck.ensureAdmin(currentUser.getRole());
+        Role role;
 
+        if (currentUser.getRole() == Role.ADMIN) {
+            role = existingUser.getRole(); // Kun admin må ændre rolle
+        } else {
+            if (!currentUser.getRole().equals(existingUser.getRole())) {
+                throw new UserFriendlyException("Du har ikke rettigheder til at ændre denne brugers rolle.", "/users/edit/" + userUpdateDTO.getUserId()); // <-- Ret URL når vi har det på plads
+            }
 
-        // Håndterer password
-        String passwordHash = getPasswordHash(userUpdateDTO, existingUser);
+            RoleCheck.ensureAdmin(currentUser.getRole());
 
-        // Mapper UserUpdateDTO til User-objekt med opdateret bruger
-        User updatedUser = new User(
-                userUpdateDTO.getUserId(),
-                userUpdateDTO.getFirstName(),
-                userUpdateDTO.getLastName(),
-                userUpdateDTO.getEmail(),
-                passwordHash,
-                existingUser.getRole() // TODO Måske virker currentuser.getRole()
-        );
+            // Håndterer password
+            String passwordHash = getPasswordHash(userUpdateDTO, existingUser);
 
-        return iUserRepository.update(updatedUser);
+            // Mapper UserUpdateDTO til User-objekt med opdateret bruger
+            User updatedUser = new User(
+                    userUpdateDTO.getUserId(),
+                    userUpdateDTO.getFirstName(),
+                    userUpdateDTO.getLastName(),
+                    userUpdateDTO.getEmail(),
+                    passwordHash,
+                    existingUser.getRole() // TODO Måske virker currentUser.getRole()
+            );
 
+            return iUserRepository.update(updatedUser);
+        }
     }
 
 
 
-    //------------------------------------ Delete() ------------------------------------
+        //------------------------------------ Delete() ------------------------------------
 
-    public void deleteById(int id, UserViewDTO currentUser) {
+    public void deleteById (int id, UserViewDTO currentUser){
 
-        RoleCheck.ensureAdmin(currentUser.getRole());
+            RoleCheck.ensureAdmin(currentUser.getRole());
 
-        iUserRepository.deleteById(id);
+            iUserRepository.deleteById(id);
 
     }
 
 
-    //------------------------------------ Login() -------------------------------------
+        //------------------------------------ Login() -------------------------------------
 
-    public UserViewDTO login(String email, String inputPassword) {
+    public UserViewDTO login (String email, String inputPassword){
 
         User user = iUserRepository.readByEmail(email);
 
-        if (passwordEncoder.matches(inputPassword, user.getPasswordHash())) {
-            return new UserViewDTO(
+        if (user == null) {
+            throw new UserFriendlyException("Brugeren blev ikke fundet.", "/login");
+        }
+
+        if (!passwordEncoder.matches(inputPassword, user.getPasswordHash())) {
+            throw new UserFriendlyException("Adgangskoden er forkert", "/login");
+        }
+
+        return new UserViewDTO(
+                user.getUserId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getRole()
+        );
+    }
+
+
+
+
+        //------------------------------------ Password ----------------------------------
+
+
+        private String getPasswordHash (UserUpdateDTO userUpdateDTO, User existingUser){
+            String passwordHash;
+
+            if (userUpdateDTO.getPassword() == null || userUpdateDTO.getPassword().isBlank()) {
+                // Hvis intet password er angivet, behold eksisterende hash
+                passwordHash = existingUser.getPasswordHash();
+            } else if (passwordEncoder.matches(userUpdateDTO.getPassword(), existingUser.getPasswordHash())) {
+                // Hvis brugeren indtaster det samme password = behold det
+                passwordHash = existingUser.getPasswordHash();
+            } else {
+                // Hash opdaterede password
+                passwordHash = passwordEncoder.encode(userUpdateDTO.getPassword());
+            }
+            return passwordHash;
+        }
+
+        //------------------------------------ DTO-Mappings -----------------------------------
+
+
+        // --- Henter projekter ud fra brugerID ---
+
+        public UserWithProjectsDTO readAllProjectsByUserId ( int userId){
+
+            // Læser én bruger
+            User user = iUserRepository.readById(userId);
+
+            if (user == null) {
+                throw new UserFriendlyException("Brugeren findes ikke", "/users/profile");
+            }
+
+            // Konverterer User til UserViewDTO
+            UserViewDTO userViewDTO = new UserViewDTO(
                     user.getUserId(),
                     user.getFirstName(),
                     user.getLastName(),
                     user.getEmail(),
                     user.getRole()
             );
+
+            // Læser projekter ud fra brugerID
+            List<Project> projectList = projectService.readByUserId(userId);
+
+            // Returnerer bruger + projekter i en DTO
+            return new UserWithProjectsDTO(userViewDTO, projectList);
         }
-        throw new BadCredentialsException("Adgangskoden er forkert.");
-    }
-
-    //------------------------------------ Password ----------------------------------
 
 
-    private String getPasswordHash(UserUpdateDTO userUpdateDTO, User existingUser) {
-        String passwordHash;
+        // --- Henter subprojekter ud fra brugerID ---
 
-        if (userUpdateDTO.getPassword() == null || userUpdateDTO.getPassword().isBlank()) {
-            // Hvis intet password er angivet, behold eksisterende hash
-            passwordHash = existingUser.getPasswordHash();
-        } else if (passwordEncoder.matches(userUpdateDTO.getPassword(), existingUser.getPasswordHash())) {
-            // Hvis brugeren indtaster det samme password = behold det
-            passwordHash = existingUser.getPasswordHash();
-        } else {
-            // Hash opdaterede password
-            passwordHash = passwordEncoder.encode(userUpdateDTO.getPassword());
+        public UserWithSubProjectsDTO readAllSubProjectsByUserId ( int userId){
+
+            // Læser én bruger
+            User user = iUserRepository.readById(userId);
+
+            if (user == null) {
+                throw new UserFriendlyException("Brugeren findes ikke", "/users/profile");
+            }
+
+            // Konverterer User til UserViewDTO
+            UserViewDTO userViewDTO = new UserViewDTO(
+                    user.getUserId(),
+                    user.getFirstName(),
+                    user.getLastName(),
+                    user.getEmail(),
+                    user.getRole()
+            );
+
+            List<SubProject> subProjectList = subProjectService.readAllSubProjectsByUserId(userId);
+
+            return new UserWithSubProjectsDTO(userViewDTO, subProjectList);
+
         }
-        return passwordHash;
-    }
 
-    //------------------------------------ DTO-Mappings -----------------------------------
+        // --- Henter brugere ud fra subprojektID ---
 
-
-    // --- Henter projekter ud fra brugerID ---
-
-    public UserWithProjectsDTO readAllProjectsByUserId(int userId) {
-
-        // Læser én bruger
-        User user = iUserRepository.readById(userId);
-
-        // ExceptionHandling
-//        if (user == null) {
-//            throw new NoSuchElementException("Bruger med ID " + userId + " findes ikke.");
-//        }
-
-        // Konverterer User til UserViewDTO
-        UserViewDTO userViewDTO = new UserViewDTO(
-                user.getUserId(),
-                user.getFirstName(),
-                user.getLastName(),
-                user.getEmail(),
-                user.getRole()
-        );
-
-        // Læser projekter ud fra brugerID
-        List<Project> projectList = projectService.readByUserId(userId);
-
-        // Returnerer bruger + projekter i en DTO
-        return new UserWithProjectsDTO(userViewDTO, projectList);
-    }
-
-
-    // --- Henter subprojekter ud fra brugerID ---
-
-    public UserWithSubProjectsDTO readAllSubProjectsByUserId(int userId) {
-
-        // Læser én bruger
-        User user = iUserRepository.readById(userId);
-
-        // ExceptionHandling
-//        if (user == null) {
-//            throw new NoSuchElementException("Bruger med ID " + userId + " findes ikke.");
-//        }
-
-        // Konverterer User til UserViewDTO
-        UserViewDTO userViewDTO = new UserViewDTO(
-                user.getUserId(),
-                user.getFirstName(),
-                user.getLastName(),
-                user.getEmail(),
-                user.getRole()
-        );
-
-        List<SubProject> subProjectList = subProjectService.readAllSubProjectsByUserId(userId);
-
-        return new UserWithSubProjectsDTO(userViewDTO, subProjectList);
-
-    }
-//
-//    // --- Henter brugere ud fra subprojektID ---
-//
 //    public SubProjectWithUsersDTO readAllUsersBySubProjectId(int subProjectId) {
 //
 //        // Læser ét subprojekt
@@ -264,54 +281,63 @@ public class UserService {
 //            userViewDTOList.add(userViewDTO); // Tilføjet hver UserDTO til listen
 //        }
 //
-//
 //        // Returnerer subprojekt + liste af UserViewDTO
 //        return new SubProjectWithUsersDTO(subProject, userViewDTOList);
 //    }
 
-    // --- Henter tasks ud fra brugerID ---
+        // --- Henter tasks ud fra brugerID ---
 
-    public UserWithTasksDTO readAllTasksByUserId(int userId) {
+        public UserWithTasksDTO readAllTasksByUserId ( int userId) {
 
-        // Henter bruger ud fra brugerID
-        User user = iUserRepository.readById(userId);
+            // Henter bruger ud fra brugerID
+            User user = iUserRepository.readById(userId);
 
-        // Konverterer User til UserViewDTO
-        UserViewDTO userViewDTO = new UserViewDTO(
-                user.getUserId(),
-                user.getFirstName(),
-                user.getLastName(),
-                user.getEmail(),
-                user.getRole()
-        );
+            if (user == null) {
+                throw new UserFriendlyException("Brugeren findes ikke", "/users/profile");
+            }
 
-        List<Task> tasks = taskService.readAllTasksByUserId(userId);
+            // Konverterer User til UserViewDTO
+            UserViewDTO userViewDTO = new UserViewDTO(
+                    user.getUserId(),
+                    user.getFirstName(),
+                    user.getLastName(),
+                    user.getEmail(),
+                    user.getRole()
+            );
 
-        return new UserWithTasksDTO(userViewDTO, tasks);
+            List<Task> tasks = taskService.readAllTasksByUserId(userId);
+
+            return new UserWithTasksDTO(userViewDTO, tasks);
+        }
+
+        // --- Henter subtasks ud fra brugerID ---
+
+        public UserWithSubTasksDTO readAllSubTasksByUserId(int userId) {
+
+            // Læser én bruger
+            User user = iUserRepository.readById(userId);
+
+            if (user == null) {
+                throw new UserFriendlyException("Brugeren findes ikke", "/users/profile");
+            }
+
+            // Konverter user til UserViewDTO
+            UserViewDTO userViewDTO = new UserViewDTO(
+                    user.getUserId(),
+                    user.getFirstName(),
+                    user.getLastName(),
+                    user.getEmail(),
+                    user.getRole()
+            );
+
+            // Læser subtasks ud fra brugerID
+            List<SubTask> subTaskList = subTaskService.readAllSubTasksByUserId(userId);
+
+            // Returnerer userViewDTO + subtasks i én samlet DTO
+            return new UserWithSubTasksDTO(userViewDTO, subTaskList);
+        }
+
+
+
     }
 
-    // --- Henter subtasks ud fra brugerID ---
-
-    public UserWithSubTasksDTO readAllSubTasksByUserId(int userId) {
-
-        // Læser én bruger
-        User user = iUserRepository.readById(userId);
-
-        // Konverter user til UserViewDTO
-        UserViewDTO userViewDTO = new UserViewDTO(
-                user.getUserId(),
-                user.getFirstName(),
-                user.getLastName(),
-                user.getEmail(),
-                user.getRole()
-        );
-
-        // Læser subtasks ud fra brugerID
-        List<SubTask> subTaskList = subTaskService.readAllSubTasksByUserId(userId);
-
-        // Returnerer userViewDTO + subtasks i én samlet DTO
-        return new UserWithSubTasksDTO(userViewDTO, subTaskList);
-    }
-
-
-}

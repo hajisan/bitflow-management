@@ -18,7 +18,7 @@ public class UserController {
 
     private final UserService userService;
 
-    // Dependency Injection af UserService i constructoren
+    // Dependency Injection af UserService i konstruktøren
     public UserController(UserService userService) {
         this.userService = userService;
     }
