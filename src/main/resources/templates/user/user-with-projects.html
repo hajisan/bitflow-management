@@ -19,6 +19,12 @@
         <li th:each="project : ${userWithProjects.projectList}">
             <span th:text="${project.name}"></span> -
             <span th:text="${project.status}"></span>
+
+            <!-- Projekt-detaljer-knap -->
+            <a th:href="@{/projects/{id}(id=${project.projectId})}" class="btn">
+                Projekt-detaljer
+            </a>
+
         </li>
     </ul>
 <!-- Besked hvis listen er tom -->
@@ -26,6 +32,11 @@
         Brugeren<span th:text="${userWithProjects.user.firstName}"></span> har ikke nogle tilknyttede projekter.
     </p>
 </section>
+
+<!-- Tilbage til forsiden -->
+<a th:href="@{/profile}">
+    <button>⬅ Tilbage til forsiden</button>
+</a>
 
 </body>
 </html>

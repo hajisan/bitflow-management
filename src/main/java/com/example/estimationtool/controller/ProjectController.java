@@ -16,7 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.List;
 
 @Controller
-@RequestMapping("projects") // Base-URL for alle endpoints i ProjectController
+@RequestMapping("/projects") // Base-URL for alle endpoints i ProjectController
 public class ProjectController {
 
     private final ProjectService projectService;

@@ -11,9 +11,8 @@
 <!-- Vis logget ind bruger og rolle -->
 <p th:if="${session.currentUser != null}"> Du er logget ind som <span th:text="${session.currentUser.role}"></span></p>
 
-<!-- Fejl-/succesbesked -->
+<!-- Fejlbesked-->
 <p th:if="${error}" th:text="${error}"></p>
-<p th:if="${success}" th:text="${success}"></p>
 
 <!-- Formular til redigering af projekt -->
 <form th:action="@{/projects/update}" th:object="${project}" method="post">

@@ -8,8 +8,7 @@
 
 <section>
     <h2>Brugeroplysninger</h2>
-    <p>Navn: <span th:text="${userWithProjects.user.firstName}"></span> <span th:text="${userWithProjects.user.lastName}"></span></p>
-    <p>ID: <span th:text="${userWithProjects.user.userId}"></span></p>
+    <p>Fulde Navn: <span th:text="${userWithProjects.user.firstName}"></span> <span th:text="${userWithProjects.user.lastName}"></span></p>
 </section>
 
 
@@ -20,13 +19,24 @@
         <li th:each="project : ${userWithProjects.projectList}">
             <span th:text="${project.name}"></span> -
             <span th:text="${project.status}"></span>
+
+            <!-- Projekt-detaljer-knap -->
+            <a th:href="@{/projects/{id}(id=${project.projectId})}" class="btn">
+                Projekt-detaljer
+            </a>
+
         </li>
     </ul>
-<!-- Fallback hvis listen er tom -->
+<!-- Besked hvis listen er tom -->
     <p th:if="${#lists.isEmpty(userWithProjects.projectList)}">
         Brugeren<span th:text="${userWithProjects.user.firstName}"></span> har ikke nogle tilknyttede projekter.
     </p>
 </section>
+
+<!-- Tilbage til forsiden -->
+<a th:href="@{/profile}">
+    <button>⬅ Tilbage til forsiden</button>
+</a>
 
 </body>
 </html>

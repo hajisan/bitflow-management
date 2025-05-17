@@ -9,6 +9,7 @@ import com.example.estimationtool.model.Project;
 import com.example.estimationtool.repository.interfaces.ISubProjectRepository;
 import com.example.estimationtool.repository.interfaces.IUserRepository;
 import com.example.estimationtool.toolbox.check.AssignCheck;
+import com.example.estimationtool.toolbox.check.DeadlineCheck;
 import com.example.estimationtool.toolbox.check.StatusCheck;
 import com.example.estimationtool.toolbox.dto.ProjectWithSubProjectsDTO;
 import com.example.estimationtool.toolbox.dto.ProjectWithUsersDTO;
@@ -77,11 +78,18 @@ public class ProjectService {
         // Kun admin eller projektleder må redigere projekt
         RoleCheck.ensureAdminOrProjectManager(currentUser.getRole());
 
-        // Assign-tjek:
+        // Assign-tjek: tjekker om brugeren er tildelt et projekt
         List<Project> userProjects = iProjectRepository.readAllByUserId(currentUser.getUserId());
         // Konverterer User + projects til DTO
         UserWithProjectsDTO userWithProjectsDTO = new UserWithProjectsDTO(currentUser, userProjects);
         AssignCheck.ensureUserAssignedToProject(userWithProjectsDTO, project.getProjectId());
+
+
+        // Deadline-håndtering (hvis ikke sat, behold eksisterende)
+        Project existingProject = readById(project.getProjectId());
+        project.setDeadline(
+                DeadlineCheck.checkForDeadlineInput(project.getDeadline(), existingProject.getDeadline())
+        );
 
 
         // Statusvalidering: Project må kun sættes til DONE, hvis alle SubProjects er DONE
