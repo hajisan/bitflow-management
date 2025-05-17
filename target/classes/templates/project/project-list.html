@@ -43,7 +43,7 @@
         <td th:text="${project.timeSpent} + ' t.'"></td>
         <td th:text="${project.status}"></td>
         <td>
-            <a th:href="@{/projects/{id}(id=${project.projectId})}">Se detaljer</a>
+            <a th:href="@{/projects/{projectId}(projectId=${project.projectId})}">Se detaljer</a>
         </td>
     </tr>
     </tbody>

@@ -34,6 +34,7 @@ public class ProjectController {
 
     //--------------------------------- Hent Create() ----------------------------------
 
+    // TODO - DONE
     @GetMapping("/create") // Vis opret formular
     public String showCreateProject(Model model,
                                     HttpSession session,
@@ -52,6 +53,7 @@ public class ProjectController {
 
     //------------------------------------ Create() ------------------------------------
 
+    // TODO - DONE
     @PostMapping("/create") // Opret projekt
     public String createProject(@ModelAttribute Project project,
                                 HttpSession session,
@@ -68,7 +70,8 @@ public class ProjectController {
         projectService.createProject(currentUser, project);
         redirectAttributes.addFlashAttribute("success", "Projektet er oprettet."); // Viser succesbesked EFTER redirect
 
-        return "redirect:/projects/list";
+        // Redirect til front-page.html
+        return "redirect:/users/profile";
     }
 
     //------------------------------------ Read() --------------------------------------
@@ -93,8 +96,10 @@ public class ProjectController {
         return "project/project-list";
     }
 
-    @GetMapping("/{id}")
-    public String showProject(@PathVariable int id,
+
+    // TODO - DONE
+    @GetMapping("/{projectId}")
+    public String showProject(@PathVariable int projectId,
                               Model model,
                               HttpSession session,
                               RedirectAttributes redirectAttributes) {
@@ -107,7 +112,7 @@ public class ProjectController {
             return "redirect:/login";
         }
 
-        Project project = projectService.readById(id);
+        Project project = projectService.readById(projectId);
         model.addAttribute("project", project);
 
         return "project/project-detail";
@@ -115,8 +120,9 @@ public class ProjectController {
 
     //------------------------------------ Hent Update() -------------------------------
 
-    @GetMapping("/edit/{id}")
-    public String showEditProject(@PathVariable int id,
+    // TODO - DONE
+    @GetMapping("/edit/{projectId}")
+    public String showEditProject(@PathVariable int projectId,
                                   HttpSession session,
                                   Model model,
                                   RedirectAttributes redirectAttributes) {
@@ -129,7 +135,7 @@ public class ProjectController {
             return "redirect:/login";
         }
 
-        Project project = projectService.readById(id);
+        Project project = projectService.readById(projectId);
 
         model.addAttribute("project", project);
 
@@ -139,6 +145,7 @@ public class ProjectController {
 
     //------------------------------------ Update() ------------------------------------
 
+    // TODO - DONE
     @PostMapping("/update")
     public String updateProject(@ModelAttribute("project") Project project,
                                 HttpSession session,
@@ -157,13 +164,13 @@ public class ProjectController {
         // Tilføj succesbesked som flash-attribut (vises efter redirect)
         redirectAttributes.addFlashAttribute("success", "Projektet blev opdateret.");
 
-        return "redirect:/projects/" + project.getProjectId();  // Redirect til task-detail
+        return "redirect:/projects/" + project.getProjectId();  // Redirect til project-detail
     }
 
     //------------------------------------ Delete() ------------------------------------
 
-    @PostMapping("/delete/{id}")
-    public String deleteProject(@PathVariable int id,
+    @PostMapping("/delete/{projectId}")
+    public String deleteProject(@PathVariable int projectId,
                                 HttpSession session,
                                 RedirectAttributes redirectAttributes) {
 
@@ -174,7 +181,7 @@ public class ProjectController {
             return "redirect:/login";
         }
 
-        projectService.deleteById(id, currentUser);
+        projectService.deleteById(projectId, currentUser);
 
         redirectAttributes.addFlashAttribute("success", "Projektet blev slettet.");
 
@@ -187,8 +194,9 @@ public class ProjectController {
 
     // --- Viser brugere tilknyttet/ikke-tilknyttet ét projekt ---
 
-    @GetMapping("/{id}/users")
-    public String showProjectWithUsers(@PathVariable int id,
+    // TODO - DONE
+    @GetMapping("/{projectId}/users")
+    public String showProjectWithUsers(@PathVariable int projectId,
                                        HttpSession session,
                                        Model model,
                                        RedirectAttributes redirectAttributes) {
@@ -201,10 +209,10 @@ public class ProjectController {
         }
 
         // Viser allerede tilknyttede brugere
-        ProjectWithUsersDTO projectWithUsers = projectService.readALlUsersByProjectId(id);
+        ProjectWithUsersDTO projectWithUsers = projectService.readALlUsersByProjectId(projectId);
 
         // Viser ikke-tilknyttede brugere (til POST-formularen)
-        List<UserViewDTO> unassignedUsers = projectService.readAllUnAssignedUsers(id);
+        List<UserViewDTO> unassignedUsers = projectService.readAllUnAssignedUsers(projectId);
 
         model.addAttribute("projectWithUsers", projectWithUsers);
         model.addAttribute("unassignedUsers", unassignedUsers);
@@ -214,8 +222,9 @@ public class ProjectController {
 
     // --- Viser subprojekter tilknyttet ét projekt ---
 
-    @GetMapping("/{id}/subprojects")
-    public String showProjectWithSubProjects(@PathVariable int id,
+    // TODO - DONE
+    @GetMapping("/{projectId}/subprojects")
+    public String showProjectWithSubProjects(@PathVariable int projectId,
                                           HttpSession session,
                                           Model model,
                                           RedirectAttributes redirectAttributes) {
@@ -228,7 +237,7 @@ public class ProjectController {
         }
 
         // Henter subprojekter for ét projekt
-        ProjectWithSubProjectsDTO projectWithSubProjectsDTO = projectService.readAllFromProjectId(id);
+        ProjectWithSubProjectsDTO projectWithSubProjectsDTO = projectService.readAllFromProjectId(projectId);
 
         model.addAttribute("projectWithSubProjects", projectWithSubProjectsDTO);
 
@@ -238,8 +247,8 @@ public class ProjectController {
 
     //---------------------------- POST Assign User to Project ----------------------------
 
-    @PostMapping("/{id}/assignusers")
-    public String assignUsersToProject(@PathVariable int id,
+    @PostMapping("/{projectId}/assignusers")
+    public String assignUsersToProject(@PathVariable int projectId,
                                        @RequestParam("userIds") List<Integer> userIds,
                                        HttpSession session,
                                        RedirectAttributes redirectAttributes) {
@@ -251,11 +260,11 @@ public class ProjectController {
             return "redirect:/login";
         }
 
-        projectService.assignUserToProject(currentUser,userIds, id);
+        projectService.assignUserToProject(currentUser,userIds, projectId);
 
         redirectAttributes.addFlashAttribute("success", "Bruger(e) blev tildelt projektet.");
 
-        return "redirect:/projects/" + id + "/users";
+        return "redirect:/projects/" + projectId + "/users";
     }
 
 

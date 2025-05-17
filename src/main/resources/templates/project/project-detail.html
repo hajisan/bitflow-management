@@ -21,20 +21,20 @@
   <li>Status: <span th:text="${project.status}"></span></li>
 </ul>
 
-<!-- Rediger-link -->
-<p>
-  <a th:href="@{/projects/edit/{id}(id=${project.projectId})}">Rediger</a>
+<!-- Rediger-link - kun for PROJECT_MANAGER -->
+<p th:if="${session.currentUser.role.name() == 'PROJECT_MANAGER'}">
+  <a th:href="@{/projects/edit/{projectId}(projectId=${project.projectId})}">Rediger</a>
 </p>
 
 <!-- Vis tilknyttede brugere -->
 <p>
-  <a th:href="@{/projects/{id}/users(id=${project.projectId})}">Se tilknyttede brugere</a>
+  <a th:href="@{/projects/{projectId}/users(projectId=${project.projectId})}">Se tilknyttede brugere</a>
 </p>
 
 
 <!-- Vis tilknyttede subprojekter -->
 <p>
-  <a th:href="@{/projects/{id}/subprojects(id=${project.projectId})}">
+  <a th:href="@{/projects/{projectId}/subprojects(projectId=${project.projectId})}">
     Se tilknyttede subprojekter
   </a>
 

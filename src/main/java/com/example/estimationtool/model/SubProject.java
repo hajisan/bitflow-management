@@ -13,8 +13,7 @@ public class SubProject implements Estimable {
     private Status status;
 
     // Tom constructor
-    public SubProject() {
-    }
+    public SubProject() {}
 
     // Overloaded constructor der instantierer alle felter med parametre
     public SubProject(int subProjectId, int projectId, int estimatedTime, int timeSpent,

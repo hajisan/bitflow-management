@@ -57,7 +57,7 @@
 
 <!-- Sletter task -->
 
-<form th:action="@{/projects/delete/{id}(id=${project.projectId})}" method="post">
+<form th:action="@{/projects/delete/{projectId}(projectId=${project.projectId})}" method="post">
   <button type="submit" onclick="return confirm('Er du sikker på, at du vil slette denne opgave?')">Slet</button>
 </form>
 

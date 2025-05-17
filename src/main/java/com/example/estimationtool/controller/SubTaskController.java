@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.List;
 
+
 @Controller
 @RequestMapping("subtasks")
 public class SubTaskController {
@@ -34,26 +35,33 @@ public class SubTaskController {
 
     //------------------------------------ Hent Create() -------------------------------
 
+    // TODO - DONE
 
     @GetMapping("/create")
-    public String showCreateSubTask(Model model,
-                                  HttpSession session,
-                                  RedirectAttributes redirectAttributes
-                                  ) {
-        UserViewDTO currentUser = getCurrentUser(session);
+    public String showCreateSubTask(@RequestParam int taskId,
+                                    Model model,
+                                    HttpSession session,
+                                    RedirectAttributes redirectAttributes) {
 
         // Tjekker om brugeren er logget ind
+        UserViewDTO currentUser = getCurrentUser(session);
+
         if (currentUser == null) {
             redirectAttributes.addFlashAttribute("error", "Log ind for at oprette en subtask.");
             return "redirect:/login";
         }
 
-        model.addAttribute("subtask", new SubTask());
+        SubTask subTask = new SubTask();
+        subTask.setTaskId(taskId); // Binder subtask til task
+
+        model.addAttribute("subtask", subTask);
 
         return "subtask/create-subtask";
     }
 
     //------------------------------------ Create() ------------------------------------
+
+    // TODO - DONE
 
     @PostMapping("/create")
     public String createSubTask(@ModelAttribute("subtask") SubTask subTask,
@@ -72,7 +80,8 @@ public class SubTaskController {
 
         redirectAttributes.addFlashAttribute("success", "Subtask blev oprettet.");
 
-        return "redirect:/subtasks/subtasks";
+        // Redirect til task-with-subtasks.html
+        return "redirect:/tasks/" + subTask.getTaskId() + "/subtasks";
 
     }
 

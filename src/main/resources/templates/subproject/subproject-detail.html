@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>SubProject Detail</title>
+</head>
+<body>
+
+<h1>Subprojektets detaljer</h1>
+
+<!-- Fejlbesked -->
+<section th:if="${error}">
+    <p th:text="${error}"></p>
+</section>
+
+
+<!-- Detaljer om subprojektet -->
+<section>
+    <h2>Detaljer</h2>
+    <p>Navn: <span th:text="${subproject.name}"></span></p>
+    <p>Beskrivelse: <span th:text="${subproject.description}"></span></p>
+    <p>Deadline: <span th:text="${subproject.deadline}"></span></p>
+    <p>Estimeret tid: <span th:text="${subproject.estimatedTime}"></span> timer</p>
+    <p>Aktuelle tidsforbrug: <span th:text="${subproject.timeSpent}"></span> timer</p>
+    <p>Status: <span th:text="${subproject.status}"></span></p>
+</section>
+
+<!-- Kun projektleder må redigere et subprojekt -->
+<section th:if="${session.currentUser.role.name() == 'PROJECT_MANAGER'}">
+    <h2>Handling</h2>
+    <a th:href="@{/subprojects/edit/{id}(id=${subproject.subProjectId})}">
+        <button>Rediger subprojekt</button>
+    </a>
+</section>
+
+
+
+<!-- Navigation -->
+
+<!-- Tilbage til project-with-subprojects.html -->
+<section>
+    <a th:href="@{/projects/{id}/subprojects(id=${subproject.projectId})}">
+        <button>Tilbage til subprojekter</button>
+    </a>
+</section>
+
+
+
+<section>
+    <!-- Rediger-knap (inaktiv) -->
+    <!--
+    <a th:href="@{/subprojects/edit/{id}(id=${subproject.subProjectId})}">
+        <button>Rediger subprojekt</button>
+    </a>
+    -->
+
+    <!-- Tilbage til projekt -->
+    <a th:href="@{/projects/{id}(id=${subproject.projectId})}">
+        <button>Tilbage til projekt</button>
+    </a>
+</section>
+
+</body>
+</html>

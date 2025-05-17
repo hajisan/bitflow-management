@@ -32,26 +32,32 @@ public class TaskController {
 
     //------------------------------------ Hent Create() -------------------------------
 
-    @GetMapping("/create")
-    public String showCreateTask(Model model,
-                           HttpSession session,
-                           RedirectAttributes redirectAttributes
-                           ) {
+    // TODO - DONE
 
-        UserViewDTO currentUser = getCurrentUser(session);
+    @GetMapping("/create")
+    public String showCreateTask(@RequestParam int subProjectId,
+                                 Model model,
+                                 HttpSession session,
+                                 RedirectAttributes redirectAttributes) {
 
         // Tjekker om brugeren er logget ind
+        UserViewDTO currentUser = getCurrentUser(session);
+
         if (currentUser == null) {
             redirectAttributes.addFlashAttribute("error", "Log ind for at oprette en task.");
             return "redirect:/login";
         }
 
-        model.addAttribute("task", new Task());
+        Task task = new Task();
+        task.setSubProjectId(subProjectId);  // Forbinder task med det givne subprojekt
+
+        model.addAttribute("task", task);
         return "task/create-task";
     }
 
     //------------------------------------ Create() ------------------------------------
 
+    // TODO - DONE
     @PostMapping("/create")
     public String createTask(@ModelAttribute("task") Task task,
                              HttpSession session,
@@ -69,13 +75,13 @@ public class TaskController {
 
         redirectAttributes.addFlashAttribute("success", "Opgaven blev oprettet");
 
-        return "redirect:/tasks/tasks";
+        return "redirect:/subprojects/" + task.getSubProjectId() + "/tasks";
 
         }
 
     //------------------------------------ Read() --------------------------------------
 
-    @GetMapping("tasks")
+    @GetMapping("/list")
     public String showAllTasks(Model model,
                                HttpSession session,
                                RedirectAttributes redirectAttributes) {
@@ -96,8 +102,8 @@ public class TaskController {
 
     }
 
-    @GetMapping("/{id}")
-    public String showTask(@PathVariable int id,
+    @GetMapping("/{taskId}")
+    public String showTask(@PathVariable int taskId,
                            Model model,
                            HttpSession session,
                            RedirectAttributes redirectAttributes
@@ -110,7 +116,7 @@ public class TaskController {
             return "redirect:/login";
         }
 
-        Task task = taskService.readById(id);
+        Task task = taskService.readById(taskId);
         model.addAttribute("task", task);
 
         return "task/task-detail";
@@ -118,8 +124,8 @@ public class TaskController {
     }
     //------------------------------------ Hent Update() -------------------------------
 
-    @GetMapping("/edit/{id}")
-    public String showEditTask(@PathVariable int id,
+    @GetMapping("/edit/{taskId}")
+    public String showEditTask(@PathVariable int taskId,
                                HttpSession session,
                                Model model,
                                RedirectAttributes redirectAttributes) {
@@ -132,7 +138,7 @@ public class TaskController {
             return "redirect:/login";
         }
 
-        Task task = taskService.readById(id);
+        Task task = taskService.readById(taskId);
 
         model.addAttribute("task", task);
 
@@ -164,8 +170,8 @@ public class TaskController {
     }
     //------------------------------------ Delete() ------------------------------------
 
-    @PostMapping("/delete/{id}")
-    public String deleteTask(@PathVariable int id,
+    @PostMapping("/delete/{taskId}")
+    public String deleteTask(@PathVariable int taskId,
                              HttpSession session,
                              RedirectAttributes redirectAttributes) {
 
@@ -176,7 +182,7 @@ public class TaskController {
             return "redirect:/login";
         }
 
-        taskService.deleteById(id);
+        taskService.deleteById(taskId);
 
         redirectAttributes.addFlashAttribute("success", "Task blev slettet.");
 
@@ -187,8 +193,8 @@ public class TaskController {
 
     // -------------------- Viser en task's tilknyttede brugere ------------------------
 
-    @GetMapping("/{id}/users")
-    public String showTaskWithUsers(@PathVariable int id,
+    @GetMapping("/{taskId}/users")
+    public String showTaskWithUsers(@PathVariable int taskId,
                                     HttpSession session,
                                     Model model,
                                     RedirectAttributes redirectAttributes) {
@@ -201,11 +207,11 @@ public class TaskController {
         }
 
         // Henter task + brugere
-        TaskWithUsersDTO taskWithUsersDTO = taskService.readAllUsersByTaskId(id);
+        TaskWithUsersDTO taskWithUsersDTO = taskService.readAllUsersByTaskId(taskId);
 
 
         // Viser ikke-tilknyttede brugere (til POST-formularen)
-        List<UserViewDTO> unassignedUsers = taskService.readAllUnAssignedUsers(id);
+        List<UserViewDTO> unassignedUsers = taskService.readAllUnAssignedUsers(taskId);
 
         // Tilføjer til model
         model.addAttribute("taskWithUsers", taskWithUsersDTO);
@@ -217,8 +223,8 @@ public class TaskController {
 
     // -------------------- Viser en task's tilknyttede subtasks ---------------------
 
-    @GetMapping("/{id}/subtasks")
-    public String showTaskWithSubTasks(@PathVariable int id,
+    @GetMapping("/{taskId}/subtasks")
+    public String showTaskWithSubTasks(@PathVariable int taskId,
                                        HttpSession session,
                                        Model model,
                                        RedirectAttributes redirectAttributes) {
@@ -229,7 +235,7 @@ public class TaskController {
             return "redirect:/login";
         }
 
-        TaskWithSubTasksDTO taskWithSubTasksDTO = taskService.readAllSubTasksByTaskId(id);
+        TaskWithSubTasksDTO taskWithSubTasksDTO = taskService.readAllSubTasksByTaskId(taskId);
         model.addAttribute("taskWithSubTasks", taskWithSubTasksDTO);
 
         return "task/task-with-subtasks";
@@ -237,8 +243,8 @@ public class TaskController {
 
     // -------------------- Viser en task's tilknyttede timeEntries  ------------------
 
-    @GetMapping("/{id}/timeentries")
-    public String showTaskWithTimeEntries(@PathVariable int id,
+    @GetMapping("/{taskId}/timeentries")
+    public String showTaskWithTimeEntries(@PathVariable int taskId,
                                           HttpSession session,
                                           Model model,
                                           RedirectAttributes redirectAttributes) {
@@ -249,7 +255,7 @@ public class TaskController {
             return "redirect:/login";
         }
 
-        TaskWithTimeEntriesDTO dto = taskService.readAllTimeEntriesByTaskId(id);
+        TaskWithTimeEntriesDTO dto = taskService.readAllTimeEntriesByTaskId(taskId);
         model.addAttribute("taskWithTimeEntries", dto);
 
         return "task/task-with-timeentries";
@@ -258,8 +264,8 @@ public class TaskController {
 
     //---------------------------- POST Assign User to Task ---------------------------
 
-    @PostMapping("/tasks/{id}/assignusers")
-    public String assignUsersToTask(@PathVariable int id,
+    @PostMapping("/tasks/{taskId}/assignusers")
+    public String assignUsersToTask(@PathVariable int taskId,
                                     @RequestParam("userIds") List<Integer> userIds,
                                     HttpSession session,
                                     RedirectAttributes redirectAttributes) {
@@ -270,10 +276,10 @@ public class TaskController {
             return "redirect:/login";
         }
 
-        taskService.assignUsersToTask(currentUser, userIds, id);
+        taskService.assignUsersToTask(currentUser, userIds, taskId);
 
         redirectAttributes.addFlashAttribute("success", "Brugere blev tildelt en task.");
-        return "redirect:/tasks/" + id + "/users";
+        return "redirect:/tasks/" + taskId + "/users";
     }
 
 

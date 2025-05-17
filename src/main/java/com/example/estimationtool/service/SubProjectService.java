@@ -8,6 +8,7 @@ import com.example.estimationtool.repository.interfaces.ISubProjectRepository;
 import com.example.estimationtool.model.SubProject;
 import com.example.estimationtool.repository.interfaces.ITaskRepository;
 import com.example.estimationtool.repository.interfaces.IUserRepository;
+import com.example.estimationtool.toolbox.check.DeadlineCheck;
 import com.example.estimationtool.toolbox.check.StatusCheck;
 import com.example.estimationtool.toolbox.dto.SubProjectWithTasksDTO;
 import com.example.estimationtool.toolbox.dto.SubProjectWithUsersDTO;
@@ -37,20 +38,6 @@ public class SubProjectService {
         // Kun admin og projektleder må oprette et subprojekt
         RoleCheck.ensureAdminOrProjectManager(currentUser.getRole());
 
-        // Inputvalidering
-        if (subProject.getName() == null || subProject.getName().isBlank()) {
-            throw new IllegalArgumentException("Subprojektets navn må ikke være tomt.");
-        }
-        if (subProject.getEstimatedTime() <= 0) {
-            throw new IllegalArgumentException("Subprojektets estimerede tid må ikke være 0 eller negativ.");
-        }
-        if (subProject.getDeadline() == null) {
-            throw new IllegalArgumentException("Subprojektets deadline må ikke være null eller tom.");
-        }
-        if (subProject.getStatus() != Status.ACTIVE && subProject.getStatus() != Status.INACTIVE && subProject.getStatus() != Status.DONE) {
-            throw new IllegalArgumentException("Subprojektets status skal være sat til enten Active, Inactive eller Done.");
-        }
-
         return iSubProjectRepository.create(subProject);
     }
 
@@ -75,21 +62,22 @@ public class SubProjectService {
         // Kun admin eller projektleder må redigere et subprojekt
         RoleCheck.ensureAdminOrProjectManager(currentUser.getRole());
 
-        // Inputvalidering til update
-        if (subProject.getName() == null || subProject.getName().isBlank()) {
-            throw new IllegalArgumentException("Subprojektets navn må ikke være tomt.");
+
+        // Deadline-håndtering (hvis ikke sat, behold eksisterende)
+        SubProject existingSubProject = iSubProjectRepository.readById(subProject.getSubProjectId());
+        subProject.setDeadline(
+                DeadlineCheck.checkForDeadlineInput(subProject.getDeadline(), existingSubProject.getDeadline())
+        );
+
+        if (subProject.getName() != null && subProject.getName().isBlank()) {
+            throw new IllegalArgumentException("Subprojektets navn må ikke være tomt, hvis det er udfyldt.");
         }
-        if (subProject.getEstimatedTime() <= 0) {
-            throw new IllegalArgumentException("Subprojektets estimerede tid må ikke være 0 eller negativ.");
+        if (subProject.getEstimatedTime() != 0 && subProject.getEstimatedTime() < 0) {
+            throw new IllegalArgumentException("Estimeret tid må ikke være negativ.");
         }
-        if (subProject.getDeadline() == null) {
-            throw new IllegalArgumentException("Subprojektets deadline må ikke være null eller tom.");
-        }
-        if (subProject.getStatus() != Status.ACTIVE &&
-                subProject.getStatus() != Status.INACTIVE &&
-                subProject.getStatus() != Status.DONE) {
-            throw new IllegalArgumentException("Subprojektets status skal være sat til enten Active, Inactive eller Done.");
-        }
+
+            // TODO - Dette tvinger brugeren til at skulle udfylde felter igen. Jeg har tilføjet
+            // TODO -> to lempelige checks ovenover
 
         // Statusvalidering: SubProject må kun sættes til DONE, hvis alle Tasks er DONE
         if (subProject.getStatus() == Status.DONE) {

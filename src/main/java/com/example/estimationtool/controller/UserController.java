@@ -210,8 +210,8 @@ public class UserController {
 
     // -------------------- Viser brugerens tilknyttede projekter ----------------------
 
-    @GetMapping("/{id}/projects")
-    public String showUserWithProjects(@PathVariable int id,
+    @GetMapping("/{userId}/projects")
+    public String showUserWithProjects(@PathVariable int userId,
                                        HttpSession session,
                                        Model model,
                                        RedirectAttributes redirectAttributes) {
@@ -223,7 +223,7 @@ public class UserController {
             return "redirect:/login";
         }
 
-        UserWithProjectsDTO userWithProjectsDTO = userService.readAllProjectsByUserId(id);
+        UserWithProjectsDTO userWithProjectsDTO = userService.readAllProjectsByUserId(userId);
 
         model.addAttribute("userWithProjects", userWithProjectsDTO);
 
