@@ -65,7 +65,7 @@
         public Project readById(Integer projectId) {
 
             String sql = """
-                    SELECT id,estimatedTime, timeSpent, name, description, deadline, status
+                    SELECT id, estimatedTime, timeSpent, name, description, deadline, status
                     FROM project
                     WHERE id = ?
                     """;
