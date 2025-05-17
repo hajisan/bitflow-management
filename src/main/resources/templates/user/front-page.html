@@ -26,14 +26,22 @@
 </div>
 
 <!-- PROJECT MANAGER -->
-<div th:if="${user.role.name() == 'PROJECT_MANAGER'}">
+<section th:if="${user.role.name() == 'PROJECT_MANAGER'}">
     <h2>Projektleder</h2>
-    <ul>
-        <li><a th:href="@{/projects/list}">Mine projekter</a></li> <!-- Viser kun brugerens projekter -->
-        <li><a th:href="@{/projects/create}">Opret nyt projekt</a></li>
-        <li><a th:href="@{/createproject}">Teamoversigt</a></li>
-    </ul>
-</div>
+
+    <section>
+        <h3>Egne projekter</h3>
+        <p>Se dine aktive og tidligere projekter.</p>
+        <a th:href="@{/users/{id}/projects(id=${user.userId})}">Gå til mine projekter</a>
+    </section>
+
+    <section>
+        <h3>Opret projekt</h3>
+        <p>Start et nyt projekt og tildel deltagere.</p>
+        <a th:href="@{/projects/create}">Opret nyt projekt</a>
+    </section>
+</section>
+
 
 <!-- DEVELOPER -->
 <div th:if="${user.role.name() == 'DEVELOPER'}">

@@ -6,29 +6,26 @@
 </head>
 <body>
 
-<h1>Brugeroplysninger</h1>
+<section>
+    <h2>Brugeroplysninger</h2>
+    <p>Fulde Navn: <span th:text="${userWithProjects.user.firstName}"></span> <span th:text="${userWithProjects.user.lastName}"></span></p>
+</section>
 
-<p>
-  Navn:
-  <span th:text="${userWithProjects.user.firstName}"></span>
-  <span th:text="${userWithProjects.user.lastName}"></span>
-</p>
-<p>ID: <span th:text="${userWithProjects.user.userId}"></span></p>
-
-<h2>Projekter</h2>
 
 <!-- Projekter (vises hvis listen ikke er tom) -->
-<ul>
-  <li th:each="project : ${userWithProjects.projectList}">
-    <span th:text="${project.name}"></span> -
-    <span th:text="${project.status}"></span>
-  </li>
-</ul>
-
-<!-- Fallback hvis listen er tom -->
-<p th:if="${#lists.isEmpty(userWithProjects.projectList)}">
-  Brugeren <span th:text="${userWithProjects.user.firstName}"></span> har ikke nogle tilknyttede projekter.
-</p>
+<section>
+    <h2>Projekter</h2>
+    <ul th:if="${!#lists.isEmpty(userWithProjects.projectList)}">
+        <li th:each="project : ${userWithProjects.projectList}">
+            <span th:text="${project.name}"></span> -
+            <span th:text="${project.status}"></span>
+        </li>
+    </ul>
+<!-- Besked hvis listen er tom -->
+    <p th:if="${#lists.isEmpty(userWithProjects.projectList)}">
+        Brugeren<span th:text="${userWithProjects.user.firstName}"></span> har ikke nogle tilknyttede projekter.
+    </p>
+</section>
 
 </body>
 </html>

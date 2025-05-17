@@ -13,7 +13,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.List;
 
 @Controller
-@RequestMapping("users") //Base-URL for alle endpoints i UserController
+@RequestMapping("/users") //Base-URL for alle endpoints i UserController
 public class UserController {
 
     private final UserService userService;
@@ -92,7 +92,7 @@ public class UserController {
 
     //------------------------------------ Read() --------------------------------------
 
-    @GetMapping("users")
+    @GetMapping("list")
     public String showAllUsers(HttpSession session,
                                Model model,
                                RedirectAttributes redirectAttributes) {
