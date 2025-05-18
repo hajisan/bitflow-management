@@ -27,10 +27,6 @@ public class SubProjectRepositoryTest {
     @Autowired
     SubProjectRepository subProjectRepository;
 
-    @Autowired
-    ProjectRepository projectRepository;
-
-
     @Test // Tjek om et subprojekt bliver oprettet korrekt og får tildelt et ID
     void create_savesNewSubProjectAndReturnsIt() {
         // Arrange
