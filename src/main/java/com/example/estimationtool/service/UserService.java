@@ -86,7 +86,7 @@ public class UserService {
         User user = iUserRepository.readById(id);
 
         if (user == null) {
-            throw new UserFriendlyException("Brugeren blev ikke fundet.", "/users/users"); // <-- Ret URL når vi har det på plads
+            throw new UserFriendlyException("Brugeren blev ikke fundet.", "/users/profile"); // <-- Ret URL når vi har det på plads
         }
 
         // Konverterer User til UserViewDTO
@@ -109,7 +109,7 @@ public class UserService {
 
         // Tjekker om bruger findes
         if (existingUser == null) {
-            throw new UserFriendlyException("Brugeren du forsøger at ændre, findes ikke.", "/users"); // <-- Ret URL når vi har det på plads
+            throw new UserFriendlyException("Brugeren du forsøger at ændre, findes ikke.", "/users/profile"); // <-- Ret URL når vi har det på plads
         }
 
         // Kun admin må redigere en bruger
@@ -159,9 +159,8 @@ public class UserService {
         // Matcher input-password med databasens hashet password
 
         if (!passwordEncoder.matches(inputPassword, user.getPasswordHash())) {
-            throw new UserFriendlyException("Adgangskoden er forkert", "/login");
+            throw new UserFriendlyException("Adgangskoden er forkert.", "/login");
         }
-        //if (passwordEncoder.matches(inputPassword, user.getPasswordHash())) {
             return new UserViewDTO(
                     user.getUserId(),
                     user.getFirstName(),
@@ -170,8 +169,6 @@ public class UserService {
                     user.getRole()
             );
         }
-        //throw new BadCredentialsException("Adgangskoden er forkert.");
-
 
     //----------------- Henter UserUpdateDTO for GET-mapping: showEditUser() --------------
 
@@ -220,7 +217,7 @@ public class UserService {
         User user = iUserRepository.readById(userId);
 
             if (user == null) {
-                throw new UserFriendlyException("Brugeren findes ikke", "/users/profile");
+                throw new UserFriendlyException("Brugeren findes ikke.", "/users/profile");
             }
 
         // Konverterer User til UserViewDTO
@@ -248,7 +245,7 @@ public class UserService {
         User user = iUserRepository.readById(userId);
 
             if (user == null) {
-                throw new UserFriendlyException("Brugeren findes ikke", "/users/profile");
+                throw new UserFriendlyException("Brugeren findes ikke.", "/users/profile");
             }
 
         // Konverterer User til UserViewDTO
@@ -274,7 +271,7 @@ public class UserService {
         User user = iUserRepository.readById(userId);
 
             if (user == null) {
-                throw new UserFriendlyException("Brugeren findes ikke", "/users/profile");
+                throw new UserFriendlyException("Brugeren findes ikke.", "/users/profile");
             }
 
             // Konverterer User til UserViewDTO

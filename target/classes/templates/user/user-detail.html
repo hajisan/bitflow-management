@@ -8,42 +8,74 @@
 <h1>Brugeroplysninger</h1>
 <div th:if="${error}" class="error" th:text="${error}"></div>
 
+<h1>Brugeroplysninger</h1>
 
-<table>
-    <tr>
-        <th>ID:</th>
-        <td th:text="${user.userId}"></td>
-    </tr>
-    <tr>
-        <th>Fornavn:</th>
-        <td th:text="${user.firstName}"></td>
-    </tr>
-    <tr>
-        <th>Efternavn:</th>
-        <td th:text="${user.lastName}"></td>
-    </tr>
-    <tr>
-        <th>Email:</th>
-        <td th:text="${user.email}"></td>
-    </tr>
-    <tr>
-        <th>Rolle:</th>
-        <td th:text="${user.role}"></td>
-    </tr>
-</table>
+<!-- Fejlbesked -->
+<section th:if="${error}" class="error-section">
+    <p th:text="${error}" class="error-message"></p>
+</section>
 
-<br>
+<!-- Brugeroplysninger -->
+<section class="details-grid">
+    <div>ID: <span th:text="${user.userId}"></span></div>
+    <div>Fornavn: <span th:text="${user.firstName}"></span></div>
+    <div>Efternavn: <span th:text="${user.lastName}"></span></div>
+    <div>Email: <span th:text="${user.email}"></span></div>
+    <div>Rolle: <span th:text="${user.role}"></span></div>
+</section>
 
-<br>
-<a th:href="@{/users/edit/{id}(id=${user.userId})}"><button>Rediger bruger</button></a>
+<!-- Handlinger -->
+<section class="form-actions">
 
-<a th:href="@{/users/{id}/projects(id=${user.userId})}">
-    <button>Vis tilknyttede projekter</button>
-</a>
+    <div th:if="${session.currentUser.role.name() == 'ADMIN'}">
+        <a th:href="@{/users/edit/{id}(id=${user.userId})}">
+            <button>Rediger bruger</button>
+        </a>
+    </div>
 
+</section>
 
+<!-- Navigation -->
+<section class="navigation">
 
-<a th:href="@{/users/users}">Tilbage til brugeroversigt</a>
+    <!-- Se brugerens projekter -->
+    <div>
+        <a th:href="@{/users/{id}/projects(id=${user.userId})}">
+            <button>Vis tilknyttede projekter</button>
+        </a>
+    </div>
 
+    <!-- Se brugerens subprojekter -->
+    <div>
+        <a th:href="@{/users/{id}/subprojects(id=${user.userId})}">
+            <button>Vis tilknyttede subprojekter</button>
+        </a>
+    </div>
+
+    <!-- Se brugerens tasks -->
+    <div>
+        <a th:href="@{/users/{id}/tasks(id=${user.userId})}">
+            <button>Vis tilknyttede tasks</button>
+        </a>
+    </div>
+
+    <!-- Se brugerens subtasks -->
+    <div>
+        <a th:href="@{/users/{id}/subtasks(id=${user.userId})}">
+            <button>Vis tilknyttede subtasks</button>
+        </a>
+    </div>
+
+    <div>
+        <a th:href="@{/users/list}">
+            <button>Tilbage til brugeroversigt</button>
+        </a>
+    </div>
+    <div>
+        <a th:href="@{/users/profile}">
+            <button>Tilbage til forside</button>
+        </a>
+    </div>
+</section>
 </body>
 </html>

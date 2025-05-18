@@ -9,55 +9,70 @@
 <h1>Subprojektets detaljer</h1>
 
 <!-- Fejlbesked -->
-<section th:if="${error}">
-    <p th:text="${error}"></p>
+<section th:if="${error}" class="error-section">
+    <p th:text="${error}" class="error-message"></p>
+</section>
+
+<!-- Detaljer om subprojektet er for alle -->
+<section class="details-grid">
+    <div>Navn: <span th:text="${subproject.name}"></span></div>
+    <div>Beskrivelse: <span th:text="${subproject.description}"></span></div>
+    <div>Deadline: <span th:text="${subproject.deadline}"></span></div>
+    <div>Estimeret tid: <span th:text="${subproject.estimatedTime}"></span> timer</div>
+    <div>Aktuelle tidsforbrug: <span th:text="${subproject.timeSpent}"></span> timer</div>
+    <div>Status: <span th:text="${subproject.status}"></span></div>
 </section>
 
 
-<!-- Detaljer om subprojektet -->
-<section>
-    <h2>Detaljer</h2>
-    <p>Navn: <span th:text="${subproject.name}"></span></p>
-    <p>Beskrivelse: <span th:text="${subproject.description}"></span></p>
-    <p>Deadline: <span th:text="${subproject.deadline}"></span></p>
-    <p>Estimeret tid: <span th:text="${subproject.estimatedTime}"></span> timer</p>
-    <p>Aktuelle tidsforbrug: <span th:text="${subproject.timeSpent}"></span> timer</p>
-    <p>Status: <span th:text="${subproject.status}"></span></p>
+<!-- Rediger-knap er kun for projektleder og admin -->
+<section class="form-actions" th:if="${session.currentUser.role.name() == 'PROJECT_MANAGER' || session.currentUser.role.name() == 'ADMIN'}">
+    <div>
+        <a th:href="@{/subprojects/edit/{id}(id=${subproject.subProjectId})}">
+           Rediger subprojekt
+        </a>
+    </div>
 </section>
-
-<!-- Kun projektleder må redigere et subprojekt -->
-<section th:if="${session.currentUser.role.name() == 'PROJECT_MANAGER'}">
-    <h2>Handling</h2>
-    <a th:href="@{/subprojects/edit/{id}(id=${subproject.subProjectId})}">
-        <button>Rediger subprojekt</button>
-    </a>
-</section>
-
-
 
 <!-- Navigation -->
+<section class="navigation">
 
-<!-- Tilbage til project-with-subprojects.html -->
-<section>
-    <a th:href="@{/projects/{id}/subprojects(id=${subproject.projectId})}">
-        <button>Tilbage til subprojekter</button>
-    </a>
-</section>
+    <!-- Se brugere tilknyttet subprojekt er for alle: subproject-with-users.html -->
+    <div>
+        <a th:href="@{/subprojects/{id}/users(id=${subproject.subProjectId})}">
+            <button>Se tilknyttede brugere</button>
+        </a>
+    </div>
+
+    <!-- Se tilknyttede tasks er for alle: subproject-with-tasks.html -->
+    <div>
+        <a th:href="@{/subprojects/{subprojectId}/tasks(subprojectId=${subproject.subProjectId})}">
+            <button>Se tilknyttede tasks</button>
+        </a>
+    </div>
 
 
 
-<section>
-    <!-- Rediger-knap (inaktiv) -->
-    <!--
-    <a th:href="@{/subprojects/edit/{id}(id=${subproject.subProjectId})}">
-        <button>Rediger subprojekt</button>
-    </a>
-    -->
 
-    <!-- Tilbage til projekt -->
-    <a th:href="@{/projects/{id}(id=${subproject.projectId})}">
-        <button>Tilbage til projekt</button>
-    </a>
+
+    <!-- Tilbage til liste af alle subprojekter er for admin: subproject-list.html -->
+    <div th:if="${session.currentUser.role.name() == 'ADMIN'}">
+        <a th:href="@{/projects/{id}/subprojects(id=${subproject.projectId})}">
+            Tilbage til alle subprojekter
+        </a>
+    </div>
+
+    <!-- Tilbage til projects-with-subprojects.html er for alle -->
+    <div>
+        <a th:href="@{/projects/{id}(id=${subproject.projectId})}">
+            Tilbage til projekt
+        </a>
+    </div>
+
+
+    <!-- Profilside er for alle: front-page.html -->
+    <div>
+    <a th:href="@{/users/profile}">Tilbage til forside</a>
+    </div>
 </section>
 
 </body>

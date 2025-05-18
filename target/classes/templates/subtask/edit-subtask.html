@@ -5,65 +5,94 @@
     <title>Edit SubTask</title>
 </head>
 <body>
-<h1>Redigér Underopgave</h1>
+<h1 th:text="'Rediger underopgave: ' + ${subtask.name}"></h1>
 
-<!-- Fejl- eller succesbeskeder -->
-<p th:if="${error}" th:text="${error}"></p>
-<p th:if="${success}" th:text="${success}"></p>
+<!-- Fejlbesked -->
+<section th:if="${error}" class="error-section">
+    <p th:text="${error}" class="error-message"></p>
+</section>
 
-<form th:action="@{/subtasks/update}" th:object="${subtask}" method="post">
-    <!-- Skjult ID -->
-    <input type="hidden" th:field="*{subTaskId}"/>
+<!-- Succesbesked -->
+<section th:if="${success}" class="success-section">
+    <p th:text="${success}" class="success-message"></p>
+</section>
 
-    <label>Opgave ID:
-        <input type="number" th:field="*{taskId}" required/>
-    </label><br/>
+<!-- Formular til redigering -->
+<section class="form-actions">
+    <form th:action="@{/subtasks/update}" method="post" th:object="${subtask}">
 
-    <label>Navn:
-        <input type="text" th:field="*{name}" required/>
-    </label><br/>
+        <!-- Skjulte felter -->
+        <input type="hidden" th:field="*{subTaskId}"/>
+        <input type="hidden" th:field="*{taskId}"/>
 
-    <label>Beskrivelse:
-        <textarea th:field="*{description}" required></textarea>
-    </label><br/>
+        <section class="details-grid">
 
-    <label>Deadline:
-        <input type="date" th:field="*{deadline}" required/>
-    </label><br/>
+            <div>
+                <label for="name">Navn:</label>
+                <input type="text" id="name" th:field="*{name}"/>
+            </div>
 
-    <label>Estimeret Tid:
-        <input type="number" th:field="*{estimatedTime}" required/>
-    </label><br/>
+            <div>
+                <label for="description">Beskrivelse:</label>
+                <textarea id="description" th:field="*{description}"></textarea>
+            </div>
 
-    <p>
-        <label>Forbrugt tid (timer):</label>
-        <input type="number" th:field="*{timeSpent}" required/>
-    </p>
+            <div>
+                <label for="deadline">Deadline:</label>
+                <input type="date" id="deadline" th:field="*{deadline}"/>
+            </div>
 
-    <label>Status:
-        <select th:field="*{status}">
-            <option th:each="s : ${statuses}"
-                    th:value="${s}"
-                    th:text="${s}"></option>
-        </select>
-    </label>
+            <div>
+                <label for="estimatedTime">Estimeret tid (timer):</label>
+                <input type="number" id="estimatedTime" th:field="*{estimatedTime}" min="0" required/>
+            </div>
 
+            <div>
+                <label for="timeSpent">Forbrugt tid (timer):</label>
+                <input type="number" id="timeSpent" th:field="*{timeSpent}" min="0"/>
+            </div>
 
-    <br/><br/>
+            <div>
+                <label>Status:</label>
+                <select th:field="*{status}">
+                    <option th:each="s : ${T(com.example.estimationtool.model.enums.Status).values()}"
+                            th:value="${s}"
+                            th:text="${s}"></option>
+                </select>
+            </div>
+        </section>
 
-    <button type="submit">Gem Ændringer</button>
-</form>
+        <!-- Submit-knap -->
+        <div>
+            <button type="submit">Opdater subtask</button>
+        </div>
+    </form>
+</section>
 
-<form th:action="@{'/subtasks/delete/' + ${subtask.subTaskId}}" method="post">
-    <button type="submit" onclick="return confirm('Er du sikker på, at du vil slette denne underopgave?');">
-        Slet Underopgave
-    </button>
-</form>
+<!-- Slet-knap -->
+<section class="form-actions">
+    <form th:action="@{/subtasks/delete/{id}(id=${subtask.subTaskId})}" method="post">
+        <button type="submit" onclick="return confirm('Er du sikker på, at du vil slette denne underopgave?')">
+            Slet underopgave
+        </button>
+    </form>
+</section>
 
+<!-- Navigation -->
+<section class="navigation">
 
-<p>
-    <a th:href="@{'/subtasks/' + ${subtask.subTaskId}}">Tilbage til detaljer</a>
-</p>
+    <div>
+        <a th:href="@{/subtasks/{id}(id=${subtask.subTaskId})}">
+            <button>Tilbage til subtask-detaljer</button>
+        </a>
+    </div>
+
+    <div>
+        <a th:href="@{/users/profile}">
+            <button>Tilbage til forside</button>
+        </a>
+    </div>
+</section>
 
 </body>
 </html>

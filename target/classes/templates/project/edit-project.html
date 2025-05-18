@@ -76,13 +76,13 @@
 <section class="navigation">
 
   <!-- Fuld projektliste kun for admin: project-list.html -->
-  <a th:if="${session.currentUser.role == 'ADMIN'}"
+  <a th:if="${session.currentUser.role.name() == 'ADMIN'}"
      th:href="@{/projects/list}">
     Tilbage til projektliste
   </a>
 
   <!-- Profilside for admin og projektleder: front-page.html -->
-  <a th:href="@{/profile}">Tilbage til forside</a>
+  <a th:href="@{/users/profile}">Tilbage til forside</a>
 </section>
 
 </body>

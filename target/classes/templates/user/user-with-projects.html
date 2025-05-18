@@ -6,37 +6,43 @@
 </head>
 <body>
 
-<section>
-    <h2>Brugeroplysninger</h2>
-    <p>Fulde Navn: <span th:text="${userWithProjects.user.firstName}"></span> <span th:text="${userWithProjects.user.lastName}"></span></p>
+<h1>Projekter tilknyttet bruger</h1>
+
+<!-- Kort info om brugeren -->
+<section class="mini-info">
+    <div>Fornavn: <span th:text="${userWithProjects.user.firstName}"></span></div>
+    <div>Efternavn: <span th:text="${userWithProjects.user.lastName}"></span></div>
+    <div>Rolle: <span th:text="${userWithProjects.user.role}"></span></div>
+</section>
+
+<!-- Projekter -->
+<section class="mini-info">
+    <div th:if="${!#lists.isEmpty(userWithProjects.projectList)}">
+        <div th:each="project : ${userWithProjects.projectList}" class="list">
+            <div>Navn: <span th:text="${project.name}"></span></div>
+            <div>Status: <span th:text="${project.status}"></span></div>
+            <div>
+                <a th:href="@{/projects/{id}(id=${project.projectId})}">
+                    <button>Se detaljer</button>
+                </a>
+            </div>
+            <hr/>
+        </div>
+    </div>
+
+    <!-- Hvis der ingen projekter er -->
+    <div th:if="${#lists.isEmpty(userWithProjects.projectList)}">
+        Brugeren <span th:text="${userWithProjects.user.firstName}"></span> har ingen tilknyttede projekter.
+    </div>
 </section>
 
 
-<!-- Projekter (vises hvis listen ikke er tom) -->
-<section>
-    <h2>Projekter</h2>
-    <ul th:if="${!#lists.isEmpty(userWithProjects.projectList)}">
-        <li th:each="project : ${userWithProjects.projectList}">
-            <span th:text="${project.name}"></span> -
-            <span th:text="${project.status}"></span>
+<div>
 
-            <!-- Projekt-detaljer-knap -->
-            <a th:href="@{/projects/{id}(id=${project.projectId})}" class="btn">
-                Projekt-detaljer
-            </a>
-
-        </li>
-    </ul>
-<!-- Besked hvis listen er tom -->
-    <p th:if="${#lists.isEmpty(userWithProjects.projectList)}">
-        Brugeren<span th:text="${userWithProjects.user.firstName}"></span> har ikke nogle tilknyttede projekter.
-    </p>
-</section>
-
-<!-- Tilbage til forsiden -->
-<a th:href="@{/profile}">
-    <button>⬅ Tilbage til forsiden</button>
-</a>
+    <a th:href="@{/users/profile}">
+        <button>Tilbage til forside</button>
+    </a>
+</div>
 
 </body>
 </html>

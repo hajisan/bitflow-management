@@ -14,7 +14,7 @@
 </section>
 
 <!-- Formular for oprettelse af projekt -->
-<section class="create-form">
+<section class="form-actions">
     <form th:action="@{/projects/create}" method="post" th:object="${project}">
         <div>
             <label for="name">Navn:</label>
@@ -45,7 +45,7 @@
             </select>
         </div>
 
-        <div class="form-actions">
+        <div>
             <button type="submit">Opret projekt</button>
         </div>
     </form>
@@ -61,7 +61,7 @@
     </a>
 
     <!-- Profilside for admin og projektleder: front-page.html -->
-    <a th:href="@{/profile}">Tilbage til forside</a>
+    <a th:href="@{/users/profile}">Tilbage til forside</a>
 </section>
 
 </body>

@@ -8,76 +8,83 @@
 
 <h1 th:text="'Rediger subprojekt: ' + ${subproject.name}"></h1>
 
-<!-- Viser fejlbesked, hvis der er nogen -->
-<section th:if="${error}">
-    <p th:text="${error}"></p>
+<!-- Fejlbesked -->
+<section th:if="${error}" class="error-section">
+    <p th:text="${error}" class="error-message"></p>
 </section>
-<!-- Formular til opdatering af subprojekt -->
-<section>
+
+
+<!-- Formular til redigering -->
+<section class="form-actions">
     <form th:action="@{/subprojects/update}" method="post" th:object="${subproject}">
 
-        <!-- Skjult felt til projektets ID -->
+        <!-- Skjulte felter -->
         <input type="hidden" th:field="*{projectId}"/>
-
-        <!-- Skjult felt til subprojektets ID -->
         <input type="hidden" th:field="*{subProjectId}"/>
 
-        <h2>Rediger subprojekt</h2>
+        <section class="details-grid">
 
-        <!-- Navn -->
-        <p>
-            <label>Navn:</label>
-            <input type="text" th:field="*{name}"/>
-        </p>
+            <div>
+                <label for="name">Navn:</label>
+                <input type="text" id="name" th:field="*{name}"/>
+            </div>
 
-        <!-- Beskrivelse -->
-        <p>
-            <label>Beskrivelse:</label>
-            <textarea th:field="*{description}"></textarea>
-        </p>
+            <div>
+                <label for="description">Beskrivelse:</label>
+                <textarea id="description" th:field="*{description}"></textarea>
+            </div>
 
-        <!-- Deadline -->
-        <p>
-            <label>Deadline:</label>
-            <input type="date" th:field="*{deadline}"/>
-        </p>
+            <div>
+                <label for="deadline">Deadline:</label>
+                <input type="date" id="deadline" th:field="*{deadline}"/>
+            </div>
 
-        <!-- Estimeret tid -->
-        <p>
-            <label>Estimeret tid (timer):</label>
-            <input type="number" th:field="*{estimatedTime}" min="0"/>
-        </p>
+            <div>
+                <label for="estimatedTime">Estimeret tid (timer):</label>
+                <input type="number" id="estimatedTime" th:field="*{estimatedTime}"/>
+            </div>
 
-        <!-- Status -->
-        <p>
-            <label>Status:</label>
-            <select th:field="*{status}">
-                <option th:each="status : ${T(com.example.estimationtool.model.enums.Status).values()}"
-                        th:value="${status}"
-                        th:text="${status}"></option>
-            </select>
-        </p>
+            <div>
+                <label for="status">Status:</label>
+                <select id="status" th:field="*{status}">
+                    <option th:each="status : ${T(com.example.estimationtool.model.enums.Status).values()}"
+                            th:value="${status}"
+                            th:text="${status}"></option>
+                </select>
+            </div>
+        </section>
 
         <!-- Submit-knap -->
-        <p>
-            <button type="submit">Opdater</button>
-        </p>
-
+        <div>
+            <button type="submit">Opdater subprojekt</button>
+        </div>
     </form>
 </section>
 
-<!-- Sektion: Slet subprojekt -->
-<section>
-    <form th:action="@{/subprojects/delete/{id}(id=${subproject.subProjectId})}" method="post">
-        <button type="submit" onclick="return confirm('Er du sikker på, at du vil slette denne opgave?')">Slet</button>
+<!-- Slet-knap -->
+<section class="form-actions">
+    <form th:action="@{/subprojects/delete/{subprojectId}(subprojectId=${subproject.subProjectId})}" method="post">
+        <button type="submit" onclick="return confirm('Er du sikker på, at du vil slette dette subprojekt?')">
+            Slet subprojekt
+        </button>
     </form>
 </section>
 
-<!-- Sektion: Tilbage-navigation -->
-<section>
-    <a th:href="@{/projects/{id}/subprojects(id=${subproject.projectId})}">
-        <button>Tilbage til subprojekter</button>
+
+<!-- Navigation -->
+<section class="navigation">
+
+    <div>
+    <a th:href="@{/subprojects/{subprojectId}(subprojectId=${subproject.subProjectId})}">
+        Tilbage til subprojektets detaljer
     </a>
+    </div>
+
+    <div>
+        <a th:href="@{/users/profile}">
+            Tilbage til forside
+        </a>
+    </div>
 </section>
 
 </body>

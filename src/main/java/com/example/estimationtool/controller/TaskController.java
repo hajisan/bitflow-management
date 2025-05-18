@@ -86,6 +86,7 @@ public class TaskController {
 
     //------------------------------------ Read() --------------------------------------
 
+    // TODO - DONE
     @GetMapping("/list")
     public String showAllTasks(Model model,
                                HttpSession session,
@@ -109,6 +110,7 @@ public class TaskController {
         return "task/task-list";
 
     }
+    // TODO - DONE
 
     @GetMapping("/{taskId}")
     public String showTask(@PathVariable int taskId,
@@ -134,7 +136,7 @@ public class TaskController {
 
     }
     //------------------------------------ Hent Update() -------------------------------
-
+// TODO - DONE
     @GetMapping("/edit/{taskId}")
     public String showEditTask(@PathVariable int taskId,
                                HttpSession session,
@@ -161,6 +163,7 @@ public class TaskController {
     }
     //------------------------------------ Update() ------------------------------------
 
+    // TODO - DONE
     @PostMapping("/update")
     public String updateTask(@ModelAttribute("task") Task task,
                              HttpSession session,
@@ -187,6 +190,8 @@ public class TaskController {
     }
     //------------------------------------ Delete() ------------------------------------
 
+    // TODO - DONE
+
     @PostMapping("/delete/{taskId}")
     public String deleteTask(@PathVariable int taskId,
                              HttpSession session,
@@ -202,17 +207,24 @@ public class TaskController {
             return "redirect:/login";
         }
 
+        // Henter task for at hente dennes subprojectID til redirect
+        Task task = taskService.readById(taskId);
+        int subProjectId = task.getSubProjectId();
+
         taskService.deleteById(taskId);
 
         redirectAttributes.addFlashAttribute("success", "Task blev slettet.");
 
-        return "redirect:/tasks/tasks";
+        // Redirect: subproject-with-tasks.html
+        return "redirect:/subprojects/" + subProjectId + "/tasks";
+
     }
 
     //---------------------------------- DTO read() ------------------------------------
 
     // -------------------- Viser en task's tilknyttede brugere ------------------------
 
+    // TODO - DONE
     @GetMapping("/{taskId}/users")
     public String showTaskWithUsers(@PathVariable int taskId,
                                     HttpSession session,
@@ -246,6 +258,7 @@ public class TaskController {
 
     // -------------------- Viser en task's tilknyttede subtasks ---------------------
 
+    // TODO - DONE
     @GetMapping("/{taskId}/subtasks")
     public String showTaskWithSubTasks(@PathVariable int taskId,
                                        HttpSession session,

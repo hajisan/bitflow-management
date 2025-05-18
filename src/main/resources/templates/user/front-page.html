@@ -2,54 +2,82 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Front Page</title>
+    <title>Forside</title>
 </head>
 <body>
 
-<!-- DEBUGGER, hvis siden ikke vises for specifik bruger-rolle -->
-<h1>Her skal den dynamiske forside laves til admin, project manager og developer :)</h1>
-
-<div th:if="${error}" class="error" th:text="${error}"></div>
-<h1>Velkommen, <span th:text="${user.firstName} + ' ' + ${user.lastName}">Navn</span>!</h1>
-<p>Din rolle: <strong th:text="${user.role}">ROLLE</strong></p>
-
-<!-- ADMIN -->
-<div th:if="${user.role.name() == 'ADMIN'}">
-    <h2>Admin</h2>
-    <ul>
-        <li><a th:href="@{/users/users}">Se alle brugere</a></li>
-        <li><a th:href="@{/users/create}">Opret ny bruger</a></li>
-        <li><a th:href="@{/projects/list}">Projekter</a></li> <!-- Viser alle projekter, også duplikater -->
-        <li><a th:href="@{/subprojects}">Alle subprojekter</a></li>
-        <li><a th:href="@{/projects/create}">Opret nyt projekt</a></li>
-    </ul>
+<!-- Fejlbesked -->
+<div th:if="${error}" class="error-section">
+    <p th:text="${error}" class="error-message"></p>
 </div>
 
-<!-- Forside for projektleder -->
-<section th:if="${user.role.name() == 'PROJECT_MANAGER'}">
+<!-- Overskrift -->
+<h1>Velkommen, <span th:text="${session.currentUser.firstName + ' ' + session.currentUser.lastName}">Navn</span>!</h1>
+<p>Din rolle: <strong th:text="${session.currentUser.role}">ROLLE</strong></p>
+
+<!-- ADMIN -->
+<section th:if="${session.currentUser.role.name() == 'ADMIN'}" class="mini-info">
+    <h2>Admin</h2>
+
+    <div><a th:href="@{/users/list}">Se alle brugere</a></div>
+    <div><a th:href="@{/users/create}">Opret ny bruger</a></div>
+    <div><a th:href="@{/projects/list}">Se alle projekter</a></div>
+    <div><a th:href="@{/projects/create}">Opret projekt</a></div>
+    <div><a th:href="@{/subprojects/list}">Se alle subprojekter</a></div>
+    <div><a th:href="@{/tasks/list}">Se alle tasks</a></div>
+    <div><a th:href="@{/subtasks/list}">Se alle subtasks</a></div>
+    <div><a th:href="@{/timeentries/list}">Se alle tidsregistreringer</a></div>
+</section>
+
+<!-- PROJECT_MANAGER -->
+<section th:if="${session.currentUser.role.name() == 'PROJECT_MANAGER'}" class="mini-info">
     <h2>Projektleder</h2>
 
-    <section>
-        <h3>Egne projekter</h3>
-        <p>Se dine aktive og tidligere projekter.</p>
-        <a th:href="@{/users/{id}/projects(id=${user.userId})}">Gå til mine projekter</a>
-    </section>
+    <div>
+        <h3>Mine projekter</h3>
+        <a th:href="@{/users/{id}/projects(id=${session.currentUser.userId})}">Se projekter</a>
+    </div>
 
-    <section>
+    <div>
         <h3>Opret projekt</h3>
         <p>Start et nyt projekt og tildel deltagere.</p>
         <a th:href="@{/projects/create}">Opret nyt projekt</a>
-    </section>
+    </div>
 </section>
 
-
 <!-- DEVELOPER -->
-<div th:if="${user.role.name() == 'DEVELOPER'}">
+<section th:if="${session.currentUser.role.name() == 'DEVELOPER'}" class="mini-info">
     <h2>Udvikler</h2>
-    <ul>
-        <li><a th:href="@{/projects/list}">Mine opgaver</a></li> <!-- Viser kun brugerens projekter -->
 
-    </ul>
-</div>
+    <div>
+        <h3>Mine projekter</h3>
+        <a th:href="@{/users/{id}/projects(id=${session.currentUser.userId})}">
+            <button>Se projekter</button>
+        </a>
+    </div>
+
+    <div>
+        <h3>Mine subprojekter</h3>
+        <a th:href="@{/users/{id}/subprojects(id=${session.currentUser.userId})}">
+            <button>Se subprojekter</button>
+        </a>
+    </div>
+
+    <div>
+        <h3>Mine tasks</h3>
+        <a th:href="@{/users/{id}/tasks(id=${session.currentUser.userId})}">
+            <button>Se tasks</button>
+        </a>
+    </div>
+
+    <div>
+        <h3>Mine subtasks</h3>
+        <a th:href="@{/users/{id}/subtasks(id=${session.currentUser.userId})}">
+            <button>Se subtasks</button>
+        </a>
+    </div>
+
+</section>
+
 </body>
 </html>

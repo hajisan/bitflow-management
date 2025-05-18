@@ -1,36 +1,48 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>UserList</title>
+  <title>User List</title>
 </head>
 <body>
-<h1>Brugeroversigt</h1>
 
-<div th:if="${error}" class="error" th:text="${error}"></div>
+<h1>Liste af alle brugere</h1>
 
+<!-- Fejlbesked -->
+<section th:if="${error}" class="error-section">
+  <p th:text="${error}" class="error-message"></p>
+</section>
 
-<table>
-  <tr>
-    <th>Bruger-ID</th>
-    <th>Fornavn</th>
-    <th>Efternavn</th>
-    <th>E-mail</th>
-    <th>Rolle</th>
-  </tr>
-  <tr th:each="user : ${users}">
-    <td th:text="${user.userId}"></td>
-    <td th:text="${user.firstName}"></td>
-    <td th:text="${user.lastName}"></td>
-    <td th:text="${user.email}"></td>
-    <td th:text="${user.role}"></td>
-    <td>
-      <a th:href="@{/users/{id}(id=${user.userId})}">Se detaljer</a>
-    </td>
-    <td th:if="${isAdmin}">
-      <a th:href="@{/users/edit/{id}(id=${user.userId})}">Rediger</a>
-    </td>
+<!-- Brugerliste -->
+<section class="mini-info">
+  <div th:each="user : ${users}" class="list">
+    <div>Navn: <span th:text="${user.firstName + ' ' + user.lastName}"></span></div>
+    <div>Rolle: <span th:text="${user.role}"></span></div>
+    <div>
+      <a th:href="@{/users/{userId}(userId=${user.userId})}">
+        <button>Se detaljer</button>
+      </a>
+    </div>
+    <hr/>
+  </div>
+</section>
 
-  </tr>
-</table>
+<!-- Knap: Opret ny bruger -->
+<section class="form-actions">
+  <div>
+    <a th:href="@{/users/create}">
+      <button>Opret ny bruger</button>
+    </a>
+  </div>
+</section>
+
+<!-- Navigation -->
+<section class="navigation">
+  <div>
+    <a th:href="@{/users/profile}">
+      <button>Tilbage til forside</button>
+    </a>
+  </div>
+</section>
+
 </body>
 </html>

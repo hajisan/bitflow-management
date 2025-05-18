@@ -7,45 +7,85 @@
 <body>
 <h1>Rediger bruger</h1>
 
-<!--  Fejl-/succesbesked  -->
-<div th:if="${error}" class="error" th:text="${error}"></div>
-<div th:if="${success}" class="success" th:text="${success}"></div>
+<!-- Fejl-/succesbesked -->
+<section th:if="${error}" class="error-section">
+    <p th:text="${error}" class="error-message"></p>
+</section>
+<section th:if="${success}" class="success-section">
+    <p th:text="${success}" class="success-message"></p>
+</section>
 
-<form th:action="@{/users/update}" th:object="${userUpdateDTO}" method="post">
-    <input type="hidden" th:field="*{userId}" />
+<!-- Formular til redigering -->
+<section class="form-actions">
+    <form th:action="@{/users/update}" th:object="${userUpdateDTO}" method="post" class="edit-form">
 
-    <label>Fornavn:</label>
-    <input type="text" th:field="*{firstName}" required />
+        <input type="hidden" th:field="*{userId}"/>
 
-    <label>Efternavn:</label>
-    <input type="text" th:field="*{lastName}" required />
+        <div>
+            <label for="firstName">Fornavn:</label>
+            <input type="text" id="firstName" th:field="*{firstName}" required/>
+        </div>
 
-    <label>Email:</label>
-    <input type="email" th:field="*{email}" required />
+        <div>
+            <label for="lastName">Efternavn:</label>
+            <input type="text" id="lastName" th:field="*{lastName}" required/>
+        </div>
 
-    <label>Adgangskode (valgfrit):</label>
-    <input type="password" th:field="*{password}" />
+        <div>
+            <label for="email">E-mail:</label>
+            <input type="email" id="email" th:field="*{email}" required/>
+        </div>
 
-    <!-- rolle-felt i dropdown-menu -->
-    <label for="role">Rolle:</label>
-    <select id="role" name="role" th:field="*{role}">
-        <option value="ADMIN">Admin</option>
-        <option value="PROJECT_MANAGER">Projektleder</option>
-        <option value="DEVELOPER">Udvikler</option>
-    </select>
+        <div>
+            <label for="password">Adgangskode (valgfrit):</label>
+            <input type="password" id="password" th:field="*{password}"/>
+        </div>
+
+        <div>
+            <label for="role">Rolle:</label>
+            <select id="role" th:field="*{role}">
+                <option value="ADMIN">Admin</option>
+                <option value="PROJECT_MANAGER">Projektleder</option>
+                <option value="DEVELOPER">Udvikler</option>
+            </select>
+        </div>
+
+        <div>
+            <button type="submit">Opdater bruger</button>
+        </div>
+    </form>
+</section>
+
+<!-- Slet bruger -->
+<section class="form-actions">
+    <form th:action="@{/users/delete/{id}(id=${userUpdateDTO.userId})}" method="post"
+          onsubmit="return confirm('Er du sikker på, at du vil slette denne bruger?');">
+        <button type="submit">Slet bruger</button>
+    </form>
+</section>
 
 
-    <br>
-    <button type="submit">Opdater bruger</button>
-</form>
+<!-- Navigation -->
+<section class="navigation">
 
-<!-- Kun admin må slette -->
-<form th:action="@{/users/delete/{id}(id=${userUpdateDTO.userId})}" method="post"
-      onsubmit="return confirm('Er du sikker på, at du vil slette denne bruger?');">
-    <button type="submit">Slet bruger</button>
-</form>
+    <div>
+        <a th:href="@{/users/{id}(id=${userUpdateDTO.userId})}">
+            <button>Tilbage til detaljer</button>
+        </a>
+    </div>
 
+    <div>
+        <a th:href="@{/users/users}">
+            <button>Tilbage til alle brugere</button>
+        </a>
+    </div>
 
+    <div>
+        <a th:href="@{/users/profile}">
+            <button>Tilbage til forside</button>
+        </a>
+    </div>
 
+</section>
 </body>
 </html>

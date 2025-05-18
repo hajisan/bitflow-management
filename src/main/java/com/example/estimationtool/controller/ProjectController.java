@@ -80,6 +80,7 @@ public class ProjectController {
 
     //------------------------------------ Read() --------------------------------------
 
+    // TODO - DONE
     @GetMapping("/list")
     public String showAllProjects(HttpSession session,
                                   Model model,
@@ -180,6 +181,7 @@ public class ProjectController {
 
     //------------------------------------ Delete() ------------------------------------
 
+    // TODO - DONE
     @PostMapping("/delete/{projectId}")
     public String deleteProject(@PathVariable int projectId,
                                 HttpSession session,

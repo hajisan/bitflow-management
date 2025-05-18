@@ -12,18 +12,6 @@ import java.sql.PreparedStatement;
 
 import java.util.List;
 
-/*
-------------------------- Denne klasse håndterer: ------------------------
-
-Indsættelse i mellemtabeller ved create
-
-JOINs ved readAll() og readById() for at samle relaterede data
-
-Sletning i korrekt rækkefølge for at undgå foreign key-violations
-
-Opdatering i både hoved- og mellemtabeller
-
- */
 
 @Repository
 public class TimeEntryRepository implements ITimeEntryRepository {

@@ -29,7 +29,8 @@ public class UserController {
     }
 
     //--------------------------------- Efter login --------------------------------
-    
+
+    // TODO - DONE
     @GetMapping("/profile")
     public String getFrontPage(HttpSession session,
                                RedirectAttributes redirectAttributes,
@@ -51,6 +52,7 @@ public class UserController {
 
     //--------------------------------- Hent Create() ----------------------------------
 
+    // TODO - DONE
     @GetMapping("/create")
     public String showCreateUser(HttpSession session,
                                  Model model,
@@ -74,6 +76,7 @@ public class UserController {
 
     //------------------------------------ Create() ------------------------------------
 
+    // TODO - DONE
     @PostMapping("/create")
     public String createUser(@ModelAttribute("user") UserRegistrationDTO userDTO,
                              HttpSession session,
@@ -91,15 +94,16 @@ public class UserController {
 
         userService.createUser(currentUser, userDTO);
 
-        redirectAttributes.addFlashAttribute("success", "Bruger blev oprettet");
+        redirectAttributes.addFlashAttribute("success", "Bruger blev oprettet.");
 
-        return "redirect:/users/users";
+        return "redirect:/users/list";
 
     }
 
     //------------------------------------ Read() --------------------------------------
 
-    @GetMapping("list")
+    // TODO - DONE
+    @GetMapping("/list")
     public String showAllUsers(HttpSession session,
                                Model model,
                                RedirectAttributes redirectAttributes) {
@@ -120,9 +124,10 @@ public class UserController {
         return "user/user-list";
     }
 
+    // TODO - DONE
 
-    @GetMapping("/{id}")
-    public String showUser(@PathVariable int id,
+    @GetMapping("/{userId}")
+    public String showUser(@PathVariable int userId,
                            HttpSession session,
                            Model model,
                            RedirectAttributes redirectAttributes) {
@@ -137,7 +142,7 @@ public class UserController {
             return "redirect:/login";
         }
 
-        UserViewDTO userViewDTO = userService.readById(id);
+        UserViewDTO userViewDTO = userService.readById(userId);
         model.addAttribute("user", userViewDTO);
 
         return "user/user-detail";
@@ -146,8 +151,9 @@ public class UserController {
 
     //------------------------------------ Hent Update() -------------------------------
 
-    @GetMapping("/edit/{id}")
-    public String showEditUser(@PathVariable int id,
+    // TODO - DONE
+    @GetMapping("/edit/{userId}")
+    public String showEditUser(@PathVariable int userId,
                                HttpSession session,
                                Model model,
                                RedirectAttributes redirectAttributes) {
@@ -164,7 +170,7 @@ public class UserController {
 
 
         // Kalder metode, der konverterer UserViewDTO til en UserUpdateDTO
-        UserUpdateDTO userUpdateDTO = userService.getUserUpdateDTOById(id);
+        UserUpdateDTO userUpdateDTO = userService.getUserUpdateDTOById(userId);
         model.addAttribute("userUpdateDTO", userUpdateDTO);
 
         return "user/edit-user";
@@ -173,6 +179,7 @@ public class UserController {
 
     //------------------------------------ Update() ------------------------------------
 
+    // TODO - DONE
     @PostMapping("/update")
     public String updateUser(@ModelAttribute("userUpdateDTO") UserUpdateDTO userUpdateDTO,
                              HttpSession session,
@@ -198,6 +205,8 @@ public class UserController {
 
     //------------------------------------ Delete() ------------------------------------
 
+
+    // TODO - DONE
     @PostMapping("/delete/{userId}")
     public String deleteUser(@PathVariable int userId,
                              HttpSession session,
@@ -217,11 +226,12 @@ public class UserController {
 
         redirectAttributes.addFlashAttribute("success", "Brugeren blev slettet.");
 
-        return "redirect:/users/users";
+        return "redirect:/users/list";
 
     }
     //---------------------------------- DTO read() ------------------------------------
 
+    // TODO - DONE
 
     // -------------------- Viser brugerens tilknyttede projekter ----------------------
 
@@ -249,8 +259,9 @@ public class UserController {
 
     // -------------------- Viser brugerens tilknyttede subprojekter --------------------
 
-    @GetMapping("/{id}/subprojects")
-    public String showUserWithSubProjects(@PathVariable int id,
+    // TODO - DONE
+    @GetMapping("/{userId}/subprojects")
+    public String showUserWithSubProjects(@PathVariable int userId,
                                           HttpSession session,
                                           Model model,
                                           RedirectAttributes redirectAttributes) {
@@ -265,7 +276,7 @@ public class UserController {
             return "redirect:/login";
         }
 
-        UserWithSubProjectsDTO userWithSubProjectsDTO = userService.readAllSubProjectsByUserId(id);
+        UserWithSubProjectsDTO userWithSubProjectsDTO = userService.readAllSubProjectsByUserId(userId);
         model.addAttribute("userWithSubProjects", userWithSubProjectsDTO);
 
         return "user/user-with-subprojects";
@@ -273,8 +284,9 @@ public class UserController {
 
     // -------------------- Viser brugerens tilknyttede tasks --------------------
 
-    @GetMapping("/{id}/tasks")
-    public String showUserWithTasks(@PathVariable int id,
+    // TODO - DONE
+    @GetMapping("/{userId}/tasks")
+    public String showUserWithTasks(@PathVariable int userId,
                                     HttpSession session,
                                     Model model,
                                     RedirectAttributes redirectAttributes) {
@@ -289,7 +301,7 @@ public class UserController {
             return "redirect:/login";
         }
 
-        UserWithTasksDTO userWithTasksDTO = userService.readAllTasksByUserId(id);
+        UserWithTasksDTO userWithTasksDTO = userService.readAllTasksByUserId(userId);
         model.addAttribute("userWithTasks", userWithTasksDTO);
 
         return "user/user-with-tasks";
@@ -298,8 +310,9 @@ public class UserController {
 
     // ------------------ Viser brugerens tilknyttede subtasks --------------------
 
-    @GetMapping("/{id}/subtasks")
-    public String showUserWithSubTasks(@PathVariable int id,
+    // TODO - DONE
+    @GetMapping("/{userId}/subtasks")
+    public String showUserWithSubTasks(@PathVariable int userId,
                                        HttpSession session,
                                        Model model,
                                        RedirectAttributes redirectAttributes) {
@@ -315,7 +328,7 @@ public class UserController {
         }
 
         // Henter DTO: bruger + subopgaver
-        UserWithSubTasksDTO userWithSubTasksDTO = userService.readAllSubTasksByUserId(id);
+        UserWithSubTasksDTO userWithSubTasksDTO = userService.readAllSubTasksByUserId(userId);
         // Lægger DTO på modellen
         model.addAttribute("userWithSubTasks", userWithSubTasksDTO);
 

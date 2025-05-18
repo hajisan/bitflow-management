@@ -44,7 +44,6 @@ public class ProjectService {
 
         Project projectWithUser = iProjectRepository.create(project);
 
-        // TODO - OBS! Projekt tildeles bruger ved oprettelse. Det er et forretningsvalg.
         iProjectRepository.assignUserToProject(currentUser.getUserId(), project.getProjectId());
 
         return projectWithUser;
@@ -53,10 +52,10 @@ public class ProjectService {
 
     //------------------------------------ Read() ------------------------------------
 
+    // TODO - DONE
     public List<Project> readAll(UserViewDTO currentUser) {
 
-        // Kun admin må se alle projekter
-        //RoleCheck.ensureAdmin(currentUser.getRole());
+        RoleCheck.ensureAdmin(currentUser.getRole());
 
         return iProjectRepository.readAll();
     }
@@ -156,6 +155,7 @@ public class ProjectService {
     // --- Find subprojekter for ét projekt ---
 
     public ProjectWithSubProjectsDTO readAllFromProjectId(int projectId) {
+
         Project project = iProjectRepository.readById(projectId);
         List<SubProject> subProjects = iSubProjectRepository.readAllFromProjectId(projectId);
 

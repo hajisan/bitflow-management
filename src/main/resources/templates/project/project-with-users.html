@@ -7,45 +7,75 @@
 <body>
 
 
-<h1>Projektbeskrivelse</h1>
+<h1>Brugere tilknyttet dette projekt</h1>
 
-<p>ID: <span th:text="${projectWithUsers.project.projectId}"></span></p>
-<p>Navn: <span th:text="${projectWithUsers.project.name}"></span></p>
-<p>Beskrivelse: <span th:text="${projectWithUsers.project.description}"></span></p>
-<p>Deadline: <span th:text="${projectWithUsers.project.deadline}"></span></p>
-<p>Status: <span th:text="${projectWithUsers.project.status}"></span></p>
+<!-- Fejlbesked -->
+<section th:if="${error}" class="error-section">
+    <p th:text="${error}" class="error-message"></p>
+</section>
+
+<!-- Kort info om projekt -->
+<section class="mini-info">
+    <div>Navn: <span th:text="${projectWithUsers.project.name}"></span></div>
+    <div>Deadline: <span th:text="${projectWithUsers.project.deadline}"></span></div>
+    <div>Aktuelle tidsforbrug: <span th:text="${projectWithUsers.project.timeSpent} + ' timer'"></span></div>
+    <div>Status: <span th:text="${projectWithUsers.project.status}"></span></div>
+</section>
 
 <h2>Brugere tilknyttet projektet</h2>
 
-<!-- Hvis listen ikke er tom -->
-<p>Brugere:</p>
-<ul th:if="${!#lists.isEmpty(projectWithUsers.userViewDTOList)}">
-  <li th:each="user : ${projectWithUsers.userViewDTOList}">
-    <span th:text="${user.firstName + ' ' + user.lastName + ' (' + user.role + ')'}"></span>
-  </li>
-</ul>
-
-<!-- Hvis listen er tom -->
-<p th:if="${#lists.isEmpty(projectWithUsers.userViewDTOList)}">
-  Der er ingen brugere tilknyttet dette projekt.
-</p>
+<!-- Kort info om brugeren -->
+<section class="mini-info">
+    <div th:if="${!#lists.isEmpty(projectWithUsers.userViewDTOList)}">
+        <div th:each="user : ${projectWithUsers.userViewDTOList}" class="user-summary">
+            <span th:text="${user.firstName + ' ' + user.lastName + ' (' + user.role + ')'}"></span>
+            <a th:href="@{/users/{id}(id=${user.userId})}">Se detaljer</a>
+        </div>
+    </div>
+    <div th:if="${#lists.isEmpty(projectWithUsers.userViewDTOList)}">
+        Der er ingen brugere tilknyttet dette projekt.
+    </div>
+</section>
 
 <h3>Tildel bruger(e) til projekt</h3>
 
-<form th:action="@{'/projects/' + ${projectWithUsers.project.projectId} + '/assignusers'}" method="post">
-    <label for="user-select">Vælg én eller flere brugere:</label><br/>
-    <select id="user-select" name="userIds" multiple size="5">
-        <option th:each="user : ${unassignedUsers}"
-                th:value="${user.userId}"
-                th:text="${user.firstName + ' ' + user.lastName + ' (' + user.role + ')'}">
-        </option>
-    </select>
-    <br/><br/>
-    <button type="submit">Tildel valgte brugere</button>
-</form>
+<!-- Formular til tildeling af brugere -->
+<section class="form-actions">
+    <form th:action="@{'/projects/' + ${projectWithUsers.project.projectId} + '/assignusers'}" method="post">
+        <div>
+            <label for="user-select">Vælg én eller flere brugere:</label><br/>
+            <select id="user-select" name="userIds" multiple size="5">
+                <option th:each="user : ${unassignedUsers}"
+                        th:value="${user.userId}"
+                        th:text="${user.firstName + ' ' + user.lastName + ' (' + user.role + ')'}">
+                </option>
+            </select>
+        </div>
+        <div>
+            <button type="submit">Tildel valgte brugere</button>
+        </div>
+    </form>
+</section>
 
 
+<!-- Navigation -->
+<section class="navigation">
 
-<a th:href="@{/projects/list}">Tilbage til projektoversigt</a>
+    <!-- Fuld brugerliste er kun for admin pg projektleder: user-list.html -->
+    <a th:if="${session.currentUser.role.name() == 'ADMIN' or session.currentUser.role.name() == 'PROJECT_MANAGER'}"
+       th:href="@{/users/list}">
+        Se alle brugere
+    </a>
+
+    <!-- Fuld projektliste er kun for admin: project-list.html -->
+    <a th:if="${session.currentUser.role.name() == 'ADMIN'}"
+       th:href="@{/projects/list}">
+        Tilbage til projektliste
+    </a>
+
+    <!-- Profilside er for alle: front-page.html -->
+    <a th:href="@{/users/profile}">Tilbage til forside</a>
+</section>
+
 </body>
 </html>

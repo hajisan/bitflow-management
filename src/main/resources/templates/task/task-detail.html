@@ -6,30 +6,72 @@
 </head>
 <body>
 
-<h1>Opgavedetaljer</h1>
+<h1>Task detaljer</h1>
 
 <!-- Fejlbesked -->
-<p th:if="${error}" th:text="${error}"></p>
+<section th:if="${error}" class="error-section">
+    <p th:text="${error}" class="error-message"></p>
+</section>
 
 <!-- Viser detaljer om task -->
-<ul>
-    <li><strong>ID:</strong> <span th:text="${task.taskId}"></span></li>
-    <li><strong>Subprojekt ID:</strong> <span th:text="${task.subProjectId}"></span></li>
-    <li><strong>Navn:</strong> <span th:text="${task.name}"></span></li>
-    <li><strong>Beskrivelse:</strong> <span th:text="${task.description}"></span></li>
-    <li><strong>Deadline:</strong> <span th:text="${task.deadline}"></span></li>
-    <li><strong>Estimeret tid:</strong> <span th:text="${task.estimatedTime}"></span></li>
-    <li><strong>Forbrugt tid:</strong> <span th:text="${task.timeSpent}"></span></li>
-    <li><strong>Status:</strong> <span th:text="${task.status}"></span></li>
-</ul>
+<section class="details-grid">
+    <div>Navn: <span th:text="${task.name}"></span></div>
+    <div>Beskrivelse: <span th:text="${task.description}"></span></div>
+    <div>Deadline: <span th:text="${task.deadline}"></span></div>
+    <div>Estimeret tid: <span th:text="${task.estimatedTime}"></span> timer</div>
+    <div>Tidsforbrug: <span th:text="${task.timeSpent}"></span> timer</div>
+    <div>Status: <span th:text="${task.status}"></span></div>
+</section>
 
-<!-- Rediger-link -->
-<p>
-    <a th:href="@{/tasks/edit/{id}(id=${task.taskId})}">Rediger opgave</a>
-</p>
+<!-- Rediger task er for alle -->
+<section class="form-actions">
+    <div>
+        <a th:href="@{/tasks/edit/{taskId}(taskId=${task.taskId})}">
+            <button>Rediger task</button>
+        </a>
+    </div>
+</section>
 
-<!-- Tilbage-knap -->
-<p><a th:href="@{/tasks}">Tilbage til opgaveliste</a></p>
+
+
+<!-- Navigation -->
+<section class="navigation">
+
+    <!-- Til taskens subtask-liste -->
+    <div>
+        <a th:href="@{/tasks/{taskId}/subtasks(taskId=${task.taskId})}">
+            <button>Se tilknyttede subtasks</button>
+        </a>
+    </div>
+
+    <!-- Se tilknyttede brugere til task -->
+    <div>
+        <a th:href="@{/tasks/{taskId}/users(taskId=${task.taskId})}">
+            <button>Se tilknyttede brugere</button>
+        </a>
+    </div>
+
+    <!-- Tilbage til subproject-with-tasks.html er for alle -->
+    <div>
+        <a th:href="@{/subprojects/{id}/tasks(id=${task.subProjectId})}">
+            <button>Tilbage til subprojektets tasks</button>
+        </a>
+    </div>
+
+    <!-- Tilbage til tasks-list.html er kun for admin -->
+    <div th:if="${session.currentUser.role.name() == 'ADMIN'}">
+        <a th:href="@{/tasks/list}">
+            <button>Tilbage til alle tasks</button>
+        </a>
+    </div>
+
+    <!-- Tilbage til front-page.html er for alle -->
+    <div>
+        <a th:href="@{/users/profile}">
+            <button>Tilbage til forside</button>
+        </a>
+    </div>
+</section>
 
 </body>
 </html>

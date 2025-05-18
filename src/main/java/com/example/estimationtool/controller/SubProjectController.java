@@ -80,6 +80,8 @@ public class SubProjectController {
 
     //------------------------------------ Read() --------------------------------------
 
+    // TODO - DONE
+
     @GetMapping("/list")
     public String showAllSubProjects(HttpSession session,
                                      Model model,
@@ -129,11 +131,11 @@ public class SubProjectController {
 
     // TODO - DONE
 
-    @GetMapping("/edit/{id}")
+    @GetMapping("/edit/{subprojectId}")
     public String showEditSubProject(HttpSession session,
                                      RedirectAttributes redirectAttributes,
                                      Model model,
-                                     @PathVariable int id) {
+                                     @PathVariable int subprojectId) {
 
         // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
@@ -145,7 +147,7 @@ public class SubProjectController {
             return "redirect:/login";
         }
 
-        SubProject subProject = subProjectService.readById(id);
+        SubProject subProject = subProjectService.readById(subprojectId);
         model.addAttribute("subproject", subProject);
 
         return "subproject/edit-subproject";
@@ -176,6 +178,8 @@ public class SubProjectController {
 
     //------------------------------------ Delete() ------------------------------------
 
+    // TODO - DONE
+
     @PostMapping("/delete/{subprojectId}")
     public String deleteSubProject(@PathVariable int subprojectId,
                                    HttpSession session,
@@ -205,6 +209,7 @@ public class SubProjectController {
 
     //------------------------------------ DTO'er ------------------------------------
 
+    // TODO - DONE
 
     // --- Viser brugere tilknyttet ét subprojekt ---
 
@@ -236,10 +241,11 @@ public class SubProjectController {
 
     }
 
+    // TODO - DONE
     // --- Viser tasks tilknyttet ét subprojekt ---
 
-    @GetMapping("/{projectId}/tasks")
-    public String showSubProjectWithTasks(@PathVariable int projectId,
+    @GetMapping("/{subprojectId}/tasks")
+    public String showSubProjectWithTasks(@PathVariable int subprojectId,
                                           HttpSession session,
                                           Model model,
                                           RedirectAttributes redirectAttributes) {
@@ -255,7 +261,7 @@ public class SubProjectController {
         }
 
         // Henter subprojekt + tilknyttede tasks
-        SubProjectWithTasksDTO subProjectWithTasksDTO = subProjectService.readAllTasksBySubProjectId(projectId);
+        SubProjectWithTasksDTO subProjectWithTasksDTO = subProjectService.readAllTasksBySubProjectId(subprojectId);
         // Tilføjer til model
         model.addAttribute("subProjectWithTasks", subProjectWithTasksDTO);
 

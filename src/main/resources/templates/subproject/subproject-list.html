@@ -2,36 +2,42 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Alle subprojekter</title>
+    <title>All SubProjects</title>
 </head>
 <body>
-<table>
-    <tr>
-        <th>Status</th>
-        <th>ProjektID</th>
-        <th>SubprojektID</th>
-        <th>Navn</th>
-        <th>Beskrivelse</th>
-        <th>Estimeret tid</th>
-        <th>Tidsforbrug logget</th>
-        <th>Deadline</th>
-    </tr>
-    <tr th:each="subproject : ${allSubprojects}">
-        <td th:text="${subproject.status}"></td>
-        <td th:text="${subproject.projectId}"></td>
-        <td th:text="${subproject.subProjectId}"></td>
-        <td th:text="${subproject.name}"></td>
-        <td th:text="${subproject.description}"></td>
-        <td th:text="${subproject.estimatedTime}"></td>
-        <td th:text="${subproject.timeSpent}"></td>
-        <td th:text="${subproject.deadline}"></td>
-        <td>
-            <a th:href="@{/subprojects/{id}(id=${subproject.subProjectId})}">Se detaljer</a>
-        </td>
-        <td th:if="${isAdmin or isProjectManager}">
-            <a th:href="@{/subprojects/edit/{id}(id=${subproject.subProjectId})}">Rediger</a>
-        </td>
-    </tr>
-</table>
+<h1>Alle subprojekter</h1>
+
+<!-- Fejlbesked -->
+<section th:if="${error}" class="error-section">
+    <p th:text="${error}" class="error-message"></p>
+</section>
+
+<!-- Liste af subprojekter er kun for admin -->
+<section th:if="${session.currentUser.role.name() == 'ADMIN'}" class="mini-info">
+    <div th:each="subproject : ${allSubprojects}" class="list">
+        <div>Navn: <span th:text="${subproject.name}"></span></div>
+        <div>Projekt ID: <span th:text="${subproject.projectId}"></span></div>
+        <div>
+            <a th:href="@{/subprojects/{subprojectId}(subprojectId=${subproject.subProjectId})}">
+                <button>Se detaljer</button>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Hvis en anden rolle forsøger at tilgå -->
+<section th:unless="${session.currentUser.role.name() == 'ADMIN'}">
+    <p>Du har ikke adgang til denne side.</p>
+</section>
+
+<!-- Navigation -->
+<section class="navigation">
+    <div>
+        <a th:href="@{/users/profile}">
+            <button>Tilbage til forside</button>
+        </a>
+    </div>
+</section>
+
 </body>
 </html>

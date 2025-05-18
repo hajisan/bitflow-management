@@ -2,51 +2,79 @@
 <html lang="en"  xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Tasks With Users</title>
+    <title>Task With Users</title>
 </head>
 <body>
-<h1>Opgavebeskrivelse</h1>
+<h1>Brugere tilknyttet en task</h1>
 
-<p>ID: <span th:text="${taskWithUsers.task.taskId}"></span></p>
-<p>Navn: <span th:text="${taskWithUsers.task.name}"></span></p>
-<p>Beskrivelse: <span th:text="${taskWithUsers.task.description}"></span></p>
-<p>Deadline: <span th:text="${taskWithUsers.task.deadline}"></span></p>
-<p>Status: <span th:text="${taskWithUsers.task.status}"></span></p>
-<p>Estimeret tid: <span th:text="${taskWithUsers.task.estimatedTime}"></span> timer</p>
-<p>Forbrugt tid: <span th:text="${taskWithUsers.task.timeSpent}"></span> timer</p>
+<!-- Fejlbesked -->
+<section th:if="${error}" class="error-section">
+    <p th:text="${error}" class="error-message"></p>
+</section>
 
+<!-- Kort info om task -->
+<section class="mini-info">
+    <div>Navn: <span th:text="${taskWithUsers.task.name}"></span></div>
+    <div>Deadline: <span th:text="${taskWithUsers.task.deadline}"></span></div>
+    <div>Status: <span th:text="${taskWithUsers.task.status}"></span></div>
+</section>
 
-<h2>Brugere tilknyttet opgaven</h2>
+<h3>Brugerne</h3>
 
-<!-- Hvis listen ikke er tom -->
-<ul th:if="${!#lists.isEmpty(taskWithUsers.userViewDTOList)}">
-  <li th:each="user : ${taskWithUsers.userViewDTOList}">
-    <span th:text="${user.firstName + ' ' + user.lastName + ' (' + user.role + ')'}"></span>
-  </li>
-</ul>
+<!-- Brugere tilknyttet opgaven -->
+<section class="mini-info">
+    <div th:if="${!#lists.isEmpty(taskWithUsers.userViewDTOList)}">
+        <div th:each="user : ${taskWithUsers.userViewDTOList}" class="user-summary">
+            <span th:text="${user.firstName + ' ' + user.lastName + ' (' + user.role + ')'}"></span>
+            <a th:href="@{/users/{userId}(userId=${user.userId})}">Se detaljer</a>
+        </div>
+    </div>
 
-<!-- Hvis listen er tom -->
-<p th:if="${#lists.isEmpty(taskWithUsers.userViewDTOList)}">
-  Der er ingen brugere tilknyttet denne opgave.
-</p>
+    <!-- Hvis listen er tom -->
+    <div th:if="${#lists.isEmpty(taskWithUsers.userViewDTOList)}">
+        Der er ingen brugere tilknyttet denne opgave.
+    </div>
+</section>
 
 <!-- Tilknyt brugere til task -->
-<h2>Tildel nye brugere</h2>
+<h3>Tildel nye brugere</h3>
 
-<form th:action="@{'/tasks/tasks/' + ${taskWithUsers.task.taskId} + '/assignusers'}" method="post">
+<section class="form-actions">
+    <form th:action="@{'/tasks/tasks/' + ${taskWithUsers.task.taskId} + '/assignusers'}" method="post">
+        <div>
+            <label for="user-select">Vælg én eller flere brugere:</label><br/>
+            <select id="user-select" name="userIds" multiple size="5">
+                <option th:each="user : ${unassignedUsers}"
+                        th:value="${user.userId}"
+                        th:text="${user.firstName + ' ' + user.lastName + ' (' + user.role + ')'}">
+                </option>
+            </select>
+        </div>
+        <div>
+            <button type="submit">Tildel valgte brugere</button>
+        </div>
+    </form>
+</section>
 
-    <label for="user-select">Vælg én eller flere brugere:</label><br/>
-    <select name="userIds" multiple size="5" id="user-select">
-        <option th:each="user : ${unassignedUsers}"
-                th:value="${user.userId}"
-                th:text="${user.firstName + ' ' + user.lastName + ' (' + user.role + ')'}">
-        </option>
-    </select>
+<!-- Navigation -->
+<section class="navigation">
+    <div>
+        <a th:href="@{/tasks/{id}(id=${taskWithUsers.task.taskId})}">
+            <button>Tilbage til task</button>
+        </a>
+    </div>
 
-    <br/><br/>
-    <button type="submit">Tildel valgte brugere</button>
-</form>
+    <div th:if="${session.currentUser.role.name() == 'ADMIN'}">
+        <a th:href="@{/tasks/list}">
+            <button>Tilbage til alle tasks></button>
+        </a>
+    </div>
 
-<a th:href="@{/tasks/list}">Tilbage til opgaveliste</a>
+    <div>
+        <a th:href="@{/users/profile}">
+            <button>Tilbage til forside</button>
+        </a>
+    </div>
+</section>
 </body>
 </html>

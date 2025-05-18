@@ -5,33 +5,45 @@
     <title>User With SubProjects</title>
 </head>
 <body>
-<h1>Brugeroplysninger</h1>
+<h1>Brugerens subprojekter</h1>
+<!-- Kort info om brugeren -->
+<section class="mini-info">
+    <div>Fornavn: <span th:text="${userWithSubProjects.user.firstName}"></span></div>
+    <div>Efternavn: <span th:text="${userWithSubProjects.user.lastName}"></span></div>
+    <div>Rolle: <span th:text="${userWithSubProjects.user.role}"></span></div>
+</section>
 
-<p>
-    Navn:
-    <span th:text="${userWithSubProjects.user.firstName}"></span>
-    <span th:text="${userWithSubProjects.user.lastName}"></span>
-</p>
-<p>ID: <span th:text="${userWithSubProjects.user.userId}"></span></p>
-<p>Email: <span th:text="${userWithSubProjects.user.email}"></span></p>
-<p>Rolle: <span th:text="${userWithSubProjects.user.role}"></span></p>
+<h3>Subprojekter</h3>
+<!-- Subprojekter -->
+<section class="mini-info">
+    <div th:if="${!#lists.isEmpty(userWithSubProjects.subProjectList)}">
+        <div th:each="sub : ${userWithSubProjects.subProjectList}" class="list">
+            <div>Navn: <span th:text="${sub.name}"></span></div>
+            <div>Status: <span th:text="${sub.status}"></span></div>
+            <div>Deadline: <span th:text="${sub.deadline}"></span></div>
+            <div>
+                <a th:href="@{/subprojects/{id}(id=${sub.subProjectId})}">
+                    <button>Se detaljer</button>
+                </a>
+            </div>
+            <hr/>
+        </div>
+    </div>
 
-<h2>Subprojekter</h2>
+    <!-- Hvis der ingen subprojekter er -->
+    <div th:if="${#lists.isEmpty(userWithSubProjects.subProjectList)}">
+        Brugeren <span th:text="${userWithSubProjects.user.firstName}"></span> har ingen tilknyttede subprojekter.
+    </div>
+</section>
 
-<!-- Subprojekter hvis listen ikke er tom -->
-<ul>
-    <li th:each="sub : ${userWithSubProjects.subProjectList}">
-        <strong th:text="${sub.name}"></strong> –
-        <em>Status:</em> <span th:text="${sub.status}"></span>,
-        <em>Tidsestimat:</em> <span th:text="${sub.estimatedTime}"></span> timer,
-        <em>Deadline:</em> <span th:text="${sub.deadline}"></span>
-    </li>
-</ul>
-
-<!-- Hvis listen er tom -->
-<p th:if="${#lists.isEmpty(userWithSubProjects.subProjectList)}">
-    Brugeren <span th:text="${userWithSubProjects.user.firstName}"></span> har ikke nogle tilknyttede subprojekter.
-</p>
+<!-- Navigation -->
+<section class="navigation">
+    <div>
+        <a th:href="@{/users/profile}">
+            <button>Tilbage til forside</button>
+        </a>
+    </div>
+</section>
 
 </body>
 </html>

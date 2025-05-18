@@ -10,6 +10,7 @@ import com.example.estimationtool.repository.interfaces.ITaskRepository;
 import com.example.estimationtool.repository.interfaces.IUserRepository;
 import com.example.estimationtool.toolbox.check.DeadlineCheck;
 import com.example.estimationtool.toolbox.check.StatusCheck;
+import com.example.estimationtool.toolbox.controllerAdvice.UserFriendlyException;
 import com.example.estimationtool.toolbox.dto.SubProjectWithTasksDTO;
 import com.example.estimationtool.toolbox.dto.SubProjectWithUsersDTO;
 import com.example.estimationtool.toolbox.dto.UserViewDTO;
@@ -69,16 +70,6 @@ public class SubProjectService {
                 DeadlineCheck.checkForDeadlineInput(subProject.getDeadline(), existingSubProject.getDeadline())
         );
 
-        if (subProject.getName() != null && subProject.getName().isBlank()) {
-            throw new IllegalArgumentException("Subprojektets navn må ikke være tomt, hvis det er udfyldt.");
-        }
-        if (subProject.getEstimatedTime() != 0 && subProject.getEstimatedTime() < 0) {
-            throw new IllegalArgumentException("Estimeret tid må ikke være negativ.");
-        }
-
-            // TODO - Dette tvinger brugeren til at skulle udfylde felter igen. Jeg har tilføjet
-            // TODO -> to lempelige checks ovenover
-
         // Statusvalidering: SubProject må kun sættes til DONE, hvis alle Tasks er DONE
         if (subProject.getStatus() == Status.DONE) {
             List<Task> tasks = iTaskRepository.readAllBySubProjectId(subProject.getSubProjectId());
@@ -86,7 +77,7 @@ public class SubProjectService {
             SubProjectWithTasksDTO dto = new SubProjectWithTasksDTO(subProject, tasks);
 
             if (!statusCheck.canMarkSubProjectAsDone(dto)) {
-                throw new IllegalStateException("Subprojektet kan ikke markeres som færdigt, før alle tasks er færdige.");
+                throw new UserFriendlyException("Subprojektet kan ikke markeres som færdigt, før alle tasks er færdige.", "/subprojects/edit/" + subProject.getSubProjectId());
             }
         }
 
@@ -99,11 +90,9 @@ public class SubProjectService {
 
         // Kun admin eller projektleder må slette et subprojekt
         RoleCheck.ensureAdminOrProjectManager(currentUser.getRole());
-        if (id <= 0) {
-            throw new IllegalArgumentException("Subprojektet med id " + id + " findes ikke, da id er 0 eller negativt.");
-        } else {
+
             iSubProjectRepository.deleteById(id);
-        }
+
     }
 
     //---------------------------------- Til DTO'er -----------------------------------

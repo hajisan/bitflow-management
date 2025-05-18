@@ -15,7 +15,7 @@ import java.util.List;
 
 
 @Controller
-@RequestMapping("subtasks")
+@RequestMapping("/subtasks")
 public class SubTaskController {
 
     private final SubTaskService subTaskService;
@@ -62,7 +62,6 @@ public class SubTaskController {
 
     //------------------------------------ Create() ------------------------------------
 
-    // TODO - DONE
 
     @PostMapping("/create")
     public String createSubTask(@ModelAttribute("subtask") SubTask subTask,
@@ -90,7 +89,8 @@ public class SubTaskController {
 
     //------------------------------------ Read() --------------------------------------
 
-    @GetMapping("subtasks")
+    // TODO - DONE
+    @GetMapping("/list")
 
     public String showAllSubTasks(Model model,
                                   HttpSession session,
@@ -114,8 +114,9 @@ public class SubTaskController {
 
     }
 
-    @GetMapping("/{id}")
-    public String showSubTask(@PathVariable int id,
+
+    @GetMapping("/{subtaskId}")
+    public String showSubTask(@PathVariable int subtaskId,
                               Model model,
                               HttpSession session,
                               RedirectAttributes redirectAttributes) {
@@ -132,7 +133,7 @@ public class SubTaskController {
         }
 
         // Henter alle subtasks
-        SubTask subTask = subTaskService.readById(id);
+        SubTask subTask = subTaskService.readById(subtaskId);
         model.addAttribute("subtask", subTask);
 
         // Henter alle brugere (for dropdown menu)
@@ -140,7 +141,7 @@ public class SubTaskController {
         model.addAttribute("allUserList", allUserList);
 
         // Henter brugeren tilknyttet subtask
-        UserViewDTO assignedUser = subTaskService.readAssignedUserBySubTaskId(id); // denne metode laver vi straks
+        UserViewDTO assignedUser = subTaskService.readAssignedUserBySubTaskId(subtaskId); // denne metode laver vi straks
         model.addAttribute("assignedUser", assignedUser);
 
         return "subtask/subtask-detail";
@@ -148,8 +149,9 @@ public class SubTaskController {
     }
     //------------------------------------ Hent Update() -------------------------------
 
-    @GetMapping("/edit/{id}")
-    public String showEditSubTask(@PathVariable int id,
+
+    @GetMapping("/edit/{subtaskId}")
+    public String showEditSubTask(@PathVariable int subtaskId,
                                   Model model,
                                   HttpSession session,
                                   RedirectAttributes redirectAttributes) {
@@ -165,15 +167,16 @@ public class SubTaskController {
             return "redirect:/login";
         }
 
-        SubTask subTask = subTaskService.readById(id);
+        SubTask subTask = subTaskService.readById(subtaskId);
 
         model.addAttribute("subtask", subTask);
-        model.addAttribute("statuses", Status.values()); //Fordi Thymeleaf ikke vil læse vores enum
+//        model.addAttribute("statuses", Status.values()); //Fordi Thymeleaf ikke vil læse vores enum
 
         return "subtask/edit-subtask";
     }
 
     //------------------------------------ Update() ------------------------------------
+
 
     @PostMapping("/update")
     public String updateSubTask(@ModelAttribute("subtask") SubTask subTask,
@@ -201,8 +204,9 @@ public class SubTaskController {
 
     //------------------------------------ Delete() ------------------------------------
 
-    @PostMapping("/delete/{id}")
-    public String deleteSubTask(@PathVariable int id,
+
+    @PostMapping("/delete/{subtaskId}")
+    public String deleteSubTask(@PathVariable int subtaskId,
                                 HttpSession session,
                                 RedirectAttributes redirectAttributes) {
 
@@ -216,11 +220,11 @@ public class SubTaskController {
             return "redirect:/login";
         }
 
-        subTaskService.deleteById(id);
+        subTaskService.deleteById(subtaskId);
 
         redirectAttributes.addFlashAttribute("success", "Subtask blev slettet.");
 
-        return "redirect:/subtasks/subtasks";
+        return "redirect:/subtasks/";
     }
 
     //---------------------------------- DTO read() ------------------------------------
@@ -228,8 +232,8 @@ public class SubTaskController {
 
     // -------------------- Viser en subtask's tilknyttede timeEntries ----------------
 
-    @GetMapping("/{id}/timeentries")
-    public String showSubTaskWithTimeEntries(@PathVariable int id,
+    @GetMapping("/{subtaskId}/timeentries")
+    public String showSubTaskWithTimeEntries(@PathVariable int subtaskId,
                                              HttpSession session,
                                              Model model,
                                              RedirectAttributes redirectAttributes) {
@@ -243,7 +247,7 @@ public class SubTaskController {
             return "redirect:/login";
         }
 
-        SubTaskWithTimeEntriesDTO dto = subTaskService.readAllTimeEntriesBySubTaskId(id);
+        SubTaskWithTimeEntriesDTO dto = subTaskService.readAllTimeEntriesBySubTaskId(subtaskId);
         model.addAttribute("subTaskWithTimeEntries", dto);
 
         return "subtask/subtask-with-timeentries";
@@ -251,8 +255,8 @@ public class SubTaskController {
 
     //------------------------- POST Assign mig selv til SubTask -----------------------
 
-    @PostMapping("/{id}/assignme")
-    public String assignSelfToSubTask(@PathVariable int id,
+    @PostMapping("/{userId}/assignme")
+    public String assignSelfToSubTask(@PathVariable int userId,
                                       HttpSession session,
                                       RedirectAttributes redirectAttributes) {
 
@@ -265,10 +269,10 @@ public class SubTaskController {
             return "redirect:/login";
         }
 
-        subTaskService.assignUserToSubTask(currentUser, currentUser.getUserId(), id);
+        subTaskService.assignUserToSubTask(currentUser, currentUser.getUserId(), userId);
 
         redirectAttributes.addFlashAttribute("success", "Du er nu tildelt denne subtask.");
-        return "redirect:/subtasks/" + id;
+        return "redirect:/subtasks/" + userId;
 
     }
 

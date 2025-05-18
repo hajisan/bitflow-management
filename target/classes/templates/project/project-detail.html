@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>Projektets Detaljer</title>
+  <title>Project Detail</title>
 </head>
 <body>
 
@@ -60,13 +60,13 @@
 <section class="navigation">
 
   <!-- Fuld projektliste er kun for admin: project-list.html -->
-  <a th:if="${session.currentUser.role == 'ADMIN'}"
+  <a th:if="${session.currentUser.role.name() == 'ADMIN'}"
      th:href="@{/projects/list}">
     Tilbage til projektliste
   </a>
 
   <!-- Profilside er for alle: front-page.html -->
-  <a th:href="@{/profile}">Tilbage til forside</a>
+  <a th:href="@{/users/profile}">Tilbage til forside</a>
 </section>
 
 </body>

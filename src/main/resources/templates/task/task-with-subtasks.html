@@ -6,31 +6,65 @@
 </head>
 <body>
 
-<h1>Opgavebeskrivelse</h1>
+<h1>Subtasks tilknyttet en task</h1>
+<!-- Kort info om opgaven -->
+<section class="mini-info">
+    <div>Navn: <span th:text="${taskWithSubTasks.task.name}"></span></div>
+    <div>Deadline: <span th:text="${taskWithSubTasks.task.deadline}"></span></div>
+    <div>Status: <span th:text="${taskWithSubTasks.task.status}"></span></div>
+</section>
 
-<p>ID: <span th:text="${taskWithSubTasks.task.taskId}"></span></p>
-<p>Navn: <span th:text="${taskWithSubTasks.task.name}"></span></p>
-<p>Beskrivelse: <span th:text="${taskWithSubTasks.task.description}"></span></p>
-<p>Deadline: <span th:text="${taskWithSubTasks.task.deadline}"></span></p>
-<p>Status: <span th:text="${taskWithSubTasks.task.status}"></span></p>
+<h3>Subtasks</h3>
 
-<h2>Underopgaver</h2>
+<section class="mini-info">
+    <div th:if="${!#lists.isEmpty(taskWithSubTasks.subTaskList)}">
+        <div th:each="sub : ${taskWithSubTasks.subTaskList}" class="list">
+            <div>Navn: <span th:text="${sub.name}"></span></div>
+            <div>Status: <span th:text="${sub.status}"></span></div>
+            <div>Deadline: <span th:text="${sub.deadline}"></span></div>
+            <div>
+                <a th:href="@{/subtasks/{id}(id=${sub.subTaskId})}">
+                    <button>Se detaljer</button>
+                </a>
+            </div>
+            <hr/>
+        </div>
+    </div>
+</section>
 
-<ul th:if="${!#lists.isEmpty(taskWithSubTasks.subTaskList)}">
-    <li th:each="sub : ${taskWithSubTasks.subTaskList}">
-        <strong th:text="${sub.name}"></strong> –
-        <em>Status:</em><span th:text="${sub.status}"></span>,
-        <em>Estimeret tid:</em><span th:text="${sub.estimatedTime}"></span> timer,
-        <em>Forbrugt tid:</em><span th:text="${sub.timeSpent}"></span> timer,
-        <em>Deadline:</em> <span th:text="${sub.deadline}"></span>
-    </li>
-</ul>
+<section>
+    <!-- Hvis ingen underopgaver -->
+    <div th:if="${#lists.isEmpty(taskWithSubTasks.subTaskList)}">
+        Der er ingen subtasks tilknyttet denne opgave.
+    </div>
+</section>
 
-<p th:if="${#lists.isEmpty(taskWithSubTasks.subTaskList)}">
-    Der er ingen underopgaver tilknyttet denne opgave.
-</p>
+<!-- Opret subtask-knap -->
+<section class="form-actions">
+    <div>
+        <a th:href="@{/subtasks/create(taskId=${taskWithSubTasks.task.taskId})}">
+            <button>Opret ny subtask</button>
+        </a>
+    </div>
+</section>
 
-<a th:href="@{/tasks/list}">Tilbage til opgaveoversigt</a>
+<!-- Navigation -->
+<section class="navigation">
+
+    <!-- Tilbage til task-detail.html -->
+    <div>
+        <a th:href="@{/tasks/{id}(id=${taskWithSubTasks.task.taskId})}">
+            <button>Tilbage til task-detaljer</button>
+        </a>
+    </div>
+
+    <!-- Tilbage til forside -->
+    <div>
+        <a th:href="@{/users/profile}">
+            <button>Tilbage til forside</button>
+        </a>
+    </div>
+</section>
 
 </body>
 </html>
