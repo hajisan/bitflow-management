@@ -46,7 +46,6 @@ public class Project implements Estimable {
     public int getProjectId() {
         return projectId;
     }
-
     public int getEstimatedTime() {
         return estimatedTime;
     }
@@ -71,7 +70,6 @@ public class Project implements Estimable {
     public void setProjectId(int projectId) {
         this.projectId = projectId;
     }
-
     public void setEstimatedTime(int estimatedTime) {
         this.estimatedTime = estimatedTime;
     }
@@ -93,14 +91,14 @@ public class Project implements Estimable {
 
     @Override
     public String toString() {
-        return "Project{" +
-                "projectId=" + projectId +
-                ", estimatedTime=" + estimatedTime +
-                ", timeSpent=" + timeSpent +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", localDate=" + deadline +
-                ", status=" + status +
-                '}';
+        return String.format("""
+            Project ID   : %d
+            Name         : %s
+            Description  : %s
+            Estimated    : %d
+            Time Spent   : %d
+            Deadline     : %s
+            Status       : %s
+            """, projectId, name, description, estimatedTime, timeSpent, deadline, status);
     }
 }
