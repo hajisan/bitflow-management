@@ -33,7 +33,7 @@ public class SubProjectRepositoryTest {
         int projectID = 1; // Forventer at der et projekt med ID 1, i h2init.sql
 
         SubProject newSubProject = new SubProject();
-        newSubProject.setProjectId(1); // Subprojektet bliver koblet til projektet med ID 1
+        newSubProject.setProjectId(projectID); // Subprojektet bliver koblet til projektet med ID 1
         newSubProject.setName("Nyt subprojekt");
         newSubProject.setDescription("Beskrivelsen til supprojektet");
         newSubProject.setDeadline(LocalDate.of(2025, 5, 5));
