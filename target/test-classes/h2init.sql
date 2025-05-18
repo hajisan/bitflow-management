@@ -97,14 +97,14 @@ CREATE TABLE SubTask (
 -- Tabel: TimeEntry
 -- ========================
 CREATE TABLE TimeEntry (
-       id          INT AUTO_INCREMENT PRIMARY KEY,
-       userID      INTEGER,
-       taskID      INTEGER NULL,
-       subtaskID   INTEGER NULL,
-       date        DATE,
-       hoursSpent  INTEGER,
+    id          INT AUTO_INCREMENT PRIMARY KEY,
+    userID      INTEGER,
+    taskID      INTEGER NULL,
+    subtaskID   INTEGER NULL,
+    date        DATE,
+    hoursSpent  INTEGER,
 
-       FOREIGN KEY (userID) REFERENCES Users(id) ON DELETE CASCADE
+    FOREIGN KEY (userID) REFERENCES Users(id) ON DELETE CASCADE
 );
 
 -- ========================
@@ -197,7 +197,7 @@ INSERT INTO Users_Project (userID, projectID)
 VALUES (2, 1),
        (3, 1);
 
-INSERT INTO Users_Subproject (userID, subProjectID)
+INSERT INTO Users_SubProject (userID, subProjectID)
 VALUES (2, 1),
        (3, 1),
        (2, 2),

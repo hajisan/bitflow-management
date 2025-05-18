@@ -142,8 +142,8 @@ public class SubProjectRepository implements ISubProjectRepository {
                     subproject.deadline,
                     subproject.status
                 FROM subproject
-                JOIN user_subproject ON subproject.id = user_subproject.subProjectID
-                WHERE user_subproject.userID = ?
+                JOIN users_subproject ON subproject.id = users_subproject.subProjectID
+                WHERE users_subproject.userID = ?
                 """;
         return jdbcTemplate.query(sql, new SubProjectRowMapperS(), userId);
     }
@@ -154,10 +154,8 @@ public class SubProjectRepository implements ISubProjectRepository {
 
     @Override
     public void assignUserToSubProject(Integer userId, Integer subProjectId) {
-        String sql = "INSERT INTO user_subproject (userID, subProjectID) VALUES (?, ?)";
+        String sql = "INSERT INTO Users_SubProject (userID, subProjectID) VALUES (?, ?)";
         jdbcTemplate.update(sql, userId, subProjectId);
     }
-
-
 
 }
