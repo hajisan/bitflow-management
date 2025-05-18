@@ -1,5 +1,5 @@
 -- Indsæt brugere
-INSERT INTO User (firstName, lastName, email, passwordHash, role) VALUES
+INSERT INTO Users (firstName, lastName, email, passwordHash, role) VALUES
 ('Admin', 'Admin', 'admin@bitbros.dk', '$2a$12$MGilL/UlYqHFlxUQPN472e1pc9no6/v.V1euob3c3R0kjqUYDL5Ua', 'ADMIN'), -- ID 1 - passwordHash 'admin'
 ('Projektleder', 'BitBro', 'projektleder@bitbros.dk', '$2a$12$XerhDcoG6tIwL.7giuUxg.W4K3zP2UMt7sqhb/ghoXwReQHj8lbD.', 'PROJECT_MANAGER'), -- ID 2 - passwordHash 'projektleder'
 ('Sofie', 'Rytter', 'sofie@bitbros.dk', '$2a$12$Aswqt9sTSdfydqIhoyNEgesHjWKp0aqS2Ku9WoaVskL1/z0dLtVZ6', 'DEVELOPER'), -- ID 3 - passwordHash 'sofie'
@@ -105,16 +105,16 @@ INSERT INTO TimeEntry_SubTask (timeEntryID, subTaskID) VALUES
 (10000015, 1000015);
 */
 -- Knyt user til projekt
-INSERT INTO User_Project (userID, projectID) VALUES
+INSERT INTO Users_Project (userID, projectID) VALUES
 (2, 1000), -- Projektleder ID 1
 (3, 1000), -- Developer Sofie ID 3
 (4, 1000); -- Developer Joakim ID 4
 
 -- Knyt udviklere til subprojekter
-INSERT INTO User_Subproject (userID, subProjectID) VALUES (3, 10000), (4, 10001);  -- Sofie ID 3 & Joakim ID 4
+INSERT INTO Users_Subproject (userID, subProjectID) VALUES (3, 10000), (4, 10001);  -- Sofie ID 3 & Joakim ID 4
 
 -- Knyt udviklere til tasks
-INSERT INTO User_Task (userID, taskID) VALUES
+INSERT INTO Users_Task (userID, taskID) VALUES
 (3, 100000), -- Sofie ID 3
 (3, 100001), -- Sofie ID 3
 (3, 100002), -- Sofie ID 3
@@ -125,7 +125,7 @@ INSERT INTO User_Task (userID, taskID) VALUES
 (5, 100007); -- Nima ID 5
 
 -- Knyt udviklere til subtasks
-INSERT INTO User_SubTask (userID, subTaskID) VALUES 
+INSERT INTO Users_SubTask (userID, subTaskID) VALUES
 (3, 1000000), -- Sofie ID 3
 (3, 1000001), -- Sofie ID 3
 (3, 1000002), -- Sofie ID 3

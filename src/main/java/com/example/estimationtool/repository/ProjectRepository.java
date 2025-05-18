@@ -65,7 +65,7 @@
         public Project readById(Integer projectId) {
 
             String sql = """
-                    SELECT id,estimatedTime, timeSpent, name, description, deadline, status
+                    SELECT id, estimatedTime, timeSpent, name, description, deadline, status
                     FROM project
                     WHERE id = ?
                     """;
@@ -129,8 +129,8 @@
                         project.deadline,
                         project.status
                     FROM project
-                    JOIN user_project ON project.id = user_project.projectID
-                    WHERE user_project.userID = ?
+                    JOIN users_project ON project.id = users_project.projectID
+                    WHERE users_project.userID = ?
                     """;
 
             return jdbcTemplate.query(sql, new ProjectRowMapper(),userId);
@@ -144,7 +144,7 @@
         @Override
         public void assignUserToProject(Integer userId, Integer projectId) {
 
-            String sql = "INSERT INTO user_project (userID, projectID) VALUES (?, ?)";
+            String sql = "INSERT INTO users_project (userID, projectID) VALUES (?, ?)";
 
             jdbcTemplate.update(sql, userId, projectId);
 
