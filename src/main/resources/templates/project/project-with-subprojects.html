@@ -5,37 +5,59 @@
     <title>Project With SubProjects</title>
 </head>
 <body>
-<h1>Projektoplysninger</h1>
+<h1>Subprojekter til projekt</h1>
 
-<p>ID: <span th:text="${projectWithSubProjects.project.projectId}"></span></p>
-<p>Navn: <span th:text="${projectWithSubProjects.project.name}"></span></p>
-<p>Beskrivelse: <span th:text="${projectWithSubProjects.project.description}"></span></p>
-<p>Deadline: <span th:text="${projectWithSubProjects.project.deadline}"></span></p>
-<p>Status: <span th:text="${projectWithSubProjects.project.status}"></span></p>
-<p>Estimeret tid:<span th:text="${projectWithSubProjects.project.estimatedTime}"></span> timer</p>
-<p>Tid brugt:<span th:text="${projectWithSubProjects.project.timeSpent}"></span> timer</p>
+<!-- Kort info om projektet -->
+<section class="mini-info">
+  <div>Navn: <span th:text="${projectWithSubProjects.project.name}"></span></div>
+  <div>Deadline: <span th:text="${projectWithSubProjects.project.deadline}"></span></div>
+  <div>Aktuelt tidsforbrug: <span th:text="${projectWithSubProjects.project.timeSpent} + ' timer'"></span></div>
 
-<h2>Subprojekter</h2>
+</section>
 
-<ul th:if="${!#lists.isEmpty(projectWithSubProjects.subProjectList)}">
-  <li th:each="sub : ${projectWithSubProjects.subProjectList}">
-    <p>Subprojekt ID: <span th:text="${sub.subProjectId}"></span></p>
-    <p>Projekt ID: <span th:text="${sub.projectId}"></span></p>
-    <p>Navn: <span th:text="${sub.name}"></span></p>
-    <p>Beskrivelse: <span th:text="${sub.description}"></span></p>
-    <p>Deadline: <span th:text="${sub.deadline}"></span></p>
-    <p>Status: <span th:text="${sub.status}"></span></p>
-    <p>Estimeret tid: <span th:text="${sub.estimatedTime}"></span> timer</p>
-    <p>Tid brugt: <span th:text="${sub.timeSpent}"></span> timer</p>
-    <hr/>
-  </li>
-</ul>
+<!-- Kort info om subprojekter -->
+<section class="mini-info">
+  <div th:if="${!#lists.isEmpty(projectWithSubProjects.subProjectList)}">
+    <div th:each="subproject : ${projectWithSubProjects.subProjectList}" class="list">
+      <div>Navn: <span th:text="${subproject.name}"></span></div>
+      <div>Deadline: <span th:text="${subproject.deadline}"></span></div>
+      <div>Status: <span th:text="${subproject.status}"></span></div>
+      <div>
+        <a th:href="@{/subprojects/{id}(id=${subproject.subProjectId})}">
+          <button>Se detaljer</button>
+        </a>
+      </div>
+      <hr />
+    </div>
+  </div>
 
-<p th:if="${#lists.isEmpty(projectWithSubProjects.subProjectList)}">
-  Projektet har ingen tilknyttede subprojekter.
-</p>
+  <!-- Hvis der ingen subprojekter er -->
+  <div th:if="${#lists.isEmpty(projectWithSubProjects.subProjectList)}">
+    Projektet har ingen tilknyttede subprojekter.
+  </div>
 
-<a th:href="@{/projects/list}">Tilbage til projektoversigt</a>
+</section>
+
+<!-- Opret subproject er kun for admin og projektleder -->
+<section class="form-actions"
+         th:if="${session.currentUser.role.name() == 'PROJECT_MANAGER' || session.currentUser.role.name() == 'ADMIN'}">
+  <div>
+    <a th:href="@{/subprojects/create(projectId=${projectWithSubProjects.project.projectId})}">
+      <button>Opret subprojekt</button>
+    </a>
+  </div>
+</section>
+
+
+<!-- Navigation -->
+<section class="navigation">
+
+<!-- Tilbage-knap til project-detail.html er for alle -->
+  <a th:href="@{/projects/{id}(id=${projectWithSubProjects.project.projectId})}"></a>
+<!-- Tilbage til front-page.html er for alle -->
+  <a th:href="@{/users/profile}">Tilbage til forside</a>
+</section>
+
 
 </body>
 </html>

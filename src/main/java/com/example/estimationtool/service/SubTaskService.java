@@ -1,6 +1,7 @@
 package com.example.estimationtool.service;
 
 
+import com.example.estimationtool.model.SubProject;
 import com.example.estimationtool.model.SubTask;
 import com.example.estimationtool.model.User;
 import com.example.estimationtool.model.enums.Role;
@@ -9,7 +10,9 @@ import com.example.estimationtool.model.timeEntry.TimeEntry;
 import com.example.estimationtool.repository.interfaces.ISubTaskRepository;
 import com.example.estimationtool.repository.interfaces.ITimeEntryRepository;
 import com.example.estimationtool.repository.interfaces.IUserRepository;
+import com.example.estimationtool.toolbox.check.DeadlineCheck;
 import com.example.estimationtool.toolbox.check.StatusCheck;
+import com.example.estimationtool.toolbox.controllerAdvice.UserFriendlyException;
 import com.example.estimationtool.toolbox.dto.SubTaskWithTimeEntriesDTO;
 import com.example.estimationtool.toolbox.dto.UserViewDTO;
 import com.example.estimationtool.toolbox.check.RoleCheck;
@@ -53,6 +56,7 @@ public class SubTaskService {
     //------------------------------------ Update() ------------------------------------
 
    public SubTask updateSubTask(SubTask subtask) {
+
 
         // Statusvalidering: formelt for konsistens i struktur. En SubTask har ingen underopgaver tilknyttet
         if (subtask.getStatus() == Status.DONE) {
@@ -99,7 +103,7 @@ public class SubTaskService {
 
         // Developer må kun tildele sig selv
         if (currentUser.getRole() == Role.DEVELOPER && currentUser.getUserId() != userId) {
-            throw new SecurityException("Udviklere må kun tildele sig selv til en subtask.");
+            throw new UserFriendlyException("Udviklere må kun tildele sig selv til en subtask.", "/subtasks/" + subTaskId);
         }
 
         iSubTaskRepository.assignUserToSubTask(userId, subTaskId);
@@ -114,7 +118,7 @@ public class SubTaskService {
         // Find bruger på subTask
         User user = iUserRepository.readUserBySubTaskId(subTaskId);
         if (user == null) {
-            return null;
+            throw new UserFriendlyException("Der var ingen bruger til denne subtask.", "/users/profile");
         }
         return new UserViewDTO(
                 user.getUserId(),

@@ -32,13 +32,17 @@ public class TaskController {
 
     //------------------------------------ Hent Create() -------------------------------
 
-    @GetMapping("/create")
-    public String showCreateTask(Model model,
-                           HttpSession session,
-                           RedirectAttributes redirectAttributes
-                           ) {
+    // TODO - DONE
 
+    @GetMapping("/create")
+    public String showCreateTask(@RequestParam int subProjectId,
+                                 Model model,
+                                 HttpSession session,
+                                 RedirectAttributes redirectAttributes) {
+
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
 
         // Tjekker om brugeren er logget ind
         if (currentUser == null) {
@@ -46,18 +50,25 @@ public class TaskController {
             return "redirect:/login";
         }
 
-        model.addAttribute("task", new Task());
+        Task task = new Task();
+        task.setSubProjectId(subProjectId);  // Forbinder task med det givne subprojekt
+
+        model.addAttribute("task", task);
         return "task/create-task";
     }
 
     //------------------------------------ Create() ------------------------------------
 
+    // TODO - DONE
     @PostMapping("/create")
     public String createTask(@ModelAttribute("task") Task task,
                              HttpSession session,
                              RedirectAttributes redirectAttributes) {
 
+
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
 
         // Tjekker om brugeren er logget ind
         if (currentUser == null) {
@@ -69,18 +80,22 @@ public class TaskController {
 
         redirectAttributes.addFlashAttribute("success", "Opgaven blev oprettet");
 
-        return "redirect:/tasks/tasks";
+        return "redirect:/subprojects/" + task.getSubProjectId() + "/tasks";
 
         }
 
     //------------------------------------ Read() --------------------------------------
 
-    @GetMapping("tasks")
+    // TODO - DONE
+    @GetMapping("/list")
     public String showAllTasks(Model model,
                                HttpSession session,
                                RedirectAttributes redirectAttributes) {
 
+
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
 
         // Tjekker om brugeren er logget ind
         if (currentUser == null) {
@@ -95,14 +110,18 @@ public class TaskController {
         return "task/task-list";
 
     }
+    // TODO - DONE
 
-    @GetMapping("/{id}")
-    public String showTask(@PathVariable int id,
+    @GetMapping("/{taskId}")
+    public String showTask(@PathVariable int taskId,
                            Model model,
                            HttpSession session,
                            RedirectAttributes redirectAttributes
                            ) {
+
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
 
         // Tjekker om brugeren er logget ind
         if (currentUser == null) {
@@ -110,21 +129,24 @@ public class TaskController {
             return "redirect:/login";
         }
 
-        Task task = taskService.readById(id);
+        Task task = taskService.readById(taskId);
         model.addAttribute("task", task);
 
         return "task/task-detail";
 
     }
     //------------------------------------ Hent Update() -------------------------------
-
-    @GetMapping("/edit/{id}")
-    public String showEditTask(@PathVariable int id,
+// TODO - DONE
+    @GetMapping("/edit/{taskId}")
+    public String showEditTask(@PathVariable int taskId,
                                HttpSession session,
                                Model model,
                                RedirectAttributes redirectAttributes) {
 
+
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
 
         // Tjekker om bruger er logget ind
         if (currentUser == null) {
@@ -132,7 +154,7 @@ public class TaskController {
             return "redirect:/login";
         }
 
-        Task task = taskService.readById(id);
+        Task task = taskService.readById(taskId);
 
         model.addAttribute("task", task);
 
@@ -141,12 +163,16 @@ public class TaskController {
     }
     //------------------------------------ Update() ------------------------------------
 
+    // TODO - DONE
     @PostMapping("/update")
     public String updateTask(@ModelAttribute("task") Task task,
                              HttpSession session,
                              RedirectAttributes redirectAttributes) {
 
+
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
 
         // Tjekker om bruger er logget ind
         if (currentUser == null) {
@@ -164,48 +190,63 @@ public class TaskController {
     }
     //------------------------------------ Delete() ------------------------------------
 
-    @PostMapping("/delete/{id}")
-    public String deleteTask(@PathVariable int id,
+    // TODO - DONE
+
+    @PostMapping("/delete/{taskId}")
+    public String deleteTask(@PathVariable int taskId,
                              HttpSession session,
                              RedirectAttributes redirectAttributes) {
 
+
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
 
         if (currentUser == null) {
             redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne slette en task.");
             return "redirect:/login";
         }
 
-        taskService.deleteById(id);
+        // Henter task for at hente dennes subprojectID til redirect
+        Task task = taskService.readById(taskId);
+        int subProjectId = task.getSubProjectId();
+
+        taskService.deleteById(taskId);
 
         redirectAttributes.addFlashAttribute("success", "Task blev slettet.");
 
-        return "redirect:/tasks/tasks";
+        // Redirect: subproject-with-tasks.html
+        return "redirect:/subprojects/" + subProjectId + "/tasks";
+
     }
 
     //---------------------------------- DTO read() ------------------------------------
 
     // -------------------- Viser en task's tilknyttede brugere ------------------------
 
-    @GetMapping("/{id}/users")
-    public String showTaskWithUsers(@PathVariable int id,
+    // TODO - DONE
+    @GetMapping("/{taskId}/users")
+    public String showTaskWithUsers(@PathVariable int taskId,
                                     HttpSession session,
                                     Model model,
                                     RedirectAttributes redirectAttributes) {
 
-        // Tjek om bruger er logget ind
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
+
+        // Tjek om bruger er logget ind
         if (currentUser == null) {
             redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at se brugere tilknyttet en task.");
             return "redirect:/login";
         }
 
         // Henter task + brugere
-        TaskWithUsersDTO taskWithUsersDTO = taskService.readAllUsersByTaskId(id);
+        TaskWithUsersDTO taskWithUsersDTO = taskService.readAllUsersByTaskId(taskId);
 
 
         // Viser ikke-tilknyttede brugere (til POST-formularen)
-        List<UserViewDTO> unassignedUsers = taskService.readAllUnAssignedUsers(id);
+        List<UserViewDTO> unassignedUsers = taskService.readAllUnAssignedUsers(taskId);
 
         // Tilføjer til model
         model.addAttribute("taskWithUsers", taskWithUsersDTO);
@@ -217,19 +258,24 @@ public class TaskController {
 
     // -------------------- Viser en task's tilknyttede subtasks ---------------------
 
-    @GetMapping("/{id}/subtasks")
-    public String showTaskWithSubTasks(@PathVariable int id,
+    // TODO - DONE
+    @GetMapping("/{taskId}/subtasks")
+    public String showTaskWithSubTasks(@PathVariable int taskId,
                                        HttpSession session,
                                        Model model,
                                        RedirectAttributes redirectAttributes) {
 
+
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
+
         if (currentUser == null) {
             redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at se en task's tilknyttede subtasks.");
             return "redirect:/login";
         }
 
-        TaskWithSubTasksDTO taskWithSubTasksDTO = taskService.readAllSubTasksByTaskId(id);
+        TaskWithSubTasksDTO taskWithSubTasksDTO = taskService.readAllSubTasksByTaskId(taskId);
         model.addAttribute("taskWithSubTasks", taskWithSubTasksDTO);
 
         return "task/task-with-subtasks";
@@ -237,19 +283,22 @@ public class TaskController {
 
     // -------------------- Viser en task's tilknyttede timeEntries  ------------------
 
-    @GetMapping("/{id}/timeentries")
-    public String showTaskWithTimeEntries(@PathVariable int id,
+    @GetMapping("/{taskId}/timeentries")
+    public String showTaskWithTimeEntries(@PathVariable int taskId,
                                           HttpSession session,
                                           Model model,
                                           RedirectAttributes redirectAttributes) {
 
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
+
         if (currentUser == null) {
             redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at se tidsregistreringer for en task.");
             return "redirect:/login";
         }
 
-        TaskWithTimeEntriesDTO dto = taskService.readAllTimeEntriesByTaskId(id);
+        TaskWithTimeEntriesDTO dto = taskService.readAllTimeEntriesByTaskId(taskId);
         model.addAttribute("taskWithTimeEntries", dto);
 
         return "task/task-with-timeentries";
@@ -258,22 +307,25 @@ public class TaskController {
 
     //---------------------------- POST Assign User to Task ---------------------------
 
-    @PostMapping("/tasks/{id}/assignusers")
-    public String assignUsersToTask(@PathVariable int id,
+    @PostMapping("/tasks/{taskId}/assignusers")
+    public String assignUsersToTask(@PathVariable int taskId,
                                     @RequestParam("userIds") List<Integer> userIds,
                                     HttpSession session,
                                     RedirectAttributes redirectAttributes) {
 
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
+
         if (currentUser == null) {
             redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne tildele brugere en task.");
             return "redirect:/login";
         }
 
-        taskService.assignUsersToTask(currentUser, userIds, id);
+        taskService.assignUsersToTask(currentUser, userIds, taskId);
 
         redirectAttributes.addFlashAttribute("success", "Brugere blev tildelt en task.");
-        return "redirect:/tasks/" + id + "/users";
+        return "redirect:/tasks/" + taskId + "/users";
     }
 
 

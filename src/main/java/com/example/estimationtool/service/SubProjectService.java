@@ -8,7 +8,9 @@ import com.example.estimationtool.repository.interfaces.ISubProjectRepository;
 import com.example.estimationtool.model.SubProject;
 import com.example.estimationtool.repository.interfaces.ITaskRepository;
 import com.example.estimationtool.repository.interfaces.IUserRepository;
+import com.example.estimationtool.toolbox.check.DeadlineCheck;
 import com.example.estimationtool.toolbox.check.StatusCheck;
+import com.example.estimationtool.toolbox.controllerAdvice.UserFriendlyException;
 import com.example.estimationtool.toolbox.dto.SubProjectWithTasksDTO;
 import com.example.estimationtool.toolbox.dto.SubProjectWithUsersDTO;
 import com.example.estimationtool.toolbox.dto.UserViewDTO;
@@ -37,20 +39,6 @@ public class SubProjectService {
         // Kun admin og projektleder må oprette et subprojekt
         RoleCheck.ensureAdminOrProjectManager(currentUser.getRole());
 
-        // Inputvalidering
-        if (subProject.getName() == null || subProject.getName().isBlank()) {
-            throw new IllegalArgumentException("Subprojektets navn må ikke være tomt.");
-        }
-        if (subProject.getEstimatedTime() <= 0) {
-            throw new IllegalArgumentException("Subprojektets estimerede tid må ikke være 0 eller negativ.");
-        }
-        if (subProject.getDeadline() == null) {
-            throw new IllegalArgumentException("Subprojektets deadline må ikke være null eller tom.");
-        }
-        if (subProject.getStatus() != Status.ACTIVE && subProject.getStatus() != Status.INACTIVE && subProject.getStatus() != Status.DONE) {
-            throw new IllegalArgumentException("Subprojektets status skal være sat til enten Active, Inactive eller Done.");
-        }
-
         return iSubProjectRepository.create(subProject);
     }
 
@@ -75,21 +63,12 @@ public class SubProjectService {
         // Kun admin eller projektleder må redigere et subprojekt
         RoleCheck.ensureAdminOrProjectManager(currentUser.getRole());
 
-        // Inputvalidering til update
-        if (subProject.getName() == null || subProject.getName().isBlank()) {
-            throw new IllegalArgumentException("Subprojektets navn må ikke være tomt.");
-        }
-        if (subProject.getEstimatedTime() <= 0) {
-            throw new IllegalArgumentException("Subprojektets estimerede tid må ikke være 0 eller negativ.");
-        }
-        if (subProject.getDeadline() == null) {
-            throw new IllegalArgumentException("Subprojektets deadline må ikke være null eller tom.");
-        }
-        if (subProject.getStatus() != Status.ACTIVE &&
-                subProject.getStatus() != Status.INACTIVE &&
-                subProject.getStatus() != Status.DONE) {
-            throw new IllegalArgumentException("Subprojektets status skal være sat til enten Active, Inactive eller Done.");
-        }
+
+        // Deadline-håndtering (hvis ikke sat, behold eksisterende)
+        SubProject existingSubProject = iSubProjectRepository.readById(subProject.getSubProjectId());
+        subProject.setDeadline(
+                DeadlineCheck.checkForDeadlineInput(subProject.getDeadline(), existingSubProject.getDeadline())
+        );
 
         // Statusvalidering: SubProject må kun sættes til DONE, hvis alle Tasks er DONE
         if (subProject.getStatus() == Status.DONE) {
@@ -98,7 +77,7 @@ public class SubProjectService {
             SubProjectWithTasksDTO dto = new SubProjectWithTasksDTO(subProject, tasks);
 
             if (!statusCheck.canMarkSubProjectAsDone(dto)) {
-                throw new IllegalStateException("Subprojektet kan ikke markeres som færdigt, før alle tasks er færdige.");
+                throw new UserFriendlyException("Subprojektet kan ikke markeres som færdigt, før alle tasks er færdige.", "/subprojects/edit/" + subProject.getSubProjectId());
             }
         }
 
@@ -111,11 +90,9 @@ public class SubProjectService {
 
         // Kun admin eller projektleder må slette et subprojekt
         RoleCheck.ensureAdminOrProjectManager(currentUser.getRole());
-        if (id <= 0) {
-            throw new IllegalArgumentException("Subprojektet med id " + id + " findes ikke, da id er 0 eller negativt.");
-        } else {
+
             iSubProjectRepository.deleteById(id);
-        }
+
     }
 
     //---------------------------------- Til DTO'er -----------------------------------

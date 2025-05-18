@@ -9,6 +9,7 @@ import com.example.estimationtool.model.Project;
 import com.example.estimationtool.repository.interfaces.ISubProjectRepository;
 import com.example.estimationtool.repository.interfaces.IUserRepository;
 import com.example.estimationtool.toolbox.check.AssignCheck;
+import com.example.estimationtool.toolbox.check.DeadlineCheck;
 import com.example.estimationtool.toolbox.check.StatusCheck;
 import com.example.estimationtool.toolbox.dto.ProjectWithSubProjectsDTO;
 import com.example.estimationtool.toolbox.dto.ProjectWithUsersDTO;
@@ -43,7 +44,6 @@ public class ProjectService {
 
         Project projectWithUser = iProjectRepository.create(project);
 
-        // TODO - OBS! Projekt tildeles bruger ved oprettelse. Det er et forretningsvalg.
         iProjectRepository.assignUserToProject(currentUser.getUserId(), project.getProjectId());
 
         return projectWithUser;
@@ -52,10 +52,10 @@ public class ProjectService {
 
     //------------------------------------ Read() ------------------------------------
 
+    // TODO - DONE
     public List<Project> readAll(UserViewDTO currentUser) {
 
-        // Kun admin må se alle projekter
-        //RoleCheck.ensureAdmin(currentUser.getRole());
+        RoleCheck.ensureAdmin(currentUser.getRole());
 
         return iProjectRepository.readAll();
     }
@@ -77,11 +77,18 @@ public class ProjectService {
         // Kun admin eller projektleder må redigere projekt
         RoleCheck.ensureAdminOrProjectManager(currentUser.getRole());
 
-        // Assign-tjek:
+        // Assign-tjek: tjekker om brugeren er tildelt et projekt
         List<Project> userProjects = iProjectRepository.readAllByUserId(currentUser.getUserId());
         // Konverterer User + projects til DTO
         UserWithProjectsDTO userWithProjectsDTO = new UserWithProjectsDTO(currentUser, userProjects);
         AssignCheck.ensureUserAssignedToProject(userWithProjectsDTO, project.getProjectId());
+
+
+        // Deadline-håndtering (hvis ikke sat, behold eksisterende)
+        Project existingProject = readById(project.getProjectId());
+        project.setDeadline(
+                DeadlineCheck.checkForDeadlineInput(project.getDeadline(), existingProject.getDeadline())
+        );
 
 
         // Statusvalidering: Project må kun sættes til DONE, hvis alle SubProjects er DONE
@@ -148,6 +155,7 @@ public class ProjectService {
     // --- Find subprojekter for ét projekt ---
 
     public ProjectWithSubProjectsDTO readAllFromProjectId(int projectId) {
+
         Project project = iProjectRepository.readById(projectId);
         List<SubProject> subProjects = iSubProjectRepository.readAllFromProjectId(projectId);
 

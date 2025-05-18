@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>SubProject Detail</title>
+</head>
+<body>
+
+<h1>Subprojektets detaljer</h1>
+
+<!-- Fejlbesked -->
+<section th:if="${error}" class="error-section">
+    <p th:text="${error}" class="error-message"></p>
+</section>
+
+<!-- Detaljer om subprojektet er for alle -->
+<section class="details-grid">
+    <div>Navn: <span th:text="${subproject.name}"></span></div>
+    <div>Beskrivelse: <span th:text="${subproject.description}"></span></div>
+    <div>Deadline: <span th:text="${subproject.deadline}"></span></div>
+    <div>Estimeret tid: <span th:text="${subproject.estimatedTime}"></span> timer</div>
+    <div>Aktuelle tidsforbrug: <span th:text="${subproject.timeSpent}"></span> timer</div>
+    <div>Status: <span th:text="${subproject.status}"></span></div>
+</section>
+
+
+<!-- Rediger-knap er kun for projektleder og admin -->
+<section class="form-actions" th:if="${session.currentUser.role.name() == 'PROJECT_MANAGER' || session.currentUser.role.name() == 'ADMIN'}">
+    <div>
+        <a th:href="@{/subprojects/edit/{id}(id=${subproject.subProjectId})}">
+           Rediger subprojekt
+        </a>
+    </div>
+</section>
+
+<!-- Navigation -->
+<section class="navigation">
+
+    <!-- Se brugere tilknyttet subprojekt er for alle: subproject-with-users.html -->
+    <div>
+        <a th:href="@{/subprojects/{id}/users(id=${subproject.subProjectId})}">
+            <button>Se tilknyttede brugere</button>
+        </a>
+    </div>
+
+    <!-- Se tilknyttede tasks er for alle: subproject-with-tasks.html -->
+    <div>
+        <a th:href="@{/subprojects/{subprojectId}/tasks(subprojectId=${subproject.subProjectId})}">
+            <button>Se tilknyttede tasks</button>
+        </a>
+    </div>
+
+
+
+
+
+    <!-- Tilbage til liste af alle subprojekter er for admin: subproject-list.html -->
+    <div th:if="${session.currentUser.role.name() == 'ADMIN'}">
+        <a th:href="@{/projects/{id}/subprojects(id=${subproject.projectId})}">
+            Tilbage til alle subprojekter
+        </a>
+    </div>
+
+    <!-- Tilbage til projects-with-subprojects.html er for alle -->
+    <div>
+        <a th:href="@{/projects/{id}(id=${subproject.projectId})}">
+            Tilbage til projekt
+        </a>
+    </div>
+
+
+    <!-- Profilside er for alle: front-page.html -->
+    <div>
+    <a th:href="@{/users/profile}">Tilbage til forside</a>
+    </div>
+</section>
+
+</body>
+</html>

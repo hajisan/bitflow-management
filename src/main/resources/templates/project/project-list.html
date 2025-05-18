@@ -8,46 +8,39 @@
 
 <h1>Projektliste</h1>
 
-<!-- Fejl-/infobeskeder -->
-<p th:if="${error}" th:text="${error}"></p>
-<p th:if="${success}" th:text="${success}"></p>
+<!-- Fejlbesked -->
+<section th:if="${error}" class="error-section">
+    <p th:text="${error}" class="error-message"></p>
+</section>
 
-<!-- Knap til at oprette nyt projekt -->
-<p>
-    <a th:href="@{/projects/create}">
-        <button>Opret nyt projekt</button>
-    </a>
-</p>
+<!-- Opret nyt projekt -->
+<section class="form-actions">
+    <div>
+        <a th:href="@{/projects/create}">
+            <button>Opret nyt projekt</button>
+        </a>
+    </div>
+</section>
 
-<!-- Tabel med projekter -->
-<table>
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Navn</th>
-        <th>Beskrivelse</th>
-        <th>Deadline</th>
-        <th>Estimeret tid</th>
-        <th>Forbrugt tid</th>
-        <th>Status</th>
-        <th>Handling</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="project : ${projectList}">
-        <td th:text="${project.projectId}"></td>
-        <td th:text="${project.name}"></td>
-        <td th:text="${project.description}"></td>
-        <td th:text="${project.deadline}"></td>
-        <td th:text="${project.estimatedTime} + ' t.'"></td>
-        <td th:text="${project.timeSpent} + ' t.'"></td>
-        <td th:text="${project.status}"></td>
-        <td>
-            <a th:href="@{/projects/{id}(id=${project.projectId})}">Se detaljer</a>
-        </td>
-    </tr>
-    </tbody>
-</table>
+
+<!-- Projektoversigt -->
+<section class="mini-info">
+    <div th:each="project : ${projectList}" class="project-summary">
+        <div>Navn: <span th:text="${project.name}"></span></div>
+        <div>Deadline: <span th:text="${project.deadline}"></span></div>
+        <div>Forbrugt tid: <span th:text="${project.timeSpent} + ' t.'"></span></div>
+        <div>Status: <span th:text="${project.status}"></span></div>
+        <div class="details-link">
+            <a th:href="@{/projects/{projectId}(projectId=${project.projectId})}">Se detaljer</a>
+        </div>
+        <hr/>
+    </div>
+</section>
+
+<!-- Navigation -->
+<section class="navigation">
+    <a th:href="@{/users/profile}">Tilbage til forside</a>
+</section>
 
 </body>
 </html>

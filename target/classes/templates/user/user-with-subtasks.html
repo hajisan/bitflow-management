@@ -5,32 +5,46 @@
     <title>User With SubTasks</title>
 </head>
 <body>
-<h1>Brugeroplysninger</h1>
+<h1>Brugerens subtasks</h1>
 
-<p>
-    Navn:
-    <span th:text="${userWithSubTasks.user.firstName}"></span>
-    <span th:text="${userWithSubTasks.user.lastName}"></span>
-</p>
-<p>ID: <span th:text="${userWithSubTasks.user.userId}"></span></p>
-<p>Email: <span th:text="${userWithSubTasks.user.email}"></span></p>
-<p>Rolle: <span th:text="${userWithSubTasks.user.role}"></span></p>
+<!-- Kort info om brugeren -->
+<section class="mini-info">
+    <div>Fornavn: <span th:text="${userWithSubTasks.user.firstName}"></span></div>
+    <div>Efternavn: <span th:text="${userWithSubTasks.user.lastName}"></span></div>
+    <div>Rolle: <span th:text="${userWithSubTasks.user.role}"></span></div>
+</section>
 
-<h2>Underopgaver</h2>
+<h3>Subtasks</h3>
 
-<!-- Underopgaver hvis listen ikke er tom -->
-<ul>
-    <li th:each="subtask : ${userWithSubTasks.subTaskList}">
-        <strong th:text="${subtask.name}"></strong> –
-        <em>Status:</em> <span th:text="${subtask.status}"></span>,
-        <em>Estimeret tid:</em> <span th:text="${subtask.estimatedTime}"></span> timer,
-        <em>Deadline:</em> <span th:text="${subtask.deadline}"></span>
-    </li>
-</ul>
+<!-- Subtasks -->
+<section class="mini-info">
+    <div th:if="${!#lists.isEmpty(userWithSubTasks.subTaskList)}">
+        <div th:each="subtask : ${userWithSubTasks.subTaskList}" class="list">
+            <div>Navn: <span th:text="${subtask.name}"></span></div>
+            <div>Status: <span th:text="${subtask.status}"></span></div>
+            <div>Deadline: <span th:text="${subtask.deadline}"></span></div>
+            <div>
+                <a th:href="@{/subtasks/{id}(id=${subtask.subTaskId})}">
+                    <button>Se detaljer</button>
+                </a>
+            </div>
+            <hr/>
+        </div>
+    </div>
 
-<!-- Hvis listen er tom -->
-<p th:if="${#lists.isEmpty(userWithSubTasks.subTaskList)}">
-    Brugeren <span th:text="${userWithSubTasks.user.firstName}"></span> har ikke nogle tilknyttede underopgaver.
-</p>
+    <!-- Hvis der ingen underopgaver er -->
+    <div th:if="${#lists.isEmpty(userWithSubTasks.subTaskList)}">
+        Brugeren <span th:text="${userWithSubTasks.user.firstName}"></span> har ingen tilknyttede underopgaver.
+    </div>
+</section>
+
+<!-- Navigation -->
+<section class="navigation">
+    <div>
+        <a th:href="@{/users/profile}">
+            <button>Tilbage til forside</button>
+        </a>
+    </div>
+</section>
 </body>
 </html>
