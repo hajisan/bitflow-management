@@ -1,14 +1,9 @@
 package com.example.estimationtool.service;
 
-import com.example.estimationtool.model.Project;
-import com.example.estimationtool.model.SubProject;
-import com.example.estimationtool.model.SubTask;
-import com.example.estimationtool.model.Task;
 import com.example.estimationtool.model.timeEntry.TimeEntry;
-
 import com.example.estimationtool.repository.interfaces.*;
-
 import com.example.estimationtool.toolbox.timeCalc.TimeCalculator;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -57,5 +52,4 @@ public class TimeEntryService {
     public void deleteById(int id) {
         iTimeEntryRepository.deleteById(id);
     }
-
 }

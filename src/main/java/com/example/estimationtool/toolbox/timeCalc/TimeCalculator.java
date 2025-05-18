@@ -177,20 +177,17 @@ public class TimeCalculator {
         return timeSpentOnProject;
     }
 
-
-
     //------------------------------------------ Tid Brugt ------------------------------------------
 
     public int calculateTimeSpent(List<TimeEntry> entries) {
-
+        // Opretter en lokal variabel til at gemme den akkumulerede timeSpent
         int totalTimeSpent = 0;
-
+        // Summerer timeSpent for hver TimeEntry i listen og gemmer det i totalTimeSpent
         for (TimeEntry timeEntry : entries) {
             totalTimeSpent += timeEntry.getHoursSpent();
         }
-
+        // Returnerer totalTimeSpent for alle TimeEntries i listen
         return totalTimeSpent;
-
     }
 
     //------------------------------------ Tid tilbage i TIMER ------------------------------------
@@ -211,15 +208,15 @@ public class TimeCalculator {
     }
 
     private static double countWorkDays(LocalDate deadline) {
-        double workingDays = 0.0; // Vi starter med 0 hverdage og inkrementerer hver gang vi møder en hverdag i while-loopet
-        LocalDate dateToCheck = LocalDate.now(); // Den dato vi tjekker - vi starter med at tjekke i dag
+        double workingDays = 0.0;                                       // Vi starter med 0 hverdage og inkrementerer hver gang vi møder en hverdag i while-loopet
+        LocalDate dateToCheck = LocalDate.now();                        // Den dato vi tjekker - vi starter med at tjekke i dag
 
-        while (dateToCheck.isBefore(deadline)) {        // Så længe den dato vi tjekker er før deadlinen kører loopet
-            DayOfWeek day = dateToCheck.getDayOfWeek(); // Vi henter den dag på ugen vi har på den dato vi vil tjekke
+        while (dateToCheck.isBefore(deadline)) {                        // Så længe den dato vi tjekker er før deadlinen kører loopet
+            DayOfWeek day = dateToCheck.getDayOfWeek();                 // Vi henter den dag på ugen vi har på den dato vi vil tjekke
             if (day != DayOfWeek.SATURDAY && day != DayOfWeek.SUNDAY) { // Hvis det ikke er lørdag og ikke er søndag
                 workingDays++;                                          // tilføjer vi en hverdag til vores variabel
             }
-            dateToCheck = dateToCheck.plusDays(1); // Vi går videre til næste dato der skal tjekkes ved at tilføje en dag til datoen
+            dateToCheck = dateToCheck.plusDays(1);                      // Vi går videre til næste dato der skal tjekkes ved at tilføje en dag til datoen
         }
 
         return workingDays;
