@@ -1,7 +1,6 @@
 package com.example.estimationtool.integrationsTest.repository;
 
 import com.example.estimationtool.model.Project;
-import com.example.estimationtool.model.User;
 import com.example.estimationtool.model.enums.Status;
 import com.example.estimationtool.repository.ProjectRepository;
 import com.example.estimationtool.repository.UserRepository;
@@ -14,7 +13,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static com.example.estimationtool.model.enums.Status.ACTIVE;
-import static org.apache.coyote.http11.Constants.a;
 import static org.junit.jupiter.api.Assertions.*;
 
 
