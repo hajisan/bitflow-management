@@ -35,18 +35,22 @@ public class SubProjectController {
     // TODO - DONE
 
     @GetMapping("/create")
-    public String showCreateSubProject(@RequestParam int projectId, HttpSession session,
+    public String showCreateSubProject(@RequestParam int projectId,
+                                       HttpSession session,
                                        Model model) {
 
-        // Tjekker om brugeren har en aktiv session
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
+
+        // Tjekker om brugeren har en aktiv session
         if (currentUser == null) return "redirect:/login";
 
         // Sender projektId med
         SubProject subProject = new SubProject();
         subProject.setProjectId(projectId);
-
         model.addAttribute("subproject", subProject);
+
         return "subproject/create-subproject";
     }
 
@@ -57,8 +61,11 @@ public class SubProjectController {
                                    HttpSession session,
                                    RedirectAttributes redirectAttributes) {
 
-        // Tjekker om brugeren har en aktiv session
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
+
+        // Tjekker om brugeren har en aktiv session
         if (currentUser == null) {
             redirectAttributes.addFlashAttribute("error", "Log ind for at oprette et subprojekt.");
             return "redirect:/login";
@@ -73,19 +80,23 @@ public class SubProjectController {
 
     //------------------------------------ Read() --------------------------------------
 
-    @GetMapping("")
+    @GetMapping("/list")
     public String showAllSubProjects(HttpSession session,
                                      Model model,
                                      RedirectAttributes redirectAttributes) {
 
-        // Tjekker om brugeren har en aktiv session
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
+
+        // Tjekker om brugeren har en aktiv session
         if (currentUser == null) {
             redirectAttributes.addFlashAttribute("error", "Log ind for at oprette et subprojekt.");
             return "redirect:/login";
         }
 
-        model.addAttribute("allSubprojects", subProjectService.readAll());
+        List<SubProject> subProjectList = subProjectService.readAll();
+        model.addAttribute("allSubprojects", subProjectList);
 
         return "subproject/subproject-list";
     }
@@ -98,15 +109,18 @@ public class SubProjectController {
                                  RedirectAttributes redirectAttributes,
                                  @PathVariable int subprojectId) {
 
+        // Henter og sætter session for Thymeleaf
+        UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
 
         // Tjekker om brugeren har en aktiv session
-        UserViewDTO currentUser = getCurrentUser(session);
         if (currentUser == null) {
             redirectAttributes.addFlashAttribute("error", "Log ind for at oprette et subprojekt.");
             return "redirect:/login";
         }
 
-        model.addAttribute("subproject", subProjectService.readById(subprojectId));
+        SubProject subProject = subProjectService.readById(subprojectId);
+        model.addAttribute("subproject", subProject);
 
         return "subproject/subproject-detail";
     }
@@ -121,8 +135,11 @@ public class SubProjectController {
                                      Model model,
                                      @PathVariable int id) {
 
-        // Tjekker om brugeren har en aktiv session
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
+
+        // Tjekker om brugeren har en aktiv session
         if (currentUser == null) {
             redirectAttributes.addFlashAttribute("error", "Log ind for at oprette et subprojekt.");
             return "redirect:/login";
@@ -139,18 +156,19 @@ public class SubProjectController {
     @PostMapping("/update")
     public String updateSubProject(HttpSession session,
                                    RedirectAttributes redirectAttributes,
-                                   Model model,
                                    @ModelAttribute("subproject") SubProject subProject) {
 
-        // Tjekker om brugeren har en aktiv session
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
+
+        // Tjekker om brugeren har en aktiv session
         if (currentUser == null) {
             redirectAttributes.addFlashAttribute("error", "Log ind for at oprette et subprojekt.");
             return "redirect:/login";
         }
 
         subProjectService.update(currentUser, subProject);
-
         redirectAttributes.addFlashAttribute("success", "Subprojekt blev opdateret.");
 
         return "redirect:/subprojects/" + subProject.getSubProjectId();
@@ -163,9 +181,11 @@ public class SubProjectController {
                                    HttpSession session,
                                    RedirectAttributes redirectAttributes) {
 
-        // Tjekker om brugeren har en aktiv session
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
 
+        // Tjekker om brugeren har en aktiv session
         if (currentUser == null) {
             redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne slette et delprojekt.");
             return "redirect:/login";
@@ -179,6 +199,7 @@ public class SubProjectController {
 
         redirectAttributes.addFlashAttribute("success", "Subprojektet blev slettet.");
 
+        // Redirect til project-with-subprojects.html
         return "redirect:/projects/" + projectId + "/subprojects";
     }
 
@@ -193,9 +214,11 @@ public class SubProjectController {
                                           Model model,
                                           RedirectAttributes redirectAttributes) {
 
-        // Tjekker at bruger er logget ind
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
 
+        // Tjekker at bruger er logget ind
         if (currentUser == null) {
             redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne se et delprojekts brugere.");
             return "redirect:/login";
@@ -203,12 +226,12 @@ public class SubProjectController {
 
         // Viser allerede tilknyttede brugere
         SubProjectWithUsersDTO subProjectWithUsersDTO = subProjectService.readAllUsersBySubProjectId(subprojectId);
+        model.addAttribute("subProjectWithUsers", subProjectWithUsersDTO);
 
         // Viser ikke-tilknyttede brugere (til POST-formularen)
         List<UserViewDTO> unassignedUsers = subProjectService.readAllUnAssignedUsers(subprojectId);
-
-        model.addAttribute("subProjectWithUsers", subProjectWithUsersDTO);
         model.addAttribute("unassignedUsers", unassignedUsers);
+
         return "subproject/subproject-with-users";
 
     }
@@ -220,9 +243,12 @@ public class SubProjectController {
                                           HttpSession session,
                                           Model model,
                                           RedirectAttributes redirectAttributes) {
-        // Tjekker at bruger er logget ind
-        UserViewDTO currentUser = getCurrentUser(session);
 
+        // Henter og sætter session for Thymeleaf
+        UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
+
+        // Tjekker at bruger er logget ind
         if (currentUser == null) {
             redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne se et delprojekts opgaver.");
             return "redirect:/login";
@@ -230,7 +256,6 @@ public class SubProjectController {
 
         // Henter subprojekt + tilknyttede tasks
         SubProjectWithTasksDTO subProjectWithTasksDTO = subProjectService.readAllTasksBySubProjectId(projectId);
-
         // Tilføjer til model
         model.addAttribute("subProjectWithTasks", subProjectWithTasksDTO);
 
@@ -245,7 +270,11 @@ public class SubProjectController {
                                           HttpSession session,
                                           RedirectAttributes redirectAttributes) {
 
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
+
+        // Tjekker sessionen
         if (currentUser == null) {
             redirectAttributes.addFlashAttribute("error", "Du skal logge ind for at kunne tildele brugere et subprojekt.");
             return "redirect:/login";

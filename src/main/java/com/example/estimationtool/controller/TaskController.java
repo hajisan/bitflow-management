@@ -40,9 +40,11 @@ public class TaskController {
                                  HttpSession session,
                                  RedirectAttributes redirectAttributes) {
 
-        // Tjekker om brugeren er logget ind
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
 
+        // Tjekker om brugeren er logget ind
         if (currentUser == null) {
             redirectAttributes.addFlashAttribute("error", "Log ind for at oprette en task.");
             return "redirect:/login";
@@ -63,7 +65,10 @@ public class TaskController {
                              HttpSession session,
                              RedirectAttributes redirectAttributes) {
 
+
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
 
         // Tjekker om brugeren er logget ind
         if (currentUser == null) {
@@ -86,7 +91,10 @@ public class TaskController {
                                HttpSession session,
                                RedirectAttributes redirectAttributes) {
 
+
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
 
         // Tjekker om brugeren er logget ind
         if (currentUser == null) {
@@ -108,7 +116,10 @@ public class TaskController {
                            HttpSession session,
                            RedirectAttributes redirectAttributes
                            ) {
+
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
 
         // Tjekker om brugeren er logget ind
         if (currentUser == null) {
@@ -130,7 +141,10 @@ public class TaskController {
                                Model model,
                                RedirectAttributes redirectAttributes) {
 
+
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
 
         // Tjekker om bruger er logget ind
         if (currentUser == null) {
@@ -152,7 +166,10 @@ public class TaskController {
                              HttpSession session,
                              RedirectAttributes redirectAttributes) {
 
+
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
 
         // Tjekker om bruger er logget ind
         if (currentUser == null) {
@@ -175,7 +192,10 @@ public class TaskController {
                              HttpSession session,
                              RedirectAttributes redirectAttributes) {
 
+
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
 
         if (currentUser == null) {
             redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne slette en task.");
@@ -199,8 +219,11 @@ public class TaskController {
                                     Model model,
                                     RedirectAttributes redirectAttributes) {
 
-        // Tjek om bruger er logget ind
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
+
+        // Tjek om bruger er logget ind
         if (currentUser == null) {
             redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at se brugere tilknyttet en task.");
             return "redirect:/login";
@@ -229,7 +252,11 @@ public class TaskController {
                                        Model model,
                                        RedirectAttributes redirectAttributes) {
 
+
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
+
         if (currentUser == null) {
             redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at se en task's tilknyttede subtasks.");
             return "redirect:/login";
@@ -249,7 +276,10 @@ public class TaskController {
                                           Model model,
                                           RedirectAttributes redirectAttributes) {
 
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
+
         if (currentUser == null) {
             redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at se tidsregistreringer for en task.");
             return "redirect:/login";
@@ -270,7 +300,10 @@ public class TaskController {
                                     HttpSession session,
                                     RedirectAttributes redirectAttributes) {
 
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
+
         if (currentUser == null) {
             redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne tildele brugere en task.");
             return "redirect:/login";

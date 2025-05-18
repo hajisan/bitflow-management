@@ -5,15 +5,13 @@ import com.example.estimationtool.model.*;
 import com.example.estimationtool.toolbox.dto.*;
 
 import com.example.estimationtool.repository.interfaces.IUserRepository;
-import com.example.estimationtool.toolbox.exceptionHandler.UserFriendlyException;
+import com.example.estimationtool.toolbox.controllerAdvice.UserFriendlyException;
 import com.example.estimationtool.toolbox.check.RoleCheck;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 // DATABASEFEJL BOBLER OP til @ControllerAdvice pga. JdbcTemplate fordi det er en unchecked exception
 //VALIDERING, eks. login-fejl, KASTER VI EXCEPTION (throws) for at signalere en fejl

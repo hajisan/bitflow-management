@@ -2,47 +2,72 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>Project Detail</title>
+  <title>Projektets Detaljer</title>
 </head>
 <body>
 
 <h1>Projektets Detaljer</h1>
 
 <!-- Fejlbesked -->
-<p th:if="${error}" th:text="${error}" class="error-message"></p>
+<section th:if="${error}" class="error-section">
+  <p th:text="${error}" class="error-message"></p>
+</section>
 
-<!-- Viser detaljer om projekt -->
-<ul>
-  <li>Navn: <span th:text="${project.name}"></span></li>
-  <li>Beskrivelse: <span th:text="${project.description}"></span></li>
-  <li>Deadline: <span th:text="${project.deadline}"></span></li>
-  <li>Estimeret tidsforbrug: <span th:text="${project.estimatedTime}"></span></li>
-  <li>Aktuelle tidsforbrug: <span th:text="${project.timeSpent}"></span></li>
-  <li>Status: <span th:text="${project.status}"></span></li>
-</ul>
+<!-- Projektinformation -->
+<section class="details-grid">
+  <div>Navn:</div>
+  <div th:text="${project.name}"></div>
 
-<!-- Rediger-link - kun for PROJECT_MANAGER -->
-<p th:if="${session.currentUser.role.name() == 'PROJECT_MANAGER'}">
-  <a th:href="@{/projects/edit/{projectId}(projectId=${project.projectId})}">Rediger</a>
-</p>
+  <div>Beskrivelse:</div>
+  <div th:text="${project.description}"></div>
 
-<!-- Vis tilknyttede brugere -->
-<p>
-  <a th:href="@{/projects/{projectId}/users(projectId=${project.projectId})}">Se tilknyttede brugere</a>
-</p>
+  <div>Deadline:</div>
+  <div th:text="${project.deadline}"></div>
 
+  <div>Estimeret tidsforbrug:</div>
+  <div th:text="${project.estimatedTime}"></div>
 
-<!-- Vis tilknyttede subprojekter -->
-<p>
-  <a th:href="@{/projects/{projectId}/subprojects(projectId=${project.projectId})}">
-    Se tilknyttede subprojekter
+  <div>Aktuelle tidsforbrug:</div>
+  <div th:text="${project.timeSpent}"></div>
+
+  <div>Status:</div>
+  <div th:text="${project.status}"></div>
+</section>
+
+<!-- Projektstyring -->
+
+  <!-- Rediger projekt - er kun for projektleder og admin: edit-project.html -->
+<section class="form-actions">
+  <div th:if="${session.currentUser.role.name() == 'PROJECT_MANAGER' or session.currentUser.role.name() == 'ADMIN'}">
+    <a th:href="@{/projects/edit/{projectId}(projectId=${project.projectId})}">Rediger</a>
+  </div>
+
+  <!-- Vis tilknyttede brugere er for alle: project-with-users.html -->
+  <div>
+    <a th:href="@{/projects/{projectId}/users(projectId=${project.projectId})}">
+      Se tilknyttede brugere
+    </a>
+  </div>
+  <!-- Vis tilknyttede subprojekter er for alle: project-with-subproject.html -->
+  <div>
+    <a th:href="@{/projects/{projectId}/subprojects(projectId=${project.projectId})}">
+      Se tilknyttede subprojekter
+    </a>
+  </div>
+</section>
+
+<!-- Navigation -->
+<section class="navigation">
+
+  <!-- Fuld projektliste er kun for admin: project-list.html -->
+  <a th:if="${session.currentUser.role.name() == 'ADMIN'}"
+     th:href="@{/projects/list}">
+    Tilbage til projektliste
   </a>
 
-</p>
-
-
-<!-- Tilbage-knap -->
-<p><a th:href="@{/projects/list}">Tilbage til projektliste</a></p>
+  <!-- Profilside er for alle: front-page.html -->
+  <a th:href="@{/profile}">Tilbage til forside</a>
+</section>
 
 </body>
 </html>

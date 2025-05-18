@@ -1,4 +1,4 @@
-package com.example.estimationtool.toolbox.exceptionHandler;
+package com.example.estimationtool.toolbox.controllerAdvice;
 
 /*
  * Denne klasse repræsenterer en specialdesignet exception, der bruges til at give brugervenlige fejlbeskeder.

@@ -4,65 +4,86 @@
   <meta charset="UTF-8">
   <title>Edit Project</title>
 </head>
+
 <body>
 
 <h1>Rediger Projekt</h1>
 
-<!-- Vis logget ind bruger og rolle -->
-<p th:if="${session.currentUser != null}"> Du er logget ind som <span th:text="${session.currentUser.role}"></span></p>
+<!-- Fejlbesked -->
+<section th:if="${error}" class="error-section">
+  <p th:text="${error}" class="error-message"></p>
+</section>
 
-<!-- Fejlbesked-->
-<p th:if="${error}" th:text="${error}"></p>
+
+  <!-- Vis logget ind bruger og rolle -->
+
+<!--                                  DEN SKAL NOK VÆK
+<section class="user-info">
+  <p th:if="${session.currentUser != null}">
+    Du er logget ind som <span th:text="${session.currentUser.role}"></span>
+  </p>
+</section> -->
+
 
 <!-- Formular til redigering af projekt -->
-<form th:action="@{/projects/update}" th:object="${project}" method="post">
+<section class="edit-form">
+  <form th:action="@{/projects/update}" th:object="${project}" method="post" class="form-fields">
+    <input type="hidden" th:field="*{projectId}" />
 
-  <input type="hidden" th:field="*{projectId}"/>
+    <div>
+      <label for="name">Navn:</label>
+      <input id="name" type="text" th:field="*{name}" required />
+    </div>
 
-  <p>
-    <label>Navn:</label>
-    <input type="text" th:field="*{name}" required/>
-  </p>
+    <div>
+      <label for="description">Beskrivelse:</label>
+      <textarea id="description" th:field="*{description}"></textarea>
+    </div>
 
-  <p>
-    <label>Beskrivelse:</label>
-    <textarea th:field="*{description}"></textarea>
-  </p>
+    <div>
+      <label for="deadline">Deadline:</label>
+      <input id="deadline" type="date" th:field="*{deadline}" />
+    </div>
 
-  <p>
-    <label>Deadline:</label>
-    <input type="date" th:field="*{deadline}"/>
-  </p>
+    <div>
+      <label for="estimatedTime">Estimeret tid (timer):</label>
+      <input id="estimatedTime" type="number" th:field="*{estimatedTime}" min="0" />
+    </div>
 
-  <p>
-    <label>Estimeret Tid (timer):</label>
-    <input type="number" th:field="*{estimatedTime}" min="0"/>
-  </p>
+    <div>
+      <label for="status">Status:</label>
+      <select id="status" th:field="*{status}">
+        <option value="ACTIVE">Aktiv</option>
+        <option value="INACTIVE">Inaktiv</option>
+        <option value="DONE">Færdig</option>
+      </select>
+    </div>
 
-  <p>
-    <label>Status:</label>
-    <select th:field="*{status}">
-      <option th:each="status : ${T(com.example.estimationtool.model.enums.Status).values()}"
-              th:value="${status}"
-              th:text="${status}"></option>
-    </select>
-  </p>
+    <div class="form-actions">
+      <button type="submit">Opdater</button>
+    </div>
+  </form>
+</section>
 
-  <!-- Knap til Opdatér task -->
+<!-- Slet projekt -->
+<section class="delete">
+  <form th:action="@{/projects/delete/{projectId}(projectId=${project.projectId})}" method="post">
+    <button type="submit" onclick="return confirm('Er du sikker på, at du vil slette denne opgave?')">Slet</button>
+  </form>
+</section>
 
-  <p>
-    <button type="submit">Opdater</button>
-  </p>
-</form>
+<!-- Navigation -->
+<section class="navigation">
 
-<!-- Sletter task -->
+  <!-- Fuld projektliste kun for admin: project-list.html -->
+  <a th:if="${session.currentUser.role == 'ADMIN'}"
+     th:href="@{/projects/list}">
+    Tilbage til projektliste
+  </a>
 
-<form th:action="@{/projects/delete/{projectId}(projectId=${project.projectId})}" method="post">
-  <button type="submit" onclick="return confirm('Er du sikker på, at du vil slette denne opgave?')">Slet</button>
-</form>
-
-<!-- Tilbage til projektliste -->
-<p><a th:href="@{/projects/list}">Tilbage til projektliste</a></p>
+  <!-- Profilside for admin og projektleder: front-page.html -->
+  <a th:href="@{/profile}">Tilbage til forside</a>
+</section>
 
 </body>
 </html>

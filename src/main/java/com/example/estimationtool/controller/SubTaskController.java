@@ -43,9 +43,11 @@ public class SubTaskController {
                                     HttpSession session,
                                     RedirectAttributes redirectAttributes) {
 
-        // Tjekker om brugeren er logget ind
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
 
+        // Tjekker om brugeren er logget ind
         if (currentUser == null) {
             redirectAttributes.addFlashAttribute("error", "Log ind for at oprette en subtask.");
             return "redirect:/login";
@@ -53,7 +55,6 @@ public class SubTaskController {
 
         SubTask subTask = new SubTask();
         subTask.setTaskId(taskId); // Binder subtask til task
-
         model.addAttribute("subtask", subTask);
 
         return "subtask/create-subtask";
@@ -68,7 +69,9 @@ public class SubTaskController {
                                 HttpSession session,
                                 RedirectAttributes redirectAttributes) {
 
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
 
         // Tjekker om brugeren er logget ind
         if (currentUser == null) {
@@ -93,7 +96,10 @@ public class SubTaskController {
                                   HttpSession session,
                                   RedirectAttributes redirectAttributes) {
 
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
+
 
         // Tjekker om brugeren er logget ind
         if (currentUser == null) {
@@ -102,7 +108,6 @@ public class SubTaskController {
         }
 
         List<SubTask> subTaskList = subTaskService.readAll();
-
         model.addAttribute("subtasks", subTaskList);
 
         return "subtask/subtask-list";
@@ -115,7 +120,10 @@ public class SubTaskController {
                               HttpSession session,
                               RedirectAttributes redirectAttributes) {
 
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
+
 
         // Tjekker om brugeren er logget ind
         if (currentUser == null) {
@@ -125,16 +133,14 @@ public class SubTaskController {
 
         // Henter alle subtasks
         SubTask subTask = subTaskService.readById(id);
+        model.addAttribute("subtask", subTask);
 
         // Henter alle brugere (for dropdown menu)
         List<UserViewDTO> allUserList = userService.readAll();
+        model.addAttribute("allUserList", allUserList);
 
         // Henter brugeren tilknyttet subtask
         UserViewDTO assignedUser = subTaskService.readAssignedUserBySubTaskId(id); // denne metode laver vi straks
-
-
-        model.addAttribute("subtask", subTask);
-        model.addAttribute("allUserList", allUserList);
         model.addAttribute("assignedUser", assignedUser);
 
         return "subtask/subtask-detail";
@@ -148,7 +154,10 @@ public class SubTaskController {
                                   HttpSession session,
                                   RedirectAttributes redirectAttributes) {
 
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
+
 
         // Tjekker om brugeren er logget ind
         if (currentUser == null) {
@@ -171,7 +180,10 @@ public class SubTaskController {
                                 HttpSession session,
                                 RedirectAttributes redirectAttributes) {
 
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
+
 
         // Tjekker om bruger er logget ind
         if (currentUser == null) {
@@ -194,7 +206,10 @@ public class SubTaskController {
                                 HttpSession session,
                                 RedirectAttributes redirectAttributes) {
 
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
+
 
         if (currentUser == null) {
             redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne slette en subtask.");
@@ -219,7 +234,10 @@ public class SubTaskController {
                                              Model model,
                                              RedirectAttributes redirectAttributes) {
 
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
+
         if (currentUser == null) {
             redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at se tidsregistreringer for en subtask.");
             return "redirect:/login";
@@ -238,7 +256,10 @@ public class SubTaskController {
                                       HttpSession session,
                                       RedirectAttributes redirectAttributes) {
 
-        UserViewDTO currentUser = (UserViewDTO) session.getAttribute("currentUser");
+        // Henter og sætter session for Thymeleaf
+        UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
+
         if (currentUser == null) {
             redirectAttributes.addFlashAttribute("error", "Du skal være logget ind.");
             return "redirect:/login";
@@ -259,7 +280,10 @@ public class SubTaskController {
                                            HttpSession session,
                                            RedirectAttributes redirectAttributes) {
 
-        UserViewDTO currentUser = (UserViewDTO) session.getAttribute("currentUser");
+        // Henter og sætter session for Thymeleaf
+        UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
+
         if (currentUser == null) {
             redirectAttributes.addFlashAttribute("error", "Login kræves.");
             return "redirect:/login";

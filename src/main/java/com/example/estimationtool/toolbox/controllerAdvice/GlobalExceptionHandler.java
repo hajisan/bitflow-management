@@ -1,4 +1,4 @@
-package com.example.estimationtool.toolbox.exceptionHandler;
+package com.example.estimationtool.toolbox.controllerAdvice;
 
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;

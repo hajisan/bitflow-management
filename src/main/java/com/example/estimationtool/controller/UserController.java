@@ -35,14 +35,15 @@ public class UserController {
                                RedirectAttributes redirectAttributes,
                                Model model) {
 
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
 
         if (currentUser == null) {
             redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at tilgå forsiden.");
             return "redirect:/login";
         }
 
-        model.addAttribute("user", currentUser);
         return "user/front-page";
     }
 
@@ -55,14 +56,18 @@ public class UserController {
                                  Model model,
                                  RedirectAttributes redirectAttributes) {
 
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
 
         if (currentUser == null) {
             redirectAttributes.addFlashAttribute("error", "Log ind for at oprette en ny bruger.");
             return "redirect:/login";
         }
 
-        model.addAttribute("user", new UserRegistrationDTO());
+        UserRegistrationDTO userRegistrationDTO = new UserRegistrationDTO();
+        model.addAttribute("user", userRegistrationDTO);
+
         return "user/create-user";
     }
 
@@ -74,7 +79,9 @@ public class UserController {
                              HttpSession session,
                              RedirectAttributes redirectAttributes) {
 
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
 
         // Tjekker om brugeren er logget ind
         if (currentUser == null) {
@@ -97,7 +104,9 @@ public class UserController {
                                Model model,
                                RedirectAttributes redirectAttributes) {
 
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
 
         // Tjekker om brugeren er logget ind
         if (currentUser == null) {
@@ -107,7 +116,7 @@ public class UserController {
 
         List<UserViewDTO> userViewDTOList = userService.readAll();
         model.addAttribute("users", userViewDTOList);
-        model.addAttribute("isAdmin", currentUser.getRole() == Role.ADMIN);
+
         return "user/user-list";
     }
 
@@ -118,7 +127,9 @@ public class UserController {
                            Model model,
                            RedirectAttributes redirectAttributes) {
 
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
 
         // Tjekker om brugeren er logget ind
         if (currentUser == null) {
@@ -127,7 +138,6 @@ public class UserController {
         }
 
         UserViewDTO userViewDTO = userService.readById(id);
-
         model.addAttribute("user", userViewDTO);
 
         return "user/user-detail";
@@ -142,7 +152,9 @@ public class UserController {
                                Model model,
                                RedirectAttributes redirectAttributes) {
 
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
 
         // Tjekker om bruger er logget ind
         if (currentUser == null) {
@@ -152,9 +164,9 @@ public class UserController {
 
 
         // Kalder metode, der konverterer UserViewDTO til en UserUpdateDTO
-       UserUpdateDTO userUpdateDTO = userService.getUserUpdateDTOById(id);
-
+        UserUpdateDTO userUpdateDTO = userService.getUserUpdateDTOById(id);
         model.addAttribute("userUpdateDTO", userUpdateDTO);
+
         return "user/edit-user";
 
     }
@@ -166,7 +178,9 @@ public class UserController {
                              HttpSession session,
                              RedirectAttributes redirectAttributes) {
 
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
 
         // Tjekker om bruger er logget ind
         if (currentUser == null) {
@@ -176,29 +190,30 @@ public class UserController {
 
         userService.updateUser(userUpdateDTO, currentUser);
 
-        // Tilføj succesbesked som flash-attribut (vises efter redirect)
         redirectAttributes.addFlashAttribute("success", "Brugeren blev opdateret.");
 
-        return "redirect:/users/" + userUpdateDTO.getUserId(); // Redirect til user-detail
+        return "redirect:/users/" + userUpdateDTO.getUserId(); // Redirect til user-detail.html
     }
 
 
     //------------------------------------ Delete() ------------------------------------
 
-    @PostMapping("/delete/{id}")
-    public String deleteUser(@PathVariable int id,
+    @PostMapping("/delete/{userId}")
+    public String deleteUser(@PathVariable int userId,
                              HttpSession session,
                              RedirectAttributes redirectAttributes) {
 
+        // Henter og sætter session for Thymeleaf
+        UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
 
         // Tjekker om bruger er logget ind
-        UserViewDTO currentUser = getCurrentUser(session);
         if (currentUser == null) {
             redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne slette brugeren.");
             return "redirect:/login";
         }
 
-        userService.deleteById(id, currentUser);
+        userService.deleteById(userId, currentUser);
 
         redirectAttributes.addFlashAttribute("success", "Brugeren blev slettet.");
 
@@ -216,15 +231,17 @@ public class UserController {
                                        Model model,
                                        RedirectAttributes redirectAttributes) {
 
-        // Tjekker om bruger er logget ind
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
+
+        // Tjekker om bruger er logget ind
         if (currentUser == null) {
             redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne se brugerens projekter.");
             return "redirect:/login";
         }
 
         UserWithProjectsDTO userWithProjectsDTO = userService.readAllProjectsByUserId(userId);
-
         model.addAttribute("userWithProjects", userWithProjectsDTO);
 
         return "user/user-with-projects";
@@ -238,16 +255,19 @@ public class UserController {
                                           Model model,
                                           RedirectAttributes redirectAttributes) {
 
-        // Tjekker om bruger er logget ind
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
+
+        // Tjekker om bruger er logget ind
         if (currentUser == null) {
             redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne se en brugers subprojekter.");
             return "redirect:/login";
         }
 
         UserWithSubProjectsDTO userWithSubProjectsDTO = userService.readAllSubProjectsByUserId(id);
-
         model.addAttribute("userWithSubProjects", userWithSubProjectsDTO);
+
         return "user/user-with-subprojects";
     }
 
@@ -259,15 +279,17 @@ public class UserController {
                                     Model model,
                                     RedirectAttributes redirectAttributes) {
 
-        // Tjekker om bruger er logget ind
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
+
+        // Tjekker om bruger er logget ind
         if (currentUser == null) {
             redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne se en brugers tasks.");
             return "redirect:/login";
         }
 
         UserWithTasksDTO userWithTasksDTO = userService.readAllTasksByUserId(id);
-
         model.addAttribute("userWithTasks", userWithTasksDTO);
 
         return "user/user-with-tasks";
@@ -282,8 +304,11 @@ public class UserController {
                                        Model model,
                                        RedirectAttributes redirectAttributes) {
 
-        // Tjekker om bruger er logget ind
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
+
+        // Tjekker om bruger er logget ind
         if (currentUser == null) {
             redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne se en brugers subtasks.");
             return "redirect:/login";
@@ -291,7 +316,6 @@ public class UserController {
 
         // Henter DTO: bruger + subopgaver
         UserWithSubTasksDTO userWithSubTasksDTO = userService.readAllSubTasksByUserId(id);
-
         // Lægger DTO på modellen
         model.addAttribute("userWithSubTasks", userWithSubTasksDTO);
 

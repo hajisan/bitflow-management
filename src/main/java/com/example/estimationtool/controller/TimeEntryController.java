@@ -31,7 +31,9 @@ public class TimeEntryController {
                                       HttpSession session,
                                       RedirectAttributes redirectAttributes) {
 
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
 
         if (currentUser == null) {
             redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne oprette en tidsregistrering.");
@@ -49,7 +51,9 @@ public class TimeEntryController {
                                   HttpSession session,
                                   RedirectAttributes redirectAttributes) {
 
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
 
         if (currentUser == null) {
             redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne oprette en tidsregistrering.");
@@ -70,7 +74,9 @@ public class TimeEntryController {
                                      HttpSession session,
                                      RedirectAttributes redirectAttributes) {
 
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
 
         if (currentUser == null) {
             redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne se tidsregistreringer.");
@@ -90,8 +96,9 @@ public class TimeEntryController {
                                 RedirectAttributes redirectAttributes) {
 
 
-        // Tjekker om bruger er logget ind
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
 
         if (currentUser == null) {
             redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne se en tidsregistrering.");
@@ -112,8 +119,9 @@ public class TimeEntryController {
                                     HttpSession session,
                                     RedirectAttributes redirectAttributes) {
 
-        // Tjekker om bruger er logget ind
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
 
         if (currentUser == null) {
             redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne ændre en tidsregistrering.");
@@ -134,8 +142,9 @@ public class TimeEntryController {
                                   HttpSession session,
                                   RedirectAttributes redirectAttributes) {
 
-        // Tjekker om bruger er logget ind
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
 
         if (currentUser == null) {
             redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne ændre en tidsregistrering.");
@@ -158,7 +167,10 @@ public class TimeEntryController {
                                   HttpSession session,
                                   RedirectAttributes redirectAttributes) {
 
+        // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
+
         if (currentUser == null) {
             redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne slette en tidsregistrering.");
             return "redirect:/login";
