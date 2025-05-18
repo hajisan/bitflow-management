@@ -70,7 +70,7 @@ public class TaskService {
             TaskWithSubTasksDTO taskWithSubTasksDTO = new TaskWithSubTasksDTO(task, subTaskList);
 
             if (!statusCheck.canMarkTaskAsDone(taskWithSubTasksDTO)) {
-                throw new IllegalStateException("Status for task kan ikke markeres som færdig, før alle SubTasks er færdige.");
+                throw new IllegalStateException("Status for task kan ikke markeres som færdig, før alle subtasks er færdige.");
             }
         }
 
@@ -203,13 +203,6 @@ public class TaskService {
             }
         }
     }
-
-
-
-
-
-    // ----------------- Task tildeles en bruger efter oprettelse -------------------
-
 
 
 

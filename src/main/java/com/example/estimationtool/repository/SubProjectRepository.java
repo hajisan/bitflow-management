@@ -50,16 +50,8 @@ public class SubProjectRepository implements ISubProjectRepository {
         int id = keyHolder.getKey().intValue();
         subProject.setSubProjectId(id);
 
-
-        // SKAL FJERNES HVIS EXCEPTION HÅNDTERES I SERVICE
-//        // Tjekker om ID'et er null og hvis det er sættes det til -1
-//        int id = keyHolder.getKey() != null ? keyHolder.getKey().intValue() : -1;
-//        // Sætter subprojektets ID til keyHolderens næste værdi, hvis den ikke er -1
-//        if (id != -1) subProject.setSubProjectId(id);
-//        // Returnerer subprojekt-instansen så den kan sendes videre
         return subProject;
     }
-
 
 
     //------------------------------------ Read() ------------------------------------
@@ -150,8 +142,8 @@ public class SubProjectRepository implements ISubProjectRepository {
                     subproject.deadline,
                     subproject.status
                 FROM subproject
-                JOIN user_subproject ON subproject.id = user_subproject.subProjectID
-                WHERE user_subproject.userID = ?
+                JOIN users_subproject ON subproject.id = users_subproject.subProjectID
+                WHERE users_subproject.userID = ?
                 """;
         return jdbcTemplate.query(sql, new SubProjectRowMapperS(), userId);
     }
@@ -162,10 +154,8 @@ public class SubProjectRepository implements ISubProjectRepository {
 
     @Override
     public void assignUserToSubProject(Integer userId, Integer subProjectId) {
-        String sql = "INSERT INTO user_subproject (userID, subProjectID) VALUES (?, ?)";
+        String sql = "INSERT INTO Users_SubProject (userID, subProjectID) VALUES (?, ?)";
         jdbcTemplate.update(sql, userId, subProjectId);
     }
-
-
 
 }

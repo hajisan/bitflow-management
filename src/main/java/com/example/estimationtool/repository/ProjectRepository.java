@@ -44,12 +44,6 @@
             int generatedId = keyHolder.getKey().intValue();
             project.setProjectId(generatedId);  // Sætter ID på Project
 
-            // OVERFLØDIG, HVIS DETTE EXCEPTION HÅNdTERES I SERVICE OG FANGES MED @CONTROLLERADVICE
-    //        // Tjekker først om id'et er null eller ej. Hvis det er, så sætter vi id-variable til -1
-    //        int projectId = keyHolder.getKey() != null ? keyHolder.getKey().intValue() : -1;
-    //        // Sætter projektets id til KeyHolderens værdi, hvis den ikke var null
-    //        if (projectId != -1) project.setProjectId(projectId);
-
             return project;
         }
 
@@ -71,7 +65,7 @@
         public Project readById(Integer projectId) {
 
             String sql = """
-                    SELECT id,estimatedTime, timeSpent, name, description, deadline, status
+                    SELECT id, estimatedTime, timeSpent, name, description, deadline, status
                     FROM project
                     WHERE id = ?
                     """;
@@ -79,38 +73,6 @@
             return jdbcTemplate.queryForObject(sql, new ProjectRowMapper(), projectId);
 
         }
-
-
-    //    @Override
-    //    public Project readById(Integer id) {
-    //
-    //        String sql = """
-    //                SELECT p.id, p.name, p.description, p.deadline, p.estimatedTime, p.timeSpent, p.status, up.userID as userId
-    //                FROM project p
-    //                LEFT JOIN user_project up ON p.id = up.projectID
-    //                WHERE p.id = ?
-    //                """;
-    //
-    //        try {
-    //            return jdbcTemplate.queryForObject(sql, new ProjectRowMapper(), id);
-    //        } catch (EmptyResultDataAccessException e) {
-    //            return null;
-    //        }
-    //    }
-    //
-    //    @Override
-    //    public List<Project> readByUserId(Integer userId) {
-    //
-    //        String sql = """
-    //                SELECT p.id, p.name, p.description, p.deadline, p.estimatedTime, p.timeSpent, p.status, up.userID as userId
-    //                FROM project p
-    //                LEFT JOIN user_project up ON p.id = up.projectID
-    //                WHERE up.userID = ?
-    //                """;
-    //
-    //        return jdbcTemplate.query(sql, new ProjectRowMapper(), userId);
-    //    }
-
 
 
         //------------------------------------ Update() ------------------------------------
@@ -147,7 +109,6 @@
         }
 
 
-
         //--------------------------------- Til DTO'er ------------------------------------
 
         // --- Read() projekter ud fra bruger-ID ---
@@ -168,8 +129,8 @@
                         project.deadline,
                         project.status
                     FROM project
-                    JOIN user_project ON project.id = user_project.projectID
-                    WHERE user_project.userID = ?
+                    JOIN users_project ON project.id = users_project.projectID
+                    WHERE users_project.userID = ?
                     """;
 
             return jdbcTemplate.query(sql, new ProjectRowMapper(),userId);
@@ -183,7 +144,7 @@
         @Override
         public void assignUserToProject(Integer userId, Integer projectId) {
 
-            String sql = "INSERT INTO user_project (userID, projectID) VALUES (?, ?)";
+            String sql = "INSERT INTO users_project (userID, projectID) VALUES (?, ?)";
 
             jdbcTemplate.update(sql, userId, projectId);
 

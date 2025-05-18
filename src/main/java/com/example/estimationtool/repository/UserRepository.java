@@ -28,7 +28,7 @@ public class UserRepository implements IUserRepository {
     @Override
     public User create(User user) {
 
-        String sql = "INSERT INTO user (firstName, lastName, email, passwordHash, role) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO users (firstName, lastName, email, passwordHash, role) VALUES (?, ?, ?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -54,14 +54,14 @@ public class UserRepository implements IUserRepository {
     @Override
     public List<User> readAll() {
 
-        String sql = "SELECT id, firstName, lastName, email, passwordHash, role FROM user";
+        String sql = "SELECT id, firstName, lastName, email, passwordHash, role FROM users";
         return jdbcTemplate.query(sql, new UserRowMapper());
     }
 
     @Override
     public User readById(Integer id) {
 
-        String sql = "SELECT id, firstName, lastName, email, passwordHash, role FROM user WHERE id = ?";
+        String sql = "SELECT id, firstName, lastName, email, passwordHash, role FROM users WHERE id = ?";
 
             return jdbcTemplate.queryForObject(sql, new UserRowMapper(), id);
 
@@ -74,7 +74,7 @@ public class UserRepository implements IUserRepository {
     @Override
     public User update(User user) {
 
-        String sql = "UPDATE user SET firstName = ?, lastName = ?, email = ?, passwordHash = ?, role = ? WHERE id = ?";
+        String sql = "UPDATE users SET firstName = ?, lastName = ?, email = ?, passwordHash = ?, role = ? WHERE id = ?";
 
 
             jdbcTemplate.update( // Henter disse værdier, så de kan opdateres
@@ -95,7 +95,7 @@ public class UserRepository implements IUserRepository {
     @Override
     public void deleteById(Integer id) {
 
-        String sql = "DELETE FROM user WHERE id = ?";
+        String sql = "DELETE FROM users WHERE id = ?";
         jdbcTemplate.update(sql, id);
 
     }
@@ -106,7 +106,7 @@ public class UserRepository implements IUserRepository {
     public User readByEmail(String email) {
         String sql = """
             SELECT id, firstName, lastName, email, passwordHash, role
-            FROM user
+            FROM users
             WHERE email = ?
             """;
 
@@ -126,15 +126,15 @@ public class UserRepository implements IUserRepository {
 
         String sql = """
                 SELECT
-                    user.id,
-                    user.firstName,
-                    user.lastName,
-                    user.email,
-                    user.passwordHash,
-                    user.role
-                FROM user
-                JOIN user_project ON user.id = user_project.userID
-                WHERE user_project.projectID = ?
+                    users.id,
+                    users.firstName,
+                    users.lastName,
+                    users.email,
+                    users.passwordHash,
+                    users.role
+                FROM users
+                JOIN users_project ON users.id = users_project.userID
+                WHERE users_project.projectID = ?
                 """;
 
             return jdbcTemplate.query(sql, new UserRowMapper(), projectId);
@@ -151,15 +151,15 @@ public class UserRepository implements IUserRepository {
 
         String sql = """
                 SELECT
-                    user.id,
-                    user.firstName,
-                    user.lastName,
-                    user.email,
-                    user.passwordHash,
-                    user.role
-                FROM user
-                JOIN user_subproject ON user.id = user_subproject.userID
-                WHERE user_subproject.subProjectID = ?
+                    users.id,
+                    users.firstName,
+                    users.lastName,
+                    users.email,
+                    users.passwordHash,
+                    users.role
+                FROM users
+                JOIN users_subproject ON users.id = users_subproject.userID
+                WHERE users_subproject.subProjectID = ?
                 """;
 
             return jdbcTemplate.query(sql, new UserRowMapper(), subProjectId);
@@ -176,15 +176,15 @@ public class UserRepository implements IUserRepository {
 
         String sql = """
                 SELECT
-                    user.id,
-                    user.firstName,
-                    user.lastName,
-                    user.email,
-                    user.passwordHash,
-                    user.role
-                FROM user
-                JOIN user_task ON user.id = user_task.userID
-                WHERE user_task.taskID = ?
+                    users.id,
+                    users.firstName,
+                    users.lastName,
+                    users.email,
+                    users.passwordHash,
+                    users.role
+                FROM users
+                JOIN users_task ON users.id = users_task.userID
+                WHERE users_task.taskID = ?
                 """;
 
             return jdbcTemplate.query(sql, new UserRowMapper(), taskId);
@@ -199,15 +199,15 @@ public class UserRepository implements IUserRepository {
 
         String sql = """
         SELECT
-            user.id,
-            user.firstName,
-            user.lastName,
-            user.email,
-            user.passwordHash,
-            user.role
-        FROM user
-        JOIN user_subtask ON user.id = user_subtask.userID
-        WHERE user_subtask.subTaskID = ?
+            users.id,
+            users.firstName,
+            users.lastName,
+            users.email,
+            users.passwordHash,
+            users.role
+        FROM users
+        JOIN users_subtask ON users.id = users_subtask.userID
+        WHERE users_subtask.subTaskID = ?
     """;
 
         List<User> users = jdbcTemplate.query(sql, new UserRowMapper(), subTaskId);

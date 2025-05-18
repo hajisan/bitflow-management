@@ -26,24 +26,25 @@
     <label>Adgangskode (valgfrit):</label>
     <input type="password" th:field="*{password}" />
 
-    <!-- Kun vis rolle-feltet hvis brugeren er admin -->
-    <div th:if="${isAdmin}">
-        <label>Rolle:</label>
-        <select th:field="*{role}">
-            <option value="ADMIN">Admin</option>
-            <option value="PROJECT_MANAGER">Projektleder</option>
-            <option value="DEVELOPER">Udvikler</option>
-        </select>
-    </div>
+    <!-- rolle-felt i dropdown-menu -->
+    <label for="role">Rolle:</label>
+    <select id="role" name="role" th:field="*{role}">
+        <option value="ADMIN">Admin</option>
+        <option value="PROJECT_MANAGER">Projektleder</option>
+        <option value="DEVELOPER">Udvikler</option>
+    </select>
+
 
     <br>
     <button type="submit">Opdater bruger</button>
 </form>
 
 <!-- Kun admin må slette -->
-<form th:if="${isAdmin}" th:action="@{/users/delete/{id}(id=${userUpdateDTO.userId})}" method="post" onsubmit="return confirm('Er du sikker på, at du vil slette denne bruger?');">
-    <button type="submit" style="color: red;">Slet bruger</button>
+<form th:action="@{/users/delete/{id}(id=${userUpdateDTO.userId})}" method="post"
+      onsubmit="return confirm('Er du sikker på, at du vil slette denne bruger?');">
+    <button type="submit">Slet bruger</button>
 </form>
+
 
 
 </body>

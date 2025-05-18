@@ -82,6 +82,7 @@ public class SubTaskService {
     // --- Henter timeentries ud fra subtask-ID ---
 
     public SubTaskWithTimeEntriesDTO readAllTimeEntriesBySubTaskId(int subTaskId) {
+
         SubTask subTask = iSubTaskRepository.readById(subTaskId);
         List<TimeEntry> entries = iTimeEntryRepository.readAllBySubTaskId(subTaskId);
         // Bruger TimeCalculatorens statiske metode til at sætte timeSpent ud fra de loggede TimeEntries

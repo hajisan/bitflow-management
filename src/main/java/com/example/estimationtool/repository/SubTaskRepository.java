@@ -134,8 +134,8 @@ public class SubTaskRepository implements ISubTaskRepository {
                     subtask.deadline,
                     subtask.status
                 FROM subtask
-                JOIN user_subtask ON subtask.id = user_subtask.subTaskID
-                WHERE user_subtask.userID = ?
+                JOIN users_subtask ON subtask.id = users_subtask.subTaskID
+                WHERE users_subtask.userID = ?
                 """;
         return jdbcTemplate.query(sql, new SubTaskRowMapper(), userId);
     }
@@ -162,11 +162,11 @@ public class SubTaskRepository implements ISubTaskRepository {
     public void assignUserToSubTask(Integer userId, Integer subTaskId) {
 
         // Slet eksisterende tildeling først
-        String deleteSql = "DELETE FROM user_subtask WHERE subTaskID = ?";
+        String deleteSql = "DELETE FROM users_subtask WHERE subTaskID = ?";
         jdbcTemplate.update(deleteSql, subTaskId);
 
         // Indsæt ny tildeling
-        String sql = "INSERT INTO user_subtask (userID, subTaskID) VALUES (?, ?)";
+        String sql = "INSERT INTO users_subtask (userID, subTaskID) VALUES (?, ?)";
         jdbcTemplate.update(sql, userId, subTaskId);
 
     }
