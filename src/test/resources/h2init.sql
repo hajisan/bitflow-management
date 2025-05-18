@@ -1,16 +1,16 @@
 -- Dropper tables hvis de findes for at rydde al data
 
-DROP TABLE IF EXISTS users;
-DROP TABLE IF EXISTS project;
-DROP TABLE IF EXISTS subproject;
-DROP TABLE IF EXISTS task;
-DROP TABLE IF EXISTS subtask;
-DROP TABLE IF EXISTS timeentry;
+DROP TABLE IF EXISTS Users;
+DROP TABLE IF EXISTS Project;
+DROP TABLE IF EXISTS SubpPoject;
+DROP TABLE IF EXISTS Task;
+DROP TABLE IF EXISTS SubTask;
+DROP TABLE IF EXISTS TimeEntry;
 
-DROP TABLE IF EXISTS users_project;
-DROP TABLE IF EXISTS users_subproject;
-DROP TABLE IF EXISTS user_task;
-DROP TABLE IF EXISTS user_subtask;
+DROP TABLE IF EXISTS Users_Project;
+DROP TABLE IF EXISTS Users_SubProject;
+DROP TABLE IF EXISTS User_Task;
+DROP TABLE IF EXISTS User_SubTask;
 
 
 
@@ -45,7 +45,7 @@ CREATE TABLE Project (
 -- ========================
 -- Tabel: Subproject
 -- ========================
-CREATE TABLE Subproject (
+CREATE TABLE SubProject (
     id              INT AUTO_INCREMENT PRIMARY KEY,
     projectID       INTEGER,
     name            VARCHAR(255),
@@ -73,7 +73,7 @@ CREATE TABLE Task (
       status          VARCHAR(255) CHECK (status IN ('ACTIVE', 'INACTIVE', 'DONE')),
 
       UNIQUE (subProjectID, name),
-      FOREIGN KEY (subProjectID) REFERENCES Subproject(id) ON DELETE CASCADE
+      FOREIGN KEY (subProjectID) REFERENCES SubProject(id) ON DELETE CASCADE
 );
 
 -- ========================
@@ -119,13 +119,13 @@ CREATE TABLE Users_Project (
      FOREIGN KEY (projectID) REFERENCES Project(id) ON DELETE CASCADE
 );
 
-CREATE TABLE Users_Subproject (
+CREATE TABLE Users_SubProject (
     userID          INTEGER,
     subProjectID    INTEGER,
 
     PRIMARY KEY (userID, subProjectID),
     FOREIGN KEY (userID) REFERENCES Users(id) ON DELETE CASCADE,
-    FOREIGN KEY (subProjectID) REFERENCES Subproject(id) ON DELETE CASCADE
+    FOREIGN KEY (subProjectID) REFERENCES SubProject(id) ON DELETE CASCADE
 );
 
 CREATE TABLE Users_Task (
@@ -153,7 +153,8 @@ CREATE TABLE Users_SubTask (
 INSERT INTO Users (firstName, lastName, email, passwordHash, role)
 VALUES ('TestAdmin', '1', 'test@1.com', '$2a$12$WshmMsov744g1iD93L.3tuJkScgrJ4q4VgIYuiZZoKwuNK42/9Tiu', 'ADMIN'),
        ('TestManager', '2', 'test@2.com', '$2a$12$d.2NywpcgVwm1PQ2XHb.t.t8WGCWH/oLuFWDWn8esNhQbUXXvm.Im', 'PROJECT_MANAGER'),
-       ('TestUser', '3', 'test@3.com', '$2a$12$oQd7HAhZZZeWODrTeF3ube1y3VnCP2jxy2py7EMMV4eGZmcMBlodm', 'DEVELOPER');
+       ('TestUser1', '3', 'test@3.com', '$2a$12$oQd7HAhZZZeWODrTeF3ube1y3VnCP2jxy2py7EMMV4eGZmcMBlodm', 'DEVELOPER'),
+       ('TestUser2', '4', 'test@4.com', '$2a$12$oQd7HAhZZZeWODrTeF3ube1y3VnCP2jxy2py7EMMV4eGZmcMBlodm', 'DEVELOPER');
 
 INSERT INTO Project (name, description, deadline, estimatedTime, timeSpent, status)
 VALUES ('Test Project 1', 'Et testprojekt 1', '2025-05-31', 100, 0, 'ACTIVE'),
