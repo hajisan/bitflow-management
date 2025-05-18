@@ -191,13 +191,13 @@ public class TimeCalculator {
 
     //------------------------------------ Tid tilbage i TIMER ------------------------------------
 
-    public static double calculateRemainingTime(LocalDate deadline) {
+    public double calculateRemainingTime(LocalDate deadline) {
         return countWorkDays(deadline) * (37 / 5.0); // Vi antager at en arbejdsuge er 37 timer med 5 hverdage
     }
 
     //---------------------------- Tid i TIMER pr. DAG m. hjælpemetode ----------------------------
 
-    public static double calculateHoursPerDay(int remainingHours, LocalDate deadline) {
+    public double calculateHoursPerDay(int remainingHours, LocalDate deadline) {
         // until-metoden hos LocalDate returnerer longs og ikke ints, hvilket er grunden til at værdien bliver castet
         double daysUntilDeadline = countWorkDays(deadline); // Se metoden countWorkDays
         if (daysUntilDeadline > 0) { // Sørger for at vi er før deadlinen, samtidig med at undgå at dividere med 0
@@ -206,7 +206,7 @@ public class TimeCalculator {
         return 0; // TODO Skal vi bruge en exception her i stedet?
     }
 
-    private static double countWorkDays(LocalDate deadline) {
+    private double countWorkDays(LocalDate deadline) {
         double workingDays = 0.0;                                       // Vi starter med 0 hverdage og inkrementerer hver gang vi møder en hverdag i while-loopet
         LocalDate dateToCheck = LocalDate.now();                        // Den dato vi tjekker - vi starter med at tjekke i dag
 
@@ -218,5 +218,10 @@ public class TimeCalculator {
             dateToCheck = dateToCheck.plusDays(1);                      // Vi går videre til næste dato der skal tjekkes ved at tilføje en dag til datoen
         }
         return workingDays;
+    }
+
+    public int countDevsNeeded(int remainingHours, LocalDate deadline) {
+        double hoursPerDay = calculateHoursPerDay(remainingHours, deadline);
+        return (int) hoursPerDay / 8; // En arbejdsuge på 5 dage og 37 timer giver 7,4 timer pr. dag. Vi under op til 8.
     }
 }
