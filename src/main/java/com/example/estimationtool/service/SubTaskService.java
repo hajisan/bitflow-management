@@ -24,12 +24,14 @@ public class SubTaskService {
     private final ITimeEntryRepository iTimeEntryRepository;
     private final IUserRepository iUserRepository;
     private final StatusCheck statusCheck;
+    private final TimeCalculator timeCalculator;
 
-    public SubTaskService(ISubTaskRepository iSubTaskRepository, ITimeEntryRepository iTimeEntryRepository, IUserRepository iUserRepository, StatusCheck statusCheck) {
+    public SubTaskService(ISubTaskRepository iSubTaskRepository, ITimeEntryRepository iTimeEntryRepository, IUserRepository iUserRepository, StatusCheck statusCheck, TimeCalculator timeCalculator) {
         this.iSubTaskRepository = iSubTaskRepository;
         this.iTimeEntryRepository = iTimeEntryRepository;
         this.iUserRepository = iUserRepository;
         this.statusCheck = statusCheck;
+        this.timeCalculator = timeCalculator;
     }
 
     //------------------------------------ Create() ------------------------------------
@@ -83,7 +85,7 @@ public class SubTaskService {
         SubTask subTask = iSubTaskRepository.readById(subTaskId);
         List<TimeEntry> entries = iTimeEntryRepository.readAllBySubTaskId(subTaskId);
         // Bruger TimeCalculatorens statiske metode til at sætte timeSpent ud fra de loggede TimeEntries
-        subTask.setTimeSpent(TimeCalculator.calculateTimeSpent(entries));
+        subTask.setTimeSpent(timeCalculator.calculateTimeSpent(entries));
 
         return new SubTaskWithTimeEntriesDTO(subTask, entries);
     }

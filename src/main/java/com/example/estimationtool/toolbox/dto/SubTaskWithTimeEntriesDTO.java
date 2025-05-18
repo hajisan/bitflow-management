@@ -7,9 +7,4 @@ import com.example.estimationtool.toolbox.timeCalc.TimeCalculator;
 import java.util.List;
 
 public record SubTaskWithTimeEntriesDTO(SubTask subTask, List<TimeEntry> timeEntries) {
-
-    // Skal måske slet ikke bruges
-    public int getTimeSpent() {
-        return TimeCalculator.calculateTimeSpent(timeEntries);
-    }
 }
