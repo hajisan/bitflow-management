@@ -96,16 +96,16 @@ public class SubTask implements Estimable {
 
     @Override
     public String toString() {
-        return "SubTask{" +
-                "subTaskId=" + subTaskId +
-                ", taskId=" + taskId +
-                ", estimatedTime=" + estimatedTime +
-                ", timeSpent=" + timeSpent +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", deadline=" + deadline +
-                ", status=" + status +
-                '}';
+        return String.format("""
+            SubTask ID    : %d
+            Task ID       : %d
+            Name          : %s
+            Description   : %s
+            Estimated     : %d
+            Time Spent    : %d
+            Deadline      : %s
+            Status        : %s
+            """, subTaskId, taskId, name, description, estimatedTime, timeSpent, deadline, status);
     }
 
 }

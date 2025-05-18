@@ -128,8 +128,8 @@ public class TaskRepository implements ITaskRepository {
                     task.deadline,
                     task.status
                 FROM task
-                JOIN user_task ON task.id = user_task.taskID
-                WHERE user_task.userID = ?
+                JOIN users_task ON task.id = users_task.taskID
+                WHERE users_task.userID = ?
                 """;
 
         return jdbcTemplate.query(sql, new TaskRowMapper(), userId);
@@ -165,7 +165,7 @@ public class TaskRepository implements ITaskRepository {
     @Override
     public void assignUserToTask(Integer userId, Integer taskId) {
 
-        String sql = "INSERT INTO user_task (userID, taskID) VALUES (?, ?)";
+        String sql = "INSERT INTO Users_Task (userID, taskID) VALUES (?, ?)";
         jdbcTemplate.update(sql, userId, taskId);
     }
 
