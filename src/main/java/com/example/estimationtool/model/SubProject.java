@@ -124,15 +124,15 @@ public class SubProject implements Estimable {
 
     @Override
     public String toString() {
-        return "SubProject{" +
-                "subProjectId=" + subProjectId +
-                ", projectId=" + projectId +
-                ", estimatedTime=" + estimatedTime +
-                ", timeSpent=" + timeSpent +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", localDate=" + deadline +
-                ", status=" + status +
-                '}';
+        return String.format("""
+            SubProject ID : %d
+            Project ID    : %d
+            Name          : %s
+            Description   : %s
+            Estimated     : %d
+            Time Spent    : %d
+            Deadline      : %s
+            Status        : %s
+            """, subProjectId, projectId, name, description, estimatedTime, timeSpent, deadline, status);
     }
 }
