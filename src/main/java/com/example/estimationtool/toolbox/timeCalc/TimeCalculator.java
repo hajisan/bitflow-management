@@ -64,8 +64,6 @@ public class TimeCalculator {
 
     //---------------- Opdatering af tidsforbrug hos projektkomponenter -----------------
 
-    //-------------------------------- Opdatering med ID --------------------------------
-
     //----------------- Opdatering af tidsforbrug hos tasks og subtasks -----------------
 
     //                                  --- SUBTASK M. ID ---
@@ -177,6 +175,7 @@ public class TimeCalculator {
         return timeSpentOnProject;
     }
 
+    //------------------------------- Andre metoder til tidsberegning -------------------------------
     //------------------------------------------ Tid Brugt ------------------------------------------
 
     public int calculateTimeSpent(List<TimeEntry> entries) {
@@ -218,7 +217,6 @@ public class TimeCalculator {
             }
             dateToCheck = dateToCheck.plusDays(1);                      // Vi går videre til næste dato der skal tjekkes ved at tilføje en dag til datoen
         }
-
         return workingDays;
     }
 }
