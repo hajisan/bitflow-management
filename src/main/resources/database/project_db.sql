@@ -155,13 +155,13 @@ CREATE TABLE Users_Project (
 -- Tabel: Users_Subproject
 -- Knytter en User til et Subproject
 -- ========================
-CREATE TABLE Users_Subproject (
+CREATE TABLE Users_SubProject (
     userID          INTEGER,
     subProjectID    INTEGER,
 
     PRIMARY KEY (userID, subProjectID),
     FOREIGN KEY (userID) REFERENCES Users(id) ON DELETE CASCADE,
-    FOREIGN KEY (subProjectID) REFERENCES Subproject(id) ON DELETE CASCADE
+    FOREIGN KEY (subProjectID) REFERENCES SubProject(id) ON DELETE CASCADE
 );
 
 -- ========================
