@@ -186,7 +186,7 @@ public class ProjectRepositoryTest {
     @Test // Tjek om en bruger kan tildeles et nyt projekt
     void assignUserToProject_assignsUserCorrectly() {
         // --------- Arrange ---------
-        int userId = 3; // Fx en udvikler
+        int userId = 3; // En udvikler
         Project newProject = new Project();
         newProject.setName("Assignment Test Project");
         newProject.setDescription("Projekt til tildelingstest");
@@ -211,14 +211,14 @@ public class ProjectRepositoryTest {
 
     @Test // Tjek om en bruger uden tilknytning til et projekt kan knyttes til projektet
     void assignUserToExistingProject_worksCorrectly() {
-        // --------- Arrange ---------
+        // Arrange
         int userId = 4; // Bruger er ikke tilknyttet noget projekt
         int existingProjectId = 1; // ID på eksisterende projekt
 
-        // --------- Act -------------
+        // Act
         projectRepository.assignUserToProject(userId, existingProjectId);
 
-        // --------- Assert ----------
+        // Assert
         List<Project> userProjects = projectRepository.readAllByUserId(userId);
         boolean found = userProjects.stream()
                 .anyMatch(p -> p.getProjectId() == existingProjectId);
