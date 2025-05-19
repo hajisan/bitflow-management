@@ -5,6 +5,37 @@
     <title>User With Time Entries</title>
 </head>
 <body>
+<h1>Brugerens tasks</h1>
 
+<!-- Kort info om brugeren -->
+<section class="mini-info">
+    <div>Fornavn: <span th:text="${userWithTimeEntries.user.firstName}"></span></div>
+    <div>Efternavn: <span th:text="${userWithTimeEntries.user.lastName}"></span></div>
+    <div>Rolle: <span th:text="${userWithTimeEntries.user.role}"></span></div>
+</section>
+
+<h3>Time Entries</h3>
+
+<!-- Time Entries -->
+<section class="mini-info">
+    <div th:if="${!#lists.isEmpty(userWithTimeEntries.timeentries)}">
+        <div th:each="timeentry : ${userWithTimeEnties.timeentries}" class="list">
+            <div>Task: <span th:text="${timeentry.}"></span></div>
+            <div th:if="${timeentry.subTaskId != null}">Subtask: <span th:text="${timeentry}"></span></div>
+            <div>Tidsforbug: <span th:text="${timeentry.}"></span></div>
+            <div>
+                <a th:href="@{/timeentry/{id}(id=${timeentry.timeId})}">
+                    <button>Se detaljer</button>
+                </a>
+            </div>
+            <hr/>
+        </div>
+    </div>
+
+    <!-- Hvis der ingen opgaver er -->
+    <div th:if="${#lists.isEmpty(userWithTimeEntries.timeentries)}">
+        Brugeren <span th:text="${userWithTimeEntries.user.firstName}"></span> har ingen tilknyttede opgaver.
+    </div>
+</section>
 </body>
 </html>

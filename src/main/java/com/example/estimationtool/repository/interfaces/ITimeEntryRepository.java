@@ -24,6 +24,5 @@ public interface ITimeEntryRepository extends IRepository<TimeEntry, Integer> {
 
     List<TimeEntry> readAllBySubTaskId(Integer subTaskId);
 
-
-
+    List<TimeEntry> readAllByUserId(Integer userId);
 }

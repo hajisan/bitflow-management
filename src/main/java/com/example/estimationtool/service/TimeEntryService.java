@@ -52,4 +52,8 @@ public class TimeEntryService {
     public void deleteById(int id) {
         iTimeEntryRepository.deleteById(id);
     }
+
+    public List<TimeEntry> readAllTimeEntriesByUserId(int userId) {
+        return iTimeEntryRepository.readAllByUserId(userId);
+    }
 }
