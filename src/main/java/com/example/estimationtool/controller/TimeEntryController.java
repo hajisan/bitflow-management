@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import java.util.List;
 
 @Controller
@@ -27,7 +28,9 @@ public class TimeEntryController {
     //------------------------------------ Create() ------------------------------------
 
     @GetMapping("/create")
-    public String showCreateTimeEntry(Model model,
+    public String showCreateTimeEntry(@RequestParam int taskId,
+                                      @RequestParam(required = false) Integer subTaskId, // Ikke nødvendigvis til stede
+                                      Model model,
                                       HttpSession session,
                                       RedirectAttributes redirectAttributes) {
 
@@ -40,7 +43,10 @@ public class TimeEntryController {
             return "redirect:/login";
         }
 
-        model.addAttribute("timeentry", new TimeEntry());
+        TimeEntry timeEntry = new TimeEntry();
+        timeEntry.setTaskId(taskId);
+        if (subTaskId != null) timeEntry.setSubTaskId(subTaskId);
+        model.addAttribute("timeentry", timeEntry);
 
         return "timeentry/create-timeentry";
     }
@@ -65,7 +71,7 @@ public class TimeEntryController {
 
         redirectAttributes.addFlashAttribute("success", "Tidsregistrering lykkedes.");
 
-        return "redirect:/timeentries";
+        return "redirect:/timeentries-list";
     }
     //------------------------------------ Read() --------------------------------------
 
@@ -182,8 +188,6 @@ public class TimeEntryController {
 
         return "redirect:/timeentries";
     }
-
-
 
 
 }

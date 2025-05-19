@@ -34,6 +34,15 @@
     </div>
 </section>
 
+<!-- Knap der fører til oprettelse af ny time entry -->
+<section class="form-actions">
+    <div>
+        <a th:href="@{/timeentries/create(taskId=${subtask.taskId},subTaskId=${subtask.subTaskId})}">
+            <button>Opret ny time entry</button>
+        </a>
+    </div>
+</section>
+
 <!-- Knap der fører til subtaskens time entry-liste -->
 <div>
     <a th:href="@{/subtasks/{subTaskId}/timeentries(subTaskId=${subtask.subTaskId})}">

@@ -117,9 +117,9 @@ public class SubTaskService {
 
         // Find bruger på subTask
         User user = iUserRepository.readUserBySubTaskId(subTaskId);
-        if (user == null) {
-            throw new UserFriendlyException("Der var ingen bruger til denne subtask.", "/users/profile");
-        }
+//        if (user == null) {
+//            throw new UserFriendlyException("Der var ingen bruger til denne subtask.", "/users/profile");
+//        }
         return new UserViewDTO(
                 user.getUserId(),
                 user.getFirstName(),
