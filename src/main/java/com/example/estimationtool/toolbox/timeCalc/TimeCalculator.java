@@ -191,22 +191,22 @@ public class TimeCalculator {
 
     //------------------------------------ Tid tilbage i TIMER ------------------------------------
 
-    public double calculateRemainingTime(LocalDate deadline) {
-        return countWorkDays(deadline) * (37 / 5.0); // Vi antager at en arbejdsuge er 37 timer med 5 hverdage
+    public double calculateRemainingTimeInHours(LocalDate deadline) {
+        return countWorkDaysLeft(deadline) * (37 / 5.0); // Vi antager at en arbejdsuge er 37 timer med 5 hverdage
     }
 
     //---------------------------- Tid i TIMER pr. DAG m. hjælpemetode ----------------------------
 
-    public double calculateHoursPerDay(int remainingHours, LocalDate deadline) {
+    public double calculateHoursNeededPerDay(int remainingHours, LocalDate deadline) {
         // until-metoden hos LocalDate returnerer longs og ikke ints, hvilket er grunden til at værdien bliver castet
-        double daysUntilDeadline = countWorkDays(deadline); // Se metoden countWorkDays
+        double daysUntilDeadline = countWorkDaysLeft(deadline); // Se metoden countWorkDays
         if (daysUntilDeadline > 0) { // Sørger for at vi er før deadlinen, samtidig med at undgå at dividere med 0
             return (double) remainingHours / daysUntilDeadline; // Returnerer timer pr. dag til deadline
         } else if (daysUntilDeadline == 0) return remainingHours; // Hvis daysUntilDeadline er 0, så er vi på
         return 0; // TODO Skal vi bruge en exception her i stedet?
     }
 
-    private double countWorkDays(LocalDate deadline) {
+    private double countWorkDaysLeft(LocalDate deadline) {
         double workingDays = 0.0;                                       // Vi starter med 0 hverdage og inkrementerer hver gang vi møder en hverdag i while-loopet
         LocalDate dateToCheck = LocalDate.now();                        // Den dato vi tjekker - vi starter med at tjekke i dag
 
@@ -221,7 +221,7 @@ public class TimeCalculator {
     }
 
     public int countDevsNeeded(int remainingHours, LocalDate deadline) {
-        double hoursPerDay = calculateHoursPerDay(remainingHours, deadline);
+        double hoursPerDay = calculateHoursNeededPerDay(remainingHours, deadline);
         return (int) hoursPerDay / 8; // En arbejdsuge på 5 dage og 37 timer giver 7,4 timer pr. dag. Vi under op til 8.
     }
 }
