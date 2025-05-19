@@ -15,6 +15,8 @@ import com.example.estimationtool.toolbox.dto.SubTaskWithTimeEntriesDTO;
 import com.example.estimationtool.toolbox.dto.UserViewDTO;
 import com.example.estimationtool.toolbox.timeCalc.TimeCalculator;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -36,8 +38,10 @@ public class SubTaskService {
 
     //------------------------------------ Create() ------------------------------------
 
-    public SubTask createSubTask(SubTask subTask) {
-        return iSubTaskRepository.create(subTask);
+    public SubTask createSubTask(UserViewDTO currentUser, SubTask subTask) {
+        SubTask createdSubTask = iSubTaskRepository.create(subTask);
+        iSubTaskRepository.assignUserToSubTask(currentUser.getUserId(), subTask.getSubTaskId());
+        return createdSubTask;
     }
 
     //------------------------------------ Read() --------------------------------------
@@ -52,7 +56,7 @@ public class SubTaskService {
 
     //------------------------------------ Update() ------------------------------------
 
-   public SubTask updateSubTask(SubTask subtask) {
+    public SubTask updateSubTask(SubTask subtask) {
 
 
         // Statusvalidering: formelt for konsistens i struktur. En SubTask har ingen underopgaver tilknyttet
@@ -62,7 +66,7 @@ public class SubTaskService {
             }
         }
         return iSubTaskRepository.update(subtask);
-   }
+    }
 
     //------------------------------------ Delete() ------------------------------------
 
@@ -109,7 +113,6 @@ public class SubTaskService {
     // ---------------- Read() hvem der er assignet til subtask ---------------------
 
 
-
     public UserViewDTO readAssignedUserBySubTaskId(int subTaskId) {
 
         // Find bruger på subTask
@@ -126,7 +129,27 @@ public class SubTaskService {
         );
     }
 
+    // Denne metode findes også i TaskService
+    public List<UserViewDTO> readAllAvailableUsers() {
 
+        // Læser alle brugere, da man pr. definition er unassigned
+        List<User> allUserList = iUserRepository.readAll();
 
+        // Tilføjer kun de brugere, der IKKE allerede er tildelt task
+        List<UserViewDTO> usersDTO = new ArrayList<>();
+        for (User user : allUserList) {
+
+            usersDTO.add(new UserViewDTO(
+                    user.getUserId(),
+                    user.getFirstName(),
+                    user.getLastName(),
+                    user.getEmail(),
+                    user.getRole()
+            ));
+
+        }
+
+        return usersDTO;
+    }
 
 }

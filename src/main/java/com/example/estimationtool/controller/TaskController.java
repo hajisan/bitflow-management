@@ -76,7 +76,7 @@ public class TaskController {
             return "redirect:/login";
         }
 
-        taskService.createTask(task);
+        taskService.createTask(currentUser, task);
 
         redirectAttributes.addFlashAttribute("success", "Opgaven blev oprettet");
 

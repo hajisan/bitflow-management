@@ -47,7 +47,7 @@ public class SubTaskRepository implements ISubTaskRepository {
         }, keyHolder);
 
         int generatedId = keyHolder.getKey().intValue();
-        subTask.setTaskId(generatedId);  // Sæt det genererede ID i objektet
+        subTask.setSubTaskId(generatedId);  // Sæt det genererede ID i objektet
 
         return subTask;
     }
