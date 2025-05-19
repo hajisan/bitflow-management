@@ -351,10 +351,12 @@ public class UserController {
             return "redirect:/login";
         }
 
+        // Henter DTO: bruger + time entries
         UserWithTimeEntriesDTO userWithTimeEntriesDTO = userService.readAllTimeEntriesByUserId(userId);
+        // Lægger DTO på modellen
         model.addAttribute("userWithTimeEntries", userWithTimeEntriesDTO);
 
-        return "user/user-with-tasks";
+        return "user/user-with-timeentries";
 
     }
 
