@@ -359,5 +359,4 @@ public class UserController {
         return "user/user-with-timeentries";
 
     }
-
 }

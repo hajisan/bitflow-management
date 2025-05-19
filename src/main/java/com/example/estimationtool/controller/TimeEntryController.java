@@ -71,7 +71,7 @@ public class TimeEntryController {
 
         redirectAttributes.addFlashAttribute("success", "Tidsregistrering lykkedes.");
 
-        return "redirect:/timeentries-list";
+        return "redirect:/timeentries/list";
     }
     //------------------------------------ Read() --------------------------------------
 
@@ -182,11 +182,12 @@ public class TimeEntryController {
             return "redirect:/login";
         }
 
+        int taskId = timeEntryService.readById(id).getTaskId();
         timeEntryService.deleteById(id);
 
         redirectAttributes.addFlashAttribute("success", "Tidsregistrering blev slettet.");
 
-        return "redirect:/timeentries";
+        return "redirect:/tasks/" + taskId + "/timeentries";
     }
 
 
