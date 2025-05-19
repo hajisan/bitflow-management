@@ -1,6 +1,6 @@
 package com.example.estimationtool.repository.interfaces;
 
-import com.example.estimationtool.model.timeEntry.TimeEntry;
+import com.example.estimationtool.model.TimeEntry;
 
 import java.util.List;
 

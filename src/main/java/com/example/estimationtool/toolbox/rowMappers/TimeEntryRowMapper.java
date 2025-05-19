@@ -1,6 +1,6 @@
 package com.example.estimationtool.toolbox.rowMappers;
 
-import com.example.estimationtool.model.timeEntry.TimeEntry;
+import com.example.estimationtool.model.TimeEntry;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

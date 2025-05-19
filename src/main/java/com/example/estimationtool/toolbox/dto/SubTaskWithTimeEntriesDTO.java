@@ -1,8 +1,7 @@
 package com.example.estimationtool.toolbox.dto;
 
 import com.example.estimationtool.model.SubTask;
-import com.example.estimationtool.model.timeEntry.TimeEntry;
-import com.example.estimationtool.toolbox.timeCalc.TimeCalculator;
+import com.example.estimationtool.model.TimeEntry;
 
 import java.util.List;
 

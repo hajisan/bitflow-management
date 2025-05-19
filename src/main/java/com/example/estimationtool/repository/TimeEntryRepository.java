@@ -1,6 +1,6 @@
 package com.example.estimationtool.repository;
 
-import com.example.estimationtool.model.timeEntry.TimeEntry;
+import com.example.estimationtool.model.TimeEntry;
 import com.example.estimationtool.repository.interfaces.ITimeEntryRepository;
 import com.example.estimationtool.toolbox.rowMappers.TimeEntryRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;

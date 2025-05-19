@@ -1,12 +1,9 @@
 package com.example.estimationtool.repository;
 
-import com.example.estimationtool.model.Project;
 import com.example.estimationtool.repository.interfaces.ISubProjectRepository;
 import com.example.estimationtool.model.SubProject;
-import com.example.estimationtool.toolbox.dto.ProjectWithSubProjectsDTO;
-import com.example.estimationtool.toolbox.rowMappers.ProjectRowMapper;
 //import com.example.estimationtool.toolbox.rowMappers.SubProjectRowMapper;
-import com.example.estimationtool.toolbox.rowMappers.SubProjectRowMapperS;
+import com.example.estimationtool.toolbox.rowMappers.SubProjectRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -63,7 +60,7 @@ public class SubProjectRepository implements ISubProjectRepository {
                 FROM subproject
                 """;
 
-        return jdbcTemplate.query(sql, new SubProjectRowMapperS());
+        return jdbcTemplate.query(sql, new SubProjectRowMapper());
     }
 
 
@@ -74,7 +71,7 @@ public class SubProjectRepository implements ISubProjectRepository {
                 FROM subproject
                 WHERE id = ?
                 """;
-        return jdbcTemplate.query(sql, new SubProjectRowMapperS(), subProjectId).getFirst(); // Får en List<SubProject>, så skal kalde List.getFirst()
+        return jdbcTemplate.query(sql, new SubProjectRowMapper(), subProjectId).getFirst(); // Får en List<SubProject>, så skal kalde List.getFirst()
     }
 
     //------------------------------------ Update() ------------------------------------
@@ -119,7 +116,7 @@ public class SubProjectRepository implements ISubProjectRepository {
                 WHERE projectID = ?
                 """;
 
-        return jdbcTemplate.query(sql, new SubProjectRowMapperS(), projectId);
+        return jdbcTemplate.query(sql, new SubProjectRowMapper(), projectId);
     }
 
 
@@ -145,7 +142,7 @@ public class SubProjectRepository implements ISubProjectRepository {
                 JOIN users_subproject ON subproject.id = users_subproject.subProjectID
                 WHERE users_subproject.userID = ?
                 """;
-        return jdbcTemplate.query(sql, new SubProjectRowMapperS(), userId);
+        return jdbcTemplate.query(sql, new SubProjectRowMapper(), userId);
     }
 
     //---------------------------------- Assign User ---------------------------------

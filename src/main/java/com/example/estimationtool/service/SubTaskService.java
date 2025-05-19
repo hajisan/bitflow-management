@@ -1,21 +1,18 @@
 package com.example.estimationtool.service;
 
 
-import com.example.estimationtool.model.SubProject;
 import com.example.estimationtool.model.SubTask;
 import com.example.estimationtool.model.User;
 import com.example.estimationtool.model.enums.Role;
 import com.example.estimationtool.model.enums.Status;
-import com.example.estimationtool.model.timeEntry.TimeEntry;
+import com.example.estimationtool.model.TimeEntry;
 import com.example.estimationtool.repository.interfaces.ISubTaskRepository;
 import com.example.estimationtool.repository.interfaces.ITimeEntryRepository;
 import com.example.estimationtool.repository.interfaces.IUserRepository;
-import com.example.estimationtool.toolbox.check.DeadlineCheck;
 import com.example.estimationtool.toolbox.check.StatusCheck;
 import com.example.estimationtool.toolbox.controllerAdvice.UserFriendlyException;
 import com.example.estimationtool.toolbox.dto.SubTaskWithTimeEntriesDTO;
 import com.example.estimationtool.toolbox.dto.UserViewDTO;
-import com.example.estimationtool.toolbox.check.RoleCheck;
 import com.example.estimationtool.toolbox.timeCalc.TimeCalculator;
 import org.springframework.stereotype.Service;
 import java.util.List;

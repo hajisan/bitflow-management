@@ -4,7 +4,7 @@ package com.example.estimationtool.service;
 import com.example.estimationtool.model.SubTask;
 import com.example.estimationtool.model.User;
 import com.example.estimationtool.model.enums.Status;
-import com.example.estimationtool.model.timeEntry.TimeEntry;
+import com.example.estimationtool.model.TimeEntry;
 import com.example.estimationtool.repository.interfaces.ISubTaskRepository;
 import com.example.estimationtool.repository.interfaces.ITaskRepository;
 import com.example.estimationtool.model.Task;

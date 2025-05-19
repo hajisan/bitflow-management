@@ -1,6 +1,6 @@
 package com.example.estimationtool.controller;
 
-import com.example.estimationtool.model.timeEntry.TimeEntry;
+import com.example.estimationtool.model.TimeEntry;
 import com.example.estimationtool.service.TimeEntryService;
 import com.example.estimationtool.toolbox.dto.UserViewDTO;
 import jakarta.servlet.http.HttpSession;
@@ -69,7 +69,7 @@ public class TimeEntryController {
     }
     //------------------------------------ Read() --------------------------------------
 
-    @GetMapping("")
+    @GetMapping("/list")
     public String showAllTimeEntries(Model model,
                                      HttpSession session,
                                      RedirectAttributes redirectAttributes) {

@@ -1,4 +1,4 @@
-package com.example.estimationtool.model.timeEntry;
+package com.example.estimationtool.model;
 
 import java.time.LocalDate;
 
