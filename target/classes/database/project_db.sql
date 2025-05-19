@@ -4,18 +4,16 @@ USE project_db;
 
 -- Dropper tables hvis de findes for at rydde al data
 DROP TABLE IF EXISTS users;
-DROP TABLE IF EXISTS project;
-DROP TABLE IF EXISTS subproject;
-DROP TABLE IF EXISTS task;
-DROP TABLE IF EXISTS subtask;
-DROP TABLE IF EXISTS timeentry;
-
-DROP TABLE IF EXISTS timeentry_subtask;
-DROP TABLE IF EXISTS timeentry_task;
 DROP TABLE IF EXISTS users_project;
 DROP TABLE IF EXISTS users_subproject;
 DROP TABLE IF EXISTS users_task;
 DROP TABLE IF EXISTS users_subtask;
+DROP TABLE IF EXISTS subproject;
+DROP TABLE IF EXISTS project;
+DROP TABLE IF EXISTS subtask;
+DROP TABLE IF EXISTS task;
+DROP TABLE IF EXISTS timeentry;
+
 
 -- ========================
 -- Tabel: Users
@@ -113,31 +111,6 @@ CREATE TABLE TimeEntry (
     FOREIGN KEY (userID) REFERENCES Users(id) ON DELETE CASCADE
 ) AUTO_INCREMENT = 10000000;
 
-/*
--- ========================
--- Tabel: TimeEntry_Task
--- Knytter en TimeEntry til en Task
--- ========================
-CREATE TABLE TimeEntry_Task (
-    timeEntryID INTEGER,
-    taskID INTEGER,
-    PRIMARY KEY (timeEntryID, taskID),
-    FOREIGN KEY (timeEntryID) REFERENCES TimeEntry(id) ON DELETE CASCADE,
-    FOREIGN KEY (taskID) REFERENCES Task(id) ON DELETE CASCADE
-);
-
--- ========================
--- Tabel: TimeEntry_SubTask
--- Knytter en TimeEntry til en SubTask
--- ========================
-CREATE TABLE TimeEntry_SubTask (
-    timeEntryID INTEGER,
-    subTaskID INTEGER,
-    PRIMARY KEY (timeEntryID, subTaskID),
-    FOREIGN KEY (timeEntryID) REFERENCES TimeEntry(id) ON DELETE CASCADE,
-    FOREIGN KEY (subTaskID) REFERENCES SubTask(id) ON DELETE CASCADE
-);
-*/
 -- ========================
 -- Tabel: Users_Project
 -- Knytter en User til et Project
