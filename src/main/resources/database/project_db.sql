@@ -14,7 +14,6 @@ DROP TABLE IF EXISTS subtask;
 DROP TABLE IF EXISTS task;
 DROP TABLE IF EXISTS timeentry;
 
-
 -- ========================
 -- Tabel: Users
 -- Gemmer information om en bruger
