@@ -335,6 +335,9 @@ public class UserController {
         return "user/user-with-subtasks";
     }
 
+    // ------------------ Viser brugerens tilknyttede timeEntries --------------------
+
+
     @GetMapping("/{userId}/timeentries")
     public String showUserWithTimeEntries(@PathVariable int userId,
                                     HttpSession session,

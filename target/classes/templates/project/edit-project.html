@@ -26,7 +26,7 @@
 
 
 <!-- Formular til redigering af projekt -->
-<section class="edit-form">
+<section class="form-actions">
   <form th:action="@{/projects/update}" th:object="${project}" method="post" class="form-fields">
     <input type="hidden" th:field="*{projectId}" />
 
