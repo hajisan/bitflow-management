@@ -335,4 +335,28 @@ public class UserController {
         return "user/user-with-subtasks";
     }
 
+    @GetMapping("/{userId}/timeentries")
+    public String showUserWithTimeEntries(@PathVariable int userId,
+                                    HttpSession session,
+                                    Model model,
+                                    RedirectAttributes redirectAttributes) {
+
+        // Henter og sætter session for Thymeleaf
+        UserViewDTO currentUser = getCurrentUser(session);
+        session.setAttribute("currentUser", currentUser);
+
+        // Tjekker om bruger er logget ind
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Du skal være logget ind for at kunne se en brugers tasks.");
+            return "redirect:/login";
+        }
+
+        // Henter DTO: bruger + time entries
+        UserWithTimeEntriesDTO userWithTimeEntriesDTO = userService.readAllTimeEntriesByUserId(userId);
+        // Lægger DTO på modellen
+        model.addAttribute("userWithTimeEntries", userWithTimeEntriesDTO);
+
+        return "user/user-with-timeentries";
+
+    }
 }

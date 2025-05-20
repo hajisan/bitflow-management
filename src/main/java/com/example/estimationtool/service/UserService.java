@@ -24,20 +24,24 @@ public class UserService {
 
     private final ProjectService projectService;
     private final SubProjectService subProjectService;
-    private final SubTaskService subTaskService;
     private final TaskService taskService;
+    private final SubTaskService subTaskService;
+    private final TimeEntryService timeEntryService;
+
 
 
 
     public UserService(IUserRepository iUserRepository, PasswordEncoder passwordEncoder,
                        ProjectService projectService, SubProjectService subProjectService,
-                       SubTaskService subTaskService, TaskService taskService) {
+                       SubTaskService subTaskService, TaskService taskService,
+                       TimeEntryService timeEntryService) {
         this.iUserRepository = iUserRepository;
         this.passwordEncoder = passwordEncoder;
         this.projectService = projectService;
         this.subProjectService = subProjectService;
-        this.subTaskService = subTaskService;
         this.taskService = taskService;
+        this.subTaskService = subTaskService;
+        this.timeEntryService = timeEntryService;
     }
 
     //------------------------------------ Create() ------------------------------------
@@ -315,5 +319,30 @@ public class UserService {
         return new UserWithSubTasksDTO(userViewDTO, subTaskList);
     }
 
+    // --- Henter time entries ud fra brugerID ---
 
+    public UserWithTimeEntriesDTO readAllTimeEntriesByUserId(int userId) {
+
+        // Læser én bruger
+        User user = iUserRepository.readById(userId);
+
+        if (user == null) {
+            throw new UserFriendlyException("Brugeren findes ikke", "/users/profile");
+        }
+
+        // Konverter user til UserViewDTO
+        UserViewDTO userViewDTO = new UserViewDTO(
+                user.getUserId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getRole()
+        );
+
+        // Læser time entries ud fra brugerID
+        List<TimeEntry> timeEntries = timeEntryService.readAllTimeEntriesByUserId(userId);
+
+        // Returnerer userViewDTO + time entries i én samlet DTO
+        return new UserWithTimeEntriesDTO(userViewDTO, timeEntries);
+    }
 }

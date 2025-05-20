@@ -1,6 +1,6 @@
 package com.example.estimationtool.service;
 
-import com.example.estimationtool.model.timeEntry.TimeEntry;
+import com.example.estimationtool.model.TimeEntry;
 import com.example.estimationtool.repository.interfaces.*;
 import com.example.estimationtool.toolbox.timeCalc.TimeCalculator;
 
@@ -51,5 +51,9 @@ public class TimeEntryService {
 
     public void deleteById(int id) {
         iTimeEntryRepository.deleteById(id);
+    }
+
+    public List<TimeEntry> readAllTimeEntriesByUserId(int userId) {
+        return iTimeEntryRepository.readAllByUserId(userId);
     }
 }

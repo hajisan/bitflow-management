@@ -4,7 +4,7 @@ package com.example.estimationtool.service;
 import com.example.estimationtool.model.SubTask;
 import com.example.estimationtool.model.User;
 import com.example.estimationtool.model.enums.Status;
-import com.example.estimationtool.model.timeEntry.TimeEntry;
+import com.example.estimationtool.model.TimeEntry;
 import com.example.estimationtool.repository.interfaces.ISubTaskRepository;
 import com.example.estimationtool.repository.interfaces.ITaskRepository;
 import com.example.estimationtool.model.Task;
@@ -45,8 +45,10 @@ public class TaskService {
 
     //------------------------------------ Create() ------------------------------------
 
-    public Task createTask(Task task) {
-        return iTaskRepository.create(task);
+    public Task createTask(UserViewDTO currentUser, Task task) {
+        Task createdTask = iTaskRepository.create(task);
+        iTaskRepository.assignUserToTask(currentUser.getUserId(), task.getTaskId());
+        return createdTask;
 
     }
 
@@ -147,26 +149,26 @@ public class TaskService {
     // ---------------------- Viser kun ikke-tilknyttede brugere --------------------
 
 
-
+    // Denne metode findes også i SubTaskService
     public List<UserViewDTO> readAllUnAssignedUsers(int taskId) {
 
         // Læser alle brugere
         List<User> allUserList = iUserRepository.readAll();
 
         // Læser taskens allerede tilknyttede brugere
-        List<User> assignedUserList = iUserRepository.readAllByTaskId(taskId);
+        List<User> assignedUsers = iUserRepository.readAllByTaskId(taskId);
 
         // Samler ID'er på de allerede tildelte brugere
         Set<Integer> assignedUserIds = new HashSet<>();
-        for (User user : assignedUserList) {
+        for (User user : assignedUsers) {
             assignedUserIds.add(user.getUserId());
         }
 
         // Tilføjer kun de brugere, der IKKE allerede er tildelt task
-        List<UserViewDTO> unassignedUserDTO = new ArrayList<>();
+        List<UserViewDTO> unassignedUsersDTO = new ArrayList<>();
         for (User user : allUserList) {
             if (!assignedUserIds.contains(user.getUserId())) {
-                unassignedUserDTO.add(new UserViewDTO(
+                unassignedUsersDTO.add(new UserViewDTO(
                         user.getUserId(),
                         user.getFirstName(),
                         user.getLastName(),
@@ -176,7 +178,7 @@ public class TaskService {
             }
         }
 
-        return unassignedUserDTO;
+        return unassignedUsersDTO;
     }
 
     // ------------------- Task tildeles en bruger efter oprettelse -----------------

@@ -1,6 +1,6 @@
 package com.example.estimationtool.repository.interfaces;
 
-import com.example.estimationtool.model.timeEntry.TimeEntry;
+import com.example.estimationtool.model.TimeEntry;
 
 import java.util.List;
 
@@ -24,6 +24,5 @@ public interface ITimeEntryRepository extends IRepository<TimeEntry, Integer> {
 
     List<TimeEntry> readAllBySubTaskId(Integer subTaskId);
 
-
-
+    List<TimeEntry> readAllByUserId(Integer userId);
 }

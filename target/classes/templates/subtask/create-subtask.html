@@ -5,8 +5,8 @@
     <title>Create SubTask</title>
 </head>
 <body>
-<h1>Opret ny subtask</h1>
 
+<h1>Opret ny subtask</h1>
 
 <!-- Succesbesked -->
 <section class="success">
@@ -57,6 +57,14 @@
                         th:value="${s}"
                         th:text="${s}">
                 </option>
+            </select>
+        </div>
+
+        <div>
+            <label for="assigneduser">Brugere</label>
+            <select id="assigneduser" required>
+                <option value = "0"></option>
+                <option th:each="user : ${unassignedusers}" th:value="${user}" th:text="${user.firstName} + ' ' + ${user.lastName}"></option>
             </select>
         </div>
 

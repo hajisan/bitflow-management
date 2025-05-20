@@ -1,6 +1,6 @@
 package com.example.estimationtool.repository;
 
-import com.example.estimationtool.model.timeEntry.TimeEntry;
+import com.example.estimationtool.model.TimeEntry;
 import com.example.estimationtool.repository.interfaces.ITimeEntryRepository;
 import com.example.estimationtool.toolbox.rowMappers.TimeEntryRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -178,5 +178,23 @@ public class TimeEntryRepository implements ITimeEntryRepository {
         """;
 
         return jdbcTemplate.query(sql, new TimeEntryRowMapper(), subTaskId);
+    }
+
+    @Override
+    public List<TimeEntry> readAllByUserId(Integer userId) {
+
+        String sql = """
+        SELECT
+            timeentry.id,
+            timeentry.userID,
+            timeentry.taskID,
+            timeentry.subtaskID,
+            timeentry.date,
+            timeentry.hoursSpent
+        FROM timeentry
+        WHERE timeentry.userID = ?
+        """;
+
+        return jdbcTemplate.query(sql, new TimeEntryRowMapper(), userId);
     }
 }

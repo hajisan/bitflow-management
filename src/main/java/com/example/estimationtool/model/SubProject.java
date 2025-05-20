@@ -4,7 +4,7 @@ import com.example.estimationtool.model.enums.Status;
 
 import java.time.LocalDate;
 
-public class SubProject implements Estimable {
+public class SubProject{
 
 
     private int subProjectId, projectId, estimatedTime, timeSpent;

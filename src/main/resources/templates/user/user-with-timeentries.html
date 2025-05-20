@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User With Time Entries</title>
+</head>
+<body>
+<h1>Brugerens time entries</h1>
+
+<!-- Kort info om brugeren -->
+<section class="mini-info">
+    <div>Fornavn: <span th:text="${userWithTimeEntries.user.firstName}"></span></div>
+    <div>Efternavn: <span th:text="${userWithTimeEntries.user.lastName}"></span></div>
+    <div>Rolle: <span th:text="${userWithTimeEntries.user.role}"></span></div>
+</section>
+
+<h3>Time Entries</h3>
+
+<!-- Time Entries -->
+<section class="mini-info">
+    <div th:if="${!#lists.isEmpty(userWithTimeEntries.timeEntries)}">
+        <div th:each="timeentry : ${userWithTimeEntries.timeEntries}" class="list">
+            <div>Task: <span th:text="${timeentry.taskId}"></span></div>
+            <div th:if="${timeentry.subTaskId != null}">Subtask: <span th:text="${timeentry.subTaskId}"></span></div>
+            <div>Tidsforbug: <span th:text="${timeentry.hoursSpent}"></span></div>
+            <div>
+                <a th:href="@{/timeentry/{id}(id=${timeentry.timeId})}">
+                    <button>Se detaljer</button>
+                </a>
+            </div>
+            <hr/>
+        </div>
+    </div>
+
+    <!-- Hvis der ingen opgaver er -->
+    <div th:if="${#lists.isEmpty(userWithTimeEntries.timeEntries)}">
+        Brugeren <span th:text="${userWithTimeEntries.user.firstName}"></span> har ingen loggede time entries.
+    </div>
+</section>
+</body>
+</html>
