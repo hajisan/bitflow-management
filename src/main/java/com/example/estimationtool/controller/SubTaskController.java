@@ -1,7 +1,6 @@
 package com.example.estimationtool.controller;
 
 import com.example.estimationtool.model.SubTask;
-import com.example.estimationtool.model.enums.Status;
 import com.example.estimationtool.service.SubTaskService;
 import com.example.estimationtool.service.UserService;
 import com.example.estimationtool.toolbox.dto.SubTaskWithTimeEntriesDTO;
@@ -56,6 +55,8 @@ public class SubTaskController {
         SubTask subTask = new SubTask();
         subTask.setTaskId(taskId); // Binder subtask til task
         model.addAttribute("subtask", subTask);
+        List<UserViewDTO> unassignedUsers = subTaskService.readAllAvailableUsers();
+        model.addAttribute("unassignedusers", unassignedUsers);
 
         return "subtask/create-subtask";
     }
@@ -78,7 +79,7 @@ public class SubTaskController {
             return "redirect:/login";
         }
 
-        subTaskService.createSubTask(subTask);
+        subTaskService.createSubTask(currentUser, subTask);
 
         redirectAttributes.addFlashAttribute("success", "Subtask blev oprettet.");
 
@@ -141,8 +142,8 @@ public class SubTaskController {
         model.addAttribute("allUserList", allUserList);
 
         // Henter brugeren tilknyttet subtask
-        UserViewDTO assignedUser = subTaskService.readAssignedUserBySubTaskId(subtaskId); // denne metode laver vi straks
-        model.addAttribute("assignedUser", assignedUser);
+        //UserViewDTO assignedUser = subTaskService.readAssignedUserBySubTaskId(subtaskId);
+        //model.addAttribute("assignedUser", assignedUser);
 
         return "subtask/subtask-detail";
 

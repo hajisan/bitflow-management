@@ -32,7 +32,14 @@
     </div>
 </section>
 
-
+<!-- Knap der fører til oprettelse af ny time entry - Skal kun være synlig, hvis der ikke er nogen subtasks -->
+<section class="form-actions" th:if="${taskwithsubtasks.subTaskList().isEmpty()}">
+    <div>
+        <a th:href="@{/timeentries/create(taskId=${task.taskId})}">
+            <button>Opret ny time entry</button>
+        </a>
+    </div>
+</section>
 
 <!-- Navigation -->
 <section class="navigation">
@@ -41,6 +48,13 @@
     <div>
         <a th:href="@{/tasks/{taskId}/subtasks(taskId=${task.taskId})}">
             <button>Se tilknyttede subtasks</button>
+        </a>
+    </div>
+
+    <!-- Til taskens time entry-liste -->
+    <div>
+        <a th:href="@{/tasks/{taskId}/timeentries(taskId=${task.taskId})}">
+            <button>Se tilknyttede time entries</button>
         </a>
     </div>
 

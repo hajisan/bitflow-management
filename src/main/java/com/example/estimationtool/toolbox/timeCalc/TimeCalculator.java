@@ -4,7 +4,7 @@ import com.example.estimationtool.model.Project;
 import com.example.estimationtool.model.SubProject;
 import com.example.estimationtool.model.SubTask;
 import com.example.estimationtool.model.Task;
-import com.example.estimationtool.model.timeEntry.TimeEntry;
+import com.example.estimationtool.model.TimeEntry;
 import com.example.estimationtool.repository.interfaces.*;
 import org.springframework.stereotype.Component;
 

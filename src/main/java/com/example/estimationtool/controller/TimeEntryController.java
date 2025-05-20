@@ -1,6 +1,6 @@
 package com.example.estimationtool.controller;
 
-import com.example.estimationtool.model.timeEntry.TimeEntry;
+import com.example.estimationtool.model.TimeEntry;
 import com.example.estimationtool.service.TimeEntryService;
 import com.example.estimationtool.toolbox.dto.UserViewDTO;
 import jakarta.servlet.http.HttpSession;
@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import java.util.List;
 
 @Controller
@@ -27,7 +28,9 @@ public class TimeEntryController {
     //------------------------------------ Create() ------------------------------------
 
     @GetMapping("/create")
-    public String showCreateTimeEntry(Model model,
+    public String showCreateTimeEntry(@RequestParam int taskId,
+                                      @RequestParam(required = false) Integer subTaskId, // Ikke nødvendigvis til stede
+                                      Model model,
                                       HttpSession session,
                                       RedirectAttributes redirectAttributes) {
 
@@ -40,7 +43,10 @@ public class TimeEntryController {
             return "redirect:/login";
         }
 
-        model.addAttribute("timeentry", new TimeEntry());
+        TimeEntry timeEntry = new TimeEntry();
+        timeEntry.setTaskId(taskId);
+        if (subTaskId != null) timeEntry.setSubTaskId(subTaskId);
+        model.addAttribute("timeentry", timeEntry);
 
         return "timeentry/create-timeentry";
     }
@@ -65,11 +71,11 @@ public class TimeEntryController {
 
         redirectAttributes.addFlashAttribute("success", "Tidsregistrering lykkedes.");
 
-        return "redirect:/timeentries";
+        return "redirect:/tasks/" + timeEntry.getTaskId() + "/timeentries";
     }
     //------------------------------------ Read() --------------------------------------
 
-    @GetMapping("")
+    @GetMapping("/list")
     public String showAllTimeEntries(Model model,
                                      HttpSession session,
                                      RedirectAttributes redirectAttributes) {
@@ -176,14 +182,13 @@ public class TimeEntryController {
             return "redirect:/login";
         }
 
+        int taskId = timeEntryService.readById(id).getTaskId();
         timeEntryService.deleteById(id);
 
         redirectAttributes.addFlashAttribute("success", "Tidsregistrering blev slettet.");
 
-        return "redirect:/timeentries";
+        return "redirect:/tasks/" + taskId + "/timeentries";
     }
-
-
 
 
 }

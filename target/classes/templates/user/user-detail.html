@@ -66,6 +66,13 @@
         </a>
     </div>
 
+    <!-- Se brugerens time entries -->
+    <div>
+        <a th:href="@{/users/{id}/timeentries(id=${user.userId})}">
+            <button>Vis tilknyttede time entries</button>
+        </a>
+    </div>
+
     <div>
         <a th:href="@{/users/list}">
             <button>Tilbage til brugeroversigt</button>
