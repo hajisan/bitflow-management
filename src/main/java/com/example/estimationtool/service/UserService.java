@@ -185,7 +185,7 @@ public class UserService {
         );
     }
 
-    //--------------------------------- Henter PasswordHash --------------------------------
+    //------------------------------ Henter/håndterer PasswordHash ---------------------------
 
 
     private String getPasswordHash(UserUpdateDTO userUpdateDTO, User existingUser) {

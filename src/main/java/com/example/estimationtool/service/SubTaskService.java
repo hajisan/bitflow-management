@@ -61,7 +61,7 @@ public class SubTaskService {
         // Statusvalidering: formelt for konsistens i struktur. En SubTask har ingen underopgaver tilknyttet
         if (subtask.getStatus() == Status.DONE) {
             if (!statusCheck.canMarkSubTaskAsDone(subtask)) {
-                throw new IllegalStateException("Subtasken kan ikke markeres som færdig");
+                throw new IllegalStateException("Subtasken kan ikke markeres som færdig.");
             }
         }
         return iSubTaskRepository.update(subtask);

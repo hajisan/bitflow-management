@@ -40,7 +40,9 @@ public class TimeEntryController {
             return "redirect:/login";
         }
 
-        model.addAttribute("timeentry", new TimeEntry());
+        TimeEntry timeEntry = new TimeEntry();
+
+        model.addAttribute("timeentry", timeEntry);
 
         return "timeentry/create-timeentry";
     }
