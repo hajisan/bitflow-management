@@ -71,7 +71,7 @@ public class TimeEntryController {
 
         redirectAttributes.addFlashAttribute("success", "Tidsregistrering lykkedes.");
 
-        return "redirect:/timeentries/list";
+        return "redirect:/tasks/" + timeEntry.getTaskId() + "/timeentries";
     }
     //------------------------------------ Read() --------------------------------------
 

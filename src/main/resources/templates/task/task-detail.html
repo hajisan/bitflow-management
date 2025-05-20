@@ -32,8 +32,8 @@
     </div>
 </section>
 
-<!-- Knap der fører til oprettelse af ny time entry -->
-<section class="form-actions">
+<!-- Knap der fører til oprettelse af ny time entry - Skal kun være synlig, hvis der ikke er nogen subtasks -->
+<section class="form-actions" th:if="${taskwithsubtasks.subTaskList().isEmpty()}">
     <div>
         <a th:href="@{/timeentries/create(taskId=${task.taskId})}">
             <button>Opret ny time entry</button>

@@ -1,5 +1,6 @@
 package com.example.estimationtool.controller;
 
+import com.example.estimationtool.model.SubTask;
 import com.example.estimationtool.toolbox.dto.TaskWithSubTasksDTO;
 import com.example.estimationtool.toolbox.dto.TaskWithTimeEntriesDTO;
 import com.example.estimationtool.toolbox.dto.TaskWithUsersDTO;
@@ -130,7 +131,10 @@ public class TaskController {
         }
 
         Task task = taskService.readById(taskId);
+        List<SubTask> subTasksUnderTask = taskService.readAllSubTasksByTaskId(taskId).subTaskList();
+        TaskWithSubTasksDTO taskWithSubTasksDTO = new TaskWithSubTasksDTO(task, subTasksUnderTask);
         model.addAttribute("task", task);
+        model.addAttribute("taskwithsubtasks", taskWithSubTasksDTO);
 
         return "task/task-detail";
 
