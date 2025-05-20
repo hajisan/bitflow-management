@@ -9,8 +9,6 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration // Spring læser configuration-classes ved applikationsopstart
 public class SecurityConfig {
-    // MIDLERTIDIGT, FOR AT KOBLE SPRING BOOTS LOGIN-METODE FRA I WEBBROWSER
-
 
 
     // ------ Alle sikkerhedsmekanismer er slået fra - kun password hashes ------

@@ -49,7 +49,9 @@ public class ProjectController {
             return "redirect:/login";
         }
 
-        model.addAttribute("project", new Project());
+        Project project = new Project();
+
+        model.addAttribute("project", project);
         return "project/create-project";
     }
 
