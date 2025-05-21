@@ -101,6 +101,16 @@ public class UserControllerTest {
                 Role.ADMIN);
 
 
+        // Admin opretter project manager
+        UserRegistrationDTO registreProjectManager = new UserRegistrationDTO(
+                "ProjectManager",
+                "LastNameProjectManager",
+                "projectmanager@projectmanager.com",
+                "notHashedProjectManagerPassword",
+                Role.PROJECT_MANAGER
+        );
+
+
         //--------- Act ------------- Opretter en Projektleder
 
         mockMvc.perform(post("/users/create")
@@ -117,6 +127,9 @@ public class UserControllerTest {
         verify(userService).createUser(eq(sessionAdmin), any(UserRegistrationDTO.class));
 
         // eq = metoden kaldes med præcis admin-objektet
+
+        // Tjekker at metoden kaldes én gang
+        verify(userService, times(1)).createUser(sessionAdmin,registreProjectManager);
     }
 
     // --------------------- Negativ test for createUser -----------------------
@@ -150,6 +163,7 @@ public class UserControllerTest {
                 .andExpect(redirectedUrl("/users/profile"))
                 .andExpect(flash().attributeExists("error"))
                 .andExpect(flash().attribute("error", "Kun Admin har adgang til denne funktion"));
+
 
     }
 
@@ -186,6 +200,10 @@ public class UserControllerTest {
                 .andExpect(view().name("user/user-list"))
                 .andExpect(model().attributeExists("users")) //Tjekker om users findes i modellen
                 .andExpect(model().attribute("users", userViewDTOMockList)); // Tjekker at users har den rigtige værdi
+
+        // Tjekker at metoden kaldes én gang
+        verify(userService, times(1)).readAll();
+
     }
     //------------------------------------ Read() --------------------------------------
 
@@ -223,6 +241,10 @@ public class UserControllerTest {
                 .andExpect(view().name("user/user-detail"))
                 .andExpect(model().attributeExists("user")) //Tjekker om user findes i modellen
                 .andExpect(model().attribute("user", projectManagerMockDTO)); // Tjekker at user har den rigtige værdi
+
+
+        // Tjekker at metoden kaldes én gang
+        verify(userService, times(1)).readById(2);
     }
 
 
@@ -306,12 +328,15 @@ public class UserControllerTest {
 
 
         // --------- Act ---------
+
+        // Admin vil redigere project manager
         mockMvc.perform(post("/users/update")
                         .sessionAttr("currentUser", sessionAdmin)
                         .param("userId", "2")
                         .param("firstName", "ProjectManager")
                         .param("lastName", "LastNameProjectManager")
                         .param("email", "projectmanagerNewEmail@projectmanagerNewEmail.com")
+                        .param("password", "hashedProjectManagerPassword")
                         .param("role", "PROJECT_MANAGER"))
                 .andExpect(status().is3xxRedirection()) // Assert
                 .andExpect(redirectedUrl("/users/2"))
@@ -322,7 +347,6 @@ public class UserControllerTest {
         verify(userService).updateUser(any(UserUpdateDTO.class), eq(sessionAdmin));
 
         // eq = metoden kaldes med præcis admin-objektet
-
 
     }
 
@@ -391,6 +415,9 @@ public class UserControllerTest {
         verify(userService).deleteById(eq(userIdToDelete), eq(sessionAdmin));
 
 
+        // Tjekker at metoden kaldes én gang
+        verify(userService, times(1)).deleteById(2,sessionAdmin);
+
     }
 
     // --------------- Negativ test for deleteUser() --------------
@@ -444,7 +471,7 @@ public class UserControllerTest {
         int userId = 2; // ID'et vi vil hente projekterne på
 
 
-        // Brugeren hvis projekter vi vil hente
+        // Brugeren, hvis projekter vi vil hente
         UserViewDTO projectManagerMockDTO = new UserViewDTO(
                 2,
                 "ProjectManager",
@@ -485,6 +512,10 @@ public class UserControllerTest {
                 .andExpect(view().name("user/user-with-projects"))
                 .andExpect(model().attributeExists("userWithProjects"))
                 .andExpect(model().attribute("userWithProjects", userWithProjectsDTO));
+
+
+        // Tjekker at metoden kaldes én gang
+        verify(userService, times(1)).readAllProjectsByUserId(2);
     }
 
     // -------------------- Viser brugerens tilknyttede subprojekter --------------------
@@ -546,6 +577,9 @@ public class UserControllerTest {
                 .andExpect(view().name("user/user-with-subprojects"))
                 .andExpect(model().attributeExists("userWithSubProjects"))
                 .andExpect(model().attribute("userWithSubProjects", userWithSubProjectsDTO));
+
+        // Tjekker at metoden kaldes én gang
+        verify(userService, times(1)).readAllSubProjectsByUserId(2);
     }
 
     // -------------------- Viser brugerens tilknyttede tasks ------------------------------
@@ -606,6 +640,9 @@ public class UserControllerTest {
                 .andExpect(view().name("user/user-with-tasks"))
                 .andExpect(model().attributeExists("userWithTasks"))
                 .andExpect(model().attribute("userWithTasks", userWithTasksDTO));
+
+        // Tjekker at metoden kaldes én gang
+        verify(userService, times(1)).readAllTasksByUserId(2);
     }
 
     // ------------------ Viser brugerens tilknyttede subtasks ----------------------------
@@ -666,6 +703,9 @@ public class UserControllerTest {
                 .andExpect(view().name("user/user-with-subtasks"))
                 .andExpect(model().attributeExists("userWithSubTasks"))
                 .andExpect(model().attribute("userWithSubTasks", userWithSubTasksDTO));
+
+        // Tjekker at metoden kaldes én gang
+        verify(userService, times(1)).readAllSubTasksByUserId(2);
     }
 
     // ------------------ Viser brugerens tilknyttede timeEntries -------------------------
@@ -721,6 +761,9 @@ public class UserControllerTest {
                 .andExpect(view().name("user/user-with-timeentries"))
                 .andExpect(model().attributeExists("userWithTimeEntries"))
                 .andExpect(model().attribute("userWithTimeEntries", userWithTimeEntriesDTO));
+
+        // Tjekker at metoden kaldes én gang
+        verify(userService, times(1)).readAllTimeEntriesByUserId(2);
     }
 
 
