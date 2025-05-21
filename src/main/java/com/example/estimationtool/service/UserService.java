@@ -139,7 +139,7 @@ public class UserService {
 
 
 
-        //------------------------------------ Delete() ------------------------------------
+    //------------------------------------ Delete() ------------------------------------
 
     public void deleteById (int id, UserViewDTO currentUser){
 

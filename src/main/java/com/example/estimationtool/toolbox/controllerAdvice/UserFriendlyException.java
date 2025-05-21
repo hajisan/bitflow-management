@@ -16,7 +16,7 @@ public class UserFriendlyException extends RuntimeException {
     }
 
     public String getRedirectPath() {
-        return redirectPath;
+        return this.redirectPath;
     }
 
 }
