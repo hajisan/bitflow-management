@@ -14,4 +14,4 @@ The build job, "Build and test with Maven", runs on Ubuntu and has the following
     WIP :3
 
 Klassediagram:    
-![Class Diagram - EstimationTool](https://github.com/user-attachments/assets/08746197-c9ea-4ecb-9830-fb014215021f)
+![Class Diagram - EstimationToolWithAttributes](https://github.com/user-attachments/assets/c8d7c13e-1d2a-4a47-bf01-ad994a5d64b7)
