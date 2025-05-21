@@ -12,3 +12,6 @@ The build job, "Build and test with Maven", runs on Ubuntu and has the following
 
     CD pipeline:
     WIP :3
+
+Klassediagram:    
+![Class Diagram - EstimationTool](https://github.com/user-attachments/assets/08746197-c9ea-4ecb-9830-fb014215021f)
