@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alpha Solutions Styleguide</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <style>
+        body {
+            font-family: var(--font-family);
+            background: var(--color-white);
+            color: var(--color-text);
+            padding: var(--spacing-lg);
+            max-width: var(--container-max-width);
+            margin: 0 auto;
+        }
+        section {
+            margin-bottom: var(--spacing-lg);
+        }
+        .section-title {
+            border-bottom: 2px solid var(--color-primary);
+            margin-bottom: var(--spacing-md);
+        }
+    </style>
+</head>
+<body>
+<h1>Alpha Solutions – Styleguide</h1>
+
+<section>
+    <h2 class="section-title">Typografi</h2>
+    <h1>H1 – Stor Overskrift</h1>
+    <h2>H2 – Sektionstitel</h2>
+    <h3>H3 – Underrubrik</h3>
+    <p>Dette er et standardafsnit med brødtekst. Den skal være letlæselig med passende linjeafstand.</p>
+    <p class="muted">Dette er en mere afdæmpet tekst.</p>
+</section>
+
+<section>
+    <h2 class="section-title">Knapper</h2>
+    <button class="btn btn-primary">Primær Knap</button>
+    <button class="btn">Standard Knap</button>
+</section>
+
+<section>
+    <h2 class="section-title">Formular</h2>
+    <form>
+        <div class="form-group">
+            <label for="navn">Navn</label>
+            <input type="text" id="navn" class="input">
+        </div>
+        <div class="form-group">
+            <label for="email">E-mail</label>
+            <input type="email" id="email" class="input">
+        </div>
+        <div class="form-group">
+            <label for="besked">Besked</label>
+            <textarea id="besked" class="input"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Send</button>
+    </form>
+</section>
+
+<section>
+    <h2 class="section-title">Farver</h2>
+    <div style="display: flex; gap: var(--spacing-sm);">
+        <div style="width: 100px; height: 100px; background: var(--color-primary);"></div>
+        <div style="width: 100px; height: 100px; background: var(--color-secondary);"></div>
+        <div style="width: 100px; height: 100px; background: var(--color-muted);"></div>
+    </div>
+</section>
+
+</body>
+</html>

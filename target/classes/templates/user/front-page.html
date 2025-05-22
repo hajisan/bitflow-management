@@ -3,8 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <title>Forside</title>
+    <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
+
+<nav class="navbar">
+    <div class="navbar-content">
+        <div class="navbar-left">
+            <img th:src="@{/images/Alpha_Solution_Logo.svg}" alt="Logo" class="logo">
+        </div>
+        <div class="navbar-center">
+            <span class="app-name">BitFlow</span>
+        </div>
+        <div class="navbar-right">
+            <a href="/" class="nav-link">Hjem</a>
+            <a href="/login" class="nav-link">Login</a>
+        </div>
+    </div>
+</nav>
 
 <!-- Fejlbesked -->
 <div th:if="${error}" class="error-section">

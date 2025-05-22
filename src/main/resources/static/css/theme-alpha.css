@@ -1,0 +1,24 @@
+/* theme-alpha.css */
+:root {
+    --font-family: 'Montserrat', sans-serif;
+    --font-size-base: 16px;
+    --font-size-lg: 20px;
+    --font-size-sm: 14px;
+    --line-height: 1.6;
+
+    --color-primary: #FF325A;
+    --color-secondary: #F3F6F9;
+    --color-text: #000000;
+    --color-muted: #777777;
+    --color-white: #ffffff;
+
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 2rem;
+    --spacing-lg: 4rem;
+
+    --border-radius: 20px;
+    --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    --container-max-width: 1330px;
+}
