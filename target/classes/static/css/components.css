@@ -1,0 +1,82 @@
+/* components.css */
+.alert {
+    padding: 1rem;
+    border-radius: var(--border-radius);
+    margin-bottom: var(--spacing-sm);
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.alert-error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.card {
+    background-color: var(--color-white);
+    border: 1px solid #e0e0e0;
+    border-radius: var(--border-radius);
+    padding: var(--spacing-md);
+    box-shadow: var(--box-shadow);
+}
+
+/* ===== NAVBAR ===== */
+
+.navbar {
+    background-color: var(--color-white);
+    padding: var(--spacing-sm) var(--spacing-md);
+    box-shadow: var(--box-shadow);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.navbar-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: var(--container-max-width);
+    margin: 0 auto;
+}
+
+.logo {
+    height: 40px;
+    max-width: 200px;  /* begrænser hvor bredt SVG’et må blive */
+    width: auto;
+    object-fit: contain;
+}
+
+.navbar-right .nav-link {
+    margin-left: var(--spacing-sm);
+    color: var(--color-text);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.navbar-right .nav-link:hover {
+    color: var(--color-primary);
+}
+
+.navbar-center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-size: 1.6rem;
+    letter-spacing: -0.5px;
+    text-transform: uppercase;
+    color: var(--color-text);
+}
+
+.navbar-center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.2rem;
+}
+
+
