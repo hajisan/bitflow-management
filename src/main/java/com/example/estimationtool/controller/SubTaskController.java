@@ -251,6 +251,10 @@ public class SubTaskController {
         SubTaskWithTimeEntriesDTO dto = subTaskService.readAllTimeEntriesBySubTaskId(subtaskId);
         model.addAttribute("subTaskWithTimeEntries", dto);
 
+        SubTask subTask = subTaskService.readById(subtaskId);
+        model.addAttribute("subTask", subTask);
+
+
         return "subtask/subtask-with-timeentries";
     }
 

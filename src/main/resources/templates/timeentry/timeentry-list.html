@@ -5,39 +5,59 @@
     <title>TimeEntry List</title>
 </head>
 <body>
-<h1>Alle tidsregistreringer</h1>
 
-<table border="1">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Bruger ID</th>
-        <th>Opgave ID</th>
-        <th>Underopgave ID</th>
-        <th>Timer</th>
-        <th>Dato</th>
-        <th>Handlinger</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="entry : ${timeentries}">
-        <td th:text="${entry.timeId}">1</td>
-        <td th:text="${entry.userId}">1</td>
-        <td th:text="${entry.taskId}">1</td>
-        <td th:text="${entry.subTaskId}">1</td>
-        <td th:text="${entry.hoursSpent}">5</td>
-        <td th:text="${entry.date}">2025-05-08</td>
-        <td>
-            <a th:href="@{|/timeentries/${entry.timeId}|}">Vis</a> |
-            <a th:href="@{|/timeentries/edit/${entry.timeId}|}">Rediger</a> |
-            <form th:action="@{|/timeentries/delete/${entry.timeId}|}" method="post" style="display:inline">
-                <button type="submit">Slet</button>
+<h1>Liste af alle tidsregistreringer</h1>
+
+<!-- Fejl-/succesbesked -->
+<section th:if="${error}" class="error-section">
+    <p th:text="${error}" class="error-message"></p>
+</section>
+<section th:if="${success}" class="success-section">
+    <p th:text="${success}" class="success-message"></p>
+</section>
+
+<!-- Kun ADMIN må se timeentry-liste -->
+<section th:if="${session.currentUser.role.name() == 'ADMIN'}" class="mini-info">
+    <div th:each="entry : ${timeentries}" class="list">
+
+        <div>ID: <span th:text="${entry.timeId}"></span></div>
+        <div>Tidsforbrug: <span th:text="${entry.hoursSpent}"></span></div>
+        <div>Dato: <span th:text="${entry.date}"></span></div>
+
+        <div>
+            <a th:href="@{/timeentries/{id}(id=${entry.timeId})}">
+                <button>Se detaljer</button>
+            </a>
+            <a th:href="@{/timeentries/edit/{id}(id=${entry.timeId})}">
+                <button>Rediger</button>
+            </a>
+            <form th:action="@{/timeentries/delete/{id}(id=${entry.timeId})}" method="post" style="display:inline">
+                <button type="submit" onclick="return confirm('Er du sikker på, at du vil slette denne tidsregistrering?')">Slet</button>
             </form>
-        </td>
-    </tr>
-    </tbody>
-</table>
+        </div>
 
-<a th:href="@{/timeentries/create}">Opret ny tidsregistrering</a>
+        <hr/>
+    </div>
+</section>
+
+<!-- Hvis en anden rolle forsøger at tilgå -->
+<section th:unless="${session.currentUser.role.name() == 'ADMIN'}">
+    <p>Du har ikke adgang til denne side.</p>
+</section>
+
+<!-- Navigation -->
+<section class="navigation">
+    <div>
+        <a th:href="@{/timeentries/create}">
+            <button>Opret ny tidsregistrering</button>
+        </a>
+    </div>
+    <div>
+        <a th:href="@{/users/profile}">
+            <button>Tilbage til forside</button>
+        </a>
+    </div>
+</section>
+
 </body>
 </html>
