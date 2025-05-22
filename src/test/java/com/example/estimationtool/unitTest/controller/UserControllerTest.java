@@ -10,18 +10,22 @@ import com.example.estimationtool.controller.UserController;
 import com.example.estimationtool.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import java.time.LocalDate;
 
 import java.util.List;
@@ -92,6 +96,11 @@ public class UserControllerTest {
 
         //--------- Arrange ---------
 
+        // Tilføjer ArgumentCaptors
+        ArgumentCaptor<UserViewDTO> currentUserCaptor = ArgumentCaptor.forClass(UserViewDTO.class);
+        ArgumentCaptor<UserRegistrationDTO> registeredUserCaptor = ArgumentCaptor.forClass(UserRegistrationDTO.class);
+
+
         // Tilføjer admin, der er logget ind til sessionen
         UserViewDTO sessionAdmin = new UserViewDTO(
                 1,
@@ -102,7 +111,7 @@ public class UserControllerTest {
 
 
         // Admin opretter project manager
-        UserRegistrationDTO registreProjectManager = new UserRegistrationDTO(
+        UserRegistrationDTO registeredProjectManager = new UserRegistrationDTO(
                 "ProjectManager",
                 "LastNameProjectManager",
                 "projectmanager@projectmanager.com",
@@ -111,25 +120,46 @@ public class UserControllerTest {
         );
 
 
-        //--------- Act ------------- Opretter en Projektleder
+        //--------- Act ---------- Opretter en Projektleder
 
         mockMvc.perform(post("/users/create")
-                        .param("firstName", "ProjectManager") //Sætter parametrene fra UserRegistrationDTO
-                        .param("lastName", "LastNameProjectManager")
-                        .param("email", "projectmanager@projectmanager.com")
-                        .param("password", "hashedProjectManagerPassword")
+//                        .param("firstName", "ProjectManager") //Sætter parametrene fra UserRegistrationDTO
+//                        .param("lastName", "LastNameProjectManager")
+//                        .param("email", "projectmanager@projectmanager.com")
+//                        .param("password", "hashedProjectManagerPassword")
+//                        .param("role", "PROJECT_MANAGER")
+                        .param("firstName", registeredProjectManager.getFirstName())
+                        .param("lastName", registeredProjectManager.getLastName())
+                        .param("email", registeredProjectManager.getEmail())
+                        .param("password", registeredProjectManager.getPassword())
+                        .param("role", registeredProjectManager.getRole().name())
                         .sessionAttr("currentUser", sessionAdmin)) // Admin opretter bruger
                 .andExpect(status().is3xxRedirection()) // Assert - Tjekker at den redirecter
                 .andExpect(redirectedUrl("/users/list")) // Tjekker at den redirecter til user-list
                 .andExpect(flash().attributeExists("success")); // Tjekker at succes-besked findes
 
-        //Tjekker at createUser() kaldes fra @UserService når admin er i session
-        verify(userService).createUser(eq(sessionAdmin), any(UserRegistrationDTO.class));
+        //--------- Assert ----------
+        // Bruger ArgumentCaptor
+        verify(userService).createUser(currentUserCaptor.capture(), registeredUserCaptor.capture());
+        // Gemmer de fangede værdier lokalt
+        UserViewDTO capturedCurrentUser = currentUserCaptor.getValue(); // Fanger den oprettende bruger (admin)
+        UserRegistrationDTO capturedRegisteredUser = registeredUserCaptor.getValue(); // Fanger den oprettede bruger (projektleder)
 
-        // eq = metoden kaldes med præcis admin-objektet
+        //Tjekker at createUser() kaldes fra @UserService når admin er i session
+        verify(userService).createUser(eq(sessionAdmin), any(UserRegistrationDTO.class)); // eq = metoden kaldes med præcis admin-objektet
+        assertEquals(sessionAdmin.getEmail(), capturedCurrentUser.getEmail());
+        assertEquals(sessionAdmin.getRole(), capturedCurrentUser.getRole());
+
+        // Tjekker at den opettede bruger stemmer overens med vores ønskede parametre
+        assertEquals(registeredProjectManager.getFirstName(), capturedRegisteredUser.getFirstName());
+        assertEquals(registeredProjectManager.getLastName(), capturedRegisteredUser.getLastName());
+        assertEquals(registeredProjectManager.getEmail(), capturedRegisteredUser.getEmail());
+        assertEquals(registeredProjectManager.getPassword(), capturedRegisteredUser.getPassword());
+        assertEquals(registeredProjectManager.getRole(), capturedRegisteredUser.getRole());
+
 
         // Tjekker at metoden kaldes én gang
-        verify(userService, times(1)).createUser(sessionAdmin,registreProjectManager);
+        verify(userService, times(1)).createUser(any(), any());
     }
 
     // --------------------- Negativ test for createUser -----------------------
@@ -168,7 +198,7 @@ public class UserControllerTest {
     }
 
 
-        //------------------------------------ ReadAll() -----------------------------------
+    //------------------------------------ ReadAll() -----------------------------------
 
     @Test
     void test_showAllUsers() throws Exception {
@@ -253,36 +283,36 @@ public class UserControllerTest {
     @Test
     void test_showEditUser() throws Exception {
 
-    //--------- Arrange ---------
-    // Tilføjer admin, der er logget ind til sessionen
-    UserViewDTO sessionAdmin = new UserViewDTO(
-            1,
-            "Admin",
-            "LastNameAdmin",
-            "admin@admin.com",
-            Role.ADMIN);
+        //--------- Arrange ---------
+        // Tilføjer admin, der er logget ind til sessionen
+        UserViewDTO sessionAdmin = new UserViewDTO(
+                1,
+                "Admin",
+                "LastNameAdmin",
+                "admin@admin.com",
+                Role.ADMIN);
 
-    // Henter update-formularen for brugeren, der skal redigeres
-    UserUpdateDTO userUpdateDTO = new UserUpdateDTO(
-            2,
-            "ProjectManager",
-            "LastNameProjectManager",
-            "projectmanager@projectmanager.com",
-            "hashedProjectManagerPassword",
-            Role.PROJECT_MANAGER);
+        // Henter update-formularen for brugeren, der skal redigeres
+        UserUpdateDTO userUpdateDTO = new UserUpdateDTO(
+                2,
+                "ProjectManager",
+                "LastNameProjectManager",
+                "projectmanager@projectmanager.com",
+                "hashedProjectManagerPassword",
+                Role.PROJECT_MANAGER);
 
         when(userService.getUserUpdateDTOById(2)).thenReturn(userUpdateDTO);
 
 
-    // --------- Act ---------
+        // --------- Act ---------
 
-    mockMvc.perform(get("/users/edit/2")
-            .sessionAttr("currentUser", sessionAdmin))
-            .andExpect(status().isOk()) // Assert
-            .andExpect(view().name("user/edit-user"))
-            .andExpect(model().attributeExists("userUpdateDTO"))
-            .andExpect(model().attribute("userUpdateDTO", userUpdateDTO));
-}
+        mockMvc.perform(get("/users/edit/2")
+                        .sessionAttr("currentUser", sessionAdmin))
+                .andExpect(status().isOk()) // Assert
+                .andExpect(view().name("user/edit-user"))
+                .andExpect(model().attributeExists("userUpdateDTO"))
+                .andExpect(model().attribute("userUpdateDTO", userUpdateDTO));
+    }
 
     // --------------- Negativ test for showEditUser() --------------
     @Test
@@ -383,7 +413,6 @@ public class UserControllerTest {
     }
 
 
-
     //------------------------------------ Delete() ------------------------------------
 
     @Test
@@ -416,7 +445,7 @@ public class UserControllerTest {
 
 
         // Tjekker at metoden kaldes én gang
-        verify(userService, times(1)).deleteById(2,sessionAdmin);
+        verify(userService, times(1)).deleteById(2, sessionAdmin);
 
     }
 
@@ -431,7 +460,7 @@ public class UserControllerTest {
         int userIdToDelete = 3; // Developer skal slettes
 
         // Project Manager er IKKE admin, så det skal fejle
-        UserViewDTO sessionProjectManager= new UserViewDTO(
+        UserViewDTO sessionProjectManager = new UserViewDTO(
                 2,
                 "ProjectManager",
                 "LastNameProjectManager",
@@ -543,7 +572,7 @@ public class UserControllerTest {
                 Role.PROJECT_MANAGER
         );
 
-       // Liste af brugerens subprojekter
+        // Liste af brugerens subprojekter
         List<SubProject> mockSubProjects = List.of(
                 new SubProject(
                         110,
@@ -769,12 +798,12 @@ public class UserControllerTest {
 
     //---------------------------------- Session Redirect ----------------------------------
 
-        @Test
-        void test_showUser_redirectsWhenNotLoggedIn () throws Exception {
-            mockMvc.perform(get("/users/2"))
-                    .andExpect(status().is3xxRedirection())
-                    .andExpect(redirectedUrl("/login"))
-                    .andExpect(flash().attributeExists("error"));
-        }
+    @Test
+    void test_showUser_redirectsWhenNotLoggedIn() throws Exception {
+        mockMvc.perform(get("/users/2"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/login"))
+                .andExpect(flash().attributeExists("error"));
     }
+}
 

@@ -1,4 +1,4 @@
-package com.example.estimationtool.integrationsTest.repository;
+package com.example.estimationtool.integrationsTest;
 
 import com.example.estimationtool.model.SubTask;
 import com.example.estimationtool.repository.SubTaskRepository;

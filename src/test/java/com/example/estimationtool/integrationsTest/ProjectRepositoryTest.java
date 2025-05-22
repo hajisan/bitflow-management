@@ -1,4 +1,4 @@
-package com.example.estimationtool.integrationsTest.repository;
+package com.example.estimationtool.integrationsTest;
 
 import com.example.estimationtool.model.Project;
 import com.example.estimationtool.model.enums.Status;
