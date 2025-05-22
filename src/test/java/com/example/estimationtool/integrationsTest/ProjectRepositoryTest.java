@@ -1,13 +1,16 @@
-package com.example.estimationtool.integrationsTest.repository;
+package com.example.estimationtool.integrationsTest;
 
 import com.example.estimationtool.model.Project;
 import com.example.estimationtool.model.enums.Status;
 import com.example.estimationtool.repository.ProjectRepository;
 import com.example.estimationtool.repository.UserRepository;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.jdbc.Sql;
+
 
 import java.time.LocalDate;
 import java.util.List;
@@ -83,16 +86,25 @@ public class ProjectRepositoryTest {
         assertEquals("ACTIVE", project.getStatus().name());
     }
 
-    @Test // Skal fejle da projektet ikke eksistere
-    void readById_returnsNullWhenProjectDoesNotExist() {
+    @Test // Skal fejle da projektet ikke eksisterer
+    void readById_throwsExceptionWhenProjectDoesNotExist() {
         // Arrange
         int nonExistentProjectId = 9999; // Et ID vi med sikkerhed ved ikke findes i h2init.sql
 
         // Act
-        Project result = projectRepository.readById(nonExistentProjectId);
+        // Vi bruger Executable-interfacet fra JUnits bibliotekt sammen med ForEmptyResultDataAccessException fra Jdbc
+        // Executable-interfacet indeholder en enkelt metode: void execute, som skal kaste en throwable
+        Executable testForEmptyResultDataAccessException = new Executable() {
+            @Override
+            public void execute() {
+                projectRepository.readById(nonExistentProjectId);
+            }
+        };
 
         // Assert
-        assertNull(result);
+        // Her bruger vi assertThrows med EmptyResultDataAccessException som den forventede exception og
+        // testForEmptyResultDataAccessException-executablen, som indeholder den metode der bør kaste vores exception
+        assertThrows(EmptyResultDataAccessException.class, testForEmptyResultDataAccessException);
     }
 
     @Test // Tjek om et projekt bliver hentet korrekt fra databasen
