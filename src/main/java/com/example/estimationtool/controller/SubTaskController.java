@@ -141,9 +141,9 @@ public class SubTaskController {
         List<UserViewDTO> allUserList = userService.readAll();
         model.addAttribute("allUserList", allUserList);
 
-        // Henter brugeren tilknyttet subtask
-        //UserViewDTO assignedUser = subTaskService.readAssignedUserBySubTaskId(subtaskId);
-        //model.addAttribute("assignedUser", assignedUser);
+        //Henter brugeren tilknyttet subtask
+        UserViewDTO assignedUser = subTaskService.readAssignedUserBySubTaskId(subtaskId);
+        model.addAttribute("assignedUser", assignedUser);
 
         return "subtask/subtask-detail";
 

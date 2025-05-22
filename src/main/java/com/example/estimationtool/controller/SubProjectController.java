@@ -270,7 +270,7 @@ public class SubProjectController {
 
     //---------------------------- POST Assign User to Subproject -------------------------
 
-    @PostMapping("/subprojects/{subprojectId}/assignusers")
+    @PostMapping("/{subprojectId}/assignusers")
     public String assignUsersToSubProject(@PathVariable int subprojectId,
                                           @RequestParam("userIds") List<Integer> userIds,
                                           HttpSession session,
