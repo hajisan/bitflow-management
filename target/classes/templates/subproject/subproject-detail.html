@@ -51,9 +51,6 @@
     </div>
 
 
-
-
-
     <!-- Tilbage til liste af alle subprojekter er for admin: subproject-list.html -->
     <div th:if="${session.currentUser.role.name() == 'ADMIN'}">
         <a th:href="@{/projects/{id}/subprojects(id=${subproject.projectId})}">

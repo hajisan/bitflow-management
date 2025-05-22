@@ -7,6 +7,7 @@
 </head>
 <body>
 
+
 <nav class="navbar">
     <div class="navbar-content">
         <div class="navbar-left">
@@ -21,6 +22,17 @@
         </div>
     </div>
 </nav>
+  
+<!-- uden nav bar -->
+<form action="/logout" method="post">
+    <button type="submit">Log ud</button>
+</form>
+
+<!-- med nav bar -->
+<form action="/logout" method="get" style="display:inline;">
+    <button type="submit">Log ud</button>
+</form>
+
 
 <!-- Fejlbesked -->
 <div th:if="${error}" class="error-section">
