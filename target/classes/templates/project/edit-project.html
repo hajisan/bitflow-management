@@ -15,16 +15,6 @@
 </section>
 
 
-  <!-- Vis logget ind bruger og rolle -->
-
-<!--                                  DEN SKAL NOK VÆK
-<section class="user-info">
-  <p th:if="${session.currentUser != null}">
-    Du er logget ind som <span th:text="${session.currentUser.role}"></span>
-  </p>
-</section> -->
-
-
 <!-- Formular til redigering af projekt -->
 <section class="form-actions">
   <form th:action="@{/projects/update}" th:object="${project}" method="post" class="form-fields">

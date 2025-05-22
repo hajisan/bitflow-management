@@ -6,6 +6,17 @@
 </head>
 <body>
 
+<!-- uden nav bar -->
+<form action="/logout" method="post">
+    <button type="submit">Log ud</button>
+</form>
+
+<!-- med nav bar -->
+<form action="/logout" method="get" style="display:inline;">
+    <button type="submit">Log ud</button>
+</form>
+
+
 <!-- Fejlbesked -->
 <div th:if="${error}" class="error-section">
     <p th:text="${error}" class="error-message"></p>

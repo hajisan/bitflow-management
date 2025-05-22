@@ -5,28 +5,73 @@
     <title>Create TimeEntry</title>
 </head>
 <body>
+
 <h1>Opret tidsregistrering</h1>
 
-<form th:action="@{/timeentries/create}" th:object="${timeentry}" method="post">
+<!-- Succesbesked -->
+<section class="success">
+    <div th:if="${success}" class="success" th:text="${success}"></div>
+</section>
 
-    <label>Bruger ID:</label>
-    <input type="number" th:field="*{userId}" /><br/>
+<!-- Fejlbesked -->
+<section th:if="${error}" class="error-section">
+    <p th:text="${error}" class="error-message"></p>
+</section>
 
-    <label>Opgave ID:</label>
-    <input type="number" th:field="*{taskId}" /><br/>
+<!-- Formular til oprettelse af tidsregistrering -->
+<section class="form-actions">
+    <form th:action="@{/timeentries/create}" th:object="${timeentry}" method="post">
 
-    <label>Underopgave ID:</label>
-    <input type="number" th:field="*{subTaskId}" /><br/>
+        <!-- Skjult felt til opgave og subtask -->
+        <input type="hidden" th:field="*{taskId}" />
+        <input type="hidden" th:field="*{subTaskId}" />
+        <input type="hidden" th:field="*{userId}"/>
 
-    <label>Timer brugt:</label>
-    <input type="number" th:field="*{hoursSpent}" /><br/>
 
-    <label>Dato:</label>
-    <input type="date" th:field="*{date}" /><br/>
+        <div>
+            <label for="hoursSpent">Tidsforbrug:</label>
+            <input type="number" id="hoursSpent" th:field="*{hoursSpent}" min="0" step="0.25" required />
+        </div>
 
-    <button type="submit">Gem</button>
-</form>
+        <div>
+            <label for="date">Dato:</label>
+            <input type="date" id="date" th:field="*{date}" required />
+        </div>
 
-<a th:href="@{/timeentries}">Tilbage til oversigt</a>
+        <div>
+            <button type="submit">Opret tidsregistrering</button>
+        </div>
+    </form>
+</section>
+
+<!-- Navigation efter oprettelse -->
+<section class="navigation">
+
+</section>
+
+<!-- Navigation -->
+<section class="navigation">
+
+    <!-- Hvis du opretter en task, men vil tage til subtask-with-timeentries.html -->
+    <div th:if="${timeentry.subTaskId == null}">
+        <a th:href="@{/tasks/{id}/timeentries(id=${timeentry.taskId})}">
+            <button>Fortryd</button>
+        </a>
+    </div>
+
+    <!-- Hvis du opretter en subtask, men vil tage til subtask-with-timeentries.html -->
+    <div th:if="${timeentry.subTaskId != null}">
+        <a th:href="@{/subtask/{id}/timeentries(id=${timeentry.subTaskId})}">
+            <button>Fortryd</button>
+        </a>
+    </div>
+
+    <div>
+        <a th:href="@{/users/profile}">
+            <button>Tilbage til forside</button>
+        </a>
+    </div>
+</section>
+
 </body>
 </html>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
   <meta charset="UTF-8">
   <title>Project Detail</title>
@@ -39,34 +39,44 @@
   <!-- Rediger projekt - er kun for projektleder og admin: edit-project.html -->
 <section class="form-actions">
   <div th:if="${session.currentUser.role.name() == 'PROJECT_MANAGER' or session.currentUser.role.name() == 'ADMIN'}">
-    <a th:href="@{/projects/edit/{projectId}(projectId=${project.projectId})}">Rediger</a>
-  </div>
-
-  <!-- Vis tilknyttede brugere er for alle: project-with-users.html -->
-  <div>
-    <a th:href="@{/projects/{projectId}/users(projectId=${project.projectId})}">
-      Se tilknyttede brugere
-    </a>
-  </div>
-  <!-- Vis tilknyttede subprojekter er for alle: project-with-subproject.html -->
-  <div>
-    <a th:href="@{/projects/{projectId}/subprojects(projectId=${project.projectId})}">
-      Se tilknyttede subprojekter
+    <a th:href="@{/projects/edit/{projectId}(projectId=${project.projectId})}">
+      <button>Rediger</button>
     </a>
   </div>
 </section>
 
+
 <!-- Navigation -->
 <section class="navigation">
 
+  <!-- Vis tilknyttede brugere er for alle: project-with-users.html -->
+  <div>
+    <a th:href="@{/projects/{projectId}/users(projectId=${project.projectId})}">
+      <button>Se tilknyttede brugere</button>
+    </a>
+  </div>
+
+  <!-- Vis tilknyttede subprojekter er for alle: project-with-subproject.html -->
+  <div>
+    <a th:href="@{/projects/{projectId}/subprojects(projectId=${project.projectId})}">
+      <button>Se tilknyttede subprojekter</button>
+    </a>
+  </div>
+
   <!-- Fuld projektliste er kun for admin: project-list.html -->
-  <a th:if="${session.currentUser.role.name() == 'ADMIN'}"
-     th:href="@{/projects/list}">
-    Tilbage til projektliste
-  </a>
+  <div th:if="${session.currentUser.role.name() == 'ADMIN'}">
+    <a th:href="@{/projects/list}">
+      <button>Tilbage til projektliste</button>
+    </a>
+  </div>
 
   <!-- Profilside er for alle: front-page.html -->
-  <a th:href="@{/users/profile}">Tilbage til forside</a>
+  <div>
+    <a th:href="@{/users/profile}">
+      <button>Tilbage til forside</button>
+    </a>
+  </div>
+
 </section>
 
 </body>
