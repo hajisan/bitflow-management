@@ -6,35 +6,75 @@
 </head>
 <body>
 
-<h1>Underopgavebeskrivelse</h1>
+<h1>Tidsregistreringer for subtask</h1>
 
-<p>ID: <span th:text="${subTaskWithTimeEntries.subTask.subTaskId}"></span></p>
-<p>Navn: <span th:text="${subTaskWithTimeEntries.subTask.name}"></span></p>
-<p>Beskrivelse: <span th:text="${subTaskWithTimeEntries.subTask.description}"></span></p>
-<p>Deadline: <span th:text="${subTaskWithTimeEntries.subTask.deadline}"></span></p>
-<p>Status: <span th:text="${subTaskWithTimeEntries.subTask.status}"></span></p>
-<p>Estimeret tid: <span th:text="${subTaskWithTimeEntries.subTask.estimatedTime}"></span> timer</p>
-<p>Forbrugt tid: <span th:text="${subTaskWithTimeEntries.subTask.timeSpent}"></span> timer</p>
+<!-- Kort info om subtask -->
+<section class="mini-info">
+    <h3>Kort beskrivelse af subtask</h3>
+    <div>Navn: <span th:text="${subTask.name}"></span></div>
+    <div>Deadline: <span th:text="${subTask.deadline}"></span></div>
+    <div>Estimeret tid: <span th:text="${subTask.estimatedTime}"></span> timer</div>
+    <div>Aktuelle tidsforbrug: <span th:text="${subTask.timeSpent}"></span> timer</div>
+    <div>Status: <span th:text="${subTask.status}"></span></div>
+</section>
 
-<h2>Registrerede timer</h2>
+<section class="mini-info">
+    <h3>Kort beskrivelse af tidsregistrering</h3>
 
-<!-- Hvis listen ikke er tom -->
-<ul th:if="${!#lists.isEmpty(subTaskWithTimeEntries.timeEntries)}">
-    <li th:each="entry : ${subTaskWithTimeEntries.timeEntries}">
-        <strong>Dato:</strong> <span th:text="${entry.date}"></span> –
-        <strong>Timer brugt:</strong> <span th:text="${entry.hoursSpent}"></span> timer –
-        <strong>Bruger-ID:</strong> <span th:text="${entry.userId}"></span>
-    </li>
-    <!--li>
-        <strong th:text="'Timer brugt i alt på ' + ${subTaskWithTimeEntries.subTask().name}"></strong>
-    </li-->
-</ul>
+    <div th:if="${!#lists.isEmpty(subTaskWithTimeEntries.timeEntries)}">
+        <div th:each="timeEntry : ${subTaskWithTimeEntries.timeEntries}" class="list">
+            <div>BrugerID: <span th:text="${timeEntry.userId}"></span></div>
+            <div>Tid forbrugt: <span th:text="${timeEntry.hoursSpent}"> timer</span></div>
+            <div>Oprettelsesdato: <span th:text="${timeEntry.date}"></span></div>
+
+                <a th:href="@{/timeentries/{id}(id=${timeEntry.timeId})}">
+                    <button>Se detaljer</button>
+                </a>
+        </div>
+    </div>
+</section>
+
+<!-- Opret ny timeEntry (for alle) -->
+<section class="form-actions">
+    <div>
+        <a th:href="@{/timeentries/create(taskId=${subTaskWithTimeEntries.subTask.taskId}, subTaskId=${subTaskWithTimeEntries.subTask.subTaskId})}">
+            <button>Opret tidsregistrering</button>
+        </a>
+    </div>
+</section>
 
 <!-- Hvis listen er tom -->
-<p th:if="${#lists.isEmpty(subTaskWithTimeEntries.timeEntries)}">
-    Der er endnu ikke registreret timer for denne underopgave.
-</p>
+<section th:if="${#lists.isEmpty(subTaskWithTimeEntries.timeEntries)}">
+    <div>
+        <p>Der er endnu ikke registreret nogle timer for denne subtask.</p>
+    </div>
+</section>
 
-<a th:href="@{/subtasks/list}">Tilbage til underopgaveoversigt</a>
+
+<!-- Navigation -->
+<section class="navigation">
+
+    <div>
+        <!-- Tilbage til subtask-detail.html er for alle -->
+        <a th:href="@{/subtask/{id}(id=${subTaskWithTimeEntries.subTask.subTaskId})}">
+            <button>Tilbage til subtask</button>
+        </a>
+    </div>
+
+    <!-- Tilbage til liste af alle timeEntries er for admin: timeentry-list.html -->
+    <div th:if="${session.currentUser.role.name() == 'ADMIN'}">
+        <a th:href="@{/timeentries/list}">
+            <button>Tilbage til listen af tidsregistreringer</button>
+        </a>
+    </div>
+
+    <!-- Tilbage til front-page.html er for alle -->
+    <div>
+        <a th:href="@{/users/profile}">
+            <button>Tilbage til forside</button>
+        </a>
+    </div>
+
+</section>
 </body>
 </html>

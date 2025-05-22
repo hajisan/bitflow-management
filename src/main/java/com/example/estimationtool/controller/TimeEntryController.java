@@ -30,6 +30,7 @@ public class TimeEntryController {
     @GetMapping("/create")
     public String showCreateTimeEntry(@RequestParam int taskId,
                                       @RequestParam(required = false) Integer subTaskId, // Ikke nødvendigvis til stede
+                                      @RequestParam int userId,
                                       Model model,
                                       HttpSession session,
                                       RedirectAttributes redirectAttributes) {
@@ -45,6 +46,7 @@ public class TimeEntryController {
 
         TimeEntry timeEntry = new TimeEntry();
         timeEntry.setTaskId(taskId);
+        timeEntry.setUserId(userId);
         if (subTaskId != null) timeEntry.setSubTaskId(subTaskId);
         model.addAttribute("timeentry", timeEntry);
 
