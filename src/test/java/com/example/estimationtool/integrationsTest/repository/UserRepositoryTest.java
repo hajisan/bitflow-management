@@ -77,13 +77,13 @@ public class UserRepositoryTest {
     @Test // Tjek om alle bruger kan hentes korrekt fra databasen
     void readAll_returnsAllUsers() {
         // Arrange
-        // Vi forventer at 3 brugere fra h2init.sql
+        // Vi forventer at 4 brugere fra h2init.sql
 
         // Act
         List<User> users = userRepository.readAll();
 
         // Assert
-        assertEquals(3, users.size());
+        assertEquals(4, users.size());
 
         // Tjek første bruger
         User firstUser = users.get(0);
@@ -206,7 +206,7 @@ public class UserRepositoryTest {
         // Assert
         assertNotNull(user);
         assertEquals(3, user.getUserId());
-        assertEquals("TestUser", user.getFirstName());
+        assertEquals("TestUser1", user.getFirstName());
         assertEquals("3", user.getLastName());
         assertEquals("test@3.com", user.getEmail());
         assertEquals(Role.DEVELOPER, user.getRole());
