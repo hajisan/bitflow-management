@@ -19,18 +19,34 @@
 
 <!-- Hvis listen ikke er tom -->
 <ul th:if="${!#lists.isEmpty(taskWithTimeEntries.timeEntries)}">
-  <li th:each="entry : ${taskWithTimeEntries.timeEntries}">
-    <strong>Dato:</strong> <span th:text="${entry.date}"></span> –
-    <strong>Timer brugt:</strong> <span th:text="${entry.hoursSpent}"></span> timer –
-    <strong>Bruger-ID:</strong> <span th:text="${entry.userId}"></span>
-  </li>
+    <li th:each="entry : ${taskWithTimeEntries.timeEntries}">
+        <strong>Dato:</strong> <span th:text="${entry.date}"></span> –
+        <strong>Timer brugt:</strong> <span th:text="${entry.hoursSpent}"></span> timer –
+        <strong>Bruger-ID:</strong> <span th:text="${entry.userId}"></span>
+    </li>
 </ul>
 
 <!-- Hvis listen er tom -->
 <p th:if="${#lists.isEmpty(taskWithTimeEntries.timeEntries)}">
-  Der er endnu ikke registreret timer for denne opgave.
+    Der er endnu ikke registreret timer for denne opgave.
 </p>
 
-<a th:href="@{/tasks/list}">Tilbage til opgaveoversigt</a>
+<!-- Navigation -->
+<section class="navigation">
+
+    <div th:if="${session.currentUser.role.ADMIN}">
+        <a th:href="@{/tasks/list}">
+            <button>Tilbage til opgaveoversigt</button>
+        </a>
+    </div>
+
+    <div>
+        <a th:href="@{/tasks/${taskId}}">
+            <button th:text="'Tilbage til tasken ' + ${taskWithTimeEntries.task().name}"></button>
+        </a>
+    </div>
+
+</section>
+
 </body>
 </html>
