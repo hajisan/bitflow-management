@@ -2,50 +2,48 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Log Ind</title>
     <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
+
 <nav class="navbar">
     <div class="navbar-content">
         <div class="navbar-left">
             <img th:src="@{/images/Alpha_Solution_Logo.svg}" alt="Logo" class="logo">
         </div>
         <div class="navbar-center">
-            <span class="app-name">BitFlow</span>
+            <a href="/" class="nav-link">INFO</a> <!-- Tag en beslutning med denne -->
         </div>
         <div class="navbar-right">
-            <a href="/" class="nav-link">Hjem</a>
-            <a href="/login" class="nav-link">Login</a>
+            <img th:src="@{/images/Alpha_Solution_Logo.svg}" alt="Logo" class="logo"> <!-- Erstat med BitBro's logo -->
         </div>
     </div>
 </nav>
 
-<div class="main-content">
-<h2>Log ind</h2>
+<div class="login-wrapper">
+    <div class="card login-card">
+        <h2>Log ind</h2>
 
-<!-- Vis fejl hvis credentials er forkerte -->
-<div th:if="${error}">
-    <p style="color: red;" th:text="${error}">Der skete en fejl</p>
-</div>
-<div th:if="${success}">
-    <p style="color: green;" th:text="${success}">Logget ind!</p>
+        <!-- Vis fejl hvis credentials er forkerte -->
+        <div th:if="${success}" class="success-section"><p class="success-message" th:text="${success}"></p></div>
+        <div th:if="${error}" class="error-section"><p class="error-message" th:text="${error}"></p></div>
+
+        <form th:action="@{/login}" method="post">
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required />
+            </div>
+            <div class="form-group">
+                <label for="password">Adgangskode:</label>
+                <input type="password" id="password" name="password" required />
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Log ind</button>
+            </div>
+        </form>
+    </div>
 </div>
 
-
-<form th:action="@{/login}" method="post">
-    <div>
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required/>
-    </div>
-    <div>
-        <label for="password">Adgangskode:</label>
-        <input type="password" id="password" name="password" required/>
-    </div>
-    <div>
-        <button type="submit" class="btn btn-primary">Log ind</button>
-    </div>
-</form>
-</div>
 </body>
 </html>

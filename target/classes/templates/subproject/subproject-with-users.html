@@ -1,90 +1,82 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>SubProject With Users</title>
+    <title>Brugere i Subprojekt</title>
+    <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
-<h1>Brugere tilknyttet subprojekt</h1>
-
-<!-- Fejlbesked -->
-<section th:if="${error}" class="error-section">
-    <p th:text="${error}" class="error-message"></p>
-</section>
-
-<!-- Succesbesked -->
-<section th:if="${success}" class="success-section">
-    <p th:text="${success}" class="success-message"></p>
-</section>
-
-
-<!-- Kort info om subprojekt -->
-<section class="mini-info">
-    <div>Navn: <span th:text="${subProjectWithUsers.subProject.name}"></span></div>
-    <div>Deadline: <span th:text="${subProjectWithUsers.subProject.deadline}"></span></div>
-    <div>Status: <span th:text="${subProjectWithUsers.subProject.status}"></span></div>
-</section>
-
-<!-- Brugere tilknyttet subprojektet -->
-<section class="mini-info">
-    <div th:if="${!#lists.isEmpty(subProjectWithUsers.userViewDTOList)}">
-        <div th:each="user : ${subProjectWithUsers.userViewDTOList}" class="user-summary">
-            <span th:text="${user.firstName + ' ' + user.lastName + ' (' + user.role + ')'}"></span>
-            <a th:href="@{/users/{userId}(userId=${user.userId})}">Se detaljer</a>
-        </div>
-    </div>
-    <!-- Hvis listen er tom -->
-    <div th:if="${#lists.isEmpty(subProjectWithUsers.userViewDTOList)}">
-        Der er ingen brugere tilknyttet dette subprojekt.
-    </div>
-</section>
-
-
-<!-- Tilknyt brugere til subprojekt -->
-<h2>Tildel nye brugere</h2>
-
-<section class="form-actions">
-    <form th:action="@{'/subprojects/' + ${subProjectWithUsers.subProject.subProjectId} + '/assignusers'}"
-          method="post">
-        <div>
-            <label for="user-select">Vælg én eller flere brugere:</label><br/>
-            <select id="user-select" name="userIds" multiple size="5">
-                <option th:each="user : ${unassignedUsers}"
-                        th:value="${user.userId}"
-                        th:text="${user.firstName + ' ' + user.lastName + ' (' + user.role + ')'}">
-                </option>
-            </select>
-        </div>
-        <div>
-            <button type="submit">Tildel valgte brugere</button>
-        </div>
-    </form>
-</section>
 
 <!-- Navigation -->
-<section class="navigation">
+<div th:replace="fragments/navbar :: navbar"></div>
 
-    <div>
-        <!-- Tilbage til subproject-detail.html er for alle -->
-        <a th:href="@{/subprojects/{id}(id=${subProjectWithUsers.subProject.subProjectId})}">
-            <button>Tilbage til subprojekt</button>
-        </a>
+<!-- Feedback-beskeder -->
+<div th:if="${success}" class="success-section"><p class="success-message" th:text="${success}"></p></div>
+<div th:if="${error}" class="error-section"><p class="error-message" th:text="${error}"></p></div>
+
+<section class="dashboard-section">
+
+    <!-- Overskrift -->
+    <div class="list-header">
+        <h2 class="section-title">Brugere tilknyttet subprojekt: <span th:text="${subProjectWithUsers.subProject.name}"></span></h2>
     </div>
-    <!-- Tilbage til subprojekt-list.html kun for admin -->
-    <div>
-        <a th:if="${session.currentUser.role.name() == 'ADMIN'}"
-           th:href="@{/subprojects/list}">
-            <button>Tilbage til subprojektoversigt</button>
-        </a>
+
+    <!-- Kort subprojektinfo -->
+    <div class="details-box">
+        <p><strong>Deadline:</strong> <span th:text="${subProjectWithUsers.subProject.deadline}"></span></p>
+        <p class="status"
+           th:text="'Status: ' + ${subProjectWithUsers.subProject.status}"
+           th:classappend="' status-' + ${subProjectWithUsers.subProject.status.name().toLowerCase()}"></p>
     </div>
-    <!-- Tilbage til forsiden -->
-    <div>
-        <a th:href="@{/users/profile}">
-            <button>Tilbage til forside</button>
-        </a>
+
+    <!-- Brugerliste -->
+    <div class="list-wrapper">
+        <div class="list" th:if="${!#lists.isEmpty(subProjectWithUsers.userViewDTOList)}">
+            <div class="row" th:each="user : ${subProjectWithUsers.userViewDTOList}">
+                <div class="info">
+                    <span class="icon">👤</span>
+                    <div class="details">
+                        <p class="name" th:text="'Navn: ' + ${user.firstName} + ' ' + ${user.lastName}"></p>
+                        <p class="role" th:text="'Rolle: ' + ${user.role}"></p>
+                    </div>
+                </div>
+                <div class="actions">
+                    <a th:href="@{/users/{id}(id=${user.userId})}" class="btn btn-secondary">Se detaljer</a>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${#lists.isEmpty(subProjectWithUsers.userViewDTOList)}">
+            <p>Der er ingen brugere tilknyttet dette subprojekt.</p>
+        </div>
     </div>
+
+    <!-- Formular til tildeling af brugere -->
+    <div th:if="${!#lists.isEmpty(unassignedUsers)}" class="form-section" style="margin-top: var(--spacing-md);">
+        <h3>Tildel bruger(e) til subprojektet</h3>
+        <form th:action="@{'/subprojects/' + ${subProjectWithUsers.subProject.subProjectId} + '/assignusers'}" method="post">
+            <div class="form-group">
+                <label for="user-select">Vælg bruger(e):</label>
+                <select id="user-select" name="userIds" multiple size="5" class="input">
+                    <option th:each="user : ${unassignedUsers}"
+                            th:value="${user.userId}"
+                            th:text="${user.firstName + ' ' + user.lastName + ' (' + user.role + ')'}">
+                    </option>
+                </select>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">➕ Tildel valgte</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Fast tilbageknapper -->
+    <div class="fixed-bottom-right">
+        <a th:href="@{/subprojects/{id}(id=${subProjectWithUsers.subProject.subProjectId})}" class="btn btn-secondary">⬅️ Tilbage til subprojekt</a>
+        <a th:if="${session.currentUser.role.name() == 'ADMIN'}" th:href="@{/subprojects/list}" class="btn btn-secondary">📋 Subprojektoversigt</a>
+        <a th:href="@{/users/profile}" class="btn btn-secondary">🏠 Dashboard</a>
+    </div>
+
 </section>
-
-
 </body>
 </html>

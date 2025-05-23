@@ -1,103 +1,191 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Edit Task</title>
+    <title>Rediger opgave</title>
+    <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
-<h1>Rediger task</h1>
 
-<!-- Fejl-/succesbesked -->
-<section th:if="${error}" class="error-section">
-    <p th:text="${error}" class="error-message"></p>
-</section>
-<section th:if="${success}" class="success-section">
-    <p th:text="${success}" class="success-message"></p>
-</section>
+<!-- Navbar -->
+<div th:replace="fragments/navbar :: navbar"></div>
 
+<section class="dashboard-section">
 
-<section>
-    <form th:action="@{/tasks/update}" th:object="${task}" method="post" class="form-actions">
+    <!-- Overskrift -->
+    <h2 class="section-title" th:text="'Rediger opgave: ' + ${task.name}">Rediger opgave</h2>
 
-        <!-- Skjulte felter -->
-        <input type="hidden" th:field="*{taskId}"/>
-        <input type="hidden" th:field="*{subProjectId}"/>
+    <!-- Feedback -->
+    <div th:if="${success}" class="success-section"><p class="success-message" th:text="${success}"></p></div>
+    <div th:if="${error}" class="error-section"><p class="error-message" th:text="${error}"></p></div>
 
-        <div>
-            <label>Navn:</label>
-            <input type="text" th:field="*{name}"/>
+    <!-- Formular -->
+    <form th:action="@{/tasks/update}" th:object="${task}" method="post" class="form-styled">
+        <input type="hidden" th:field="*{taskId}" />
+        <input type="hidden" th:field="*{subProjectId}" />
+
+        <div class="form-group">
+            <label for="name">Navn:</label>
+            <input type="text" id="name" th:field="*{name}" class="input" />
         </div>
 
-        <div>
-            <label>Beskrivelse:</label>
-            <textarea th:field="*{description}"></textarea>
+        <div class="form-group">
+            <label for="description">Beskrivelse:</label>
+            <textarea id="description" th:field="*{description}" class="input"></textarea>
         </div>
 
-        <!-- Kun ADMIN og PROJECT_MANAGER må redigere deadline og estimeret tid -->
+        <!-- Kun ADMIN og PROJECT_MANAGER -->
         <div th:if="${session.currentUser.role.name() == 'ADMIN' or session.currentUser.role.name() == 'PROJECT_MANAGER'}">
-            <div>
-                <label>Deadline:</label>
-                <input type="date" th:field="*{deadline}"/>
+            <div class="form-group">
+                <label for="deadline">Deadline:</label>
+                <input type="date" id="deadline" th:field="*{deadline}" class="input"/>
             </div>
 
-            <div>
-                <label>Estimeret Tid (timer):</label>
-                <input type="number" th:field="*{estimatedTime}" min="0"/>
+            <div class="form-group">
+                <label for="estimatedTime">Estimeret tid (timer):</label>
+                <input type="number" id="estimatedTime" th:field="*{estimatedTime}" class="input" min="0"/>
             </div>
         </div>
 
-        <div>
-            <label>Forbrugt Tid (timer):</label>
-            <input type="number" th:field="*{timeSpent}"/>
+        <div class="form-group">
+            <label for="timeSpent">Forbrugt tid (timer):</label>
+            <input type="number" id="timeSpent" th:field="*{timeSpent}" class="input" min="0"/>
         </div>
 
-        <div>
-            <label>Status:</label>
-            <select th:field="*{status}">
+        <div class="form-group">
+            <label for="status">Status:</label>
+            <select id="status" th:field="*{status}" class="input">
                 <option th:each="s : ${T(com.example.estimationtool.model.enums.Status).values()}"
-                        th:value="${s}"
-                        th:text="${s}"></option>
+                        th:value="${s}" th:text="${s}"></option>
             </select>
         </div>
 
-        <div class="form-actions">
-            <button type="submit">Opdater task</button>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">💾 Opdater opgave</button>
         </div>
     </form>
-</section>
 
-<!-- Slet task - kun for ADMIN og PROJECT_MANAGER -->
-<section class="form-actions" th:if="${session.currentUser.role.name() == 'ADMIN' or session.currentUser.role.name() == 'PROJECT_MANAGER'}">
-    <form th:action="@{/tasks/delete/{id}(id=${task.taskId})}" method="post">
-        <button type="submit" onclick="return confirm('Er du sikker på, at du vil slette denne opgave?')">Slet</button>
+    <!-- Slet knap -->
+    <form th:action="@{/tasks/delete/{id}(id=${task.taskId})}" method="post"
+          th:if="${session.currentUser.role.name() == 'ADMIN' or session.currentUser.role.name() == 'PROJECT_MANAGER'}"
+          onsubmit="return confirm('Er du sikker på, at du vil slette denne opgave?');"
+          class="form-group" style="margin-top: var(--spacing-sm);">
+        <button type="submit" class="btn btn-danger">🗑️ Slet opgave</button>
     </form>
-</section>
 
-<!-- Navigation -->
-<section class="navigation">
-
-    <!-- Tilbage til task-detail.html -->
-    <div>
-        <a th:href="@{/tasks/{id}(id=${task.taskId})}">
-            <button>Tilbage til detaljer</button>
-        </a>
-    </div>
-
-    <!-- Kun admin må se task-list.html -->
-    <div th:if="${session.currentUser.role.name() == 'ADMIN'}">
-        <a th:href="@{/tasks/list}">
-            <button>Tilbage til alle tasks</button>
-        </a>
-    </div>
-
-    <!-- Tilbage til forside -->
-    <div>
-        <a th:href="@{/users/profile}">
-            <button>Tilbage til forside</button>
-        </a>
+    <!-- Navigation -->
+    <div class="fixed-bottom-right">
+        <a th:href="@{/tasks/{id}(id=${task.taskId})}" class="btn btn-secondary">⬅️ Tilbage til detaljer</a>
+        <a th:if="${session.currentUser.role.name() == 'ADMIN'}" th:href="@{/tasks/list}" class="btn btn-secondary">📋 Alle opgaver</a>
+        <a th:href="@{/users/profile}" class="btn btn-secondary">🏠 Forside</a>
     </div>
 
 </section>
 
 </body>
 </html>
+
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Edit Task</title>-->
+<!--</head>-->
+<!--<body>-->
+<!--<h1>Rediger task</h1>-->
+
+<!--&lt;!&ndash; Fejl-/succesbesked &ndash;&gt;-->
+<!--<section th:if="${error}" class="error-section">-->
+<!--    <p th:text="${error}" class="error-message"></p>-->
+<!--</section>-->
+<!--<section th:if="${success}" class="success-section">-->
+<!--    <p th:text="${success}" class="success-message"></p>-->
+<!--</section>-->
+
+
+<!--<section>-->
+<!--    <form th:action="@{/tasks/update}" th:object="${task}" method="post" class="form-actions">-->
+
+<!--        &lt;!&ndash; Skjulte felter &ndash;&gt;-->
+<!--        <input type="hidden" th:field="*{taskId}"/>-->
+<!--        <input type="hidden" th:field="*{subProjectId}"/>-->
+
+<!--        <div>-->
+<!--            <label>Navn:</label>-->
+<!--            <input type="text" th:field="*{name}"/>-->
+<!--        </div>-->
+
+<!--        <div>-->
+<!--            <label>Beskrivelse:</label>-->
+<!--            <textarea th:field="*{description}"></textarea>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; Kun ADMIN og PROJECT_MANAGER må redigere deadline og estimeret tid &ndash;&gt;-->
+<!--        <div th:if="${session.currentUser.role.name() == 'ADMIN' or session.currentUser.role.name() == 'PROJECT_MANAGER'}">-->
+<!--            <div>-->
+<!--                <label>Deadline:</label>-->
+<!--                <input type="date" th:field="*{deadline}"/>-->
+<!--            </div>-->
+
+<!--            <div>-->
+<!--                <label>Estimeret Tid (timer):</label>-->
+<!--                <input type="number" th:field="*{estimatedTime}" min="0"/>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        <div>-->
+<!--            <label>Forbrugt Tid (timer):</label>-->
+<!--            <input type="number" th:field="*{timeSpent}"/>-->
+<!--        </div>-->
+
+<!--        <div>-->
+<!--            <label>Status:</label>-->
+<!--            <select th:field="*{status}">-->
+<!--                <option th:each="s : ${T(com.example.estimationtool.model.enums.Status).values()}"-->
+<!--                        th:value="${s}"-->
+<!--                        th:text="${s}"></option>-->
+<!--            </select>-->
+<!--        </div>-->
+
+<!--        <div class="form-actions">-->
+<!--            <button type="submit">Opdater task</button>-->
+<!--        </div>-->
+<!--    </form>-->
+<!--</section>-->
+
+<!--&lt;!&ndash; Slet task - kun for ADMIN og PROJECT_MANAGER &ndash;&gt;-->
+<!--<section class="form-actions" th:if="${session.currentUser.role.name() == 'ADMIN' or session.currentUser.role.name() == 'PROJECT_MANAGER'}">-->
+<!--    <form th:action="@{/tasks/delete/{id}(id=${task.taskId})}" method="post">-->
+<!--        <button type="submit" onclick="return confirm('Er du sikker på, at du vil slette denne opgave?')">Slet</button>-->
+<!--    </form>-->
+<!--</section>-->
+
+<!--&lt;!&ndash; Navigation &ndash;&gt;-->
+<!--<section class="navigation">-->
+
+<!--    &lt;!&ndash; Tilbage til task-detail.html &ndash;&gt;-->
+<!--    <div>-->
+<!--        <a th:href="@{/tasks/{id}(id=${task.taskId})}">-->
+<!--            <button>Tilbage til detaljer</button>-->
+<!--        </a>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Kun admin må se task-list.html &ndash;&gt;-->
+<!--    <div th:if="${session.currentUser.role.name() == 'ADMIN'}">-->
+<!--        <a th:href="@{/tasks/list}">-->
+<!--            <button>Tilbage til alle tasks</button>-->
+<!--        </a>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Tilbage til forside &ndash;&gt;-->
+<!--    <div>-->
+<!--        <a th:href="@{/users/profile}">-->
+<!--            <button>Tilbage til forside</button>-->
+<!--        </a>-->
+<!--    </div>-->
+
+<!--</section>-->
+
+<!--</body>-->
+<!--</html>-->

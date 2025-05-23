@@ -1,24 +1,39 @@
 /* theme-alpha.css */
+
+/*
+   Root-level CSS variabler (Custom Properties)
+   Disse variabler bruges til at sikre et konsistent designtema og gøre det lettere,
+   at vedligeholde og opdatere styling på tværs af projektet.
+*/
+
 :root {
-    --font-family: 'Montserrat', sans-serif;
-    --font-size-base: 16px;
-    --font-size-lg: 20px;
-    --font-size-sm: 14px;
-    --line-height: 1.6;
+    /* Typografi */
+    --font-family: 'Montserrat', sans-serif;    /* Primær skrifttype */
+    --font-size-base: 16px;                     /* Standard skriftstørrelse */
+    --font-size-lg: 20px;                       /* Stor skriftstørrelse (f.eks. overskrifter) */
+    --font-size-sm: 14px;                       /* Lille skriftstørrelse (f.eks. sekundær tekst) */
+    --line-height: 1.6;                         /* Linjeafstand for læsbarhed */
 
-    --color-primary: #FF325A;
-    --color-secondary: #F3F6F9;
-    --color-text: #000000;
-    --color-muted: #777777;
-    --color-white: #ffffff;
+    /* Farver */
+    --color-primary: #FF325A;                   /* Primær farve (bruges til knapper, links osv.) */
+    --color-primary-light: #ffe4ea;             /* Lysere variant af primær farve (f.eks. baggrunde) */
+    --color-secondary: #F3F6F9;                 /* Sekundær farve (ofte brugt til baggrunde) */
+    --color-text: #000000;                      /* Standard tekstfarve */
+    --color-muted: #777777;                     /* Nedtonet tekstfarve (f.eks. placeholder eller sekundær information) */
+    --color-white: #ffffff;                     /* Hvid (bruges ofte til baggrunde og tekst) */
+    --color-success: #2DBE60;                   /* Farve til succesmeddelelser eller indikationer */
+    --color-success-light: #e6f5eb;             /* Lysere succesfarve (f.eks. baggrund for succesbeskeder) */
 
-    --spacing-xs: 0.5rem;
-    --spacing-sm: 1rem;
-    --spacing-md: 2rem;
-    --spacing-lg: 4rem;
+    /* Spacing (afstande) */
+    --spacing-xs: 0.5rem;                       /* Ekstra lille afstand */
+    --spacing-sm: 1rem;                         /* Lille afstand */
+    --spacing-md: 2rem;                         /* Medium afstand */
+    --spacing-lg: 4rem;                         /* Stor afstand */
 
-    --border-radius: 20px;
-    --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    /* Visuelle elementer */
+    --border-radius: 20px;                      /* Afrunding på kanter (bruges til knapper, kort mv.) */
+    --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Skyggeeffekt for dybde og lagdeling */
 
-    --container-max-width: 1330px;
+    /* Layout */
+    --container-max-width: 1330px;               /* Maksimal bredde for hovedcontaineren på siden */
 }
