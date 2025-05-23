@@ -1,69 +1,153 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>SubProject With Tasks</title>
+    <title>Tasks for Subprojekt</title>
+    <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
-<h1>Tasks for subprojekt</h1>
-
-<!-- Kort info om subprojektet -->
-<section class="mini-info">
-    <div>Navn: <span th:text="${subProjectWithTasks.subProject.name}"></span></div>
-    <div>Deadline: <span th:text="${subProjectWithTasks.subProject.deadline}"></span></div>
-    <div>Status: <span th:text="${subProjectWithTasks.subProject.status}"></span></div>
-</section>
-
-<h2>Tasks tilknyttet subprojektet</h2>
-
-<section class="mini-info">
-    <div th:if="${!#lists.isEmpty(subProjectWithTasks.taskList)}">
-        <div th:each="task : ${subProjectWithTasks.taskList}" class="list">
-            <div>Navn: <span th:text="${task.name}"></span></div>
-            <div>Deadline: <span th:text="${task.deadline}"></span></div>
-            <div>Status: <span th:text="${task.status}"></span></div>
-            <div>
-                <a th:href="@{/tasks/{id}(id=${task.taskId})}">
-                    <button>Se detaljer</button>
-                </a>
-            </div>
-            <hr/>
-        </div>
-    </div>
-
-
-    <!-- Opret ny task (for alle) -->
-    <section class="form-actions">
-        <div>
-            <a th:href="@{/tasks/create(subProjectId=${subProjectWithTasks.subProject.subProjectId})}">
-                <button>Opret ny task</button>
-            </a>
-        </div>
-    </section>
-
-<!-- Hvis listen er tom -->
-    <div th:if="${#lists.isEmpty(subProjectWithTasks.taskList)}">
-        Der er ingen tasks tilknyttet dette subprojekt.
-    </div>
-</section>
 
 <!-- Navigation -->
-<section class="navigation">
+<div th:replace="fragments/navbar :: navbar"></div>
 
-    <!-- Tilbage til subprojekt-detail.html er for alle -->
-    <div>
-        <a th:href="@{/subprojects/{id}(id=${subProjectWithTasks.subProject.subProjectId})}">
-            <button>Tilbage til subprojekt</button>
-        </a>
+<!-- Feedback-beskeder -->
+<div th:if="${success}" class="success-section"><p class="success-message" th:text="${success}"></p></div>
+<div th:if="${error}" class="error-section"><p class="error-message" th:text="${error}"></p></div>
+
+<section class="dashboard-section">
+
+    <!-- Sideoverskrift og opret-knap -->
+    <div class="list-header">
+        <h2 class="section-title">Tasks for <span th:text="${subProjectWithTasks.subProject.name}"></span></h2>
+        <a th:href="@{/tasks/create(subProjectId=${subProjectWithTasks.subProject.subProjectId})}" class="btn btn-primary">➕ Opret task</a>
     </div>
 
-    <!-- Tilbage til front-page.html er for alle -->
-    <div>
-        <a th:href="@{/users/profile}">
-            <button>Tilbage til forside</button>
-        </a>
+    <!-- Kort subprojektinfo -->
+    <div class="details-box">
+        <p><strong>Deadline:</strong> <span th:text="${subProjectWithTasks.subProject.deadline}"></span></p>
+
+        <div class="info details meta">
+        <p th:text="'Estimeret tid: ' + ${subProjectWithTasks.subProject.estimatedTime} + ' t.'"></p>
+        <p th:text="'Forbrugt tid: ' + ${subProjectWithTasks.subProject.timeSpent} + ' t.'"></p>
+        </div>
+
+        <p class="status"
+           th:text="'Status: ' + ${subProjectWithTasks.subProject.status}"
+           th:classappend="' status-' + ${subProjectWithTasks.subProject.status.name().toLowerCase()}">
+        </p>
     </div>
+
+    <!-- Liste over tasks -->
+    <div class="list-wrapper">
+        <div th:if="${!#lists.isEmpty(subProjectWithTasks.taskList)}" class="list">
+            <div class="row" th:each="task : ${subProjectWithTasks.taskList}">
+                <div class="info">
+                    <span class="icon">📝</span>
+                    <div class="details">
+                        <p class="name" th:text="'Navn: ' + ${task.name}"></p>
+
+                        <div class="meta">
+                            <p th:text="'Deadline: ' + ${task.deadline}"></p>
+                            <p th:text="'Estimeret tid: ' + ${task.estimatedTime} + ' t.'"></p>
+                            <p th:text="'Forbrugt tid: ' + ${task.timeSpent} + ' t.'"></p>
+                        </div>
+
+                        <p class="status"
+                           th:text="'Status: ' + ${task.status}"
+                           th:classappend="' status-' + ${task.status.name().toLowerCase()}">
+                        </p>
+                    </div>
+                </div>
+                <div class="actions">
+                    <a th:href="@{/tasks/{id}(id=${task.taskId})}" class="btn btn-secondary">Se detaljer</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hvis ingen tasks -->
+        <div th:if="${#lists.isEmpty(subProjectWithTasks.taskList)}">
+            <p>Subprojektet har ingen tilknyttede tasks.</p>
+        </div>
+    </div>
+
+    <!-- Navigationsknapper -->
+    <div class="fixed-bottom-right">
+        <a th:href="@{/subprojects/{id}(id=${subProjectWithTasks.subProject.subProjectId})}" class="btn btn-secondary">⬅️ Tilbage til subprojekt</a>
+        <a th:href="@{/users/profile}" class="btn btn-secondary">🏠 Dashboard</a>
+    </div>
+
 </section>
 
 </body>
 </html>
+
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>SubProject With Tasks</title>-->
+<!--</head>-->
+<!--<body>-->
+<!--<h1>Tasks for subprojekt</h1>-->
+
+<!--&lt;!&ndash; Kort info om subprojektet &ndash;&gt;-->
+<!--<section class="mini-info">-->
+<!--    <div>Navn: <span th:text="${subProjectWithTasks.subProject.name}"></span></div>-->
+<!--    <div>Deadline: <span th:text="${subProjectWithTasks.subProject.deadline}"></span></div>-->
+<!--    <div>Status: <span th:text="${subProjectWithTasks.subProject.status}"></span></div>-->
+<!--</section>-->
+
+<!--<h2>Tasks tilknyttet subprojektet</h2>-->
+
+<!--<section class="mini-info">-->
+<!--    <div th:if="${!#lists.isEmpty(subProjectWithTasks.taskList)}">-->
+<!--        <div th:each="task : ${subProjectWithTasks.taskList}" class="list">-->
+<!--            <div>Navn: <span th:text="${task.name}"></span></div>-->
+<!--            <div>Deadline: <span th:text="${task.deadline}"></span></div>-->
+<!--            <div>Status: <span th:text="${task.status}"></span></div>-->
+<!--            <div>-->
+<!--                <a th:href="@{/tasks/{id}(id=${task.taskId})}">-->
+<!--                    <button>Se detaljer</button>-->
+<!--                </a>-->
+<!--            </div>-->
+<!--            <hr/>-->
+<!--        </div>-->
+<!--    </div>-->
+
+
+<!--    &lt;!&ndash; Opret ny task (for alle) &ndash;&gt;-->
+<!--    <section class="form-actions">-->
+<!--        <div>-->
+<!--            <a th:href="@{/tasks/create(subProjectId=${subProjectWithTasks.subProject.subProjectId})}">-->
+<!--                <button>Opret ny task</button>-->
+<!--            </a>-->
+<!--        </div>-->
+<!--    </section>-->
+
+<!--&lt;!&ndash; Hvis listen er tom &ndash;&gt;-->
+<!--    <div th:if="${#lists.isEmpty(subProjectWithTasks.taskList)}">-->
+<!--        Der er ingen tasks tilknyttet dette subprojekt.-->
+<!--    </div>-->
+<!--</section>-->
+
+<!--&lt;!&ndash; Navigation &ndash;&gt;-->
+<!--<section class="navigation">-->
+
+<!--    &lt;!&ndash; Tilbage til subprojekt-detail.html er for alle &ndash;&gt;-->
+<!--    <div>-->
+<!--        <a th:href="@{/subprojects/{id}(id=${subProjectWithTasks.subProject.subProjectId})}">-->
+<!--            <button>Tilbage til subprojekt</button>-->
+<!--        </a>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Tilbage til front-page.html er for alle &ndash;&gt;-->
+<!--    <div>-->
+<!--        <a th:href="@{/users/profile}">-->
+<!--            <button>Tilbage til forside</button>-->
+<!--        </a>-->
+<!--    </div>-->
+<!--</section>-->
+
+<!--</body>-->
+<!--</html>-->

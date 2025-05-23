@@ -1,79 +1,163 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>Edit Project</title>
+  <title>Rediger Projekt</title>
+  <link rel="stylesheet" href="/css/main.css">
 </head>
-
 <body>
 
-<h1>Rediger Projekt</h1>
+<!-- Navbar -->
+<div th:replace="fragments/navbar :: navbar"></div>
 
-<!-- Fejlbesked -->
-<section th:if="${error}" class="error-section">
-  <p th:text="${error}" class="error-message"></p>
-</section>
+<section class="dashboard-section">
 
+  <!-- Sideoverskrift -->
+  <h2 class="section-title">Rediger projekt</h2>
 
-<!-- Formular til redigering af projekt -->
-<section class="form-actions">
-  <form th:action="@{/projects/update}" th:object="${project}" method="post" class="form-fields">
-    <input type="hidden" th:field="*{projectId}" />
+  <!-- Feedback-beskeder -->
+  <div th:if="${success}" class="success-section">
+    <p class="success-message" th:text="${success}"></p>
+  </div>
+  <div th:if="${error}" class="error-section">
+    <p class="error-message" th:text="${error}"></p>
+  </div>
 
-    <div>
+  <!-- Formular til redigering -->
+  <form th:action="@{/projects/update}" th:object="${project}" method="post" class="form-styled">
+
+    <input type="hidden" th:field="*{projectId}"/>
+
+    <div class="form-group">
       <label for="name">Navn:</label>
-      <input id="name" type="text" th:field="*{name}" required />
+      <input type="text" id="name" th:field="*{name}" class="input" required/>
     </div>
 
-    <div>
+    <div class="form-group">
       <label for="description">Beskrivelse:</label>
-      <textarea id="description" th:field="*{description}"></textarea>
+      <textarea id="description" th:field="*{description}" class="input" required></textarea>
     </div>
 
-    <div>
+    <div class="form-group">
       <label for="deadline">Deadline:</label>
-      <input id="deadline" type="date" th:field="*{deadline}" />
+      <input type="date" id="deadline" th:field="*{deadline}" class="input"/>
     </div>
 
-    <div>
+    <div class="form-group">
       <label for="estimatedTime">Estimeret tid (timer):</label>
-      <input id="estimatedTime" type="number" th:field="*{estimatedTime}" min="0" />
+      <input type="number" id="estimatedTime" th:field="*{estimatedTime}" class="input" min="0"/>
     </div>
 
-    <div>
+    <div class="form-group">
       <label for="status">Status:</label>
-      <select id="status" th:field="*{status}">
+      <select id="status" th:field="*{status}" class="input">
         <option value="ACTIVE">Aktiv</option>
         <option value="INACTIVE">Inaktiv</option>
         <option value="DONE">Færdig</option>
       </select>
     </div>
 
-    <div class="form-actions">
-      <button type="submit">Opdater</button>
+    <div class="form-group">
+      <button type="submit" class="btn btn-primary">💾 Opdater projekt</button>
     </div>
   </form>
-</section>
 
-<!-- Slet projekt -->
-<section class="delete">
-  <form th:action="@{/projects/delete/{projectId}(projectId=${project.projectId})}" method="post">
-    <button type="submit" onclick="return confirm('Er du sikker på, at du vil slette denne opgave?')">Slet</button>
+  <!-- Slet projekt -->
+  <form th:action="@{/projects/delete/{projectId}(projectId=${project.projectId})}" method="post"
+        onsubmit="return confirm('Er du sikker på, at du vil slette dette projekt?');"
+        class="form-group" style="margin-top: var(--spacing-sm);">
+    <button type="submit" class="btn btn-danger">🗑️ Slet projekt</button>
   </form>
-</section>
 
-<!-- Navigation -->
-<section class="navigation">
+  <!-- Navigation -->
+  <div class="fixed-bottom-right">
+    <a th:href="@{/projects/{projectId}(projectId=${project.projectId})}" class="btn btn-secondary">⬅️ Tilbage til detaljer</a>
+    <a th:if="${session.currentUser.role.name() == 'ADMIN'}"
+       th:href="@{/projects/list}" class="btn btn-secondary">📋 Projektliste</a>
+    <a th:href="@{/users/profile}" class="btn btn-secondary">🏠 Dashboard</a>
+  </div>
 
-  <!-- Fuld projektliste kun for admin: project-list.html -->
-  <a th:if="${session.currentUser.role.name() == 'ADMIN'}"
-     th:href="@{/projects/list}">
-    Tilbage til projektliste
-  </a>
-
-  <!-- Profilside for admin og projektleder: front-page.html -->
-  <a th:href="@{/users/profile}">Tilbage til forside</a>
 </section>
 
 </body>
 </html>
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--  <meta charset="UTF-8">-->
+<!--  <title>Edit Project</title>-->
+<!--</head>-->
+
+<!--<body>-->
+
+<!--<h1>Rediger Projekt</h1>-->
+
+<!--&lt;!&ndash; Fejlbesked &ndash;&gt;-->
+<!--<section th:if="${error}" class="error-section">-->
+<!--  <p th:text="${error}" class="error-message"></p>-->
+<!--</section>-->
+
+
+<!--&lt;!&ndash; Formular til redigering af projekt &ndash;&gt;-->
+<!--<section class="form-actions">-->
+<!--  <form th:action="@{/projects/update}" th:object="${project}" method="post" class="form-fields">-->
+<!--    <input type="hidden" th:field="*{projectId}" />-->
+
+<!--    <div>-->
+<!--      <label for="name">Navn:</label>-->
+<!--      <input id="name" type="text" th:field="*{name}" required />-->
+<!--    </div>-->
+
+<!--    <div>-->
+<!--      <label for="description">Beskrivelse:</label>-->
+<!--      <textarea id="description" th:field="*{description}"></textarea>-->
+<!--    </div>-->
+
+<!--    <div>-->
+<!--      <label for="deadline">Deadline:</label>-->
+<!--      <input id="deadline" type="date" th:field="*{deadline}" />-->
+<!--    </div>-->
+
+<!--    <div>-->
+<!--      <label for="estimatedTime">Estimeret tid (timer):</label>-->
+<!--      <input id="estimatedTime" type="number" th:field="*{estimatedTime}" min="0" />-->
+<!--    </div>-->
+
+<!--    <div>-->
+<!--      <label for="status">Status:</label>-->
+<!--      <select id="status" th:field="*{status}">-->
+<!--        <option value="ACTIVE">Aktiv</option>-->
+<!--        <option value="INACTIVE">Inaktiv</option>-->
+<!--        <option value="DONE">Færdig</option>-->
+<!--      </select>-->
+<!--    </div>-->
+
+<!--    <div class="form-actions">-->
+<!--      <button type="submit">Opdater</button>-->
+<!--    </div>-->
+<!--  </form>-->
+<!--</section>-->
+
+<!--&lt;!&ndash; Slet projekt &ndash;&gt;-->
+<!--<section class="delete">-->
+<!--  <form th:action="@{/projects/delete/{projectId}(projectId=${project.projectId})}" method="post">-->
+<!--    <button type="submit" onclick="return confirm('Er du sikker på, at du vil slette denne opgave?')">Slet</button>-->
+<!--  </form>-->
+<!--</section>-->
+
+<!--&lt;!&ndash; Navigation &ndash;&gt;-->
+<!--<section class="navigation">-->
+
+<!--  &lt;!&ndash; Fuld projektliste kun for admin: project-list.html &ndash;&gt;-->
+<!--  <a th:if="${session.currentUser.role.name() == 'ADMIN'}"-->
+<!--     th:href="@{/projects/list}">-->
+<!--    Tilbage til projektliste-->
+<!--  </a>-->
+
+<!--  &lt;!&ndash; Profilside for admin og projektleder: front-page.html &ndash;&gt;-->
+<!--  <a th:href="@{/users/profile}">Tilbage til forside</a>-->
+<!--</section>-->
+
+<!--</body>-->
+<!--</html>-->

@@ -7,20 +7,8 @@
 </head>
 <body>
 
-<nav class="navbar">
-    <div class="navbar-content">
-        <div class="navbar-left">
-            <img th:src="@{/images/Alpha_Solution_Logo.svg}" alt="Logo" class="logo">
-        </div>
-        <div class="navbar-center">
-            <span class="app-name">BitFlow</span>
-        </div>
-        <div class="navbar-right">
-            <a href="/" class="nav-link">Hjem</a>
-            <a href="/login" class="nav-link">Login</a>
-        </div>
-    </div>
-</nav>
+<!-- Navigation bar, som et fragment -->
+<div th:replace="fragments/navbar :: navbar"></div>
 
 <!-- Fejlbesked -->
 <div th:if="${error}" class="error-section">
@@ -28,71 +16,71 @@
 </div>
 
 <!-- Overskrift -->
-<h1>Velkommen, <span th:text="${session.currentUser.firstName + ' ' + session.currentUser.lastName}">Navn</span>!</h1>
-<p>Din rolle: <strong th:text="${session.currentUser.role}">ROLLE</strong></p>
+<div class="welcome-box">
+    <h1>Velkommen, <span th:text="${session.currentUser.firstName + ' ' + session.currentUser.lastName}">Navn</span>!</h1>
+<!--    <p class="user-role">Du er logget ind som <strong th:text="${session.currentUser.role}">ROLLE</strong></p>-->
+</div>
 
 <!-- ADMIN -->
-<section th:if="${session.currentUser.role.name() == 'ADMIN'}" class="mini-info">
-    <h2>Admin</h2>
+<section th:if="${session.currentUser.role.name() == 'ADMIN'}" class="dashboard-section">
+    <h2>Adminpanel</h2>
 
-    <div><a th:href="@{/users/list}">Se alle brugere</a></div>
-    <div><a th:href="@{/users/create}">Opret ny bruger</a></div>
-    <div><a th:href="@{/projects/list}">Se alle projekter</a></div>
-    <div><a th:href="@{/projects/create}">Opret projekt</a></div>
-    <div><a th:href="@{/subprojects/list}">Se alle subprojekter</a></div>
-    <div><a th:href="@{/tasks/list}">Se alle tasks</a></div>
-    <div><a th:href="@{/subtasks/list}">Se alle subtasks</a></div>
-    <div><a th:href="@{/timeentries/list}">Se alle tidsregistreringer</a></div>
+    <div class="dashboard-grid">
+        <a class="dashboard-card" th:href="@{/users/list}">👥 Se alle brugere</a>
+        <a class="dashboard-card" th:href="@{/users/create}">➕ Opret ny bruger</a>
+        <a class="dashboard-card" th:href="@{/projects/list}">📁 Se alle projekter</a>
+        <a class="dashboard-card" th:href="@{/projects/create}">🆕 Opret projekt</a>
+        <a class="dashboard-card" th:href="@{/subprojects/list}">📂 Se subprojekter</a>
+        <a class="dashboard-card" th:href="@{/tasks/list}">📝 Se tasks</a>
+        <a class="dashboard-card" th:href="@{/subtasks/list}">🧩 Se subtasks</a>
+        <a class="dashboard-card" th:href="@{/timeentries/list}">⏱️ Tidsregistreringer</a>
+    </div>
 </section>
 
 <!-- PROJECT_MANAGER -->
-<section th:if="${session.currentUser.role.name() == 'PROJECT_MANAGER'}" class="mini-info">
-    <h2>Projektleder</h2>
+<section th:if="${session.currentUser.role.name() == 'PROJECT_MANAGER'}" class="dashboard-section">
+    <h2>Projektlederpanel</h2>
 
-    <div>
-        <h3>Mine projekter</h3>
-        <a th:href="@{/users/{id}/projects(id=${session.currentUser.userId})}">Se projekter</a>
-    </div>
-
-    <div>
-        <h3>Opret projekt</h3>
-        <p>Start et nyt projekt og tildel deltagere.</p>
-        <a th:href="@{/projects/create}">Opret nyt projekt</a>
+    <div class="dashboard-grid">
+        <a class="dashboard-card" th:href="@{/users/{id}/projects(id=${session.currentUser.userId})}">
+            📁 <strong>Mine projekter</strong>
+        </a>
+        <a class="dashboard-card" th:href="@{/projects/create}">
+            🆕 <strong>Opret projekt</strong>
+        </a>
     </div>
 </section>
 
 <!-- DEVELOPER -->
-<section th:if="${session.currentUser.role.name() == 'DEVELOPER'}" class="mini-info">
-    <h2>Udvikler</h2>
+<section th:if="${session.currentUser.role.name() == 'DEVELOPER'}" class="dashboard-section">
+    <h2>Udviklerpanel</h2>
 
-    <div>
-        <h3>Mine projekter</h3>
-        <a th:href="@{/users/{id}/projects(id=${session.currentUser.userId})}">
-            <button>Se projekter</button>
+    <div class="dashboard-grid">
+        <a class="dashboard-card" th:href="@{/users/{id}/projects(id=${session.currentUser.userId})}">
+            🗂️ Mine projekter
         </a>
-    </div>
 
-    <div>
-        <h3>Mine subprojekter</h3>
-        <a th:href="@{/users/{id}/subprojects(id=${session.currentUser.userId})}">
-            <button>Se subprojekter</button>
+        <a class="dashboard-card" th:href="@{/users/{id}/subprojects(id=${session.currentUser.userId})}">
+            📁 Mine subprojekter
         </a>
-    </div>
 
-    <div>
-        <h3>Mine tasks</h3>
-        <a th:href="@{/users/{id}/tasks(id=${session.currentUser.userId})}">
-            <button>Se tasks</button>
+        <a class="dashboard-card" th:href="@{/users/{id}/tasks(id=${session.currentUser.userId})}">
+            ✅ Mine tasks
         </a>
-    </div>
 
-    <div>
-        <h3>Mine subtasks</h3>
-        <a th:href="@{/users/{id}/subtasks(id=${session.currentUser.userId})}">
-            <button>Se subtasks</button>
+        <a class="dashboard-card" th:href="@{/users/{id}/subtasks(id=${session.currentUser.userId})}">
+            🧩 Mine subtasks
         </a>
-    </div>
 
+        <a class="dashboard-card" th:href="@{/users/{id}/timeentries(id=${session.currentUser.userId})}">
+            ⏱️ Tidsregistreringer
+        </a>
+
+        <a class="dashboard-card" th:href="@{/users/{id}/details(id=${session.currentUser.userId})}"> <!-- fiks -->
+            👤Se dine oplysninger
+        </a>
+
+    </div>
 </section>
 
 </body>
