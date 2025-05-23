@@ -1,48 +1,47 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>User List</title>
+  <meta charset="UTF-8">
+  <title>Brugerliste</title>
+  <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
 
-<h1>Liste af alle brugere</h1>
-
-<!-- Fejlbesked -->
-<section th:if="${error}" class="error-section">
-  <p th:text="${error}" class="error-message"></p>
-</section>
-
-<!-- Brugerliste -->
-<section class="mini-info">
-  <div th:each="user : ${users}" class="list">
-    <div>Navn: <span th:text="${user.firstName + ' ' + user.lastName}"></span></div>
-    <div>Rolle: <span th:text="${user.role}"></span></div>
-    <div>
-      <a th:href="@{/users/{userId}(userId=${user.userId})}">
-        <button>Se detaljer</button>
-      </a>
-    </div>
-    <hr/>
-  </div>
-</section>
-
-<!-- Knap: Opret ny bruger -->
-<section class="form-actions">
-  <div>
-    <a th:href="@{/users/create}">
-      <button>Opret ny bruger</button>
-    </a>
-  </div>
-</section>
-
 <!-- Navigation -->
-<section class="navigation">
-  <div>
-    <a th:href="@{/users/profile}">
-      <button>Tilbage til forside</button>
-    </a>
-  </div>
-</section>
+<div th:replace="fragments/navbar :: navbar"></div>
 
+<!-- Feedback-beskeder -->
+<div th:if="${success}" class="success-section"><p class="success-message" th:text="${success}"></p></div>
+<div th:if="${error}" class="error-section"><p class="error-message" th:text="${error}"></p></div>
+
+<section class="dashboard-section">
+  <!-- Header med knap -->
+  <div class="list-header">
+    <h2 class="section-title">Brugeroversigt</h2>
+    <a th:href="@{/users/create}" class="btn btn-primary">➕ Opret ny bruger</a>
+  </div>
+
+  <!-- Klassisk brugerliste med rækker -->
+  <div class="list-wrapper">
+    <div class="list">
+      <div class="row" th:each="user : ${users}">
+        <div class="info">
+          <span class="icon">👤</span>
+          <div class="details">
+            <p class="name" th:text="'Navn: ' + ${user.firstName} + ' ' + ${user.lastName}"></p>
+            <p class="role" th:text="'Rolle: ' + ${user.role}"></p>
+          </div>
+        </div>
+        <div class="actions">
+          <a th:href="@{/users/{id}(id=${user.userId})}" class="btn btn-secondary">Se detaljer</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- Fast tilbageknap nederst til højre -->
+<a th:href="@{/users/profile}" class="btn btn-secondary fixed-bottom-right">⬅️ Tilbage til dashboard</a>
+
+</section>
 </body>
 </html>

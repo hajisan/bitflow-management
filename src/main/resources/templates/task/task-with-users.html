@@ -1,80 +1,164 @@
 <!DOCTYPE html>
-<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Task With Users</title>
+    <title>Brugere i Opgave</title>
+    <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
-<h1>Brugere tilknyttet en task</h1>
 
-<!-- Fejlbesked -->
-<section th:if="${error}" class="error-section">
-    <p th:text="${error}" class="error-message"></p>
-</section>
+<!-- Navbar -->
+<div th:replace="fragments/navbar :: navbar"></div>
 
-<!-- Kort info om task -->
-<section class="mini-info">
-    <div>Navn: <span th:text="${taskWithUsers.task.name}"></span></div>
-    <div>Deadline: <span th:text="${taskWithUsers.task.deadline}"></span></div>
-    <div>Status: <span th:text="${taskWithUsers.task.status}"></span></div>
-</section>
+<!-- Feedback -->
+<div th:if="${success}" class="success-section"><p class="success-message" th:text="${success}"></p></div>
+<div th:if="${error}" class="error-section"><p class="error-message" th:text="${error}"></p></div>
 
-<h3>Brugerne</h3>
+<section class="dashboard-section">
 
-<!-- Brugere tilknyttet opgaven -->
-<section class="mini-info">
-    <div th:if="${!#lists.isEmpty(taskWithUsers.userViewDTOList)}">
-        <div th:each="user : ${taskWithUsers.userViewDTOList}" class="user-summary">
-            <span th:text="${user.firstName + ' ' + user.lastName + ' (' + user.role + ')'}"></span>
-            <a th:href="@{/users/{userId}(userId=${user.userId})}">Se detaljer</a>
+    <!-- Overskrift -->
+    <div class="list-header">
+        <h2 class="section-title">Brugere tilknyttet opgave: <span th:text="${taskWithUsers.task.name}"></span></h2>
+    </div>
+
+    <!-- Kort opgaveinfo -->
+    <div class="details-box">
+        <p><strong>Deadline:</strong> <span th:text="${taskWithUsers.task.deadline}"></span></p>
+        <p class="status"
+           th:text="'Status: ' + ${taskWithUsers.task.status}"
+           th:classappend="' status-' + ${taskWithUsers.task.status.name().toLowerCase()}"></p>
+    </div>
+
+    <!-- Brugerliste -->
+    <div class="list-wrapper">
+        <div class="list" th:if="${!#lists.isEmpty(taskWithUsers.userViewDTOList)}">
+            <div class="row" th:each="user : ${taskWithUsers.userViewDTOList}">
+                <div class="info">
+                    <span class="icon">👤</span>
+                    <div class="details">
+                        <p class="name" th:text="'Navn: ' + ${user.firstName} + ' ' + ${user.lastName}"></p>
+                        <p class="role" th:text="'Rolle: ' + ${user.role}"></p>
+                    </div>
+                </div>
+                <div class="actions">
+                    <a th:href="@{/users/{id}(id=${user.userId})}" class="btn btn-secondary">Se detaljer</a>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${#lists.isEmpty(taskWithUsers.userViewDTOList)}">
+            <p>Der er ingen brugere tilknyttet denne opgave.</p>
         </div>
     </div>
 
-    <!-- Hvis listen er tom -->
-    <div th:if="${#lists.isEmpty(taskWithUsers.userViewDTOList)}">
-        Der er ingen brugere tilknyttet denne opgave.
+    <!-- Formular til tildeling af brugere -->
+    <div th:if="${!#lists.isEmpty(unassignedUsers)}" class="form-section" style="margin-top: var(--spacing-md);">
+        <h3>Tildel bruger(e) til opgaven</h3>
+        <form th:action="@{'/tasks/' + ${taskWithUsers.task.taskId} + '/assignusers'}" method="post">
+            <div class="form-group">
+                <label for="user-select">Vælg bruger(e):</label>
+                <select id="user-select" name="userIds" multiple size="5" class="input">
+                    <option th:each="user : ${unassignedUsers}"
+                            th:value="${user.userId}"
+                            th:text="${user.firstName + ' ' + user.lastName + ' (' + user.role + ')'}">
+                    </option>
+                </select>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">➕ Tildel valgte</button>
+            </div>
+        </form>
     </div>
+
+    <!-- Navigation -->
+    <div class="fixed-bottom-right">
+        <a th:href="@{/tasks/{id}(id=${taskWithUsers.task.taskId})}" class="btn btn-secondary">⬅️ Tilbage til opgave</a>
+        <a th:if="${session.currentUser.role.name() == 'ADMIN'}" th:href="@{/tasks/list}" class="btn btn-secondary">📋 Opgaveoversigt</a>
+        <a th:href="@{/users/profile}" class="btn btn-secondary">🏠 Dashboard</a>
+    </div>
+
 </section>
 
-<!-- Tilknyt brugere til task -->
-<h3>Tildel nye brugere</h3>
-
-<section class="form-actions">
-    <form th:action="@{'/tasks/tasks/' + ${taskWithUsers.task.taskId} + '/assignusers'}" method="post">
-        <div>
-            <label for="user-select">Vælg én eller flere brugere:</label><br/>
-            <select id="user-select" name="userIds" multiple size="5">
-                <option th:each="user : ${unassignedUsers}"
-                        th:value="${user.userId}"
-                        th:text="${user.firstName + ' ' + user.lastName + ' (' + user.role + ')'}">
-                </option>
-            </select>
-        </div>
-        <div>
-            <button type="submit">Tildel valgte brugere</button>
-        </div>
-    </form>
-</section>
-
-<!-- Navigation -->
-<section class="navigation">
-    <div>
-        <a th:href="@{/tasks/{id}(id=${taskWithUsers.task.taskId})}">
-            <button>Tilbage til task</button>
-        </a>
-    </div>
-
-    <div th:if="${session.currentUser.role.name() == 'ADMIN'}">
-        <a th:href="@{/tasks/list}">
-            <button>Tilbage til alle tasks></button>
-        </a>
-    </div>
-
-    <div>
-        <a th:href="@{/users/profile}">
-            <button>Tilbage til forside</button>
-        </a>
-    </div>
-</section>
 </body>
 </html>
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en"  xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Task With Users</title>-->
+<!--</head>-->
+<!--<body>-->
+<!--<h1>Brugere tilknyttet en task</h1>-->
+
+<!--&lt;!&ndash; Fejlbesked &ndash;&gt;-->
+<!--<section th:if="${error}" class="error-section">-->
+<!--    <p th:text="${error}" class="error-message"></p>-->
+<!--</section>-->
+
+<!--&lt;!&ndash; Kort info om task &ndash;&gt;-->
+<!--<section class="mini-info">-->
+<!--    <div>Navn: <span th:text="${taskWithUsers.task.name}"></span></div>-->
+<!--    <div>Deadline: <span th:text="${taskWithUsers.task.deadline}"></span></div>-->
+<!--    <div>Status: <span th:text="${taskWithUsers.task.status}"></span></div>-->
+<!--</section>-->
+
+<!--<h3>Brugerne</h3>-->
+
+<!--&lt;!&ndash; Brugere tilknyttet opgaven &ndash;&gt;-->
+<!--<section class="mini-info">-->
+<!--    <div th:if="${!#lists.isEmpty(taskWithUsers.userViewDTOList)}">-->
+<!--        <div th:each="user : ${taskWithUsers.userViewDTOList}" class="user-summary">-->
+<!--            <span th:text="${user.firstName + ' ' + user.lastName + ' (' + user.role + ')'}"></span>-->
+<!--            <a th:href="@{/users/{userId}(userId=${user.userId})}">Se detaljer</a>-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Hvis listen er tom &ndash;&gt;-->
+<!--    <div th:if="${#lists.isEmpty(taskWithUsers.userViewDTOList)}">-->
+<!--        Der er ingen brugere tilknyttet denne opgave.-->
+<!--    </div>-->
+<!--</section>-->
+
+<!--&lt;!&ndash; Tilknyt brugere til task &ndash;&gt;-->
+<!--<h3>Tildel nye brugere</h3>-->
+
+<!--<section class="form-actions">-->
+<!--    <form th:action="@{'/tasks/tasks/' + ${taskWithUsers.task.taskId} + '/assignusers'}" method="post">-->
+<!--        <div>-->
+<!--            <label for="user-select">Vælg én eller flere brugere:</label><br/>-->
+<!--            <select id="user-select" name="userIds" multiple size="5">-->
+<!--                <option th:each="user : ${unassignedUsers}"-->
+<!--                        th:value="${user.userId}"-->
+<!--                        th:text="${user.firstName + ' ' + user.lastName + ' (' + user.role + ')'}">-->
+<!--                </option>-->
+<!--            </select>-->
+<!--        </div>-->
+<!--        <div>-->
+<!--            <button type="submit">Tildel valgte brugere</button>-->
+<!--        </div>-->
+<!--    </form>-->
+<!--</section>-->
+
+<!--&lt;!&ndash; Navigation &ndash;&gt;-->
+<!--<section class="navigation">-->
+<!--    <div>-->
+<!--        <a th:href="@{/tasks/{id}(id=${taskWithUsers.task.taskId})}">-->
+<!--            <button>Tilbage til task</button>-->
+<!--        </a>-->
+<!--    </div>-->
+
+<!--    <div th:if="${session.currentUser.role.name() == 'ADMIN'}">-->
+<!--        <a th:href="@{/tasks/list}">-->
+<!--            <button>Tilbage til alle tasks></button>-->
+<!--        </a>-->
+<!--    </div>-->
+
+<!--    <div>-->
+<!--        <a th:href="@{/users/profile}">-->
+<!--            <button>Tilbage til forside</button>-->
+<!--        </a>-->
+<!--    </div>-->
+<!--</section>-->
+<!--</body>-->
+<!--</html>-->

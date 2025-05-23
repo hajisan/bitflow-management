@@ -1,51 +1,65 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>User With Tasks</title>
+    <title>Brugerens tasks</title>
+    <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
-<h1>Brugerens tasks</h1>
 
-<!-- Kort info om brugeren -->
-<section class="mini-info">
-    <div>Fornavn: <span th:text="${userWithTasks.user.firstName}"></span></div>
-    <div>Efternavn: <span th:text="${userWithTasks.user.lastName}"></span></div>
-    <div>Rolle: <span th:text="${userWithTasks.user.role}"></span></div>
-</section>
+<!-- Navigation -->
+<div th:replace="fragments/navbar :: navbar"></div>
 
-<h3>Tasks</h3>
+<!-- Feedback-beskeder -->
+<div th:if="${success}" class="success-section"><p class="success-message" th:text="${success}"></p></div>
+<div th:if="${error}" class="error-section"><p class="error-message" th:text="${error}"></p></div>
 
-<!-- Tasks -->
-<section class="mini-info">
-    <div th:if="${!#lists.isEmpty(userWithTasks.taskList)}">
-        <div th:each="task : ${userWithTasks.taskList}" class="list">
-            <div>Navn: <span th:text="${task.name}"></span></div>
-            <div>Status: <span th:text="${task.status}"></span></div>
-            <div>Deadline: <span th:text="${task.deadline}"></span></div>
-            <div>
-                <a th:href="@{/tasks/{id}(id=${task.taskId})}">
-                    <button>Se detaljer</button>
-                </a>
+<section class="dashboard-section">
+
+    <!-- Brugerinfo -->
+    <div class="list-header">
+        <h2 class="section-title">Opgaver for <span th:text="${userWithTasks.user.firstName}"></span></h2>
+        <p class="role" th:text="'Rolle: ' + ${userWithTasks.user.role}"></p>
+    </div>
+
+    <!-- Liste med tasks -->
+    <div class="list-wrapper">
+        <div th:if="${!#lists.isEmpty(userWithTasks.taskList)}" class="list">
+
+            <div th:each="task : ${userWithTasks.taskList}" class="row">
+                <div class="info">
+                    <span class="icon">📋</span>
+                    <div class="details">
+                        <p class="name" th:text="'Navn: ' + ${task.name}"></p>
+
+                        <div class="meta">
+                            <p th:text="'Deadline: ' + ${task.deadline}"></p>
+                            <p th:text="'Estimeret tid: ' + ${task.estimatedTime} + ' t.'"></p>
+                            <p th:text="'Forbrugt tid: ' + ${task.timeSpent} + ' t.'"></p>
+                        </div>
+
+                        <p class="status"
+                           th:text="'Status: ' + ${task.status}"
+                           th:classappend="' status-' + ${task.status.name().toLowerCase()}">
+                        </p>
+                    </div>
+                </div>
+                <div class="actions">
+                    <a th:href="@{/tasks/{id}(id=${task.taskId})}" class="btn btn-secondary">Se detaljer</a>
+                </div>
             </div>
-            <hr/>
+
+        </div>
+
+        <!-- Hvis ingen opgaver -->
+        <div th:if="${#lists.isEmpty(userWithTasks.taskList)}">
+            <p>Brugeren <span th:text="${userWithTasks.user.firstName}"></span> har ingen tilknyttede opgaver.</p>
         </div>
     </div>
 
-    <!-- Hvis der ingen opgaver er -->
-    <div th:if="${#lists.isEmpty(userWithTasks.taskList)}">
-        Brugeren <span th:text="${userWithTasks.user.firstName}"></span> har ingen tilknyttede opgaver.
-    </div>
-</section>
+    <!-- Fast tilbageknap -->
+    <a th:href="@{/users/profile}" class="btn btn-secondary fixed-bottom-right">⬅️ Tilbage til dashboard</a>
 
-<!-- Navigation -->
-<section class="navigation">
-    <div>
-        <a th:href="@{/users/profile}">
-            <button>Tilbage til forside</button>
-        </a>
-    </div>
 </section>
-
 </body>
 </html>
