@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="da"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TimeEntry.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EstimationTool</a> &gt; <a href="index.source.html" class="el_package">com.example.estimationtool.model</a> &gt; <span class="el_source">TimeEntry.java</span></div><h1>TimeEntry.java</h1><pre class="source lang-java linenums">package com.example.estimationtool.model;
+
+import java.time.LocalDate;
+
+public class TimeEntry {
+    private int timeId, userId, taskId, subTaskId, hoursSpent;
+    private LocalDate date;
+
+    public TimeEntry(int timeId, int userId, int taskId,
+<span class="fc" id="L10">                     int subTaskId, int hoursSpent, LocalDate date) {</span>
+<span class="fc" id="L11">        setTimeId(timeId);</span>
+<span class="fc" id="L12">        setUserId(userId);</span>
+<span class="fc" id="L13">        setTaskId(taskId);</span>
+<span class="fc" id="L14">        setSubTaskId(subTaskId);</span>
+<span class="fc" id="L15">        setHoursSpent(hoursSpent);</span>
+<span class="fc" id="L16">        setDate(date);</span>
+<span class="fc" id="L17">    }</span>
+
+<span class="nc" id="L19">    public TimeEntry() {}</span>
+
+    // Getter-metoder
+
+    public int getTimeId() {
+<span class="fc" id="L24">        return timeId;</span>
+    }
+
+    public int getUserId() {
+<span class="nc" id="L28">        return userId;</span>
+    }
+
+    public int getTaskId() {
+<span class="fc" id="L32">        return taskId;</span>
+    }
+
+    public int getSubTaskId() {
+<span class="fc" id="L36">        return subTaskId;</span>
+    }
+
+    public int getHoursSpent() {
+<span class="fc" id="L40">        return hoursSpent;</span>
+    }
+    public LocalDate getDate() {
+<span class="nc" id="L43">        return date;</span>
+    }
+
+    // Setter-metoder
+
+    public void setTimeId(int timeId) {
+<span class="fc" id="L49">        this.timeId = timeId;</span>
+<span class="fc" id="L50">    }</span>
+
+    public void setUserId(int userId) {
+<span class="fc" id="L53">        this.userId = userId;</span>
+<span class="fc" id="L54">    }</span>
+
+    public void setTaskId(int taskId) {
+<span class="fc" id="L57">        this.taskId = taskId;</span>
+<span class="fc" id="L58">    }</span>
+
+    public void setSubTaskId(int subTaskId) {
+<span class="fc" id="L61">        this.subTaskId = subTaskId;</span>
+<span class="fc" id="L62">    }</span>
+
+    public void setHoursSpent(int hoursSpent) {
+<span class="fc" id="L65">        this.hoursSpent = hoursSpent;</span>
+<span class="fc" id="L66">    }</span>
+
+    public void setDate(LocalDate date) {
+<span class="fc" id="L69">        this.date = date;</span>
+<span class="fc" id="L70">    }</span>
+
+    @Override
+    public String toString() {
+<span class="fc" id="L74">        return String.format(&quot;&quot;&quot;</span>
+                Time ID: %d
+                User ID: %d
+                Task ID: %d
+                SubTask ID: %d
+                Hours spent: %d
+                Date of entry: %s
+<span class="fc" id="L81">                &quot;&quot;&quot;, timeId, userId, taskId, subTaskId, hoursSpent, date);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

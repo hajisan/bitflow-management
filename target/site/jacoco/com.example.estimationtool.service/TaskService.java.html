@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="da"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TaskService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EstimationTool</a> &gt; <a href="index.source.html" class="el_package">com.example.estimationtool.service</a> &gt; <span class="el_source">TaskService.java</span></div><h1>TaskService.java</h1><pre class="source lang-java linenums">package com.example.estimationtool.service;
+
+
+import com.example.estimationtool.model.SubTask;
+import com.example.estimationtool.model.User;
+import com.example.estimationtool.model.enums.Status;
+import com.example.estimationtool.model.TimeEntry;
+import com.example.estimationtool.repository.interfaces.ISubTaskRepository;
+import com.example.estimationtool.repository.interfaces.ITaskRepository;
+import com.example.estimationtool.model.Task;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import com.example.estimationtool.repository.interfaces.ITimeEntryRepository;
+import com.example.estimationtool.repository.interfaces.IUserRepository;
+import com.example.estimationtool.toolbox.check.StatusCheck;
+import com.example.estimationtool.toolbox.dto.*;
+import com.example.estimationtool.toolbox.timeCalc.TimeCalculator;
+import com.example.estimationtool.toolbox.check.RoleCheck;
+import org.springframework.stereotype.Service;
+
+@Service
+public class TaskService {
+
+    private final ITaskRepository iTaskRepository;
+    private final IUserRepository iUserRepository;
+    private final ISubTaskRepository iSubTaskRepository;
+    private final ITimeEntryRepository iTimeEntryRepository;
+    private final StatusCheck statusCheck;
+    private final TimeCalculator timeCalculator;
+
+    public TaskService(ITaskRepository iTaskRepository,
+                       IUserRepository iUserRepository, ISubTaskRepository iSubTaskRepository,
+<span class="fc" id="L37">                       ITimeEntryRepository iTimeEntryRepository, StatusCheck statusCheck, TimeCalculator timeCalculator) {</span>
+<span class="fc" id="L38">        this.iTaskRepository = iTaskRepository;</span>
+<span class="fc" id="L39">        this.iUserRepository = iUserRepository;</span>
+<span class="fc" id="L40">        this.iSubTaskRepository = iSubTaskRepository;</span>
+<span class="fc" id="L41">        this.iTimeEntryRepository = iTimeEntryRepository;</span>
+<span class="fc" id="L42">        this.statusCheck = statusCheck;</span>
+<span class="fc" id="L43">        this.timeCalculator = timeCalculator;</span>
+<span class="fc" id="L44">    }</span>
+
+    //------------------------------------ Create() ------------------------------------
+
+    public Task createTask(UserViewDTO currentUser, Task task) {
+<span class="nc" id="L49">        Task createdTask = iTaskRepository.create(task);</span>
+<span class="nc" id="L50">        iTaskRepository.assignUserToTask(currentUser.getUserId(), task.getTaskId());</span>
+<span class="nc" id="L51">        return createdTask;</span>
+
+    }
+
+    //------------------------------------ Read() --------------------------------------
+
+    public List&lt;Task&gt; readAll() {
+<span class="nc" id="L58">        return iTaskRepository.readAll();</span>
+    }
+
+    public Task readById(int id) {
+<span class="nc" id="L62">        return iTaskRepository.readById(id);</span>
+    }
+
+    //------------------------------------ Update() ------------------------------------
+
+    public Task updateTask(Task task) {
+
+<span class="nc bnc" id="L69" title="All 2 branches missed.">        if (task.getStatus() == Status.DONE) {</span>
+<span class="nc" id="L70">            List&lt;SubTask&gt; subTaskList = iSubTaskRepository.readAllByTaskId(task.getTaskId());</span>
+            // Konverterer Task + SubTasks til DTO
+<span class="nc" id="L72">            TaskWithSubTasksDTO taskWithSubTasksDTO = new TaskWithSubTasksDTO(task, subTaskList);</span>
+
+<span class="nc bnc" id="L74" title="All 2 branches missed.">            if (!statusCheck.canMarkTaskAsDone(taskWithSubTasksDTO)) {</span>
+<span class="nc" id="L75">                throw new IllegalStateException(&quot;Status for task kan ikke markeres som færdig, før alle subtasks er færdige.&quot;);</span>
+            }
+        }
+
+<span class="nc" id="L79">        return iTaskRepository.update(task);</span>
+    }
+    //------------------------------------ Delete() ------------------------------------
+
+    public void deleteById(int id) {
+<span class="nc" id="L84">        iTaskRepository.deleteById(id);</span>
+<span class="nc" id="L85">    }</span>
+
+    //------------------------------------ DTO'er -------------------------------------
+
+    // --- Henter tasks ud fra brugerID for UserService ---
+
+    public List&lt;Task&gt; readAllTasksByUserId(int userId) {
+
+<span class="nc" id="L93">        return iTaskRepository.readAllByUserId(userId);</span>
+    }
+
+    // --- Henter brugere ud fra taskID ---
+
+    public TaskWithUsersDTO readAllUsersByTaskId(int taskId) {
+
+        // Læser task ud fra taskID
+<span class="nc" id="L101">        Task task = iTaskRepository.readById(taskId);</span>
+
+        // Læser tilknyttede brugere
+<span class="nc" id="L104">        List&lt;User&gt; users = iUserRepository.readAllByTaskId(taskId);</span>
+
+        // Konverter til UserViewDTO
+<span class="nc" id="L107">        List&lt;UserViewDTO&gt; userViewDTOList = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L108" title="All 2 branches missed.">        for (User user : users) {</span>
+<span class="nc" id="L109">            UserViewDTO userViewDTO = new UserViewDTO(</span>
+<span class="nc" id="L110">                    user.getUserId(),</span>
+<span class="nc" id="L111">                    user.getFirstName(),</span>
+<span class="nc" id="L112">                    user.getLastName(),</span>
+<span class="nc" id="L113">                    user.getEmail(),</span>
+<span class="nc" id="L114">                    user.getRole()</span>
+            );
+<span class="nc" id="L116">            userViewDTOList.add(userViewDTO); // Tilføjer hver UserDTO til listen</span>
+<span class="nc" id="L117">        }</span>
+        // Returnerer task + liste af UserViewDTO
+<span class="nc" id="L119">        return new TaskWithUsersDTO(task, userViewDTOList);</span>
+
+    }
+
+    // --- Henter subtasks ud fra taskID ---
+
+    public TaskWithSubTasksDTO readAllSubTasksByTaskId(int taskId) {
+        // Hent opgaven
+<span class="nc" id="L127">        Task task = iTaskRepository.readById(taskId);</span>
+
+        // Hent tilknyttede subtasks
+<span class="nc" id="L130">        List&lt;SubTask&gt; subTaskList = iSubTaskRepository.readAllByTaskId(taskId);</span>
+
+        // Returnér samlet DTO
+<span class="nc" id="L133">        return new TaskWithSubTasksDTO(task, subTaskList);</span>
+    }
+
+    // --- Henter timeentries ud fra task-ID -----
+
+    public TaskWithTimeEntriesDTO readAllTimeEntriesByTaskId(int taskId) {
+<span class="nc" id="L139">        Task task = iTaskRepository.readById(taskId);</span>
+<span class="nc" id="L140">        List&lt;TimeEntry&gt; entries = iTimeEntryRepository.readAllByTaskId(taskId);</span>
+        // Bruger TimeCalculatorens statiske metode til at sætte timeSpent ud fra de loggede TimeEntries
+<span class="nc" id="L142">        task.setTimeSpent(timeCalculator.calculateTimeSpent(entries));</span>
+<span class="nc" id="L143">        return new TaskWithTimeEntriesDTO(task, entries);</span>
+    }
+
+
+    //---------------------------------- Assign User --------------------------------
+
+    // ---------------------- Viser kun ikke-tilknyttede brugere --------------------
+
+
+    // Denne metode findes også i SubTaskService
+    public List&lt;UserViewDTO&gt; readAllUnAssignedUsers(int taskId) {
+
+        // Læser alle brugere
+<span class="nc" id="L156">        List&lt;User&gt; allUserList = iUserRepository.readAll();</span>
+
+        // Læser taskens allerede tilknyttede brugere
+<span class="nc" id="L159">        List&lt;User&gt; assignedUsers = iUserRepository.readAllByTaskId(taskId);</span>
+
+        // Samler ID'er på de allerede tildelte brugere
+<span class="nc" id="L162">        Set&lt;Integer&gt; assignedUserIds = new HashSet&lt;&gt;();</span>
+<span class="nc bnc" id="L163" title="All 2 branches missed.">        for (User user : assignedUsers) {</span>
+<span class="nc" id="L164">            assignedUserIds.add(user.getUserId());</span>
+<span class="nc" id="L165">        }</span>
+
+        // Tilføjer kun de brugere, der IKKE allerede er tildelt task
+<span class="nc" id="L168">        List&lt;UserViewDTO&gt; unassignedUsersDTO = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L169" title="All 2 branches missed.">        for (User user : allUserList) {</span>
+<span class="nc bnc" id="L170" title="All 2 branches missed.">            if (!assignedUserIds.contains(user.getUserId())) {</span>
+<span class="nc" id="L171">                unassignedUsersDTO.add(new UserViewDTO(</span>
+<span class="nc" id="L172">                        user.getUserId(),</span>
+<span class="nc" id="L173">                        user.getFirstName(),</span>
+<span class="nc" id="L174">                        user.getLastName(),</span>
+<span class="nc" id="L175">                        user.getEmail(),</span>
+<span class="nc" id="L176">                        user.getRole()</span>
+                ));
+            }
+<span class="nc" id="L179">        }</span>
+
+<span class="nc" id="L181">        return unassignedUsersDTO;</span>
+    }
+
+    // ------------------- Task tildeles en bruger efter oprettelse -----------------
+
+
+    public void assignUsersToTask(UserViewDTO currentUser, List&lt;Integer&gt; userIds, int taskId) {
+
+        // Kun admin og projektleder må assign bruger til task
+<span class="nc" id="L190">        RoleCheck.ensureAdminOrProjectManager(currentUser.getRole());</span>
+
+        // Henter de brugere, der allerede er tilknyttet task
+<span class="nc" id="L193">        List&lt;User&gt; existingUsers = iUserRepository.readAllByTaskId(taskId);</span>
+
+        // Opretter et Set af allerede tildelte bruger-ID'er
+<span class="nc" id="L196">        Set&lt;Integer&gt; existingUserIds = new HashSet&lt;&gt;();</span>
+<span class="nc bnc" id="L197" title="All 2 branches missed.">        for (User user : existingUsers) {</span>
+<span class="nc" id="L198">            existingUserIds.add(user.getUserId());</span>
+<span class="nc" id="L199">        }</span>
+
+        // Tildeler kun brugere, som ikke allerede er tilknyttet task
+<span class="nc bnc" id="L202" title="All 2 branches missed.">        for (Integer userId : userIds) {</span>
+<span class="nc bnc" id="L203" title="All 2 branches missed.">            if (!existingUserIds.contains(userId)) {</span>
+<span class="nc" id="L204">                iTaskRepository.assignUserToTask(userId, taskId);</span>
+            }
+<span class="nc" id="L206">        }</span>
+<span class="nc" id="L207">    }</span>
+
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

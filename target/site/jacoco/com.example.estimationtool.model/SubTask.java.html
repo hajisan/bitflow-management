@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="da"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SubTask.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EstimationTool</a> &gt; <a href="index.source.html" class="el_package">com.example.estimationtool.model</a> &gt; <span class="el_source">SubTask.java</span></div><h1>SubTask.java</h1><pre class="source lang-java linenums">package com.example.estimationtool.model;
+
+import com.example.estimationtool.model.enums.Status;
+
+import java.time.LocalDate;
+
+public class SubTask {
+
+    private int subTaskId, taskId, estimatedTime, timeSpent;
+    private String name, description;
+    private LocalDate deadline;
+    private Status status;
+
+    public SubTask(int subTaskId, int taskId, int estimatedTime, int timeSpent, String name,
+<span class="fc" id="L15">                   String description, LocalDate deadline, Status status) {</span>
+<span class="fc" id="L16">        setSubTaskId(subTaskId);</span>
+<span class="fc" id="L17">        setTaskId(taskId);</span>
+<span class="fc" id="L18">        setEstimatedTime(estimatedTime);</span>
+<span class="fc" id="L19">        setTimeSpent(timeSpent);</span>
+<span class="fc" id="L20">        setName(name);</span>
+<span class="fc" id="L21">        setDescription(description);</span>
+<span class="fc" id="L22">        setDeadline(deadline);</span>
+<span class="fc" id="L23">        setStatus(status);</span>
+<span class="fc" id="L24">    }</span>
+
+<span class="fc" id="L26">    public SubTask() {</span>
+<span class="fc" id="L27">    }</span>
+
+    // Getter-metoder
+
+    public int getSubTaskId() {
+<span class="fc" id="L32">        return subTaskId;</span>
+    }
+
+    public int getTaskId() {
+<span class="fc" id="L36">        return taskId;</span>
+    }
+
+    public int getEstimatedTime() {
+<span class="fc" id="L40">        return estimatedTime;</span>
+    }
+
+    public int getTimeSpent() {
+<span class="fc" id="L44">        return timeSpent;</span>
+    }
+
+    public String getName() {
+<span class="fc" id="L48">        return name;</span>
+    }
+
+    public String getDescription() {
+<span class="fc" id="L52">        return description;</span>
+    }
+
+    public LocalDate getDeadline() {
+<span class="fc" id="L56">        return deadline;</span>
+    }
+
+    public Status getStatus() {
+<span class="fc" id="L60">        return status;</span>
+    }
+
+    // Setter-metoder
+
+    public void setSubTaskId(int subTaskId) {
+<span class="fc" id="L66">        this.subTaskId = subTaskId;</span>
+<span class="fc" id="L67">    }</span>
+
+    public void setTaskId(int taskId) {
+<span class="fc" id="L70">        this.taskId = taskId;</span>
+<span class="fc" id="L71">    }</span>
+
+    public void setEstimatedTime(int estimatedTime) {
+<span class="fc" id="L74">        this.estimatedTime = estimatedTime;</span>
+<span class="fc" id="L75">    }</span>
+
+    public void setTimeSpent(int timeSpent) {
+<span class="fc" id="L78">        this.timeSpent = timeSpent;</span>
+<span class="fc" id="L79">    }</span>
+
+    public void setName(String name) {
+<span class="fc" id="L82">        this.name = name;</span>
+<span class="fc" id="L83">    }</span>
+
+    public void setDescription(String description) {
+<span class="fc" id="L86">        this.description = description;</span>
+<span class="fc" id="L87">    }</span>
+
+    public void setDeadline(LocalDate deadline) {
+<span class="fc" id="L90">        this.deadline = deadline;</span>
+<span class="fc" id="L91">    }</span>
+
+    public void setStatus(Status status) {
+<span class="fc" id="L94">        this.status = status;</span>
+<span class="fc" id="L95">    }</span>
+
+    @Override
+    public String toString() {
+<span class="fc" id="L99">        return String.format(&quot;&quot;&quot;</span>
+            SubTask ID    : %d
+            Task ID       : %d
+            Name          : %s
+            Description   : %s
+            Estimated     : %d
+            Time Spent    : %d
+            Deadline      : %s
+            Status        : %s
+<span class="fc" id="L108">            &quot;&quot;&quot;, subTaskId, taskId, name, description, estimatedTime, timeSpent, deadline, status);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

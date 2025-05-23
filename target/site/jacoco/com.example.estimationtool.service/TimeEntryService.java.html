@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="da"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TimeEntryService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EstimationTool</a> &gt; <a href="index.source.html" class="el_package">com.example.estimationtool.service</a> &gt; <span class="el_source">TimeEntryService.java</span></div><h1>TimeEntryService.java</h1><pre class="source lang-java linenums">package com.example.estimationtool.service;
+
+import com.example.estimationtool.model.TimeEntry;
+import com.example.estimationtool.repository.interfaces.*;
+import com.example.estimationtool.toolbox.timeCalc.TimeCalculator;
+
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class TimeEntryService {
+
+    private final ITimeEntryRepository iTimeEntryRepository;
+    private final TimeCalculator timeCalculator;
+
+<span class="fc" id="L17">    public TimeEntryService(ITimeEntryRepository iTimeEntryRepository, TimeCalculator timeCalculator) {</span>
+<span class="fc" id="L18">        this.iTimeEntryRepository = iTimeEntryRepository;</span>
+<span class="fc" id="L19">        this.timeCalculator = timeCalculator;</span>
+<span class="fc" id="L20">    }</span>
+
+    //------------------------------------ Create() ------------------------------------
+
+    public TimeEntry createTimeEntry(TimeEntry timeEntry) {
+<span class="nc" id="L25">        TimeEntry createdTimeEntry = iTimeEntryRepository.create(timeEntry);</span>
+<span class="nc" id="L26">        timeCalculator.updateTimeSpentForAll(timeEntry);</span>
+        // Sørger for at kalde repository-CRUD-metoden før opdateringen af timeSpent
+<span class="nc" id="L28">        return createdTimeEntry;</span>
+    }
+
+    //------------------------------------ Read() --------------------------------------
+
+    public List&lt;TimeEntry&gt; readAll() {
+<span class="nc" id="L34">        return iTimeEntryRepository.readAll();</span>
+    }
+
+    public TimeEntry readById(int id) {
+<span class="nc" id="L38">        return iTimeEntryRepository.readById(id);</span>
+    }
+
+    //------------------------------------ Update() ------------------------------------
+
+    public TimeEntry updateTimeEntry(TimeEntry timeEntry) {
+<span class="nc" id="L44">        TimeEntry updatedTimeEntry = iTimeEntryRepository.update(timeEntry);</span>
+<span class="nc" id="L45">        timeCalculator.updateTimeSpentForAll(timeEntry);</span>
+        // Sørger for at kalde repository-CRUD-metoden før opdateringen af timeSpent
+<span class="nc" id="L47">        return updatedTimeEntry;</span>
+    }
+
+    //------------------------------------ Delete() ------------------------------------
+
+    public void deleteById(int id) {
+<span class="nc" id="L53">        iTimeEntryRepository.deleteById(id);</span>
+<span class="nc" id="L54">    }</span>
+
+    public List&lt;TimeEntry&gt; readAllTimeEntriesByUserId(int userId) {
+<span class="nc" id="L57">        return iTimeEntryRepository.readAllByUserId(userId);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

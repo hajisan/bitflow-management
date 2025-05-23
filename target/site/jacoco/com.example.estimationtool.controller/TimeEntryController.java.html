@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="da"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TimeEntryController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EstimationTool</a> &gt; <a href="index.source.html" class="el_package">com.example.estimationtool.controller</a> &gt; <span class="el_source">TimeEntryController.java</span></div><h1>TimeEntryController.java</h1><pre class="source lang-java linenums">package com.example.estimationtool.controller;
+
+import com.example.estimationtool.model.TimeEntry;
+import com.example.estimationtool.service.TimeEntryService;
+import com.example.estimationtool.toolbox.dto.UserViewDTO;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.List;
+
+@Controller
+@RequestMapping(&quot;timeentries&quot;)
+public class TimeEntryController {
+
+    private final TimeEntryService timeEntryService;
+
+<span class="fc" id="L20">    public TimeEntryController(TimeEntryService timeEntryService) {</span>
+<span class="fc" id="L21">        this.timeEntryService = timeEntryService;</span>
+<span class="fc" id="L22">    }</span>
+
+    private UserViewDTO getCurrentUser(HttpSession session) {
+<span class="nc" id="L25">        return (UserViewDTO) session.getAttribute(&quot;currentUser&quot;);</span>
+    }
+
+    //------------------------------------ Create() ------------------------------------
+
+    @GetMapping(&quot;/create&quot;)
+    public String showCreateTimeEntry(@RequestParam int taskId,
+                                      @RequestParam(required = false) Integer subTaskId, // Ikke nødvendigvis til stede
+                                      @RequestParam int userId,
+                                      Model model,
+                                      HttpSession session,
+                                      RedirectAttributes redirectAttributes) {
+
+        // Henter og sætter session for Thymeleaf
+<span class="nc" id="L39">        UserViewDTO currentUser = getCurrentUser(session);</span>
+<span class="nc" id="L40">        session.setAttribute(&quot;currentUser&quot;, currentUser);</span>
+
+<span class="nc bnc" id="L42" title="All 2 branches missed.">        if (currentUser == null) {</span>
+<span class="nc" id="L43">            redirectAttributes.addFlashAttribute(&quot;error&quot;, &quot;Du skal være logget ind for at kunne oprette en tidsregistrering.&quot;);</span>
+<span class="nc" id="L44">            return &quot;redirect:/login&quot;;</span>
+        }
+
+<span class="nc" id="L47">        TimeEntry timeEntry = new TimeEntry();</span>
+<span class="nc" id="L48">        timeEntry.setTaskId(taskId);</span>
+<span class="nc" id="L49">        timeEntry.setUserId(userId);</span>
+<span class="nc bnc" id="L50" title="All 2 branches missed.">        if (subTaskId != null) timeEntry.setSubTaskId(subTaskId);</span>
+<span class="nc" id="L51">        model.addAttribute(&quot;timeentry&quot;, timeEntry);</span>
+
+<span class="nc" id="L53">        return &quot;timeentry/create-timeentry&quot;;</span>
+    }
+    //------------------------------------ Hent Create() -------------------------------
+
+    @PostMapping(&quot;/create&quot;)
+    public String createTimeEntry(@ModelAttribute(&quot;timeentry&quot;) TimeEntry timeEntry,
+                                  HttpSession session,
+                                  RedirectAttributes redirectAttributes) {
+
+        // Henter og sætter session for Thymeleaf
+<span class="nc" id="L63">        UserViewDTO currentUser = getCurrentUser(session);</span>
+<span class="nc" id="L64">        session.setAttribute(&quot;currentUser&quot;, currentUser);</span>
+
+<span class="nc bnc" id="L66" title="All 2 branches missed.">        if (currentUser == null) {</span>
+<span class="nc" id="L67">            redirectAttributes.addFlashAttribute(&quot;error&quot;, &quot;Du skal være logget ind for at kunne oprette en tidsregistrering.&quot;);</span>
+<span class="nc" id="L68">            return &quot;redirect:/login&quot;;</span>
+        }
+
+        // Tjekker om brugeren er logget ind
+<span class="nc" id="L72">        timeEntryService.createTimeEntry(timeEntry);</span>
+
+<span class="nc" id="L74">        redirectAttributes.addFlashAttribute(&quot;success&quot;, &quot;Tidsregistrering lykkedes.&quot;);</span>
+
+<span class="nc" id="L76">        return &quot;redirect:/tasks/&quot; + timeEntry.getTaskId() + &quot;/timeentries&quot;;</span>
+    }
+    //------------------------------------ Read() --------------------------------------
+
+    @GetMapping(&quot;/list&quot;)
+    public String showAllTimeEntries(Model model,
+                                     HttpSession session,
+                                     RedirectAttributes redirectAttributes) {
+
+        // Henter og sætter session for Thymeleaf
+<span class="nc" id="L86">        UserViewDTO currentUser = getCurrentUser(session);</span>
+<span class="nc" id="L87">        session.setAttribute(&quot;currentUser&quot;, currentUser);</span>
+
+<span class="nc bnc" id="L89" title="All 2 branches missed.">        if (currentUser == null) {</span>
+<span class="nc" id="L90">            redirectAttributes.addFlashAttribute(&quot;error&quot;, &quot;Du skal være logget ind for at kunne se tidsregistreringer.&quot;);</span>
+<span class="nc" id="L91">            return &quot;redirect:/login&quot;;</span>
+        }
+
+<span class="nc" id="L94">        List&lt;TimeEntry&gt; timeEntryList = timeEntryService.readAll();</span>
+
+<span class="nc" id="L96">        model.addAttribute(&quot;timeentries&quot;, timeEntryList);</span>
+<span class="nc" id="L97">        return &quot;timeentry/timeentry-list&quot;;</span>
+    }
+
+    @GetMapping(&quot;/{id}&quot;)
+    public String showTimeEntry(@PathVariable int id,
+                                Model model,
+                                HttpSession session,
+                                RedirectAttributes redirectAttributes) {
+
+
+        // Henter og sætter session for Thymeleaf
+<span class="nc" id="L108">        UserViewDTO currentUser = getCurrentUser(session);</span>
+<span class="nc" id="L109">        session.setAttribute(&quot;currentUser&quot;, currentUser);</span>
+
+<span class="nc bnc" id="L111" title="All 2 branches missed.">        if (currentUser == null) {</span>
+<span class="nc" id="L112">            redirectAttributes.addFlashAttribute(&quot;error&quot;, &quot;Du skal være logget ind for at kunne se en tidsregistrering.&quot;);</span>
+<span class="nc" id="L113">            return &quot;redirect:/login&quot;;</span>
+        }
+
+<span class="nc" id="L116">        TimeEntry timeEntry = timeEntryService.readById(id);</span>
+
+<span class="nc" id="L118">        model.addAttribute(&quot;timeentry&quot;, timeEntry);</span>
+<span class="nc" id="L119">        return &quot;timeentry/timeentry-detail&quot;;</span>
+    }
+
+    //------------------------------------ Hent Update() -------------------------------
+
+    @GetMapping(&quot;/edit/{id}&quot;)
+    public String showEditTimeEntry(@PathVariable int id,
+                                    Model model,
+                                    HttpSession session,
+                                    RedirectAttributes redirectAttributes) {
+
+        // Henter og sætter session for Thymeleaf
+<span class="nc" id="L131">        UserViewDTO currentUser = getCurrentUser(session);</span>
+<span class="nc" id="L132">        session.setAttribute(&quot;currentUser&quot;, currentUser);</span>
+
+<span class="nc bnc" id="L134" title="All 2 branches missed.">        if (currentUser == null) {</span>
+<span class="nc" id="L135">            redirectAttributes.addFlashAttribute(&quot;error&quot;, &quot;Du skal være logget ind for at kunne ændre en tidsregistrering.&quot;);</span>
+<span class="nc" id="L136">            return &quot;redirect:/login&quot;;</span>
+        }
+
+<span class="nc" id="L139">        TimeEntry timeEntry = timeEntryService.readById(id);</span>
+
+<span class="nc" id="L141">        model.addAttribute(&quot;timeentry&quot;, timeEntry);</span>
+<span class="nc" id="L142">        return &quot;timeentry/edit-timeentry&quot;;</span>
+
+    }
+
+    //------------------------------------ Update() ------------------------------------
+
+    @PostMapping(&quot;/update&quot;)
+    public String updateTimeEntry(@ModelAttribute(&quot;timeentry&quot;) TimeEntry timeEntry,
+                                  HttpSession session,
+                                  RedirectAttributes redirectAttributes) {
+
+        // Henter og sætter session for Thymeleaf
+<span class="nc" id="L154">        UserViewDTO currentUser = getCurrentUser(session);</span>
+<span class="nc" id="L155">        session.setAttribute(&quot;currentUser&quot;, currentUser);</span>
+
+<span class="nc bnc" id="L157" title="All 2 branches missed.">        if (currentUser == null) {</span>
+<span class="nc" id="L158">            redirectAttributes.addFlashAttribute(&quot;error&quot;, &quot;Du skal være logget ind for at kunne ændre en tidsregistrering.&quot;);</span>
+<span class="nc" id="L159">            return &quot;redirect:/login&quot;;</span>
+        }
+
+
+<span class="nc" id="L163">        timeEntryService.updateTimeEntry(timeEntry);</span>
+
+<span class="nc" id="L165">        redirectAttributes.addFlashAttribute(&quot;success&quot;, &quot;Ændring af tidsregistrering lykkedes.&quot;);</span>
+
+
+<span class="nc" id="L168">        return &quot;redirect:/timeentries/&quot; + timeEntry.getTimeId(); // Redirect til timeentry-detail.html</span>
+
+    }
+    //------------------------------------ Delete() ------------------------------------
+
+    @PostMapping(&quot;/delete/{id}&quot;)
+    public String deleteTimeEntry(@PathVariable int id,
+                                  HttpSession session,
+                                  RedirectAttributes redirectAttributes) {
+
+        // Henter og sætter session for Thymeleaf
+<span class="nc" id="L179">        UserViewDTO currentUser = getCurrentUser(session);</span>
+<span class="nc" id="L180">        session.setAttribute(&quot;currentUser&quot;, currentUser);</span>
+
+<span class="nc bnc" id="L182" title="All 2 branches missed.">        if (currentUser == null) {</span>
+<span class="nc" id="L183">            redirectAttributes.addFlashAttribute(&quot;error&quot;, &quot;Du skal være logget ind for at kunne slette en tidsregistrering.&quot;);</span>
+<span class="nc" id="L184">            return &quot;redirect:/login&quot;;</span>
+        }
+
+<span class="nc" id="L187">        int taskId = timeEntryService.readById(id).getTaskId();</span>
+<span class="nc" id="L188">        timeEntryService.deleteById(id);</span>
+
+<span class="nc" id="L190">        redirectAttributes.addFlashAttribute(&quot;success&quot;, &quot;Tidsregistrering blev slettet.&quot;);</span>
+
+<span class="nc" id="L192">        return &quot;redirect:/tasks/&quot; + taskId + &quot;/timeentries&quot;;</span>
+    }
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

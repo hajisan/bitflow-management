@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="da"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TaskRepository.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EstimationTool</a> &gt; <a href="index.source.html" class="el_package">com.example.estimationtool.repository</a> &gt; <span class="el_source">TaskRepository.java</span></div><h1>TaskRepository.java</h1><pre class="source lang-java linenums">package com.example.estimationtool.repository;
+
+import com.example.estimationtool.model.enums.Status;
+import com.example.estimationtool.repository.interfaces.ITaskRepository;
+import com.example.estimationtool.model.Task;
+import com.example.estimationtool.toolbox.rowMappers.TaskRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
+
+import java.sql.PreparedStatement;
+import java.time.LocalDate;
+import java.util.List;
+
+@Repository
+public class TaskRepository implements ITaskRepository {
+
+    private final JdbcTemplate jdbcTemplate;
+
+<span class="fc" id="L21">    public TaskRepository(JdbcTemplate jdbcTemplate) {</span>
+<span class="fc" id="L22">        this.jdbcTemplate = jdbcTemplate;</span>
+<span class="fc" id="L23">    }</span>
+
+    //------------------------------------ Create() ------------------------------------
+
+    @Override
+    public Task create(Task task) {
+
+<span class="fc" id="L30">        String sql = &quot;&quot;&quot;</span>
+                INSERT INTO task (subProjectID, name, description, deadline, estimatedTime, timeSpent, status) VALUES (?, ?, ?, ?, ?, ?, ?)
+                &quot;&quot;&quot;;
+
+<span class="fc" id="L34">        KeyHolder keyHolder = new GeneratedKeyHolder();</span>
+
+        // Bruger PreparedStatement sammen med vores GeneratedKeyHolder til at kunne autogenerere et nyt id
+<span class="fc" id="L37">        jdbcTemplate.update(connection -&gt; {</span>
+<span class="fc" id="L38">            PreparedStatement ps = connection.prepareStatement(sql, new String[]{&quot;id&quot;});</span>
+<span class="fc" id="L39">            ps.setInt(1, task.getSubProjectId());</span>
+<span class="fc" id="L40">            ps.setString(2, task.getName());</span>
+<span class="fc" id="L41">            ps.setString(3, task.getDescription());</span>
+<span class="fc" id="L42">            ps.setDate(4, java.sql.Date.valueOf(task.getDeadline())); // Konverterer LocalDate til java.sql.Date</span>
+<span class="fc" id="L43">            ps.setInt(5, task.getEstimatedTime());</span>
+<span class="fc" id="L44">            ps.setInt(6, task.getTimeSpent());</span>
+<span class="fc" id="L45">            ps.setString(7, task.getStatus().name());</span>
+<span class="fc" id="L46">            return ps;</span>
+        }, keyHolder);
+
+<span class="fc" id="L49">        int generatedId = keyHolder.getKey().intValue();</span>
+<span class="fc" id="L50">        task.setTaskId(generatedId);  // Sæt det genererede ID i objektet</span>
+
+<span class="fc" id="L52">        return task;</span>
+    }
+
+
+    //------------------------------------ Read() ------------------------------------
+    @Override
+    public List&lt;Task&gt; readAll() {
+
+<span class="nc" id="L60">        String sql = &quot;SELECT id, subProjectID, name, description, deadline, estimatedTime, timeSpent, status FROM task&quot;;</span>
+
+<span class="nc" id="L62">        return jdbcTemplate.query(sql, new TaskRowMapper());</span>
+    }
+
+    @Override
+    public Task readById(Integer taskId) {
+
+<span class="fc" id="L68">        String sql = &quot;&quot;&quot;</span>
+                SELECT
+                id, subProjectID, name, description, deadline, estimatedTime, timeSpent, status
+                FROM task
+                WHERE id = ?
+                &quot;&quot;&quot;;
+<span class="fc" id="L74">        return jdbcTemplate.queryForObject(sql, new TaskRowMapper(), taskId);</span>
+    }
+
+    //------------------------------------ Update() ------------------------------------
+
+    @Override
+    public Task update(Task task) {
+
+<span class="fc" id="L82">        String sql = &quot;&quot;&quot;</span>
+                UPDATE task
+                SET name = ?, description = ?, deadline = ?, estimatedTime = ?, timeSpent = ?, status = ?
+                WHERE id = ?
+                &quot;&quot;&quot;;
+
+<span class="fc" id="L88">        jdbcTemplate.update( // Henter disse værdier, så de kan opdateres</span>
+                sql,
+<span class="fc" id="L90">                task.getName(),</span>
+<span class="fc" id="L91">                task.getDescription(),</span>
+<span class="fc" id="L92">                task.getDeadline(),</span>
+<span class="fc" id="L93">                task.getEstimatedTime(),</span>
+<span class="fc" id="L94">                task.getTimeSpent(),</span>
+<span class="fc" id="L95">                task.getStatus().name(), // Konverteres til String for at gemmes i databasen</span>
+<span class="fc" id="L96">                task.getTaskId()); // Parameter -&gt; id til WHERE</span>
+
+<span class="fc" id="L98">        return task;</span>
+    }
+
+    //------------------------------------ Delete() ------------------------------------
+
+    @Override
+    public void deleteById(Integer taskId) {
+
+<span class="fc" id="L106">        String sql = &quot;DELETE FROM task WHERE id = ?&quot;;</span>
+<span class="fc" id="L107">        jdbcTemplate.update(sql, taskId);</span>
+
+<span class="fc" id="L109">    }</span>
+
+
+    //---------------------------------- Til DTO'er ------------------------------------
+
+    // --- Read() tasks ud fra bruger-ID ---
+
+    @Override
+    public List&lt;Task&gt; readAllByUserId(Integer userId) {
+
+        // Bruger JOIN til at hente alle tasks for ét brugerID
+<span class="fc" id="L120">        String sql = &quot;&quot;&quot;</span>
+                SELECT
+                    task.subProjectID,
+                    task.id,
+                    task.estimatedTime,
+                    task.timeSpent,
+                    task.name,
+                    task.description,
+                    task.deadline,
+                    task.status
+                FROM task
+                JOIN users_task ON task.id = users_task.taskID
+                WHERE users_task.userID = ?
+                &quot;&quot;&quot;;
+
+<span class="fc" id="L135">        return jdbcTemplate.query(sql, new TaskRowMapper(), userId);</span>
+    }
+
+    // --- Read() tasks ud fra subprojekt-ID ---
+
+    @Override
+    public List&lt;Task&gt; readAllBySubProjectId(Integer subProjectId) {
+
+<span class="fc" id="L143">        String sql = &quot;&quot;&quot;</span>
+                SELECT
+                    id,
+                    subProjectID,
+                    estimatedTime,
+                    timeSpent,
+                    name,
+                    description,
+                    deadline,
+                    status
+                FROM task
+                WHERE subProjectID = ?
+                &quot;&quot;&quot;;
+
+<span class="fc" id="L157">        return jdbcTemplate.query(sql, new TaskRowMapper(), subProjectId);</span>
+    }
+
+
+    //---------------------------------- Assign User --------------------------------
+
+    // ----------------- Task tildeles en bruger efter oprettelse -------------------
+
+    @Override
+    public void assignUserToTask(Integer userId, Integer taskId) {
+
+<span class="fc" id="L168">        String sql = &quot;INSERT INTO Users_Task (userID, taskID) VALUES (?, ?)&quot;;</span>
+<span class="fc" id="L169">        jdbcTemplate.update(sql, userId, taskId);</span>
+<span class="fc" id="L170">    }</span>
+
+
+}
+
+
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

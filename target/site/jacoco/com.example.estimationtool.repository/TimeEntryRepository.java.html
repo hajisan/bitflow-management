@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="da"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TimeEntryRepository.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EstimationTool</a> &gt; <a href="index.source.html" class="el_package">com.example.estimationtool.repository</a> &gt; <span class="el_source">TimeEntryRepository.java</span></div><h1>TimeEntryRepository.java</h1><pre class="source lang-java linenums">package com.example.estimationtool.repository;
+
+import com.example.estimationtool.model.TimeEntry;
+import com.example.estimationtool.repository.interfaces.ITimeEntryRepository;
+import com.example.estimationtool.toolbox.rowMappers.TimeEntryRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
+
+import java.sql.PreparedStatement;
+
+import java.util.List;
+
+
+@Repository
+public class TimeEntryRepository implements ITimeEntryRepository {
+
+    private final JdbcTemplate jdbcTemplate;
+
+<span class="fc" id="L21">    public TimeEntryRepository(JdbcTemplate jdbcTemplate) {</span>
+<span class="fc" id="L22">        this.jdbcTemplate = jdbcTemplate;</span>
+<span class="fc" id="L23">    }</span>
+
+
+    //------------------------------------ Create() ------------------------------------
+
+    @Override
+    public TimeEntry create(TimeEntry timeEntry) {
+
+<span class="nc" id="L31">        String sql = &quot;&quot;&quot;</span>
+                INSERT INTO timeentry (userID, taskID, subtaskID, date, hoursSpent)
+                VALUES (?, ?, ?, ?, ?)
+                &quot;&quot;&quot;;
+
+
+<span class="nc" id="L37">        KeyHolder keyHolder = new GeneratedKeyHolder();</span>
+
+        // Bruger PreparedStatement sammen med vores GeneratedKeyHolder til at kunne autogenerere et nyt id
+
+<span class="nc" id="L41">        jdbcTemplate.update(connection -&gt; {</span>
+<span class="nc" id="L42">            PreparedStatement ps = connection.prepareStatement(sql, new String[]{&quot;id&quot;});</span>
+<span class="nc" id="L43">            ps.setInt(1, timeEntry.getUserId());</span>
+<span class="nc" id="L44">            ps.setInt(2, timeEntry.getTaskId());</span>
+<span class="nc" id="L45">            ps.setInt(3, timeEntry.getSubTaskId());</span>
+<span class="nc" id="L46">            ps.setDate(4, java.sql.Date.valueOf(timeEntry.getDate()));</span>
+<span class="nc" id="L47">            ps.setInt(5, timeEntry.getHoursSpent());</span>
+<span class="nc" id="L48">            return ps;</span>
+
+            }, keyHolder);
+
+<span class="nc" id="L52">        int generatedId = keyHolder.getKey().intValue();</span>
+<span class="nc" id="L53">        timeEntry.setTimeId(generatedId);  // Sætter ID på timeEntry</span>
+
+<span class="nc" id="L55">        return timeEntry;</span>
+    }
+
+    //------------------------------------ Read() --------------------------------------
+
+    @Override
+    public List&lt;TimeEntry&gt; readAll() {
+
+        // JOIN bruges til at hente data fra de øvrige tabeller: timeentry_subtask og timeentry_task
+
+<span class="nc" id="L65">        String sql = &quot;&quot;&quot;</span>
+                SELECT
+                timeentry.id,
+                timeentry.userID,
+                timeentry.taskID,
+                timeentry.subtaskID,
+                timeentry.date,
+                timeentry.hoursSpent
+                FROM timeentry
+                &quot;&quot;&quot;; // Finder dét taskID/subtaskID, der hører til en timeEntry
+<span class="nc" id="L75">        return jdbcTemplate.query(sql, new TimeEntryRowMapper());</span>
+    }
+
+    @Override
+    public TimeEntry readById(Integer id) {
+
+<span class="nc" id="L81">        String sql = &quot;&quot;&quot;</span>
+                SELECT
+                timeentry.id,
+                timeentry.userID,
+                timeentry.taskID,
+                timeentry.subtaskID,
+                timeentry.date,
+                timeentry.hoursSpent
+                FROM timeentry
+                WHERE timeentry.id = ?
+                &quot;&quot;&quot;; // Finder task/subtask for en timeEntry
+<span class="nc" id="L92">        return jdbcTemplate.queryForObject(sql, new TimeEntryRowMapper(), id);</span>
+    }
+
+    //------------------------------------ Update() ------------------------------------
+
+    @Override
+    public TimeEntry update(TimeEntry timeEntry) {
+
+<span class="nc" id="L100">        String sql = &quot;&quot;&quot;</span>
+                UPDATE timeentry
+                SET userID = ?, taskID = ?, subtaskID = ?, date = ?, hoursSpent = ?
+                WHERE id = ?
+                &quot;&quot;&quot;;
+
+<span class="nc" id="L106">        jdbcTemplate.update(sql,</span>
+<span class="nc" id="L107">                timeEntry.getUserId(),</span>
+<span class="nc" id="L108">                timeEntry.getTaskId(),</span>
+<span class="nc" id="L109">                timeEntry.getSubTaskId(),</span>
+<span class="nc" id="L110">                java.sql.Date.valueOf(timeEntry.getDate()),</span>
+<span class="nc" id="L111">                timeEntry.getHoursSpent(),</span>
+<span class="nc" id="L112">                timeEntry.getTimeId()</span>
+        );
+
+<span class="nc" id="L115">        return timeEntry;</span>
+
+    }
+
+    //------------------------------------ Delete() ------------------------------------
+
+    @Override
+    public void deleteById(Integer id) {
+
+<span class="nc" id="L124">        String sql = &quot;DELETE FROM timeentry WHERE id = ?&quot;;</span>
+
+<span class="nc" id="L126">        jdbcTemplate.update(sql, id);</span>
+
+<span class="nc" id="L128">    }</span>
+
+    //-------------------------------- Til TimeSpent -----------------------------------
+//
+//    public int sumTimeSpentBySubTaskId(int subTaskId) {
+//        String sql = &quot;&quot;&quot;
+//                SELECT COALESCE(SUM(timeSpent), 0)
+//                FROM timeentry
+//                WHERE
+//                &quot;&quot;&quot;;
+//    }
+
+    //---------------------------------- Til DTO'er ------------------------------------
+
+    // --- Read() timeentries ud fra task-ID -----
+
+    @Override
+    public List&lt;TimeEntry&gt; readAllByTaskId(Integer taskId) {
+
+<span class="nc" id="L147">        String sql = &quot;&quot;&quot;</span>
+        SELECT
+            timeentry.id,
+            timeentry.userID,
+            timeentry.taskID,
+            timeentry.subtaskID,
+            timeentry.date,
+            timeentry.hoursSpent
+        FROM timeentry
+        WHERE timeentry.taskID = ?
+        &quot;&quot;&quot;;
+
+<span class="nc" id="L159">        return jdbcTemplate.query(sql, new TimeEntryRowMapper(), taskId);</span>
+    }
+
+
+    // --- Read() timeentries ud fra subtask-ID ---
+
+    @Override
+    public List&lt;TimeEntry&gt; readAllBySubTaskId(Integer subTaskId) {
+
+<span class="nc" id="L168">        String sql = &quot;&quot;&quot;</span>
+        SELECT
+            timeentry.id,
+            timeentry.userID,
+            timeentry.taskID,
+            timeentry.subtaskID,
+            timeentry.date,
+            timeentry.hoursSpent
+        FROM timeentry
+        WHERE timeentry.subTaskID = ?
+        &quot;&quot;&quot;;
+
+<span class="nc" id="L180">        return jdbcTemplate.query(sql, new TimeEntryRowMapper(), subTaskId);</span>
+    }
+
+    @Override
+    public List&lt;TimeEntry&gt; readAllByUserId(Integer userId) {
+
+<span class="nc" id="L186">        String sql = &quot;&quot;&quot;</span>
+        SELECT
+            timeentry.id,
+            timeentry.userID,
+            timeentry.taskID,
+            timeentry.subtaskID,
+            timeentry.date,
+            timeentry.hoursSpent
+        FROM timeentry
+        WHERE timeentry.userID = ?
+        &quot;&quot;&quot;;
+
+<span class="nc" id="L198">        return jdbcTemplate.query(sql, new TimeEntryRowMapper(), userId);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
