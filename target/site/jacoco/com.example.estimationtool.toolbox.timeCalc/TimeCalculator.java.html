@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="da"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TimeCalculator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EstimationTool</a> &gt; <a href="index.source.html" class="el_package">com.example.estimationtool.toolbox.timeCalc</a> &gt; <span class="el_source">TimeCalculator.java</span></div><h1>TimeCalculator.java</h1><pre class="source lang-java linenums">package com.example.estimationtool.toolbox.timeCalc;
+
+import com.example.estimationtool.model.Project;
+import com.example.estimationtool.model.SubProject;
+import com.example.estimationtool.model.SubTask;
+import com.example.estimationtool.model.Task;
+import com.example.estimationtool.model.TimeEntry;
+import com.example.estimationtool.repository.interfaces.*;
+import org.springframework.stereotype.Component;
+
+
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.util.List;
+
+@Component
+public class TimeCalculator {
+    private final ISubTaskRepository iSubTaskRepository;
+    private final ITaskRepository iTaskRepository;
+    private final ISubProjectRepository iSubProjectRepository;
+    private final IProjectRepository iProjectRepository;
+    private final ITimeEntryRepository iTimeEntryRepository;
+
+    public TimeCalculator(
+            ISubTaskRepository iSubTaskRepository,
+            ITaskRepository iTaskRepository,
+            ISubProjectRepository iSubProjectRepository,
+            IProjectRepository iProjectRepository,
+<span class="fc" id="L29">            ITimeEntryRepository iTimeEntryRepository) {</span>
+
+<span class="fc" id="L31">        this.iSubTaskRepository = iSubTaskRepository;</span>
+<span class="fc" id="L32">        this.iTaskRepository = iTaskRepository;</span>
+<span class="fc" id="L33">        this.iSubProjectRepository = iSubProjectRepository;</span>
+<span class="fc" id="L34">        this.iProjectRepository = iProjectRepository;</span>
+<span class="fc" id="L35">        this.iTimeEntryRepository = iTimeEntryRepository;</span>
+<span class="fc" id="L36">    }</span>
+
+    //------------- Opdatering af tidsforbrug hos alle projektkomponenter --------------
+
+    // På grund af den hierarkiske struktur i vores modeller (SubTask har reference til ovenstående Tasks ID osv.)
+    // opdaterer metoden timeSpent hos komponenterne fra bunden af hierarkiet og opad igennem
+    public void updateTimeSpentForAll(TimeEntry timeEntry) {
+        // Hvis der er registreret en subtask på den givne TimeEntry, skal vi regne den med:
+<span class="nc bnc" id="L44" title="All 2 branches missed.">        if (timeEntry.getSubTaskId() &gt; 0) {</span>
+<span class="nc" id="L45">            int subTaskId = timeEntry.getSubTaskId();                                       // Henter subTaskId fra timeEntry</span>
+<span class="nc" id="L46">            updateTimeSpentForSubTaskWithId(subTaskId);                                     // Opdaterer SubTask med subTaskId</span>
+<span class="nc" id="L47">            int taskId = iSubTaskRepository.readById(subTaskId).getTaskId();                // Henter taskId fra SubTask, som er hentet fra sit eget subTaskId</span>
+<span class="nc" id="L48">            updateTimeSpentForTaskWithId(taskId);                                           // Opdaterer Task med taskId</span>
+<span class="nc" id="L49">            int subProjectId = iTaskRepository.readById(taskId).getSubProjectId();          // Henter subProjectId fra Task, som er hentet fra sit eget taskId</span>
+<span class="nc" id="L50">            updateTimeSpentForSubProjectWithId(subProjectId);                               // Opdaterer SubProject med subProjectId</span>
+<span class="nc" id="L51">            int projectId = iSubProjectRepository.readById(subProjectId).getProjectId();    // Henter projectId fra subProject, som er hentet fra sit eget subProjectId</span>
+<span class="nc" id="L52">            updateTimeSpentForProjectWithId(projectId);                                     // Opdaterer Project med projectId</span>
+<span class="nc" id="L53">        }</span>
+        // Hvis der ikke er registreret en subtask, springer vi det trin over og kører således:
+<span class="nc bnc" id="L55" title="All 2 branches missed.">        else if (timeEntry.getTaskId() &gt; 0) {</span>
+<span class="nc" id="L56">            int taskId = timeEntry.getTaskId();                                             // Henter taskId fra timeEntry</span>
+<span class="nc" id="L57">            updateTimeSpentForTaskWithId(taskId);                                           // Opdaterer Task med taskId</span>
+<span class="nc" id="L58">            int subProjectId = iTaskRepository.readById(taskId).getSubProjectId();          // Henter subProjectId fra Task, som er hentet fra sit eget taskId</span>
+<span class="nc" id="L59">            updateTimeSpentForSubProjectWithId(subProjectId);                               // Opdaterer SubProject med subProjectId</span>
+<span class="nc" id="L60">            int projectId = iSubProjectRepository.readById(subProjectId).getProjectId();    // Henter projectId fra subProject, som er hentet fra sit eget subProjectId</span>
+<span class="nc" id="L61">            updateTimeSpentForProjectWithId(projectId);                                     // Opdaterer Project med projectId</span>
+        }
+<span class="nc" id="L63">    }</span>
+
+    //---------------- Opdatering af tidsforbrug hos projektkomponenter -----------------
+
+    //----------------- Opdatering af tidsforbrug hos tasks og subtasks -----------------
+
+    //                                  --- SUBTASK M. ID ---
+    // Metoden tager et subtask-id og opdaterer timeSpent for den givne subtask
+    public int updateTimeSpentForSubTaskWithId(int subTaskId) {
+        // Opretter en lokal SubTask-instans ud fra parametren til at opdatere timeSpent hos
+<span class="nc" id="L73">        SubTask subTask = iSubTaskRepository.readById(subTaskId);</span>
+
+        // Henter listen af TimeEntries under et SubProject med subTaskId
+<span class="nc" id="L76">        List&lt;TimeEntry&gt; timeEntries = iTimeEntryRepository.readAllBySubTaskId(subTaskId);</span>
+
+        // Opretter lokal variabel til at opbevare det summerede tidsforbrug på subtasken
+<span class="nc" id="L79">        int timeSpentOnSubTask = calculateTimeSpent(timeEntries);</span>
+
+        // timeSpent-attributten bliver sat hos den lokale instans og opdateret med den tilsvarende repository-update-metode
+<span class="nc" id="L82">        subTask.setTimeSpent(timeSpentOnSubTask);</span>
+<span class="nc" id="L83">        iSubTaskRepository.update(subTask);</span>
+
+        // Den totale timeSpent returneres for testbarhed og evt. udvidelser af programmet
+<span class="nc" id="L86">        return timeSpentOnSubTask;</span>
+    }
+
+    //                                    --- TASK M. ID ---
+    // Metoden tager et task-id og opdaterer timeSpent for den givne task
+    public int updateTimeSpentForTaskWithId(int taskId) {
+        // Opretter en lokal Task-instans ud fra parametren til at opdatere timeSpent hos
+<span class="nc" id="L93">        Task task = iTaskRepository.readById(taskId);</span>
+
+        // Henter listen af Tasks under et SubProject med subProjectId
+<span class="nc" id="L96">        List&lt;SubTask&gt; subTasks = iSubTaskRepository.readAllByTaskId(task.getTaskId());</span>
+
+        // Opretter lokal variabel til at opbevare det summerede tidsforbrug på tasken
+<span class="nc" id="L99">        int timeSpentOnTask = 0;</span>
+
+        // Først tjekkes der om vi er nået til bunds i hierarkiet. Hvis listen af SubTasks er tom, så er Tasken nederst.
+<span class="nc bnc" id="L102" title="All 2 branches missed.">        if (subTasks.isEmpty()) {</span>
+            // Da Tasken er nederst i hierarkiet, bør dens timeSpent blive beregnet direkte ud fra sine TimeEntries
+<span class="nc" id="L104">            List&lt;TimeEntry&gt; timeEntries = iTimeEntryRepository.readAllByTaskId(taskId);</span>
+            // Der udregnes med calculateTimeSpent-metoden fra TimeCalculator
+<span class="nc" id="L106">            timeSpentOnTask = calculateTimeSpent(timeEntries);</span>
+<span class="nc" id="L107">        }</span>
+        // Ellers er vi ikke nederst i hierarkiet og vi udregner timeSpent fra SubTasks
+        else {
+            // timeSpent bliver summeret i et for-each loop ud fra hvert SubTask i listen af SubTasks under en Task
+<span class="nc bnc" id="L111" title="All 2 branches missed.">            for (SubTask subTask : subTasks) {</span>
+<span class="nc" id="L112">                timeSpentOnTask += subTask.getTimeSpent();</span>
+<span class="nc" id="L113">            }</span>
+        }
+
+        // timeSpent-attributten bliver sat hos den lokale instans og opdateret med den tilsvarende repository-update-metode
+<span class="nc" id="L117">        task.setTimeSpent(timeSpentOnTask);</span>
+<span class="nc" id="L118">        iTaskRepository.update(task);</span>
+
+        // Den totale timeSpent returneres for testbarhed og evt. udvidelser af programmet
+<span class="nc" id="L121">        return timeSpentOnTask;</span>
+    }
+
+    //-------------------- Opdatering af tidsforbrug hos subprojekter --------------------
+
+    //                               --- SUBPROJEKT M. ID ---
+    // Metoden tager et subprojekt-id og opdaterer timeSpent hos det givne subprojekt
+    public int updateTimeSpentForSubProjectWithId(int subProjectId) {
+        // Opretter en lokal SubProject-instans ud fra parametren til at opdatere timeSpent hos
+<span class="nc" id="L130">        SubProject subProject = iSubProjectRepository.readById(subProjectId);</span>
+
+        // Henter listen af Tasks under et SubProject med subProjectId
+<span class="nc" id="L133">        List&lt;Task&gt; tasks = iTaskRepository.readAllBySubProjectId(subProjectId);</span>
+
+        // Opretter lokal variabel til at opbevare det summerede tidsforbrug på subprojektet
+<span class="nc" id="L136">        int timeSpentOnSubProject = 0;</span>
+
+        // timeSpent bliver summeret i et for-each loop ud fra hvert Task i listen af Tasks under et SubProject
+<span class="nc bnc" id="L139" title="All 2 branches missed.">        for (Task task : tasks) {</span>
+<span class="nc" id="L140">            timeSpentOnSubProject += task.getTimeSpent();</span>
+<span class="nc" id="L141">        }</span>
+
+        // timeSpent-attributten bliver sat hos den lokale instans og opdateret med den tilsvarende repository-update-metode
+<span class="nc" id="L144">        subProject.setTimeSpent(timeSpentOnSubProject);</span>
+<span class="nc" id="L145">        iSubProjectRepository.update(subProject);</span>
+
+        // Den totale timeSpent returneres for testbarhed og evt. udvidelser af programmet
+<span class="nc" id="L148">        return timeSpentOnSubProject;</span>
+    }
+
+    //-------------------- Opdatering af tidsforbrug hos projekter -----------------------
+
+    //                               --- PROJEKT M. ID ---
+    // Metoden tager et projekt-id og opdaterer timeSpent hos det givne projekt
+    public int updateTimeSpentForProjectWithId(int projectId) {
+        // Opretter en lokal Project-instans ud fra parametren til at opdatere timeSpent hos
+<span class="nc" id="L157">        Project project = iProjectRepository.readById(projectId);</span>
+
+        // Henter listen af SubProjects under et Project med projectId
+<span class="nc" id="L160">        List&lt;SubProject&gt; subProjectsUnderProject = iSubProjectRepository.readAllFromProjectId(projectId);</span>
+
+        // Opretter lokal variabel til at opbevare det summerede tidsforbrug på projektet
+<span class="nc" id="L163">        int timeSpentOnProject = 0;</span>
+
+        // timeSpent bliver summeret i et for-each loop ud fra hvert SubProject i listen af SubProjects under et Project
+<span class="nc bnc" id="L166" title="All 2 branches missed.">        for (SubProject subProject : subProjectsUnderProject) {</span>
+<span class="nc" id="L167">            timeSpentOnProject += subProject.getTimeSpent();</span>
+<span class="nc" id="L168">        }</span>
+
+        // Den opsummerede timeSpent-værdi sættes i project og værdien opdateres i databasetabellen
+<span class="nc" id="L171">        project.setTimeSpent(timeSpentOnProject);</span>
+<span class="nc" id="L172">        iProjectRepository.update(project);</span>
+
+        // Den totale timeSpent returneres for testbarhed og evt. udvidelser af programmet
+<span class="nc" id="L175">        return timeSpentOnProject;</span>
+    }
+
+    //------------------------------- Andre metoder til tidsberegning -------------------------------
+    //------------------------------------------ Tid Brugt ------------------------------------------
+
+    public int calculateTimeSpent(List&lt;TimeEntry&gt; entries) {
+        // Opretter en lokal variabel til at gemme den akkumulerede timeSpent
+<span class="nc" id="L183">        int totalTimeSpent = 0;</span>
+        // Summerer timeSpent for hver TimeEntry i listen og gemmer det i totalTimeSpent
+<span class="nc bnc" id="L185" title="All 2 branches missed.">        for (TimeEntry timeEntry : entries) {</span>
+<span class="nc" id="L186">            totalTimeSpent += timeEntry.getHoursSpent();</span>
+<span class="nc" id="L187">        }</span>
+        // Returnerer totalTimeSpent for alle TimeEntries i listen
+<span class="nc" id="L189">        return totalTimeSpent;</span>
+    }
+
+    //------------------------------------ Tid tilbage i TIMER ------------------------------------
+
+    public double calculateRemainingTimeInHours(LocalDate deadline) {
+<span class="nc" id="L195">        return countWorkDaysLeft(deadline) * (37 / 5.0); // Vi antager at en arbejdsuge er 37 timer med 5 hverdage</span>
+    }
+
+    //---------------------------- Tid i TIMER pr. DAG m. hjælpemetode ----------------------------
+
+    public double calculateHoursNeededPerDay(int remainingHours, LocalDate deadline) {
+        // until-metoden hos LocalDate returnerer longs og ikke ints, hvilket er grunden til at værdien bliver castet
+<span class="nc" id="L202">        double daysUntilDeadline = countWorkDaysLeft(deadline); // Se metoden countWorkDays</span>
+<span class="nc bnc" id="L203" title="All 2 branches missed.">        if (daysUntilDeadline &gt; 0) { // Sørger for at vi er før deadlinen, samtidig med at undgå at dividere med 0</span>
+<span class="nc" id="L204">            return (double) remainingHours / daysUntilDeadline; // Returnerer timer pr. dag til deadline</span>
+<span class="nc bnc" id="L205" title="All 2 branches missed.">        } else if (daysUntilDeadline == 0) return remainingHours; // Hvis daysUntilDeadline er 0, så er vi på</span>
+<span class="nc" id="L206">        return 0; // TODO Skal vi bruge en exception her i stedet?</span>
+    }
+
+    private double countWorkDaysLeft(LocalDate deadline) {
+<span class="nc" id="L210">        double workingDays = 0.0;                                       // Vi starter med 0 hverdage og inkrementerer hver gang vi møder en hverdag i while-loopet</span>
+<span class="nc" id="L211">        LocalDate dateToCheck = LocalDate.now();                        // Den dato vi tjekker - vi starter med at tjekke i dag</span>
+
+<span class="nc bnc" id="L213" title="All 2 branches missed.">        while (dateToCheck.isBefore(deadline)) {                        // Så længe den dato vi tjekker er før deadlinen kører loopet</span>
+<span class="nc" id="L214">            DayOfWeek day = dateToCheck.getDayOfWeek();                 // Vi henter den dag på ugen vi har på den dato vi vil tjekke</span>
+<span class="nc bnc" id="L215" title="All 4 branches missed.">            if (day != DayOfWeek.SATURDAY &amp;&amp; day != DayOfWeek.SUNDAY) { // Hvis det ikke er lørdag og ikke er søndag</span>
+<span class="nc" id="L216">                workingDays++;                                          // tilføjer vi en hverdag til vores variabel</span>
+            }
+<span class="nc" id="L218">            dateToCheck = dateToCheck.plusDays(1);                      // Vi går videre til næste dato der skal tjekkes ved at tilføje en dag til datoen</span>
+<span class="nc" id="L219">        }</span>
+<span class="nc" id="L220">        return workingDays;</span>
+    }
+
+    public int countDevsNeeded(int remainingHours, LocalDate deadline) {
+<span class="nc" id="L224">        double hoursPerDay = calculateHoursNeededPerDay(remainingHours, deadline);</span>
+<span class="nc" id="L225">        return (int) hoursPerDay / 8; // En arbejdsuge på 5 dage og 37 timer giver 7,4 timer pr. dag. Vi under op til 8.</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

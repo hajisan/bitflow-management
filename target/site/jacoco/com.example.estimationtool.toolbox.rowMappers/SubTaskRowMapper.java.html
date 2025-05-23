@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="da"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SubTaskRowMapper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EstimationTool</a> &gt; <a href="index.source.html" class="el_package">com.example.estimationtool.toolbox.rowMappers</a> &gt; <span class="el_source">SubTaskRowMapper.java</span></div><h1>SubTaskRowMapper.java</h1><pre class="source lang-java linenums">package com.example.estimationtool.toolbox.rowMappers;
+
+import com.example.estimationtool.model.SubTask;
+import com.example.estimationtool.model.enums.Status;
+import org.springframework.jdbc.core.RowMapper;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDate;
+
+<span class="fc" id="L11">public class SubTaskRowMapper implements RowMapper&lt;SubTask&gt; {</span>
+    @Override
+    public SubTask mapRow(ResultSet rs, int rowNum) throws SQLException {
+
+<span class="fc" id="L15">        java.sql.Date sqlDate = rs.getDate(&quot;deadline&quot;);</span>
+<span class="fc" id="L16">        LocalDate deadline = null; // Sætter deadline til null</span>
+
+<span class="pc bpc" id="L18" title="1 of 2 branches missed.">        if (sqlDate != null) {</span>
+<span class="fc" id="L19">            deadline = sqlDate.toLocalDate(); // Hvis deadline ikke er null, konverter til LocalDate</span>
+        }
+<span class="fc" id="L21">        return new SubTask(</span>
+<span class="fc" id="L22">                rs.getInt(&quot;id&quot;),</span>
+<span class="fc" id="L23">                rs.getInt(&quot;taskID&quot;),</span>
+<span class="fc" id="L24">                rs.getInt(&quot;estimatedTime&quot;),</span>
+<span class="fc" id="L25">                rs.getInt(&quot;timeSpent&quot;),</span>
+<span class="fc" id="L26">                rs.getString(&quot;name&quot;),</span>
+<span class="fc" id="L27">                rs.getString(&quot;description&quot;),</span>
+                deadline,
+<span class="fc" id="L29">                Status.valueOf(rs.getString(&quot;status&quot;))</span>
+        );
+
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

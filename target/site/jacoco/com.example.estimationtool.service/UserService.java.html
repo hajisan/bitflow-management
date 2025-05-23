@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="da"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EstimationTool</a> &gt; <a href="index.source.html" class="el_package">com.example.estimationtool.service</a> &gt; <span class="el_source">UserService.java</span></div><h1>UserService.java</h1><pre class="source lang-java linenums">package com.example.estimationtool.service;
+
+import com.example.estimationtool.model.*;
+
+import com.example.estimationtool.toolbox.dto.*;
+
+import com.example.estimationtool.repository.interfaces.IUserRepository;
+import com.example.estimationtool.toolbox.controllerAdvice.UserFriendlyException;
+import com.example.estimationtool.toolbox.check.RoleCheck;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+
+// DATABASEFEJL BOBLER OP til @ControllerAdvice pga. JdbcTemplate fordi det er en unchecked exception
+//VALIDERING, eks. login-fejl, KASTER VI EXCEPTION (throws) for at signalere en fejl
+
+@Service
+public class UserService {
+
+    private final IUserRepository iUserRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    private final ProjectService projectService;
+    private final SubProjectService subProjectService;
+    private final TaskService taskService;
+    private final SubTaskService subTaskService;
+    private final TimeEntryService timeEntryService;
+
+
+
+
+    public UserService(IUserRepository iUserRepository, PasswordEncoder passwordEncoder,
+                       ProjectService projectService, SubProjectService subProjectService,
+                       SubTaskService subTaskService, TaskService taskService,
+<span class="fc" id="L37">                       TimeEntryService timeEntryService) {</span>
+<span class="fc" id="L38">        this.iUserRepository = iUserRepository;</span>
+<span class="fc" id="L39">        this.passwordEncoder = passwordEncoder;</span>
+<span class="fc" id="L40">        this.projectService = projectService;</span>
+<span class="fc" id="L41">        this.subProjectService = subProjectService;</span>
+<span class="fc" id="L42">        this.taskService = taskService;</span>
+<span class="fc" id="L43">        this.subTaskService = subTaskService;</span>
+<span class="fc" id="L44">        this.timeEntryService = timeEntryService;</span>
+<span class="fc" id="L45">    }</span>
+
+    //------------------------------------ Create() ------------------------------------
+
+    public User createUser(UserViewDTO currentUser, UserRegistrationDTO userDTO) {
+
+<span class="fc" id="L51">        RoleCheck.ensureAdmin(currentUser.getRole()); // Adgangskontrol</span>
+
+        // Mapper DTO til User-objekt med hashet password
+<span class="fc" id="L54">        User newUser = new User(</span>
+                0,
+<span class="fc" id="L56">                userDTO.getFirstName(),</span>
+<span class="fc" id="L57">                userDTO.getLastName(),</span>
+<span class="fc" id="L58">                userDTO.getEmail(),</span>
+<span class="fc" id="L59">                passwordEncoder.encode(userDTO.getPassword()), // Hashing</span>
+<span class="fc" id="L60">                userDTO.getRole()</span>
+        );
+
+<span class="fc" id="L63">        return iUserRepository.create(newUser);</span>
+    }
+
+
+    //------------------------------------ Read() --------------------------------------
+
+    public List&lt;UserViewDTO&gt; readAll() {
+
+<span class="fc" id="L71">        List&lt;User&gt; userList = iUserRepository.readAll();</span>
+<span class="fc" id="L72">        List&lt;UserViewDTO&gt; userViewDTOList = new ArrayList&lt;&gt;();</span>
+
+        // Konverterer userList til userViewDTOList
+<span class="fc bfc" id="L75" title="All 2 branches covered.">        for (User user : userList) {</span>
+<span class="fc" id="L76">            UserViewDTO userViewDTO = new UserViewDTO(</span>
+<span class="fc" id="L77">                    user.getUserId(),</span>
+<span class="fc" id="L78">                    user.getFirstName(),</span>
+<span class="fc" id="L79">                    user.getLastName(),</span>
+<span class="fc" id="L80">                    user.getEmail(),</span>
+<span class="fc" id="L81">                    user.getRole()</span>
+            );
+<span class="fc" id="L83">            userViewDTOList.add(userViewDTO);</span>
+<span class="fc" id="L84">        }</span>
+<span class="fc" id="L85">        return userViewDTOList;</span>
+
+    }
+
+    public UserViewDTO readById(int id) {
+<span class="fc" id="L90">        User user = iUserRepository.readById(id);</span>
+
+<span class="pc bpc" id="L92" title="1 of 2 branches missed.">        if (user == null) {</span>
+<span class="nc" id="L93">            throw new UserFriendlyException(&quot;Brugeren blev ikke fundet.&quot;, &quot;/users/profile&quot;); // &lt;-- Ret URL når vi har det på plads</span>
+        }
+
+        // Konverterer User til UserViewDTO
+<span class="fc" id="L97">        return new UserViewDTO(</span>
+<span class="fc" id="L98">                user.getUserId(),</span>
+<span class="fc" id="L99">                user.getFirstName(),</span>
+<span class="fc" id="L100">                user.getLastName(),</span>
+<span class="fc" id="L101">                user.getEmail(),</span>
+<span class="fc" id="L102">                user.getRole()</span>
+        );
+
+    }
+
+    //------------------------------------ Update() ------------------------------------
+
+    public User updateUser(UserUpdateDTO userUpdateDTO, UserViewDTO currentUser) {
+
+        // Henter eksisterende bruger
+<span class="fc" id="L112">        User existingUser = iUserRepository.readById(userUpdateDTO.getUserId());</span>
+
+        // Tjekker om bruger findes
+<span class="pc bpc" id="L115" title="1 of 2 branches missed.">        if (existingUser == null) {</span>
+<span class="nc" id="L116">            throw new UserFriendlyException(&quot;Brugeren du forsøger at ændre, findes ikke.&quot;, &quot;/users/profile&quot;); // &lt;-- Ret URL når vi har det på plads</span>
+        }
+
+        // Kun admin må redigere en bruger
+<span class="fc" id="L120">        RoleCheck.ensureAdmin(currentUser.getRole());</span>
+
+
+        // Håndterer password
+<span class="fc" id="L124">        String passwordHash = getPasswordHash(userUpdateDTO, existingUser);</span>
+
+        // Mapper UserUpdateDTO til User-objekt med opdateret bruger
+<span class="fc" id="L127">        User updatedUser = new User(</span>
+<span class="fc" id="L128">                userUpdateDTO.getUserId(),</span>
+<span class="fc" id="L129">                userUpdateDTO.getFirstName(),</span>
+<span class="fc" id="L130">                userUpdateDTO.getLastName(),</span>
+<span class="fc" id="L131">                userUpdateDTO.getEmail(),</span>
+                passwordHash,
+<span class="fc" id="L133">                userUpdateDTO.getRole() // Kun admin må ændre brugerens rolle</span>
+        );
+
+<span class="fc" id="L136">        return iUserRepository.update(updatedUser);</span>
+
+    }
+
+
+
+    //------------------------------------ Delete() ------------------------------------
+
+    public void deleteById (int id, UserViewDTO currentUser){
+
+        // Kun admin må slette en bruger
+<span class="fc" id="L147">        RoleCheck.ensureAdmin(currentUser.getRole());</span>
+
+<span class="fc" id="L149">        iUserRepository.deleteById(id);</span>
+
+<span class="fc" id="L151">    }</span>
+
+
+    //------------------------------------- Login() -------------------------------------
+
+    public UserViewDTO login(String email, String inputPassword) {
+
+<span class="fc" id="L158">        User user = iUserRepository.readByEmail(email);</span>
+
+<span class="pc bpc" id="L160" title="1 of 2 branches missed.">        if (user == null) {</span>
+<span class="nc" id="L161">            throw new UserFriendlyException(&quot;Brugeren blev ikke fundet.&quot;, &quot;/login&quot;);</span>
+        }
+        // Matcher input-password med databasens hashet password
+
+<span class="fc bfc" id="L165" title="All 2 branches covered.">        if (!passwordEncoder.matches(inputPassword, user.getPasswordHash())) {</span>
+<span class="fc" id="L166">            throw new UserFriendlyException(&quot;Adgangskoden er forkert.&quot;, &quot;/login&quot;);</span>
+        }
+<span class="fc" id="L168">            return new UserViewDTO(</span>
+<span class="fc" id="L169">                    user.getUserId(),</span>
+<span class="fc" id="L170">                    user.getFirstName(),</span>
+<span class="fc" id="L171">                    user.getLastName(),</span>
+<span class="fc" id="L172">                    user.getEmail(),</span>
+<span class="fc" id="L173">                    user.getRole()</span>
+            );
+        }
+
+    //----------------- Henter UserUpdateDTO for GET-mapping: showEditUser() --------------
+
+    public UserUpdateDTO getUserUpdateDTOById(int id) {
+<span class="fc" id="L180">        UserViewDTO userViewDTO = readById(id);</span>
+
+<span class="fc" id="L182">        return new UserUpdateDTO(</span>
+<span class="fc" id="L183">                userViewDTO.getUserId(),</span>
+<span class="fc" id="L184">                userViewDTO.getFirstName(),</span>
+<span class="fc" id="L185">                userViewDTO.getLastName(),</span>
+<span class="fc" id="L186">                userViewDTO.getEmail(),</span>
+                &quot;&quot;, // Tomt passwordfelt, skal indtastes af brugeren
+<span class="fc" id="L188">                userViewDTO.getRole()</span>
+        );
+    }
+
+    //------------------------------ Henter/håndterer PasswordHash ---------------------------
+
+
+    private String getPasswordHash(UserUpdateDTO userUpdateDTO, User existingUser) {
+        String passwordHash;
+
+<span class="fc bfc" id="L198" title="All 4 branches covered.">        if (userUpdateDTO.getPassword() == null || userUpdateDTO.getPassword().isBlank()) {</span>
+            // Hvis intet password er angivet, behold eksisterende hash
+<span class="fc" id="L200">            passwordHash = existingUser.getPasswordHash();</span>
+
+<span class="fc bfc" id="L202" title="All 2 branches covered.">        } else if (passwordEncoder.matches(userUpdateDTO.getPassword(), existingUser.getPasswordHash())) {</span>
+            // Hvis brugeren indtaster det samme password = behold det
+<span class="fc" id="L204">            passwordHash = existingUser.getPasswordHash();</span>
+
+        } else {
+            // Hash opdaterede password
+<span class="fc" id="L208">            passwordHash = passwordEncoder.encode(userUpdateDTO.getPassword());</span>
+        }
+<span class="fc" id="L210">        return passwordHash;</span>
+    }
+
+    //------------------------------------ DTO-Mappings -----------------------------------
+
+
+    // --- Henter projekter ud fra brugerID ---
+
+    public UserWithProjectsDTO readAllProjectsByUserId(int userId) {
+
+        // Læser én bruger
+<span class="nc" id="L221">        User user = iUserRepository.readById(userId);</span>
+
+<span class="nc bnc" id="L223" title="All 2 branches missed.">            if (user == null) {</span>
+<span class="nc" id="L224">                throw new UserFriendlyException(&quot;Brugeren findes ikke.&quot;, &quot;/users/profile&quot;);</span>
+            }
+
+        // Konverterer User til UserViewDTO
+<span class="nc" id="L228">        UserViewDTO userViewDTO = new UserViewDTO(</span>
+<span class="nc" id="L229">                user.getUserId(),</span>
+<span class="nc" id="L230">                user.getFirstName(),</span>
+<span class="nc" id="L231">                user.getLastName(),</span>
+<span class="nc" id="L232">                user.getEmail(),</span>
+<span class="nc" id="L233">                user.getRole()</span>
+        );
+
+        // Læser projekter ud fra brugerID
+<span class="nc" id="L237">        List&lt;Project&gt; projectList = projectService.readByUserId(userId);</span>
+
+        // Returnerer bruger + projekter i en DTO
+<span class="nc" id="L240">        return new UserWithProjectsDTO(userViewDTO, projectList);</span>
+    }
+
+
+    // --- Henter subprojekter ud fra brugerID ---
+
+    public UserWithSubProjectsDTO readAllSubProjectsByUserId(int userId) {
+
+        // Læser én bruger
+<span class="nc" id="L249">        User user = iUserRepository.readById(userId);</span>
+
+<span class="nc bnc" id="L251" title="All 2 branches missed.">            if (user == null) {</span>
+<span class="nc" id="L252">                throw new UserFriendlyException(&quot;Brugeren findes ikke.&quot;, &quot;/users/profile&quot;);</span>
+            }
+
+        // Konverterer User til UserViewDTO
+<span class="nc" id="L256">        UserViewDTO userViewDTO = new UserViewDTO(</span>
+<span class="nc" id="L257">                user.getUserId(),</span>
+<span class="nc" id="L258">                user.getFirstName(),</span>
+<span class="nc" id="L259">                user.getLastName(),</span>
+<span class="nc" id="L260">                user.getEmail(),</span>
+<span class="nc" id="L261">                user.getRole()</span>
+        );
+
+<span class="nc" id="L264">        List&lt;SubProject&gt; subProjectList = subProjectService.readAllSubProjectsByUserId(userId);</span>
+
+<span class="nc" id="L266">        return new UserWithSubProjectsDTO(userViewDTO, subProjectList);</span>
+
+    }
+
+    // --- Henter tasks ud fra brugerID ---
+
+    public UserWithTasksDTO readAllTasksByUserId(int userId) {
+
+        // Henter bruger ud fra brugerID
+<span class="nc" id="L275">        User user = iUserRepository.readById(userId);</span>
+
+<span class="nc bnc" id="L277" title="All 2 branches missed.">            if (user == null) {</span>
+<span class="nc" id="L278">                throw new UserFriendlyException(&quot;Brugeren findes ikke.&quot;, &quot;/users/profile&quot;);</span>
+            }
+
+            // Konverterer User til UserViewDTO
+<span class="nc" id="L282">            UserViewDTO userViewDTO = new UserViewDTO(</span>
+<span class="nc" id="L283">                    user.getUserId(),</span>
+<span class="nc" id="L284">                    user.getFirstName(),</span>
+<span class="nc" id="L285">                    user.getLastName(),</span>
+<span class="nc" id="L286">                    user.getEmail(),</span>
+<span class="nc" id="L287">                    user.getRole()</span>
+            );
+
+<span class="nc" id="L290">        List&lt;Task&gt; tasks = taskService.readAllTasksByUserId(userId);</span>
+
+<span class="nc" id="L292">        return new UserWithTasksDTO(userViewDTO, tasks);</span>
+    }
+
+    // --- Henter subtasks ud fra brugerID ---
+
+    public UserWithSubTasksDTO readAllSubTasksByUserId(int userId) {
+
+        // Læser én bruger
+<span class="nc" id="L300">        User user = iUserRepository.readById(userId);</span>
+
+<span class="nc bnc" id="L302" title="All 2 branches missed.">            if (user == null) {</span>
+<span class="nc" id="L303">                throw new UserFriendlyException(&quot;Brugeren findes ikke&quot;, &quot;/users/profile&quot;);</span>
+            }
+
+            // Konverter user til UserViewDTO
+<span class="nc" id="L307">            UserViewDTO userViewDTO = new UserViewDTO(</span>
+<span class="nc" id="L308">                    user.getUserId(),</span>
+<span class="nc" id="L309">                    user.getFirstName(),</span>
+<span class="nc" id="L310">                    user.getLastName(),</span>
+<span class="nc" id="L311">                    user.getEmail(),</span>
+<span class="nc" id="L312">                    user.getRole()</span>
+            );
+
+        // Læser subtasks ud fra brugerID
+<span class="nc" id="L316">        List&lt;SubTask&gt; subTaskList = subTaskService.readAllSubTasksByUserId(userId);</span>
+
+        // Returnerer userViewDTO + subtasks i én samlet DTO
+<span class="nc" id="L319">        return new UserWithSubTasksDTO(userViewDTO, subTaskList);</span>
+    }
+
+    // --- Henter time entries ud fra brugerID ---
+
+    public UserWithTimeEntriesDTO readAllTimeEntriesByUserId(int userId) {
+
+        // Læser én bruger
+<span class="nc" id="L327">        User user = iUserRepository.readById(userId);</span>
+
+<span class="nc bnc" id="L329" title="All 2 branches missed.">        if (user == null) {</span>
+<span class="nc" id="L330">            throw new UserFriendlyException(&quot;Brugeren findes ikke&quot;, &quot;/users/profile&quot;);</span>
+        }
+
+        // Konverter user til UserViewDTO
+<span class="nc" id="L334">        UserViewDTO userViewDTO = new UserViewDTO(</span>
+<span class="nc" id="L335">                user.getUserId(),</span>
+<span class="nc" id="L336">                user.getFirstName(),</span>
+<span class="nc" id="L337">                user.getLastName(),</span>
+<span class="nc" id="L338">                user.getEmail(),</span>
+<span class="nc" id="L339">                user.getRole()</span>
+        );
+
+        // Læser time entries ud fra brugerID
+<span class="nc" id="L343">        List&lt;TimeEntry&gt; timeEntries = timeEntryService.readAllTimeEntriesByUserId(userId);</span>
+
+        // Returnerer userViewDTO + time entries i én samlet DTO
+<span class="nc" id="L346">        return new UserWithTimeEntriesDTO(userViewDTO, timeEntries);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

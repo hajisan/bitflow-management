@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="da"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProjectService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EstimationTool</a> &gt; <a href="index.source.html" class="el_package">com.example.estimationtool.service</a> &gt; <span class="el_source">ProjectService.java</span></div><h1>ProjectService.java</h1><pre class="source lang-java linenums">package com.example.estimationtool.service;
+
+
+import com.example.estimationtool.model.SubProject;
+import com.example.estimationtool.model.User;
+import com.example.estimationtool.model.enums.Status;
+import com.example.estimationtool.repository.interfaces.IProjectRepository;
+import com.example.estimationtool.model.Project;
+import com.example.estimationtool.repository.interfaces.ISubProjectRepository;
+import com.example.estimationtool.repository.interfaces.IUserRepository;
+import com.example.estimationtool.toolbox.check.AssignCheck;
+import com.example.estimationtool.toolbox.check.DeadlineCheck;
+import com.example.estimationtool.toolbox.check.StatusCheck;
+import com.example.estimationtool.toolbox.dto.ProjectWithSubProjectsDTO;
+import com.example.estimationtool.toolbox.dto.ProjectWithUsersDTO;
+import com.example.estimationtool.toolbox.dto.UserViewDTO;
+import com.example.estimationtool.toolbox.check.RoleCheck;
+import com.example.estimationtool.toolbox.dto.UserWithProjectsDTO;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
+
+@Service
+public class ProjectService {
+
+    private final IProjectRepository iProjectRepository;
+    private final IUserRepository iUserRepository;
+    private final ISubProjectRepository iSubProjectRepository;
+    private final StatusCheck statusCheck;
+
+<span class="fc" id="L31">    public ProjectService(IProjectRepository iProjectRepository, IUserRepository iUserRepository, ISubProjectRepository iSubProjectRepository, StatusCheck statusCheck) {</span>
+<span class="fc" id="L32">        this.iProjectRepository = iProjectRepository;</span>
+<span class="fc" id="L33">        this.iUserRepository = iUserRepository; //Til at knytte projekt til brugere</span>
+<span class="fc" id="L34">        this.iSubProjectRepository = iSubProjectRepository;</span>
+<span class="fc" id="L35">        this.statusCheck = statusCheck;</span>
+<span class="fc" id="L36">    }</span>
+
+    //------------------------------------ Create() ------------------------------------
+
+    public Project createProject(UserViewDTO currentUser, Project project) {
+
+        // Kun admin og projektleder må oprette et projekt
+<span class="fc" id="L43">        RoleCheck.ensureAdminOrProjectManager(currentUser.getRole());</span>
+
+<span class="fc" id="L45">        Project projectWithUser = iProjectRepository.create(project);</span>
+
+<span class="fc" id="L47">        iProjectRepository.assignUserToProject(currentUser.getUserId(), project.getProjectId());</span>
+
+<span class="fc" id="L49">        return projectWithUser;</span>
+    }
+
+
+    //------------------------------------ Read() ------------------------------------
+
+    // TODO - DONE
+    public List&lt;Project&gt; readAll(UserViewDTO currentUser) {
+
+<span class="nc" id="L58">        RoleCheck.ensureAdmin(currentUser.getRole());</span>
+
+<span class="nc" id="L60">        return iProjectRepository.readAll();</span>
+    }
+
+    public Project readById(int id) {
+
+<span class="nc" id="L65">        Project project = iProjectRepository.readById(id);</span>
+<span class="nc bnc" id="L66" title="All 2 branches missed.">        if (project == null) throw new NoSuchElementException(&quot;Projekt med ID&quot; + id + &quot; eksisterer ikke.&quot;);</span>
+
+<span class="nc" id="L68">        return project;</span>
+    }
+
+
+
+    //------------------------------------ Update() ------------------------------------
+
+    public Project updateProject(UserViewDTO currentUser, Project project) {
+
+        // Kun admin eller projektleder må redigere projekt
+<span class="nc" id="L78">        RoleCheck.ensureAdminOrProjectManager(currentUser.getRole());</span>
+
+        // Assign-tjek: tjekker om brugeren er tildelt et projekt
+<span class="nc" id="L81">        List&lt;Project&gt; userProjects = iProjectRepository.readAllByUserId(currentUser.getUserId());</span>
+        // Konverterer User + projects til DTO
+<span class="nc" id="L83">        UserWithProjectsDTO userWithProjectsDTO = new UserWithProjectsDTO(currentUser, userProjects);</span>
+<span class="nc" id="L84">        AssignCheck.ensureUserAssignedToProject(userWithProjectsDTO, project.getProjectId());</span>
+
+
+        // Deadline-håndtering (hvis ikke sat, behold eksisterende)
+<span class="nc" id="L88">        Project existingProject = readById(project.getProjectId());</span>
+<span class="nc" id="L89">        project.setDeadline(</span>
+<span class="nc" id="L90">                DeadlineCheck.checkForDeadlineInput(project.getDeadline(), existingProject.getDeadline())</span>
+        );
+
+
+        // Statusvalidering: Project må kun sættes til DONE, hvis alle SubProjects er DONE
+<span class="nc bnc" id="L95" title="All 2 branches missed.">        if (project.getStatus() == Status.DONE) {</span>
+<span class="nc" id="L96">            List&lt;SubProject&gt; subProjectList = iSubProjectRepository.readAllFromProjectId(project.getProjectId());</span>
+<span class="nc" id="L97">            ProjectWithSubProjectsDTO projectWithSubProjectsDTO = new ProjectWithSubProjectsDTO(project, subProjectList);</span>
+
+<span class="nc bnc" id="L99" title="All 2 branches missed.">            if (!statusCheck.canMarkProjectAsDone(projectWithSubProjectsDTO)) {</span>
+<span class="nc" id="L100">                throw new IllegalStateException(&quot;Projektet kan ikke markeres som færdigt, før alle subprojekter er færdige.&quot;);</span>
+            }
+        }
+
+<span class="nc" id="L104">        return iProjectRepository.update(project);</span>
+    }
+
+    //------------------------------------ Delete() ------------------------------------
+
+    public void deleteById(int id, UserViewDTO currentUser) {
+
+        // Kun admin og projektleder må slette et projekt
+<span class="nc" id="L112">        RoleCheck.ensureAdminOrProjectManager(currentUser.getRole());</span>
+<span class="nc" id="L113">        iProjectRepository.deleteById(id);</span>
+<span class="nc" id="L114">    }</span>
+
+    //------------------------------------ DTO'er ------------------------------------
+
+
+    // --- Find projekter for én bruger ---
+
+    public List&lt;Project&gt; readByUserId(int userId) {
+
+<span class="nc" id="L123">        return iProjectRepository.readAllByUserId(userId);</span>
+    }
+
+    //------------------------------------ DTO-Mappings -------------------------------
+
+
+    // --- Find brugere for ét projekt ---
+    public ProjectWithUsersDTO readALlUsersByProjectId(int projectId) {
+
+        // Henter ét projekt
+<span class="nc" id="L133">        Project project = iProjectRepository.readById(projectId);</span>
+
+        // Henter tilknyttede brugere for dét projekt
+<span class="nc" id="L136">        List&lt;User&gt; userList = iUserRepository.readAllByProjectId(projectId);</span>
+
+        // Hver User konverteres til UserViewDTO
+<span class="nc" id="L139">        List&lt;UserViewDTO&gt; userViewDTOList = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L140" title="All 2 branches missed.">        for (User user : userList) {</span>
+<span class="nc" id="L141">            UserViewDTO userViewDTO = new UserViewDTO(</span>
+<span class="nc" id="L142">                    user.getUserId(),</span>
+<span class="nc" id="L143">                    user.getFirstName(),</span>
+<span class="nc" id="L144">                    user.getLastName(),</span>
+<span class="nc" id="L145">                    user.getEmail(),</span>
+<span class="nc" id="L146">                    user.getRole()</span>
+            );
+<span class="nc" id="L148">            userViewDTOList.add(userViewDTO);</span>
+<span class="nc" id="L149">        }</span>
+
+        // Returnerer projektet + brugere
+<span class="nc" id="L152">        return new ProjectWithUsersDTO(project, userViewDTOList);</span>
+    }
+
+    // --- Find subprojekter for ét projekt ---
+
+    public ProjectWithSubProjectsDTO readAllFromProjectId(int projectId) {
+
+<span class="nc" id="L159">        Project project = iProjectRepository.readById(projectId);</span>
+<span class="nc" id="L160">        List&lt;SubProject&gt; subProjects = iSubProjectRepository.readAllFromProjectId(projectId);</span>
+
+<span class="nc" id="L162">        return new ProjectWithSubProjectsDTO(project, subProjects);</span>
+    }
+
+
+
+    //----------------------- Assign User til Project GET-mapping -------------------------
+
+
+    public List&lt;UserViewDTO&gt; readAllUnAssignedUsers(int projectId) {
+
+        // Læser alle brugere
+<span class="nc" id="L173">        List&lt;User&gt; allUserList = iUserRepository.readAll();</span>
+
+
+        // Læser projektets allerede tilknyttede brugere
+<span class="nc" id="L177">        List&lt;User&gt; assignedUserList = iUserRepository.readAllByProjectId(projectId);</span>
+
+        // Samler ID'er på de allerede tildelte brugere
+<span class="nc" id="L180">        Set&lt;Integer&gt; assignedUserIds = new HashSet&lt;&gt;();</span>
+<span class="nc bnc" id="L181" title="All 2 branches missed.">        for (User user : assignedUserList) {</span>
+<span class="nc" id="L182">            assignedUserIds.add(user.getUserId());</span>
+<span class="nc" id="L183">        }</span>
+
+        // Tilføjer kun de brugere, der IKKE allerede er tildelt projektet
+<span class="nc" id="L186">        List&lt;UserViewDTO&gt; unassignedUserDTO = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L187" title="All 2 branches missed.">        for (User user : allUserList) {</span>
+<span class="nc bnc" id="L188" title="All 2 branches missed.">            if (!assignedUserIds.contains(user.getUserId())) {</span>
+<span class="nc" id="L189">                unassignedUserDTO.add(new UserViewDTO(</span>
+<span class="nc" id="L190">                        user.getUserId(),</span>
+<span class="nc" id="L191">                        user.getFirstName(),</span>
+<span class="nc" id="L192">                        user.getLastName(),</span>
+<span class="nc" id="L193">                        user.getEmail(),</span>
+<span class="nc" id="L194">                        user.getRole()</span>
+                ));
+
+            }
+<span class="nc" id="L198">        }</span>
+<span class="nc" id="L199">        return unassignedUserDTO;</span>
+    }
+
+    //------------------------- Assign User til Project POST-mapping ------------------------
+
+
+    public void assignUserToProject(UserViewDTO currentUser, List&lt;Integer&gt; userIds, int projectId) {
+
+        // Kun admin og projektleder må assign bruger til projekt
+<span class="nc" id="L208">        RoleCheck.ensureAdminOrProjectManager(currentUser.getRole());</span>
+
+        // Henter de brugere, der allerede er tilknyttet projektet
+<span class="nc" id="L211">        List&lt;User&gt; existingUsers = iUserRepository.readAllByProjectId(projectId);</span>
+
+        // Opretter et tomt Set af brugerID'er
+<span class="nc" id="L214">        Set&lt;Integer&gt; existingUserIds = new HashSet&lt;&gt;();</span>
+
+        // BrugerID'er gemmes i Settet (undgår duplikater)
+<span class="nc bnc" id="L217" title="All 2 branches missed.">        for (User user : existingUsers) {</span>
+<span class="nc" id="L218">            existingUserIds.add(user.getUserId());</span>
+<span class="nc" id="L219">        }</span>
+
+        // Tjekker om brugerID'et allerede ligger i databasen
+<span class="nc bnc" id="L222" title="All 2 branches missed.">        for (Integer userId : userIds) {</span>
+<span class="nc bnc" id="L223" title="All 2 branches missed.">            if (!existingUserIds.contains(userId)) {</span>
+<span class="nc" id="L224">                iProjectRepository.assignUserToProject(userId, projectId);</span>
+            }
+<span class="nc" id="L226">        }</span>
+<span class="nc" id="L227">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

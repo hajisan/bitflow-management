@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="da"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EstimationTool</a> &gt; <a href="index.source.html" class="el_package">com.example.estimationtool.controller</a> &gt; <span class="el_source">UserController.java</span></div><h1>UserController.java</h1><pre class="source lang-java linenums">package com.example.estimationtool.controller;
+
+import com.example.estimationtool.toolbox.dto.*;
+import com.example.estimationtool.model.enums.Role;
+import com.example.estimationtool.service.UserService;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.security.core.parameters.P;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.List;
+
+@Controller
+@RequestMapping(&quot;/users&quot;) //Base-URL for alle endpoints i UserController
+public class UserController {
+
+    private final UserService userService;
+
+    // Dependency Injection af UserService i konstruktøren
+<span class="fc" id="L22">    public UserController(UserService userService) {</span>
+<span class="fc" id="L23">        this.userService = userService;</span>
+<span class="fc" id="L24">    }</span>
+
+
+    private UserViewDTO getCurrentUser(HttpSession session) {
+<span class="fc" id="L28">        return (UserViewDTO) session.getAttribute(&quot;currentUser&quot;);</span>
+    }
+
+    //--------------------------------- Efter login --------------------------------
+
+    // TODO - DONE
+    @GetMapping(&quot;/profile&quot;)
+    public String getFrontPage(HttpSession session,
+                               RedirectAttributes redirectAttributes,
+                               Model model) {
+
+        // Henter og sætter session for Thymeleaf
+<span class="fc" id="L40">        UserViewDTO currentUser = getCurrentUser(session);</span>
+<span class="fc" id="L41">        session.setAttribute(&quot;currentUser&quot;, currentUser);</span>
+
+<span class="pc bpc" id="L43" title="1 of 2 branches missed.">        if (currentUser == null) {</span>
+<span class="nc" id="L44">            redirectAttributes.addFlashAttribute(&quot;error&quot;, &quot;Du skal være logget ind for at tilgå forsiden.&quot;);</span>
+<span class="nc" id="L45">            return &quot;redirect:/login&quot;;</span>
+        }
+
+<span class="fc" id="L48">        return &quot;user/front-page&quot;;</span>
+    }
+
+
+
+    //--------------------------------- Hent Create() ----------------------------------
+
+    // TODO - DONE
+    @GetMapping(&quot;/create&quot;)
+    public String showCreateUser(HttpSession session,
+                                 Model model,
+                                 RedirectAttributes redirectAttributes) {
+
+        // Henter og sætter session for Thymeleaf
+<span class="fc" id="L62">        UserViewDTO currentUser = getCurrentUser(session);</span>
+<span class="fc" id="L63">        session.setAttribute(&quot;currentUser&quot;, currentUser);</span>
+
+<span class="pc bpc" id="L65" title="1 of 2 branches missed.">        if (currentUser == null) {</span>
+<span class="nc" id="L66">            redirectAttributes.addFlashAttribute(&quot;error&quot;, &quot;Log ind for at oprette en ny bruger.&quot;);</span>
+<span class="nc" id="L67">            return &quot;redirect:/login&quot;;</span>
+        }
+
+<span class="fc" id="L70">        UserRegistrationDTO userRegistrationDTO = new UserRegistrationDTO();</span>
+<span class="fc" id="L71">        model.addAttribute(&quot;user&quot;, userRegistrationDTO);</span>
+
+<span class="fc" id="L73">        return &quot;user/create-user&quot;;</span>
+    }
+
+
+    //------------------------------------ Create() ------------------------------------
+
+    // TODO - DONE
+    @PostMapping(&quot;/create&quot;)
+    public String createUser(@ModelAttribute(&quot;user&quot;) UserRegistrationDTO userDTO,
+                             HttpSession session,
+                             RedirectAttributes redirectAttributes) {
+
+        // Henter og sætter session for Thymeleaf
+<span class="fc" id="L86">        UserViewDTO currentUser = getCurrentUser(session);</span>
+<span class="fc" id="L87">        session.setAttribute(&quot;currentUser&quot;, currentUser);</span>
+
+        // Tjekker om brugeren er logget ind
+<span class="pc bpc" id="L90" title="1 of 2 branches missed.">        if (currentUser == null) {</span>
+<span class="nc" id="L91">            redirectAttributes.addFlashAttribute(&quot;error&quot;, &quot;Log ind for at oprette en bruger.&quot;);</span>
+<span class="nc" id="L92">            return &quot;redirect:/login&quot;;</span>
+        }
+
+<span class="fc" id="L95">        userService.createUser(currentUser, userDTO);</span>
+
+<span class="fc" id="L97">        redirectAttributes.addFlashAttribute(&quot;success&quot;, &quot;Bruger blev oprettet.&quot;);</span>
+
+<span class="fc" id="L99">        return &quot;redirect:/users/list&quot;;</span>
+
+    }
+
+    //------------------------------------ Read() --------------------------------------
+
+    // TODO - DONE
+    @GetMapping(&quot;/list&quot;)
+    public String showAllUsers(HttpSession session,
+                               Model model,
+                               RedirectAttributes redirectAttributes) {
+
+        // Henter og sætter session for Thymeleaf
+<span class="fc" id="L112">        UserViewDTO currentUser = getCurrentUser(session);</span>
+<span class="fc" id="L113">        session.setAttribute(&quot;currentUser&quot;, currentUser);</span>
+
+        // Tjekker om brugeren er logget ind
+<span class="pc bpc" id="L116" title="1 of 2 branches missed.">        if (currentUser == null) {</span>
+<span class="nc" id="L117">            redirectAttributes.addFlashAttribute(&quot;error&quot;, &quot;Log ind for at se brugeroplysninger.&quot;);</span>
+<span class="nc" id="L118">            return &quot;redirect:/login&quot;;</span>
+        }
+
+<span class="fc" id="L121">        List&lt;UserViewDTO&gt; userViewDTOList = userService.readAll();</span>
+<span class="fc" id="L122">        model.addAttribute(&quot;users&quot;, userViewDTOList);</span>
+
+<span class="fc" id="L124">        return &quot;user/user-list&quot;;</span>
+    }
+
+    // TODO - DONE
+
+    @GetMapping(&quot;/{userId}&quot;)
+    public String showUser(@PathVariable int userId,
+                           HttpSession session,
+                           Model model,
+                           RedirectAttributes redirectAttributes) {
+
+        // Henter og sætter session for Thymeleaf
+<span class="fc" id="L136">        UserViewDTO currentUser = getCurrentUser(session);</span>
+<span class="fc" id="L137">        session.setAttribute(&quot;currentUser&quot;, currentUser);</span>
+
+        // Tjekker om brugeren er logget ind
+<span class="fc bfc" id="L140" title="All 2 branches covered.">        if (currentUser == null) {</span>
+<span class="fc" id="L141">            redirectAttributes.addFlashAttribute(&quot;error&quot;, &quot;Log ind for at se brugeroplysninger.&quot;);</span>
+<span class="fc" id="L142">            return &quot;redirect:/login&quot;;</span>
+        }
+
+<span class="fc" id="L145">        UserViewDTO userViewDTO = userService.readById(userId);</span>
+<span class="fc" id="L146">        model.addAttribute(&quot;user&quot;, userViewDTO);</span>
+
+<span class="fc" id="L148">        return &quot;user/user-detail&quot;;</span>
+
+    }
+
+    //------------------------------------ Hent Update() -------------------------------
+
+    // TODO - DONE
+    @GetMapping(&quot;/edit/{userId}&quot;)
+    public String showEditUser(@PathVariable int userId,
+                               HttpSession session,
+                               Model model,
+                               RedirectAttributes redirectAttributes) {
+
+        // Henter og sætter session for Thymeleaf
+<span class="fc" id="L162">        UserViewDTO currentUser = getCurrentUser(session);</span>
+<span class="fc" id="L163">        session.setAttribute(&quot;currentUser&quot;, currentUser);</span>
+
+        // Tjekker om bruger er logget ind
+<span class="pc bpc" id="L166" title="1 of 2 branches missed.">        if (currentUser == null) {</span>
+<span class="nc" id="L167">            redirectAttributes.addFlashAttribute(&quot;error&quot;, &quot;Log ind for at opdatere bruger.&quot;);</span>
+<span class="nc" id="L168">            return &quot;redirect:/login&quot;;</span>
+        }
+
+
+        // Kalder metode, der konverterer UserViewDTO til en UserUpdateDTO
+<span class="fc" id="L173">        UserUpdateDTO userUpdateDTO = userService.getUserUpdateDTOById(userId);</span>
+<span class="fc" id="L174">        model.addAttribute(&quot;userUpdateDTO&quot;, userUpdateDTO);</span>
+
+<span class="fc" id="L176">        return &quot;user/edit-user&quot;;</span>
+
+    }
+
+    //------------------------------------ Update() ------------------------------------
+
+    // TODO - DONE
+    @PostMapping(&quot;/update&quot;)
+    public String updateUser(@ModelAttribute(&quot;userUpdateDTO&quot;) UserUpdateDTO userUpdateDTO,
+                             HttpSession session,
+                             RedirectAttributes redirectAttributes) {
+
+        // Henter og sætter session for Thymeleaf
+<span class="fc" id="L189">        UserViewDTO currentUser = getCurrentUser(session);</span>
+<span class="fc" id="L190">        session.setAttribute(&quot;currentUser&quot;, currentUser);</span>
+
+        // Tjekker om bruger er logget ind
+<span class="pc bpc" id="L193" title="1 of 2 branches missed.">        if (currentUser == null) {</span>
+<span class="nc" id="L194">            redirectAttributes.addFlashAttribute(&quot;error&quot;, &quot;Log ind for at opdatere bruger.&quot;);</span>
+<span class="nc" id="L195">            return &quot;redirect:/login&quot;;</span>
+        }
+
+<span class="fc" id="L198">        userService.updateUser(userUpdateDTO, currentUser);</span>
+
+<span class="fc" id="L200">        redirectAttributes.addFlashAttribute(&quot;success&quot;, &quot;Brugeren blev opdateret.&quot;);</span>
+
+<span class="fc" id="L202">        return &quot;redirect:/users/&quot; + userUpdateDTO.getUserId(); // Redirect til user-detail.html</span>
+    }
+
+
+    //------------------------------------ Delete() ------------------------------------
+
+
+    // TODO - DONE
+    @PostMapping(&quot;/delete/{userId}&quot;)
+    public String deleteUser(@PathVariable int userId,
+                             HttpSession session,
+                             RedirectAttributes redirectAttributes) {
+
+        // Henter og sætter session for Thymeleaf
+<span class="fc" id="L216">        UserViewDTO currentUser = getCurrentUser(session);</span>
+<span class="fc" id="L217">        session.setAttribute(&quot;currentUser&quot;, currentUser);</span>
+
+        // Tjekker om bruger er logget ind
+<span class="pc bpc" id="L220" title="1 of 2 branches missed.">        if (currentUser == null) {</span>
+<span class="nc" id="L221">            redirectAttributes.addFlashAttribute(&quot;error&quot;, &quot;Du skal være logget ind for at kunne slette brugeren.&quot;);</span>
+<span class="nc" id="L222">            return &quot;redirect:/login&quot;;</span>
+        }
+
+<span class="fc" id="L225">        userService.deleteById(userId, currentUser);</span>
+
+<span class="fc" id="L227">        redirectAttributes.addFlashAttribute(&quot;success&quot;, &quot;Brugeren blev slettet.&quot;);</span>
+
+<span class="fc" id="L229">        return &quot;redirect:/users/list&quot;;</span>
+
+    }
+    //---------------------------------- DTO read() ------------------------------------
+
+    // TODO - DONE
+
+    // -------------------- Viser brugerens tilknyttede projekter ----------------------
+
+    @GetMapping(&quot;/{userId}/projects&quot;)
+    public String showUserWithProjects(@PathVariable int userId,
+                                       HttpSession session,
+                                       Model model,
+                                       RedirectAttributes redirectAttributes) {
+
+        // Henter og sætter session for Thymeleaf
+<span class="fc" id="L245">        UserViewDTO currentUser = getCurrentUser(session);</span>
+<span class="fc" id="L246">        session.setAttribute(&quot;currentUser&quot;, currentUser);</span>
+
+        // Tjekker om bruger er logget ind
+<span class="pc bpc" id="L249" title="1 of 2 branches missed.">        if (currentUser == null) {</span>
+<span class="nc" id="L250">            redirectAttributes.addFlashAttribute(&quot;error&quot;, &quot;Du skal være logget ind for at kunne se brugerens projekter.&quot;);</span>
+<span class="nc" id="L251">            return &quot;redirect:/login&quot;;</span>
+        }
+
+<span class="fc" id="L254">        UserWithProjectsDTO userWithProjectsDTO = userService.readAllProjectsByUserId(userId);</span>
+<span class="fc" id="L255">        model.addAttribute(&quot;userWithProjects&quot;, userWithProjectsDTO);</span>
+
+<span class="fc" id="L257">        return &quot;user/user-with-projects&quot;;</span>
+    }
+
+    // -------------------- Viser brugerens tilknyttede subprojekter --------------------
+
+    // TODO - DONE
+    @GetMapping(&quot;/{userId}/subprojects&quot;)
+    public String showUserWithSubProjects(@PathVariable int userId,
+                                          HttpSession session,
+                                          Model model,
+                                          RedirectAttributes redirectAttributes) {
+
+        // Henter og sætter session for Thymeleaf
+<span class="fc" id="L270">        UserViewDTO currentUser = getCurrentUser(session);</span>
+<span class="fc" id="L271">        session.setAttribute(&quot;currentUser&quot;, currentUser);</span>
+
+        // Tjekker om bruger er logget ind
+<span class="pc bpc" id="L274" title="1 of 2 branches missed.">        if (currentUser == null) {</span>
+<span class="nc" id="L275">            redirectAttributes.addFlashAttribute(&quot;error&quot;, &quot;Du skal være logget ind for at kunne se en brugers subprojekter.&quot;);</span>
+<span class="nc" id="L276">            return &quot;redirect:/login&quot;;</span>
+        }
+
+<span class="fc" id="L279">        UserWithSubProjectsDTO userWithSubProjectsDTO = userService.readAllSubProjectsByUserId(userId);</span>
+<span class="fc" id="L280">        model.addAttribute(&quot;userWithSubProjects&quot;, userWithSubProjectsDTO);</span>
+
+<span class="fc" id="L282">        return &quot;user/user-with-subprojects&quot;;</span>
+    }
+
+    // -------------------- Viser brugerens tilknyttede tasks --------------------
+
+    // TODO - DONE
+    @GetMapping(&quot;/{userId}/tasks&quot;)
+    public String showUserWithTasks(@PathVariable int userId,
+                                    HttpSession session,
+                                    Model model,
+                                    RedirectAttributes redirectAttributes) {
+
+        // Henter og sætter session for Thymeleaf
+<span class="fc" id="L295">        UserViewDTO currentUser = getCurrentUser(session);</span>
+<span class="fc" id="L296">        session.setAttribute(&quot;currentUser&quot;, currentUser);</span>
+
+        // Tjekker om bruger er logget ind
+<span class="pc bpc" id="L299" title="1 of 2 branches missed.">        if (currentUser == null) {</span>
+<span class="nc" id="L300">            redirectAttributes.addFlashAttribute(&quot;error&quot;, &quot;Du skal være logget ind for at kunne se en brugers tasks.&quot;);</span>
+<span class="nc" id="L301">            return &quot;redirect:/login&quot;;</span>
+        }
+
+<span class="fc" id="L304">        UserWithTasksDTO userWithTasksDTO = userService.readAllTasksByUserId(userId);</span>
+<span class="fc" id="L305">        model.addAttribute(&quot;userWithTasks&quot;, userWithTasksDTO);</span>
+
+<span class="fc" id="L307">        return &quot;user/user-with-tasks&quot;;</span>
+
+    }
+
+    // ------------------ Viser brugerens tilknyttede subtasks --------------------
+
+    // TODO - DONE
+    @GetMapping(&quot;/{userId}/subtasks&quot;)
+    public String showUserWithSubTasks(@PathVariable int userId,
+                                       HttpSession session,
+                                       Model model,
+                                       RedirectAttributes redirectAttributes) {
+
+        // Henter og sætter session for Thymeleaf
+<span class="fc" id="L321">        UserViewDTO currentUser = getCurrentUser(session);</span>
+<span class="fc" id="L322">        session.setAttribute(&quot;currentUser&quot;, currentUser);</span>
+
+        // Tjekker om bruger er logget ind
+<span class="pc bpc" id="L325" title="1 of 2 branches missed.">        if (currentUser == null) {</span>
+<span class="nc" id="L326">            redirectAttributes.addFlashAttribute(&quot;error&quot;, &quot;Du skal være logget ind for at kunne se en brugers subtasks.&quot;);</span>
+<span class="nc" id="L327">            return &quot;redirect:/login&quot;;</span>
+        }
+
+        // Henter DTO: bruger + subopgaver
+<span class="fc" id="L331">        UserWithSubTasksDTO userWithSubTasksDTO = userService.readAllSubTasksByUserId(userId);</span>
+        // Lægger DTO på modellen
+<span class="fc" id="L333">        model.addAttribute(&quot;userWithSubTasks&quot;, userWithSubTasksDTO);</span>
+
+<span class="fc" id="L335">        return &quot;user/user-with-subtasks&quot;;</span>
+    }
+
+    // ------------------ Viser brugerens tilknyttede timeEntries --------------------
+
+
+    @GetMapping(&quot;/{userId}/timeentries&quot;)
+    public String showUserWithTimeEntries(@PathVariable int userId,
+                                    HttpSession session,
+                                    Model model,
+                                    RedirectAttributes redirectAttributes) {
+
+        // Henter og sætter session for Thymeleaf
+<span class="fc" id="L348">        UserViewDTO currentUser = getCurrentUser(session);</span>
+<span class="fc" id="L349">        session.setAttribute(&quot;currentUser&quot;, currentUser);</span>
+
+        // Tjekker om bruger er logget ind
+<span class="pc bpc" id="L352" title="1 of 2 branches missed.">        if (currentUser == null) {</span>
+<span class="nc" id="L353">            redirectAttributes.addFlashAttribute(&quot;error&quot;, &quot;Du skal være logget ind for at kunne se en brugers tasks.&quot;);</span>
+<span class="nc" id="L354">            return &quot;redirect:/login&quot;;</span>
+        }
+
+        // Henter DTO: bruger + time entries
+<span class="fc" id="L358">        UserWithTimeEntriesDTO userWithTimeEntriesDTO = userService.readAllTimeEntriesByUserId(userId);</span>
+        // Lægger DTO på modellen
+<span class="fc" id="L360">        model.addAttribute(&quot;userWithTimeEntries&quot;, userWithTimeEntriesDTO);</span>
+
+<span class="fc" id="L362">        return &quot;user/user-with-timeentries&quot;;</span>
+
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

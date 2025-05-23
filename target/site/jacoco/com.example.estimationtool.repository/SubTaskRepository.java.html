@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="da"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SubTaskRepository.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EstimationTool</a> &gt; <a href="index.source.html" class="el_package">com.example.estimationtool.repository</a> &gt; <span class="el_source">SubTaskRepository.java</span></div><h1>SubTaskRepository.java</h1><pre class="source lang-java linenums">package com.example.estimationtool.repository;
+
+import com.example.estimationtool.model.SubTask;
+import com.example.estimationtool.repository.interfaces.ISubTaskRepository;
+import com.example.estimationtool.toolbox.rowMappers.SubTaskRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
+
+import java.sql.PreparedStatement;
+import java.util.List;
+
+@Repository
+public class SubTaskRepository implements ISubTaskRepository {
+
+    private final JdbcTemplate jdbcTemplate;
+
+<span class="fc" id="L19">    public SubTaskRepository(JdbcTemplate jdbcTemplate) {</span>
+<span class="fc" id="L20">        this.jdbcTemplate = jdbcTemplate;</span>
+<span class="fc" id="L21">    }</span>
+
+    //------------------------------------ Create() ------------------------------------
+
+    @Override
+    public SubTask create(SubTask subTask) {
+
+<span class="fc" id="L28">        String sql = &quot;&quot;&quot;</span>
+                INSERT INTO
+                subtask (taskID, name, description, deadline, estimatedTime, timeSpent, status)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+                &quot;&quot;&quot;;
+
+<span class="fc" id="L34">        KeyHolder keyHolder = new GeneratedKeyHolder();</span>
+
+        // Bruger PreparedStatement sammen med vores GeneratedKeyHolder til at kunne autogenerere et nyt id
+<span class="fc" id="L37">        jdbcTemplate.update(connection -&gt; {</span>
+<span class="fc" id="L38">            PreparedStatement ps = connection.prepareStatement(sql, new String[]{&quot;id&quot;});</span>
+<span class="fc" id="L39">            ps.setInt(1, subTask.getTaskId());</span>
+<span class="fc" id="L40">            ps.setString(2, subTask.getName());</span>
+<span class="fc" id="L41">            ps.setString(3, subTask.getDescription());</span>
+<span class="fc" id="L42">            ps.setDate(4, java.sql.Date.valueOf(subTask.getDeadline()));// Konverterer LocalDate til java.sql.Date</span>
+<span class="fc" id="L43">            ps.setInt(5, subTask.getEstimatedTime());</span>
+<span class="fc" id="L44">            ps.setInt(6, subTask.getTimeSpent());</span>
+<span class="fc" id="L45">            ps.setString(7, subTask.getStatus().name());</span>
+<span class="fc" id="L46">            return ps;</span>
+        }, keyHolder);
+
+<span class="fc" id="L49">        int generatedId = keyHolder.getKey().intValue();</span>
+<span class="fc" id="L50">        subTask.setSubTaskId(generatedId);  // Sæt det genererede ID i objektet</span>
+
+<span class="fc" id="L52">        return subTask;</span>
+    }
+
+    //------------------------------------ Read() --------------------------------------
+
+
+    @Override
+    public List&lt;SubTask&gt; readAll() {
+
+<span class="nc" id="L61">        String sql = &quot;&quot;&quot;</span>
+                SELECT id, taskID, estimatedTime, timeSpent, name, description, deadline, status
+                FROM subtask
+                &quot;&quot;&quot;;
+
+<span class="nc" id="L66">        return jdbcTemplate.query(sql, new SubTaskRowMapper());</span>
+    }
+
+    @Override
+    public SubTask readById(Integer id) {
+
+<span class="fc" id="L72">        String sql = &quot;&quot;&quot;</span>
+                SELECT
+                id, taskID, estimatedTime, timeSpent, name, description, deadline, status
+                FROM subtask
+                WHERE id = ?
+                &quot;&quot;&quot;;
+<span class="fc" id="L78">        return jdbcTemplate.queryForObject(sql, new SubTaskRowMapper(), id);</span>
+    }
+
+    //------------------------------------ Update() ------------------------------------
+
+
+    @Override
+    public SubTask update(SubTask subTask) {
+
+<span class="fc" id="L87">        String sql = &quot;&quot;&quot;</span>
+                UPDATE subtask
+                SET estimatedTime = ?, timeSpent = ?, name = ?, description = ?, deadline = ?, status = ?
+                WHERE id = ?
+                &quot;&quot;&quot;;
+
+<span class="fc" id="L93">        jdbcTemplate.update( // Henter disse værdier, så de kan opdateres</span>
+                sql,
+<span class="fc" id="L95">                subTask.getEstimatedTime(),</span>
+<span class="fc" id="L96">                subTask.getTimeSpent(),</span>
+<span class="fc" id="L97">                subTask.getName(),</span>
+<span class="fc" id="L98">                subTask.getDescription(),</span>
+<span class="fc" id="L99">                subTask.getDeadline(),</span>
+<span class="fc" id="L100">                subTask.getStatus().name(), // Konverteres til String for at gemmes i databasen</span>
+<span class="fc" id="L101">                subTask.getSubTaskId()); // Parameter -&gt; id til WHERE</span>
+
+<span class="fc" id="L103">        return subTask;</span>
+    }
+
+    //------------------------------------ Delete() ------------------------------------
+
+
+    @Override
+    public void deleteById(Integer id) {
+
+<span class="fc" id="L112">        String sql = &quot;DELETE FROM subtask WHERE id = ?&quot;;</span>
+<span class="fc" id="L113">        jdbcTemplate.update(sql, id);</span>
+
+<span class="fc" id="L115">    }</span>
+
+    //---------------------------------- Til DTO'er ------------------------------------
+
+
+    // --- Read() subtasks ud fra bruger-ID ---
+    @Override
+    public List&lt;SubTask&gt; readAllByUserId(Integer userId) {
+
+        // Bruger JOIN til at hente alle subtasks for ét brugerID
+
+<span class="fc" id="L126">        String sql = &quot;&quot;&quot;</span>
+                SELECT
+                    subtask.id,
+                    subtask.taskID,
+                    subtask.estimatedTime,
+                    subTask.timeSpent,
+                    subtask.name,
+                    subtask.description,
+                    subtask.deadline,
+                    subtask.status
+                FROM subtask
+                JOIN users_subtask ON subtask.id = users_subtask.subTaskID
+                WHERE users_subtask.userID = ?
+                &quot;&quot;&quot;;
+<span class="fc" id="L140">        return jdbcTemplate.query(sql, new SubTaskRowMapper(), userId);</span>
+    }
+
+    // --- Read() subtasks ud fra task-ID ---
+
+    @Override
+    public List&lt;SubTask&gt; readAllByTaskId(Integer taskId) {
+<span class="fc" id="L147">        String sql = &quot;&quot;&quot;</span>
+                SELECT id, taskID, estimatedTime, timeSpent, name, description, deadline, status
+                FROM subtask
+                WHERE taskID = ?
+                &quot;&quot;&quot;;
+
+<span class="fc" id="L153">        return jdbcTemplate.query(sql, new SubTaskRowMapper(), taskId);</span>
+    }
+
+    //---------------------------------- Assign User --------------------------------
+
+
+    // ----------------- SubTask tildeles en bruger efter oprettelse ----------------
+
+    @Override
+    public void assignUserToSubTask(Integer userId, Integer subTaskId) {
+
+        // Slet eksisterende tildeling først
+<span class="fc" id="L165">        String deleteSql = &quot;DELETE FROM users_subtask WHERE subTaskID = ?&quot;;</span>
+<span class="fc" id="L166">        jdbcTemplate.update(deleteSql, subTaskId);</span>
+
+        // Indsæt ny tildeling
+<span class="fc" id="L169">        String sql = &quot;INSERT INTO users_subtask (userID, subTaskID) VALUES (?, ?)&quot;;</span>
+<span class="fc" id="L170">        jdbcTemplate.update(sql, userId, subTaskId);</span>
+
+<span class="fc" id="L172">    }</span>
+
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
