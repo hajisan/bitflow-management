@@ -1,0 +1,27 @@
+/* layout.css */
+.container {
+    max-width: var(--container-max-width);
+    margin: 0 auto;
+    padding: 0 var(--spacing-md);
+}
+
+.section {
+    padding: var(--spacing-lg) 0;
+}
+
+.grid {
+    display: grid;
+    gap: var(--spacing-md);
+}
+
+.flex {
+    display: flex;
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+.main-content {
+    max-width: 500px;
+    margin: 2rem auto;
+    padding: var(--spacing-md);
+}

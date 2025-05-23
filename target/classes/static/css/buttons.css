@@ -1,0 +1,21 @@
+/* buttons.css */
+.btn {
+    font-family: var(--font-family);
+    font-size: var(--font-size-base);
+    padding: 0.5rem 1.5rem;
+    border: none;
+    border-radius: var(--border-radius);
+    text-transform: uppercase;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.btn-primary {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+}
+
+.btn-primary:hover {
+    background-color: #e5284c;
+}
