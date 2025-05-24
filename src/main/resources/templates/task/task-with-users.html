@@ -2,7 +2,7 @@
 <html lang="da" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Brugere i Opgave</title>
+    <title>Task-with-users</title>
     <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
@@ -18,12 +18,13 @@
 
     <!-- Overskrift -->
     <div class="list-header">
-        <h2 class="section-title">Brugere tilknyttet opgave: <span th:text="${taskWithUsers.task.name}"></span></h2>
+        <h2 class="section-title">Brugere tilknyttet task: <span th:text="${taskWithUsers.task.name}"></span></h2>
     </div>
 
     <!-- Kort opgaveinfo -->
     <div class="details-box">
         <p><strong>Deadline:</strong> <span th:text="${taskWithUsers.task.deadline}"></span></p>
+        <p><strong>Forbrugt tid:</strong> <span th:text="${taskWithUsers.task.timeSpent}"></span></p>
         <p class="status"
            th:text="'Status: ' + ${taskWithUsers.task.status}"
            th:classappend="' status-' + ${taskWithUsers.task.status.name().toLowerCase()}"></p>
@@ -47,13 +48,13 @@
         </div>
 
         <div th:if="${#lists.isEmpty(taskWithUsers.userViewDTOList)}">
-            <p>Der er ingen brugere tilknyttet denne opgave.</p>
+            <p>Der er ingen brugere tilknyttet denne task</p>
         </div>
     </div>
 
     <!-- Formular til tildeling af brugere -->
     <div th:if="${!#lists.isEmpty(unassignedUsers)}" class="form-section" style="margin-top: var(--spacing-md);">
-        <h3>Tildel bruger(e) til opgaven</h3>
+        <h3>Tildel bruger(e) til task</h3>
         <form th:action="@{'/tasks/' + ${taskWithUsers.task.taskId} + '/assignusers'}" method="post">
             <div class="form-group">
                 <label for="user-select">Vælg bruger(e):</label>
@@ -72,7 +73,7 @@
 
     <!-- Navigation -->
     <div class="fixed-bottom-right">
-        <a th:href="@{/tasks/{id}(id=${taskWithUsers.task.taskId})}" class="btn btn-secondary">⬅️ Tilbage til opgave</a>
+        <a th:href="@{/tasks/{id}(id=${taskWithUsers.task.taskId})}" class="btn btn-secondary">⬅️ Tilbage til task-detaljer</a>
         <a th:if="${session.currentUser.role.name() == 'ADMIN'}" th:href="@{/tasks/list}" class="btn btn-secondary">📋 Opgaveoversigt</a>
         <a th:href="@{/users/profile}" class="btn btn-secondary">🏠 Dashboard</a>
     </div>

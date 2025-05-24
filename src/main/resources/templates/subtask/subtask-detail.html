@@ -2,7 +2,7 @@
 <html lang="da" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Subtaskdetaljer</title>
+    <title>Subtask-detail</title>
     <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
@@ -52,8 +52,8 @@
 
     <!-- Handlinger -->
     <div class="action-buttons">
-        <a th:href="@{/timeentries/create(taskId=${subtask.taskId}, subTaskId=${subtask.subTaskId})}" class="btn btn-primary">➕ Opret time entry</a>
-        <a th:href="@{/subtasks/{subTaskId}/timeentries(subTaskId=${subtask.subTaskId})}" class="btn btn-secondary">⏱️ Se time entries</a>
+        <a th:href="@{/timeentries/create(taskId=${subtask.taskId}, subTaskId=${subtask.subTaskId})}" class="btn btn-primary">➕ Opret tidsregistrering</a>
+        <a th:href="@{/subtasks/{subTaskId}/timeentries(subTaskId=${subtask.subTaskId})}" class="btn btn-secondary">⏱️ Se tidsregistreringer</a>
     </div>
 
     <!-- Formular: tildel mig selv -->
@@ -84,9 +84,10 @@
 
     <!-- Navigation -->
     <div class="fixed-bottom-right">
-        <a th:href="@{/subprojects/{id}/tasks(id=${subtask.taskId})}" class="btn btn-secondary">⬅️ Tilbage til tasks</a>
-        <a th:href="@{/users/profile}" class="btn btn-secondary">🏠 Dashboard</a>
+    <a th:href="@{/tasks/{taskId}/subtasks(taskId=${subtask.taskId})}" class="btn btn-secondary">⬅️ Tilbage til taskens subtasks</a>
+    <a th:href="@{/users/profile}" class="btn btn-secondary">🏠 Dashboard</a>
     </div>
+
 
 </section>
 </body>

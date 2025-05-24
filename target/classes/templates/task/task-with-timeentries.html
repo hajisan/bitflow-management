@@ -2,7 +2,7 @@
 <html lang="da" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Tidsregistreringer for opgave</title>
+    <title>Task-with-timeeentries</title>
     <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
@@ -51,7 +51,7 @@
         </div>
 
         <div th:if="${#lists.isEmpty(taskWithTimeEntries.timeEntries)}">
-            <p>Der er endnu ingen tidsregistreringer for denne opgave.</p>
+            <p>Der er endnu ingen tidsregistreringer for denne task.</p>
         </div>
     </div>
 
@@ -59,79 +59,12 @@
     <div class="form-actions" style="margin-top: var(--spacing-md);">
         <a th:href="@{/timeentries/create(taskId=${taskWithTimeEntries.task.taskId})}" class="btn btn-primary">
             ➕ Opret tidsregistrering
-=======
-<h1>Tidsregistreringer for opgave</h1>
-
-<!-- Kort info om task -->
-<section class="mini-info">
-    <h3>Kort beskrivelse af task</h3>
-    <div>Navn: <span th:text="${taskWithTimeEntries.task.name}"></span></div>
-    <div>Deadline: <span th:text="${taskWithTimeEntries.task.deadline}"></span></div>
-    <div>Estimeret tid: <span th:text="${taskWithTimeEntries.task.estimatedTime}"></span> timer</div>
-    <div>Aktuelle tidsforbrug: <span th:text="${taskWithTimeEntries.task.timeSpent}"></span> timer</div>
-    <div>Status: <span th:text="${taskWithTimeEntries.task.status}"></span></div>
-</section>
-
-<!-- Registrerede tidsregistreringer -->
-<section class="mini-info">
-    <h3>Kort beskrivelse af tidsregistrering</h3>
-
-    <div th:if="${!#lists.isEmpty(taskWithTimeEntries.timeEntries)}">
-        <div th:each="timeEntry : ${taskWithTimeEntries.timeEntries}" class="list">
-            <div>BrugerID: <span th:text="${timeEntry.userId}"></span></div>
-            <div>Tid forbrugt: <span th:text="${timeEntry.hoursSpent}"></span> timer</div>
-            <div>Oprettelsesdato: <span th:text="${timeEntry.date}"></span></div>
-
-            <a th:href="@{/timeentries/{id}(id=${timeEntry.timeId})}">
-                <button>Se detaljer</button>
-            </a>
-        </div>
-    </div>
-</section>
-
-<!-- Opret ny timeEntry (for alle) -->
-<section class="form-actions">
-    <div>
-        <a th:href="@{/timeentries/create(taskId=${taskWithTimeEntries.task.taskId})}">
-            <button>Opret tidsregistrering</button>
-        </a>
-    </div>
-</section>
-
-<!-- Hvis ingen registreringer findes -->
-<section th:if="${#lists.isEmpty(taskWithTimeEntries.timeEntries)}">
-    <div>
-        <p>Der er endnu ikke registreret nogle timer for denne opgave.</p>
-    </div>
-</section>
-
-<!-- Navigation -->
-<section class="navigation">
-
-    <!-- Tilbage til task-detail.html -->
-    <div>
-        <a th:href="@{/tasks/{id}(id=${taskWithTimeEntries.task.taskId})}">
-            <button>Tilbage til opgave</button>
-        </a>
-    </div>
-
-    <!-- Kun for ADMIN: alle tidsregistreringer -->
-    <div th:if="${session.currentUser.role.name() == 'ADMIN'}">
-        <a th:href="@{/timeentries/list}">
-            <button>Tilbage til listen af tidsregistreringer</button>
-        </a>
-    </div>
-
-    <!-- Tilbage til forsiden -->
-    <div>
-        <a th:href="@{/users/profile}">
-            <button>Tilbage til</button>
         </a>
     </div>
 
     <!-- Navigation -->
     <div class="fixed-bottom-right">
-        <a th:href="@{/tasks/{id}(id=${taskWithTimeEntries.task.taskId})}" class="btn btn-secondary">⬅️ Tilbage til opgave</a>
+        <a th:href="@{/tasks/{id}(id=${taskWithTimeEntries.task.taskId})}" class="btn btn-secondary">⬅️ Tilbage til taskdetaljer</a>
         <a th:if="${session.currentUser.role.name() == 'ADMIN'}" th:href="@{/timeentries/list}" class="btn btn-secondary">📋 Alle tidsregistreringer</a>
         <a th:href="@{/users/profile}" class="btn btn-secondary">🏠 Dashboard</a>
     </div>

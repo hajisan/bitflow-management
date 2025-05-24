@@ -2,7 +2,7 @@
 <html lang="da" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Rediger tidsregistrering</title>
+    <title>Edit-timeentry</title>
     <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
@@ -47,11 +47,16 @@
         </div>
     </form>
 
+    <form th:action="@{/timeentries/delete/{id}(id=${timeentry.timeId})}" method="post"
+          onsubmit="return confirm('Er du sikker på, at du vil slette denne tidsregistrering?');">
+        <button type="submit" class="btn btn-danger">🗑️ Slet tidsregistrering</button>
+    </form>
+
+
     <!-- Navigation -->
     <div class="fixed-bottom-right">
-        <a th:if="${timeentry.subTaskId != null}" th:href="@{/subtasks/{id}/timeentries(id=${timeentry.subTaskId})}" class="btn btn-secondary">⬅️ Tilbage til underopgave</a>
-        <a th:if="${timeentry.subTaskId == null}" th:href="@{/tasks/{id}/timeentries(id=${timeentry.taskId})}" class="btn btn-secondary">⬅️ Tilbage til opgave</a>
-        <a th:href="@{/users/profile}" class="btn btn-secondary">🏠 Forside</a>
+        <a th:href="@{/timeentries/{id}(id=${timeentry.timeId})}" class="btn btn-secondary">⬅️Tilbage til detaljer om tidsregistrering</a>
+        <a th:href="@{/users/profile}" class="btn btn-secondary">🏠 Dashboard</a>
     </div>
 
 </section>

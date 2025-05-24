@@ -51,11 +51,6 @@
         </div>
 
         <div class="form-group">
-            <label for="timeSpent">Forbrugt tid (timer):</label>
-            <input type="number" id="timeSpent" th:field="*{timeSpent}" class="input" min="0"/>
-        </div>
-
-        <div class="form-group">
             <label for="status">Status:</label>
             <select id="status" th:field="*{status}" class="input">
                 <option th:each="s : ${T(com.example.estimationtool.model.enums.Status).values()}"

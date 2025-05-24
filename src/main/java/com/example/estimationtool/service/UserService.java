@@ -113,7 +113,7 @@ public class UserService {
 
         // Tjekker om bruger findes
         if (existingUser == null) {
-            throw new UserFriendlyException("Brugeren du forsøger at ændre, findes ikke.", "/users/profile"); // <-- Ret URL når vi har det på plads
+            throw new UserFriendlyException("Brugeren du forsøger at ændre, findes ikke.", "/users/profile");
         }
 
         // Kun admin må redigere en bruger

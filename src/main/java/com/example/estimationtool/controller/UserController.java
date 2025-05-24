@@ -33,8 +33,7 @@ public class UserController {
     // TODO - DONE
     @GetMapping("/profile")
     public String getFrontPage(HttpSession session,
-                               RedirectAttributes redirectAttributes,
-                               Model model) {
+                               RedirectAttributes redirectAttributes) {
 
         // Henter og sætter session for Thymeleaf
         UserViewDTO currentUser = getCurrentUser(session);

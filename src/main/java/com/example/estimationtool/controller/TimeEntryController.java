@@ -30,7 +30,6 @@ public class TimeEntryController {
     @GetMapping("/create")
     public String showCreateTimeEntry(@RequestParam int taskId,
                                       @RequestParam(required = false) Integer subTaskId, // Ikke nødvendigvis til stede
-                                      @RequestParam int userId,
                                       Model model,
                                       HttpSession session,
                                       RedirectAttributes redirectAttributes) {
@@ -46,7 +45,7 @@ public class TimeEntryController {
 
         TimeEntry timeEntry = new TimeEntry();
         timeEntry.setTaskId(taskId);
-        timeEntry.setUserId(userId);
+        timeEntry.setUserId(currentUser.getUserId());
         if (subTaskId != null) timeEntry.setSubTaskId(subTaskId);
         model.addAttribute("timeentry", timeEntry);
 
@@ -184,12 +183,12 @@ public class TimeEntryController {
             return "redirect:/login";
         }
 
-        int taskId = timeEntryService.readById(id).getTaskId();
         timeEntryService.deleteById(id);
 
         redirectAttributes.addFlashAttribute("success", "Tidsregistrering blev slettet.");
 
-        return "redirect:/tasks/" + taskId + "/timeentries";
+        return "redirect:/users/profile";
+
     }
 
 

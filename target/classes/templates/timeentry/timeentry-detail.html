@@ -2,7 +2,7 @@
 <html lang="da" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Tidsregistreringsdetaljer</title>
+    <title>Timeentry-detail</title>
     <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
@@ -26,16 +26,16 @@
     <div class="details-box">
         <p><strong>ID:</strong> <span th:text="${timeentry.timeId}"></span></p>
         <p><strong>Bruger ID:</strong> <span th:text="${timeentry.userId}"></span></p>
-        <p><strong>Opgave ID:</strong> <span th:text="${timeentry.taskId}"></span></p>
-        <p><strong>Underopgave ID:</strong> <span th:text="${timeentry.subTaskId} ?: 'Ingen'"></span></p>
-        <p><strong>Timer brugt:</strong> <span th:text="${timeentry.hoursSpent} + ' t.'"></span></p>
+        <p><strong>Task ID:</strong> <span th:text="${timeentry.taskId}"></span></p>
+        <p><strong>Subtask ID:</strong> <span th:text="${timeentry.subTaskId} ?: 'Ingen'"></span></p>
+        <p><strong>Forbrugt tid:</strong> <span th:text="${timeentry.hoursSpent} + ' t.'"></span></p>
         <p><strong>Dato:</strong> <span th:text="${timeentry.date}"></span></p>
     </div>
 
     <!-- Navigation -->
     <div class="fixed-bottom-right">
-        <a th:if="${timeentry.subTaskId != null}" th:href="@{/subtasks/{id}/timeentries(id=${timeentry.subTaskId})}" class="btn btn-secondary">⬅️ Tilbage til underopgave</a>
-        <a th:if="${timeentry.subTaskId == null}" th:href="@{/tasks/{id}/timeentries(id=${timeentry.taskId})}" class="btn btn-secondary">⬅️ Tilbage til opgave</a>
+        <a th:if="${timeentry.subTaskId != null}" th:href="@{/subtasks/{id}/timeentries(id=${timeentry.subTaskId})}" class="btn btn-secondary">⬅️ Tilbage til subtaskens tidsregistreringer</a>
+        <a th:if="${timeentry.subTaskId == null}" th:href="@{/tasks/{id}/timeentries(id=${timeentry.taskId})}" class="btn btn-secondary">⬅️ Tilbage til taskens tidsregistreringer</a>
         <a th:if="${session.currentUser.role.name() == 'ADMIN'}" th:href="@{/timeentries/list}" class="btn btn-secondary">📋 Alle tidsregistreringer</a>
         <a th:href="@{/users/profile}" class="btn btn-secondary">🏠 Dashboard</a>
     </div>
