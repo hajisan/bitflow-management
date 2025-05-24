@@ -2,7 +2,7 @@
 <html lang="da" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Subprojektdetaljer</title>
+    <title>Subproject-detail</title>
     <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
@@ -53,7 +53,7 @@
 
         <!-- PROJECT_MANAGER -->
         <a th:if="${session.currentUser.role.name() == 'PROJECT_MANAGER'}"
-           th:href="@{/projects/{id}/subprojects(id=${subproject.projectId})}" class="btn btn-secondary">⬅️ Subprojektliste</a>
+           th:href="@{/projects/{id}/subprojects(id=${subproject.projectId})}" class="btn btn-secondary">⬅️ Subprojektliste for projekt</a>
 
         <!-- PROJECT_MANAGER & DEVELOPER -->
         <a th:if="${session.currentUser.role.name() == 'PROJECT_MANAGER' || session.currentUser.role.name() == 'DEVELOPER'}"

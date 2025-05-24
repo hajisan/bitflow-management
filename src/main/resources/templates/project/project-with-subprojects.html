@@ -2,7 +2,7 @@
 <html lang="da" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>Subprojekter for Projekt</title>
+  <title>Project-with-subprojects</title>
   <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
@@ -27,7 +27,11 @@
   <!-- Kort projektinfo -->
   <div class="details-box">
     <p><strong>Deadline:</strong> <span th:text="${projectWithSubProjects.project.deadline}"></span></p>
-    <p><strong>Forbrugt tid:</strong> <span th:text="${projectWithSubProjects.project.timeSpent} + ' t.'"></span></p>
+    <p><strong>Estimeret tid:</strong> <span th:text="${projectWithSubProjects.project.estimatedTime} + ' t.'"></span></p>
+    <p class="status"
+       th:text="'Status: ' + ${projectWithSubProjects.project.status}"
+       th:classappend="' status-' + ${projectWithSubProjects.project.status.name().toLowerCase()}">
+    </p>
   </div>
 
   <!-- Liste over subprojekter -->

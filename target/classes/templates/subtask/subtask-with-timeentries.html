@@ -2,7 +2,7 @@
 <html lang="da" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Tidsregistreringer for underopgave</title>
+    <title>Subtask-with-timeentries</title>
     <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
@@ -64,7 +64,7 @@
 
     <!-- Navigation -->
     <div class="fixed-bottom-right">
-        <a th:href="@{/subtasks/{id}(id=${subTaskWithTimeEntries.subTask.subTaskId})}" class="btn btn-secondary">⬅️ Tilbage til underopgave</a>
+        <a th:href="@{/subtasks/{id}(id=${subTaskWithTimeEntries.subTask.subTaskId})}" class="btn btn-secondary">⬅️ Tilbage til subtaskens detaljer</a>
         <a th:if="${session.currentUser.role.name() == 'ADMIN'}" th:href="@{/timeentries/list}" class="btn btn-secondary">📋 Alle tidsregistreringer</a>
         <a th:href="@{/users/profile}" class="btn btn-secondary">🏠 Dashboard</a>
     </div>

@@ -2,7 +2,7 @@
 <html lang="da" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Opret subtask</title>
+    <title>Create-subtask</title>
     <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
@@ -70,13 +70,13 @@
         </div>
 
         <div class="form-group">
-            <button type="submit" class="btn btn-primary">➕ Opret underopgave</button>
+            <button type="submit" class="btn btn-primary">➕ Opret subtask</button>
         </div>
     </form>
 
     <!-- Navigation -->
     <div class="fixed-bottom-right">
-        <a th:href="@{/subprojects/{id}/tasks(id=${task.subProjectId})}" class="btn btn-secondary">⬅️ Tilbage til subtask</a>
+        <a th:href="@{/subprojects/{id}/tasks(id=${subtask.taskId})}" class="btn btn-secondary">⬅️ Tilbage til subtask</a>
         <a th:href="@{/users/profile}" class="btn btn-secondary">🏠 Forside</a>
     </div>
 

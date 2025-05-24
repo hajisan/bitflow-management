@@ -2,7 +2,7 @@
 <html lang="da" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Opret tidsregistrering</title>
+    <title>Create-timeentry</title>
     <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
@@ -46,7 +46,7 @@
     <div class="fixed-bottom-right">
         <a th:if="${timeentry.subTaskId == null}" th:href="@{/tasks/{id}/timeentries(id=${timeentry.taskId})}" class="btn btn-secondary">⬅️ Tilbage til task</a>
         <a th:if="${timeentry.subTaskId != null}" th:href="@{/subtasks/{id}/timeentries(id=${timeentry.subTaskId})}" class="btn btn-secondary">⬅️ Tilbage til subtask</a>
-        <a th:href="@{/users/profile}" class="btn btn-secondary">🏠 Forside</a>
+        <a th:href="@{/users/profile}" class="btn btn-secondary">🏠 Dashboard</a>
     </div>
 
 </section>

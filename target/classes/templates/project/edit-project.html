@@ -2,7 +2,7 @@
 <html lang="da" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>Rediger Projekt</title>
+  <title>Edit-project</title>
   <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
@@ -62,10 +62,13 @@
     </div>
   </form>
 
-  <!-- Slet projekt -->
-  <form th:action="@{/projects/delete/{projectId}(projectId=${project.projectId})}" method="post"
+  <!-- Slet projekt kun for admin -->
+  <form th:if="${session.currentUser.role.name() == 'ADMIN'}"
+        th:action="@{/projects/delete/{projectId}(projectId=${project.projectId})}"
+        method="post"
         onsubmit="return confirm('Er du sikker på, at du vil slette dette projekt?');"
-        class="form-group" style="margin-top: var(--spacing-sm);">
+        class="form-group"
+        style="margin-top: var(--spacing-sm);">
     <button type="submit" class="btn btn-danger">🗑️ Slet projekt</button>
   </form>
 

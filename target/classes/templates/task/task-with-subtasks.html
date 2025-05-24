@@ -2,7 +2,7 @@
 <html lang="da" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Subtasks for Opgave</title>
+    <title>Task-with-subtasks</title>
     <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
@@ -25,6 +25,7 @@
     <!-- Kort task-info -->
     <div class="details-box">
         <p><strong>Deadline:</strong> <span th:text="${taskWithSubTasks.task.deadline}"></span></p>
+        <p><strong>Estimeret tid</strong> <span th:text="${taskWithSubTasks.task.estimatedTime}"></span></p>
         <p class="status"
            th:text="'Status: ' + ${taskWithSubTasks.task.status}"
            th:classappend="' status-' + ${taskWithSubTasks.task.status.name().toLowerCase()}">
@@ -42,6 +43,12 @@
 
                         <div class="meta">
                             <p th:text="'Deadline: ' + ${sub.deadline}"></p>
+                        </div>
+                        <div class="meta">
+                            <p th:text="'Estimeret tid: ' + ${sub.estimatedTime}"></p>
+                        </div>
+                        <div class="meta">
+                            <p th:text="'Forbrugt tid: ' + ${sub.timeSpent}"></p>
                         </div>
 
                         <p class="status"
@@ -64,7 +71,7 @@
 
     <!-- Navigation -->
     <div class="fixed-bottom-right">
-        <a th:href="@{/tasks/{id}(id=${taskWithSubTasks.task.taskId})}" class="btn btn-secondary">⬅️ Tilbage til opgave</a>
+        <a th:href="@{/tasks/{id}(id=${taskWithSubTasks.task.taskId})}" class="btn btn-secondary">⬅️ Tilbage til task</a>
         <a th:href="@{/users/profile}" class="btn btn-secondary">🏠 Dashboard</a>
     </div>
 

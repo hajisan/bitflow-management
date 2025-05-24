@@ -2,7 +2,7 @@
 <html lang="da" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Rediger Subprojekt</title>
+    <title>Edit-subproject</title>
     <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
@@ -73,8 +73,8 @@
 
     <!-- Navigation -->
     <div class="fixed-bottom-right">
-        <a th:href="@{/subprojects/{subprojectId}(subprojectId=${subproject.subProjectId})}" class="btn btn-secondary">⬅️ Tilbage til detaljer</a>
-        <a th:href="@{/users/profile}" class="btn btn-secondary">🏠 Forside</a>
+        <a th:href="@{/subprojects/{subprojectId}(subprojectId=${subproject.subProjectId})}" class="btn btn-secondary">⬅️ Tilbage til subprojektets detaljer</a>
+        <a th:href="@{/users/profile}" class="btn btn-secondary">🏠 Dashboard</a>
     </div>
 
 </section>

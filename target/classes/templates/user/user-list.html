@@ -2,7 +2,7 @@
 <html lang="da" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>Brugerliste</title>
+  <title>User-list</title>
   <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
@@ -15,12 +15,16 @@
 <div th:if="${error}" class="error-section"><p class="error-message" th:text="${error}"></p></div>
 
 <section class="dashboard-section">
-  <!-- Header med knap -->
   <div class="list-header">
     <h2 class="section-title">Brugeroversigt</h2>
-    <a th:href="@{/users/create}" class="btn btn-primary">➕ Opret ny bruger</a>
+    <!-- Kun for ADMIN -->
+    <a th:if="${session.currentUser.role.name() == 'ADMIN'}"
+       th:href="@{/users/create}"
+       class="btn btn-primary">➕ Opret ny bruger</a>
   </div>
+</section>
 
+<section class="dashboard-section">
   <!-- Klassisk brugerliste med rækker -->
   <div class="list-wrapper">
     <div class="list">

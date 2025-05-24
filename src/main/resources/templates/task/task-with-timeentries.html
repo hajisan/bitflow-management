@@ -2,7 +2,7 @@
 <html lang="da" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Tidsregistreringer for opgave</title>
+    <title>Task-with-timeeentries</title>
     <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
@@ -51,7 +51,7 @@
         </div>
 
         <div th:if="${#lists.isEmpty(taskWithTimeEntries.timeEntries)}">
-            <p>Der er endnu ingen tidsregistreringer for denne opgave.</p>
+            <p>Der er endnu ingen tidsregistreringer for denne task.</p>
         </div>
     </div>
 
@@ -64,7 +64,7 @@
 
     <!-- Navigation -->
     <div class="fixed-bottom-right">
-        <a th:href="@{/tasks/{id}(id=${taskWithTimeEntries.task.taskId})}" class="btn btn-secondary">⬅️ Tilbage til opgave</a>
+        <a th:href="@{/tasks/{id}(id=${taskWithTimeEntries.task.taskId})}" class="btn btn-secondary">⬅️ Tilbage til taskdetaljer</a>
         <a th:if="${session.currentUser.role.name() == 'ADMIN'}" th:href="@{/timeentries/list}" class="btn btn-secondary">📋 Alle tidsregistreringer</a>
         <a th:href="@{/users/profile}" class="btn btn-secondary">🏠 Dashboard</a>
     </div>
