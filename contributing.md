@@ -59,3 +59,4 @@ Brug GitHub Project Board til at holde styr på opgaver og fremdrift.
 Scrum board: GitHub Project Board
 
 Brug issues i GitHub til fejlrapporter og support.
+
