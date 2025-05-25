@@ -77,5 +77,6 @@ Opret en ny branch for din feature eller rettelse. Se nærmere beskrivelse under
 Vi siger tak for din opmærksomhed og din fremtidige villighed til at dedikere din tid og din passion til vores fælles projekt!
 
 Oversigt over Dos and Don'ts:
+
 ![Do's   Dont's](https://github.com/user-attachments/assets/068754c0-f731-4abb-9880-1ddd4d279789)
 
