@@ -12,11 +12,6 @@ The build job, "Build and test with Maven", runs on Ubuntu and has the following
 
     CD pipeline:
     WIP :3
-
-Klassediagram:    
-![Class Diagram - EstimationToolWithAttributes](https://github.com/user-attachments/assets/c8d7c13e-1d2a-4a47-bf01-ad994a5d64b7)
-
-
 # EstimationTool – Projektplanlægning og Tidsstyring
 
 Med mange ansatte fordelt over flere lande er projektstyring en kompleks opgave. Dette system hjælper med at nedbryde og planlægge projektopgaver, lave tidskalkulationer og etablere pipelines til automatisering.
@@ -78,3 +73,13 @@ SQL-scripts til databaseoprettelse og seed-data findes i src/main/resources.
   o Domænemodel  
   o ER-model  
   o Klassediagram
+
+Domænemodel:
+![Domænemodel - Project Manager](https://github.com/user-attachments/assets/e5e53c3a-45a6-4b49-ae4a-a667aaa0b2fe)
+
+
+ER-model:
+(Nima kan smide 600 DPI HiRes version af ER-modellen fra Visual Paradigm her)
+
+Klassediagram:    
+![Class Diagram - EstimationToolWithAttributes](https://github.com/user-attachments/assets/c8d7c13e-1d2a-4a47-bf01-ad994a5d64b7)
