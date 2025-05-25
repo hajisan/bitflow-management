@@ -22,7 +22,7 @@ Klassediagram:
 Med mange ansatte fordelt over flere lande er projektstyring en kompleks opgave. Dette system hjælper med at nedbryde og planlægge projektopgaver, lave tidskalkulationer og etablere pipelines til automatisering.
 
 ## 📌 Om projektet
-- Opgave- og projektnedbrydning (f.eks. bygge et hus i mindre opgaver)  
+- Opgave- og projektnedbrydning (f.eks. som at bygge et hus i mindre opgaver)  
 - Tidsstyring: beregning af tidsforbrug, deadlines og arbejdsdage  
 - CI/CD pipeline med automatiserede tests og deployment til Azure  
 - Brugergrænseflade til oprettelse, vedligeholdelse og oversigt over projekter
@@ -42,7 +42,7 @@ Projektet giver virksomheden et klart overblik over projekter, delprojekter og o
 7. Deploy til Azure  
    GitHub Actions er sat op til at håndtere CI/CD.  
 
-🔗 Kørende applikation på Azure (indsæt-link-her)
+🔗 Kørende applikation på Azure: (indsæt-link-her) http://alphasolution-estimation-tool-fdf6h3fwcvgcdhfq.swedencentral-01.azurewebsites.net
 
 ## 📘 Hvor brugere kan få hjælp
 - Scrum board og projektoversigt: GitHub Project Board  
