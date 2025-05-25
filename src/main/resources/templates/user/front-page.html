@@ -82,8 +82,8 @@
             ⏱️ Tidsregistreringer
         </a>
 
-        <a class="dashboard-card" th:href="@{/users/{id}/details(id=${session.currentUser.userId})}"> <!-- fiks -->
-            👤Se dine oplysninger
+        <a class="dashboard-card" th:href="@{/users/{id}(id=${session.currentUser.userId})}"> <!-- fiks -->
+            👤Mine oplysninger
         </a>
 
     </div>

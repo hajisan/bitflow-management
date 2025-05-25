@@ -35,12 +35,8 @@
     </div>
 
     <!-- Opret time entry (kun hvis ingen subtasks) -->
-    <div th:if="${taskwithsubtasks.subTaskList().isEmpty()}" class="form-actions">
-        <a th:href="@{/timeentries/create(taskId=${task.taskId})}" class="btn btn-primary">➕ Opret time entry</a>
-    </div>
-
-    <!-- Handlinger -->
-    <div class="action-buttons">
+    <div th:if="${taskwithsubtasks.subTaskList().isEmpty()}" class="action-buttons">
+        <!-- Handlinger kun vist hvis listen er tom -->
         <a th:href="@{/timeentries/create(taskId=${task.taskId})}" class="btn btn-primary">➕ Opret tidsregistrering</a>
         <a th:href="@{/tasks/{taskId}/subtasks(taskId=${task.taskId})}" class="btn btn-secondary">📋 Se subtasks</a>
         <a th:href="@{/tasks/{taskId}/timeentries(taskId=${task.taskId})}" class="btn btn-secondary">⏱️ Se tidsregistreringer</a>
@@ -51,102 +47,11 @@
     <!-- Navigation -->
     <div class="fixed-bottom-right">
         <a th:href="@{/subprojects/{id}/tasks(id=${task.subProjectId})}" class="btn btn-secondary">⬅️ Tilbage til subprojektets tasks</a>
-        <a th:if="${session.currentUser.role.name() == 'ADMIN'}" th:href="@{/tasks/list}" class="btn btn-secondary">📋 Alle opgaver</a>
+        <a th:if="${session.currentUser.role.name() == 'ADMIN'}" th:href="@{/tasks/list}" class="btn btn-secondary">📋 Alle tasks</a>
         <a th:href="@{/users/profile}" class="btn btn-secondary">🏠 Dashboard</a>
     </div>
-
 </section>
+
 </body>
 </html>
 
-<!--<!DOCTYPE html>-->
-<!--<html lang="en" xmlns:th="http://www.thymeleaf.org">-->
-<!--<head>-->
-<!--    <meta charset="UTF-8">-->
-<!--    <title>Task Detail</title>-->
-<!--</head>-->
-<!--<body>-->
-
-<!--<h1>Task detaljer</h1>-->
-
-<!--&lt;!&ndash; Fejlbesked &ndash;&gt;-->
-<!--<section th:if="${error}" class="error-section">-->
-<!--    <p th:text="${error}" class="error-message"></p>-->
-<!--</section>-->
-
-<!--&lt;!&ndash; Viser detaljer om task &ndash;&gt;-->
-<!--<section class="details-grid">-->
-<!--    <div>Navn: <span th:text="${task.name}"></span></div>-->
-<!--    <div>Beskrivelse: <span th:text="${task.description}"></span></div>-->
-<!--    <div>Deadline: <span th:text="${task.deadline}"></span></div>-->
-<!--    <div>Estimeret tid: <span th:text="${task.estimatedTime}"></span> timer</div>-->
-<!--    <div>Aktuelle tidsforbrug: <span th:text="${task.timeSpent}"></span> timer</div>-->
-<!--    <div>Status: <span th:text="${task.status}"></span></div>-->
-<!--</section>-->
-
-<!--&lt;!&ndash; Rediger task er for alle &ndash;&gt;-->
-<!--<section class="form-actions">-->
-<!--    <div>-->
-<!--        <a th:href="@{/tasks/edit/{taskId}(taskId=${task.taskId})}">-->
-<!--            <button>Rediger task</button>-->
-<!--        </a>-->
-<!--    </div>-->
-<!--</section>-->
-
-<!--&lt;!&ndash; Knap der fører til oprettelse af ny time entry - Skal kun være synlig, hvis der ikke er nogen subtasks &ndash;&gt;-->
-<!--<section class="form-actions" th:if="${taskwithsubtasks.subTaskList().isEmpty()}">-->
-<!--    <div>-->
-<!--        <a th:href="@{/timeentries/create(taskId=${task.taskId})}">-->
-<!--            <button>Opret ny time entry</button>-->
-<!--        </a>-->
-<!--    </div>-->
-<!--</section>-->
-
-<!--&lt;!&ndash; Navigation &ndash;&gt;-->
-<!--<section class="navigation">-->
-
-<!--    &lt;!&ndash; Til taskens subtask-liste &ndash;&gt;-->
-<!--    <div>-->
-<!--        <a th:href="@{/tasks/{taskId}/subtasks(taskId=${task.taskId})}">-->
-<!--            <button>Se tilknyttede subtasks</button>-->
-<!--        </a>-->
-<!--    </div>-->
-
-<!--    &lt;!&ndash; Til taskens time entry-liste &ndash;&gt;-->
-<!--    <div>-->
-<!--        <a th:href="@{/tasks/{taskId}/timeentries(taskId=${task.taskId})}">-->
-<!--            <button>Se tilknyttede time entries</button>-->
-<!--        </a>-->
-<!--    </div>-->
-
-<!--    &lt;!&ndash; Se tilknyttede brugere til task &ndash;&gt;-->
-<!--    <div>-->
-<!--        <a th:href="@{/tasks/{taskId}/users(taskId=${task.taskId})}">-->
-<!--            <button>Se tilknyttede brugere</button>-->
-<!--        </a>-->
-<!--    </div>-->
-
-<!--    &lt;!&ndash; Tilbage til subproject-with-tasks.html er for alle &ndash;&gt;-->
-<!--    <div>-->
-<!--        <a th:href="@{/subprojects/{id}/tasks(id=${task.subProjectId})}">-->
-<!--            <button>Tilbage til subprojektets tasks</button>-->
-<!--        </a>-->
-<!--    </div>-->
-
-<!--    &lt;!&ndash; Tilbage til tasks-list.html er kun for admin &ndash;&gt;-->
-<!--    <div th:if="${session.currentUser.role.name() == 'ADMIN'}">-->
-<!--        <a th:href="@{/tasks/list}">-->
-<!--            <button>Tilbage til alle tasks</button>-->
-<!--        </a>-->
-<!--    </div>-->
-
-<!--    &lt;!&ndash; Tilbage til front-page.html er for alle &ndash;&gt;-->
-<!--    <div>-->
-<!--        <a th:href="@{/users/profile}">-->
-<!--            <button>Tilbage til forside</button>-->
-<!--        </a>-->
-<!--    </div>-->
-<!--</section>-->
-
-<!--</body>-->
-<!--</html>-->

@@ -2,7 +2,7 @@
 <html lang="da" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Subtask oversigt</title>
+    <title>Subtask-list</title>
     <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
@@ -19,8 +19,7 @@
 
     <!-- Header -->
     <div class="list-header">
-        <h2 class="section-title">Alle subtasks</h2>
-        <a th:href="@{/subtasks/create}" class="btn btn-primary">➕ Opret ny subtask</a>
+        <h2 class="section-title">Subtaskoversigt</h2>
     </div>
 
     <!-- Liste over subtasks -->
@@ -34,8 +33,8 @@
                         <p class="name" th:text="'Navn: ' + ${subtask.name}"></p>
 
                         <div class="meta">
-                            <p th:text="'Opgave ID: ' + ${subtask.taskId}"></p>
-                            <p th:text="'Deadline: ' + ${subtask.deadline}"></p>
+                            <p th:text="'Task ID: ' + ${subtask.taskId}"></p>
+                            <p th:text="'Subtask ID: ' + ${subtask.subTaskId}"></p>
                         </div>
 
                         <p class="status"
@@ -61,67 +60,7 @@
 </section>
 
 <!-- Tilbage-knap -->
-<a th:href="@{/users/profile}" class="btn btn-secondary fixed-bottom-right">⬅️ Tilbage til dashboard</a>
+<a th:href="@{/users/profile}" class="btn btn-secondary fixed-bottom-right">🏠 Dashboard</a>
 
 </body>
 </html>
-
-
-<!--<!DOCTYPE html>-->
-<!--<html lang="en" xmlns:th="http://www.thymeleaf.org">-->
-<!--<head>-->
-<!--    <meta charset="UTF-8">-->
-<!--    <title>SubTask List</title>-->
-<!--</head>-->
-<!--<body>-->
-<!--<h1>Alle subtasks</h1>-->
-
-<!--&lt;!&ndash; Fejl-/succesbesked &ndash;&gt;-->
-<!--<section th:if="${error}" class="error-section">-->
-<!--    <p th:text="${error}" class="error-message"></p>-->
-<!--</section>-->
-<!--<section th:if="${success}" class="success-section">-->
-<!--    <p th:text="${success}" class="success-message"></p>-->
-<!--</section>-->
-<!--&lt;!&ndash; Liste af subtasks er kun for admin &ndash;&gt;-->
-<!--<section th:if="${session.currentUser.role.name() == 'ADMIN'}" class="mini-info">-->
-<!--    <div th:each="subtask : ${subtasks}" class="list">-->
-<!--        <div>Navn: <span th:text="${subtask.name}"></span></div>-->
-<!--        <div>Opgave ID: <span th:text="${subtask.taskId}"></span></div>-->
-<!--        <div>Status: <span th:text="${subtask.status}"></span></div>-->
-<!--        <div>Deadline: <span th:text="${subtask.deadline}"></span></div>-->
-<!--        <div>-->
-<!--            <a th:href="@{/subtasks/{id}(id=${subtask.subTaskId})}">-->
-<!--                <button>Se detaljer</button>-->
-<!--            </a>-->
-<!--        </div>-->
-<!--        <hr/>-->
-<!--    </div>-->
-<!--</section>-->
-
-<!--&lt;!&ndash; Hvis en anden rolle forsøger at tilgå &ndash;&gt;-->
-<!--<section th:unless="${session.currentUser.role.name() == 'ADMIN'}">-->
-<!--    <p>Du har ikke adgang til denne side.</p>-->
-<!--</section>-->
-
-<!--&lt;!&ndash; Knap til at oprette ny underopgave &ndash;&gt;-->
-<!--<section class="form-actions" th:if="${session.currentUser.role.name() == 'ADMIN'}">-->
-<!--    <div>-->
-<!--        <a th:href="@{/subtasks/create}">-->
-<!--            <button>Opret ny underopgave</button>-->
-<!--        </a>-->
-<!--    </div>-->
-<!--</section>-->
-
-<!--&lt;!&ndash; Navigation &ndash;&gt;-->
-<!--<section class="navigation">-->
-<!--    <div>-->
-<!--        <a th:href="@{/users/profile}">-->
-<!--            <button>Tilbage til forside</button>-->
-<!--        </a>-->
-<!--    </div>-->
-<!--</section>-->
-
-
-<!--</body>-->
-<!--</html>-->

@@ -38,7 +38,7 @@
         <div th:if="${session.currentUser.role.name() == 'ADMIN' or session.currentUser.role.name() == 'PROJECT_MANAGER'}">
             <div class="form-group">
                 <label for="deadline">Deadline:</label>
-                <input type="date" id="deadline" th:field="*{deadline}" class="input"/>
+                <input type="date" id="deadline" th:field="*{deadline}" class="input" required/>
             </div>
 
             <div class="form-group">
@@ -64,15 +64,15 @@
     <!-- Slet knap -->
     <form th:action="@{/tasks/delete/{id}(id=${task.taskId})}" method="post"
           th:if="${session.currentUser.role.name() == 'ADMIN' or session.currentUser.role.name() == 'PROJECT_MANAGER'}"
-          onsubmit="return confirm('Er du sikker på, at du vil slette denne opgave?');"
+          onsubmit="return confirm('Er du sikker på, at du vil slette denne task?');"
           class="form-group" style="margin-top: var(--spacing-sm);">
-        <button type="submit" class="btn btn-danger">🗑️ Slet opgave</button>
+        <button type="submit" class="btn btn-danger">🗑️ Slet Task</button>
     </form>
 
     <!-- Navigation -->
     <div class="fixed-bottom-right">
         <a th:href="@{/tasks/{taskId}(taskId=${task.taskId})}" class="btn btn-secondary">⬅️ Tilbage til taskdetaljer</a>
-        <a th:if="${session.currentUser.role.name() == 'ADMIN'}" th:href="@{/tasks/list}" class="btn btn-secondary">📋 Alle tasks</a>
+        <a th:if="${session.currentUser.role.name() == 'ADMIN'}" th:href="@{/tasks/list}" class="btn btn-secondary">📋 Taskoversigt</a>
         <a th:href="@{/users/profile}" class="btn btn-secondary">🏠 Dashboard</a>
     </div>
 

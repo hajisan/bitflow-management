@@ -2,7 +2,7 @@
 <html lang="da" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Brugerens Timeregistreringer</title>
+    <title>User-with-timeentries</title>
     <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
@@ -40,7 +40,7 @@
                 </div>
 
                 <div class="actions">
-                    <a th:href="@{/timeentry/{id}(id=${timeentry.timeId})}" class="btn btn-secondary">Se detaljer</a>
+                    <a th:href="@{/timeentries/{id}(id=${timeentry.timeId})}" class="btn btn-secondary">Se detaljer</a>
                 </div>
             </div>
 
@@ -52,9 +52,10 @@
         </div>
     </div>
 
-    <!-- Fast tilbageknap -->
-    <a th:href="@{/users/profile}" class="btn btn-secondary fixed-bottom-right">⬅️ Tilbage til dashboard</a>
-
+    <div class="fixed-bottom-right">
+        <a th:href="@{/users/{userId}(userId=${userWithTimeEntries.user.userId})}" class="btn btn-secondary">⬅️ Tilbage til brugerdetaljer</a>
+        <a th:href="@{/users/profile}" class="btn btn-secondary">🏠 Dashboard</a>
+    </div>
 </section>
 </body>
 </html>

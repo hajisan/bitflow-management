@@ -1,14 +1,17 @@
 package com.example.estimationtool.service;
 
+import com.example.estimationtool.model.Project;
 import com.example.estimationtool.model.Task;
 import com.example.estimationtool.model.User;
 import com.example.estimationtool.model.enums.Status;
+import com.example.estimationtool.repository.ProjectRepository;
 import com.example.estimationtool.repository.interfaces.IProjectRepository;
 import com.example.estimationtool.repository.interfaces.ISubProjectRepository;
 import com.example.estimationtool.model.SubProject;
 import com.example.estimationtool.repository.interfaces.ITaskRepository;
 import com.example.estimationtool.repository.interfaces.IUserRepository;
 import com.example.estimationtool.toolbox.check.DeadlineCheck;
+import com.example.estimationtool.toolbox.check.DeadlineValidation;
 import com.example.estimationtool.toolbox.check.StatusCheck;
 import com.example.estimationtool.toolbox.controllerAdvice.UserFriendlyException;
 import com.example.estimationtool.toolbox.dto.SubProjectWithTasksDTO;
@@ -26,11 +29,19 @@ public class SubProjectService {
     private final ITaskRepository iTaskRepository;
     private final StatusCheck statusCheck;
 
-    public SubProjectService(ISubProjectRepository iSubProjectRepository, IUserRepository iUserRepository, ITaskRepository iTaskRepository, StatusCheck statusCheck) {
+    private final DeadlineValidation deadlineValidation;
+
+
+    public SubProjectService(ISubProjectRepository iSubProjectRepository,
+                             IUserRepository iUserRepository,
+                             ITaskRepository iTaskRepository,
+                             StatusCheck statusCheck, DeadlineValidation deadlineValidation) {
         this.iSubProjectRepository = iSubProjectRepository;
         this.iUserRepository = iUserRepository;
         this.iTaskRepository = iTaskRepository;
         this.statusCheck = statusCheck;
+
+        this.deadlineValidation = deadlineValidation;
     }
 
     //------------------------------------ Create() ------------------------------------
@@ -38,6 +49,11 @@ public class SubProjectService {
 
         // Kun admin og projektleder må oprette et subprojekt
         RoleCheck.ensureAdminOrProjectManager(currentUser.getRole());
+
+
+        // Subprojektets deadline må ikke være efter projektets deadline
+        deadlineValidation.validateSubprojectDeadline(subProject.getProjectId(), subProject.getDeadline());
+
 
         return iSubProjectRepository.create(subProject);
     }
@@ -69,6 +85,12 @@ public class SubProjectService {
         SubProject existingSubProject = iSubProjectRepository.readById(subProject.getSubProjectId());
         subProject.setDeadline(
                 DeadlineCheck.checkForDeadlineInput(subProject.getDeadline(), existingSubProject.getDeadline())
+        );
+
+        // Deadline-validering: må ikke sættes til efter projektets deadline
+        deadlineValidation.validateSubprojectDeadline(
+                subProject.getProjectId(),   // Henter projektets ID
+                subProject.getDeadline()     // Subprojektets deadline
         );
 
         // Statusvalidering: SubProject må kun sættes til DONE, hvis alle Tasks er DONE

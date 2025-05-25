@@ -2,7 +2,7 @@
 <html lang="da" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Opgaveoversigt</title>
+    <title>Task-list</title>
     <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
@@ -19,8 +19,7 @@
 
     <!-- Header -->
     <div class="list-header">
-        <h2 class="section-title">Alle opgaver</h2>
-        <a th:href="@{/tasks/create}" class="btn btn-primary">➕ Opret ny opgave</a>
+        <h2 class="section-title">Taskoversigt</h2>
     </div>
 
     <!-- Liste over tasks -->
@@ -35,7 +34,7 @@
 
                         <div class="meta">
                             <p th:text="'Subprojekt ID: ' + ${task.subProjectId}"></p>
-                            <p th:text="'Deadline: ' + ${task.deadline}"></p>
+                            <p th:text="'Task ID: ' + ${task.taskId}"></p>
                         </div>
 
                         <p class="status"
@@ -61,57 +60,7 @@
 </section>
 
 <!-- Tilbage-knap -->
-<a th:href="@{/users/profile}" class="btn btn-secondary fixed-bottom-right">⬅️ Tilbage til dashboard</a>
+<a th:href="@{/users/profile}" class="btn btn-secondary fixed-bottom-right">🏠 Dashboard</a>
 
 </body>
 </html>
-
-<!--<!DOCTYPE html>-->
-<!--<html lang="en" xmlns:th="http://www.thymeleaf.org">-->
-<!--<head>-->
-<!--    <meta charset="UTF-8">-->
-<!--    <title>Task List</title>-->
-<!--</head>-->
-<!--<body>-->
-<!--<h1>Liste af alle tasks</h1>-->
-
-<!--&lt;!&ndash; Fejl-/succesbesked &ndash;&gt;-->
-<!--<section th:if="${error}" class="error-section">-->
-<!--    <p th:text="${error}" class="error-message"></p>-->
-<!--</section>-->
-<!--<section th:if="${success}" class="success-section">-->
-<!--    <p th:text="${success}" class="success-message"></p>-->
-<!--</section>-->
-
-
-<!--&lt;!&ndash; Kun ADMIN må se task-liste &ndash;&gt;-->
-<!--<section th:if="${session.currentUser.role.name() == 'ADMIN'}" class="mini-info">-->
-<!--    <div th:each="task : ${tasks}" class="list">-->
-<!--        <div>Navn: <span th:text="${task.name}"></span></div>-->
-<!--        <div>Subprojekt ID: <span th:text="${task.subProjectId}"></span></div>-->
-<!--        <div>Status: <span th:text="${task.status}"></span></div>-->
-<!--        <div>-->
-<!--            <a th:href="@{/tasks/{taskId}(taskId=${task.taskId})}">-->
-<!--                <button>Se detaljer</button>-->
-<!--            </a>-->
-<!--        </div>-->
-<!--        <hr/>-->
-<!--    </div>-->
-<!--</section>-->
-
-<!--&lt;!&ndash; Hvis en anden rolle forsøger at tilgå &ndash;&gt;-->
-<!--<section th:unless="${session.currentUser.role.name() == 'ADMIN'}">-->
-<!--    <p>Du har ikke adgang til denne side.</p>-->
-<!--</section>-->
-
-<!--&lt;!&ndash; Navigation &ndash;&gt;-->
-<!--<section class="navigation">-->
-<!--    <div>-->
-<!--        <a th:href="@{/users/profile}">-->
-<!--            <button>Tilbage til forside</button>-->
-<!--        </a>-->
-<!--    </div>-->
-<!--</section>-->
-
-<!--</body>-->
-<!--</html>-->
