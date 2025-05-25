@@ -28,37 +28,37 @@ Tak fordi du ønsker at bidrage til EstimationTool! Dette dokument beskriver, hv
  ##  🌿 Branch-konventioner
 For at holde repositoryet organiseret og let at vedligeholde, bruger vi følgende branch-konventioner:
 
-1. **main
+1. **main**
 Indeholder den nyeste, stabile og kørende version af applikationen. Ingen direkte commits til denne branch. Bruges kun til releases.
 
-2. **development
+2. **development**
 Hovedbranchen for udvikling. Alle feature branches og bugfixes flettes ind her efter pull requests. Når udviklingen er stabil, flettes development til main.
 
-3. **feature/
+3. **feature/**
 Alle nye funktioner udvikles i branches, der starter med feature/.
 Eksempel: feature/ny-funktion
 
-4. **bugfix/
+4. **bugfix/**
 Alle fejlrettelser udvikles i branches, der starter med bugfix/.
 Eksempel: bugfix/fix-login-issue
 
 ## 🔍 Retningslinjer for bidrag
 Opret en ny branch for din feature eller rettelse.
 
-1. **Brug meningsfulde commit-beskeder.
+1. **Brug meningsfulde commit-beskeder.**
 
-2. **Opret en pull request til development branch, og beskriv ændringerne tydeligt.
+2. **Opret en pull request til development branch, og beskriv ændringerne tydeligt.**
 
-3. **Sørg for at alle tests kører uden fejl, før pull request oprettes.
+3. **Sørg for at alle tests kører uden fejl, før pull request oprettes.**
 
-4. **For større ændringer, start med at åbne en issue for diskussion.
+4. **For større ændringer, start med at åbne en issue for diskussion.**
 
-5. **Brug GitHub Project Board til at holde styr på opgaver og fremdrift.
+5. **Brug GitHub Project Board til at holde styr på opgaver og fremdrift.**
 
 ## 📘 Hjælp og support
-**Scrum board: GitHub Project Board
+1. **Scrum board: GitHub Project Board**
 
-Brug issues i GitHub til fejlrapporter og support.
+2. **Brug issues i GitHub til fejlrapporter og support.**
 
 
 
