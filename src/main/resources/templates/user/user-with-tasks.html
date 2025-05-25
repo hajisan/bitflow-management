@@ -2,7 +2,7 @@
 <html lang="da" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Brugerens tasks</title>
+    <title>User-with-tasks</title>
     <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
@@ -18,7 +18,7 @@
 
     <!-- Brugerinfo -->
     <div class="list-header">
-        <h2 class="section-title">Opgaver for <span th:text="${userWithTasks.user.firstName}"></span></h2>
+        <h2 class="section-title">Tasks for <span th:text="${userWithTasks.user.firstName}"></span></h2>
         <p class="role" th:text="'Rolle: ' + ${userWithTasks.user.role}"></p>
     </div>
 
@@ -53,12 +53,15 @@
 
         <!-- Hvis ingen opgaver -->
         <div th:if="${#lists.isEmpty(userWithTasks.taskList)}">
-            <p>Brugeren <span th:text="${userWithTasks.user.firstName}"></span> har ingen tilknyttede opgaver.</p>
+            <p>Brugeren <span th:text="${userWithTasks.user.firstName}"></span> har ingen tilknyttede tasks.</p>
         </div>
     </div>
 
     <!-- Fast tilbageknap -->
-    <a th:href="@{/users/profile}" class="btn btn-secondary fixed-bottom-right">⬅️ Tilbage til dashboard</a>
+    <div class="fixed-bottom-right">
+        <a th:href="@{/users/{userId}(userId=${userWithTasks.user.userId})}" class="btn btn-secondary">⬅️ Tilbage til brugerdetaljer</a>
+        <a th:href="@{/users/profile}" class="btn btn-secondary">🏠 Dashboard</a>
+    </div>
 
 </section>
 </body>

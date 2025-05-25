@@ -2,17 +2,24 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Forside</title>
+    <title>Front-page</title>
+    <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
 
 <!-- Navigation bar, som et fragment -->
 <div th:replace="fragments/navbar :: navbar"></div>
 
+<!-- Feedback -->
+<div th:if="${success}" class="success-section">
+    <p class="success-message" th:text="${success}"></p>
+</div>
+
 <!-- Fejlbesked -->
 <div th:if="${error}" class="error-section">
     <p th:text="${error}" class="error-message"></p>
 </div>
+
 
 <!-- Overskrift -->
 <div class="welcome-box">
@@ -75,8 +82,8 @@
             ⏱️ Tidsregistreringer
         </a>
 
-        <a class="dashboard-card" th:href="@{/users/{id}/details(id=${session.currentUser.userId})}"> <!-- fiks -->
-            👤Se dine oplysninger
+        <a class="dashboard-card" th:href="@{/users/{id}(id=${session.currentUser.userId})}"> <!-- fiks -->
+            👤Mine oplysninger
         </a>
 
     </div>

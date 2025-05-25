@@ -225,7 +225,7 @@ public class SubTaskController {
 
         redirectAttributes.addFlashAttribute("success", "Subtask blev slettet.");
 
-        return "redirect:/subtasks/";
+        return "redirect:/users/profile";
     }
 
     //---------------------------------- DTO read() ------------------------------------

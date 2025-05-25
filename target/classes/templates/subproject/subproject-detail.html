@@ -56,8 +56,6 @@
            th:href="@{/projects/{id}/subprojects(id=${subproject.projectId})}" class="btn btn-secondary">⬅️ Subprojektliste for projekt</a>
 
         <!-- PROJECT_MANAGER & DEVELOPER -->
-        <a th:if="${session.currentUser.role.name() == 'PROJECT_MANAGER' || session.currentUser.role.name() == 'DEVELOPER'}"
-           th:href="@{/projects/{id}(id=${subproject.projectId})}" class="btn btn-secondary">⬅️ Tilbage til subprojekt</a>
 
         <a th:if="${session.currentUser.role.name() == 'PROJECT_MANAGER' || session.currentUser.role.name() == 'DEVELOPER'}"
            th:href="@{/projects/{id}(id=${subproject.projectId})}" class="btn btn-secondary">⬅️ Tilbage til projekt</a>
