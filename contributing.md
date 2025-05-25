@@ -42,7 +42,7 @@ Eksempel: feature/ny-funktion
 Alle fejlrettelser udvikles i branches, der starter med bugfix/.
 Eksempel: bugfix/fix-login-issue
 
-##🔍 Retningslinjer for bidrag
+## 🔍 Retningslinjer for bidrag
 Opret en ny branch for din feature eller rettelse.
 
 1. **Brug meningsfulde commit-beskeder.
@@ -55,7 +55,7 @@ Opret en ny branch for din feature eller rettelse.
 
 5. **Brug GitHub Project Board til at holde styr på opgaver og fremdrift.
 
-##📘 Hjælp og support
+## 📘 Hjælp og support
 **Scrum board: GitHub Project Board
 
 Brug issues i GitHub til fejlrapporter og support.
