@@ -1,4 +1,6 @@
 -- Dropper tables hvis de findes for at rydde al data
+CREATE SCHEMA IF NOT EXISTS project_db;
+USE project_db;
 
 DROP TABLE IF EXISTS Users_SubTask;
 DROP TABLE IF EXISTS Users_Task;
