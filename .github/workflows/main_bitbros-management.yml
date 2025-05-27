@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy JAR app to Azure Web App - alphasolution-bitflow-management
+name: Build and deploy JAR app to Azure Web App - bitbros-management
 
 on:
   push:
@@ -52,15 +52,15 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_2B5F664A4A3C4673AB55CD45CF96549C }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_93801BDEF8A94254853EC8F470E7C014 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_DC66223B02924A78AA24FE96D3E710B7 }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_84EA77599103427F9546634B608989CA }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_2E31197BABCE4235B59CFF3FF19B1542 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_473F7A81D5EA4C7FBAFD19A3E7F335D7 }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'alphasolution-bitflow-management'
+          app-name: 'bitbros-management'
           slot-name: 'Production'
           package: '*.jar'
           

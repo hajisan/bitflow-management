@@ -64,7 +64,7 @@ Domænemodel:
 ![Domænemodel - Project Manager](https://github.com/user-attachments/assets/e5e53c3a-45a6-4b49-ae4a-a667aaa0b2fe)
 
 ER-model:
-![ER Model](https://github.com/user-attachments/assets/310d9a82-0ecd-40d2-95fa-3600ae1afb0f)
+![ER Model_v10](https://github.com/user-attachments/assets/7bb4d6fc-c21b-4a41-9a85-6e1a7ae663e9)
 
 Klassediagram:    
 ![Class Diagram - EstimationToolWithAttributes](https://github.com/user-attachments/assets/c8d7c13e-1d2a-4a47-bf01-ad994a5d64b7)
