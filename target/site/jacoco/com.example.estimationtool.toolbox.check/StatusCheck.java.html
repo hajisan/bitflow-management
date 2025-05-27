@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="da"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>StatusCheck.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EstimationTool</a> &gt; <a href="index.source.html" class="el_package">com.example.estimationtool.toolbox.check</a> &gt; <span class="el_source">StatusCheck.java</span></div><h1>StatusCheck.java</h1><pre class="source lang-java linenums">package com.example.estimationtool.toolbox.check;
+
+import com.example.estimationtool.model.SubProject;
+import com.example.estimationtool.model.SubTask;
+import com.example.estimationtool.model.Task;
+import com.example.estimationtool.model.enums.Status;
+import com.example.estimationtool.toolbox.dto.ProjectWithSubProjectsDTO;
+import com.example.estimationtool.toolbox.dto.SubProjectWithTasksDTO;
+import com.example.estimationtool.toolbox.dto.TaskWithSubTasksDTO;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+
+// @Component = hjælpeklasse
+
+@Component // Så Spring kan oprette instans af klassen (@Bean), som nu kan injiceres i Service-laget
+<span class="fc" id="L17">public class StatusCheck {</span>
+
+    // ------------------------------- Projekt med SubProjekter ---------------------------------
+
+    public boolean canMarkProjectAsDone(ProjectWithSubProjectsDTO projectWithSubProjectsDTO) {
+
+<span class="nc" id="L23">        List&lt;SubProject&gt; subProjects = projectWithSubProjectsDTO.subProjectList();</span>
+<span class="nc bnc" id="L24" title="All 2 branches missed.">        for (SubProject subProject : subProjects) {</span>
+<span class="nc bnc" id="L25" title="All 2 branches missed.">            if (subProject.getStatus() != Status.DONE) {</span>
+<span class="nc" id="L26">                return false;</span>
+            }
+<span class="nc" id="L28">        }</span>
+<span class="nc" id="L29">        return true;</span>
+    }
+
+    // ------------------------------- SubProjekt med Task --------------------------------------
+
+    public boolean canMarkSubProjectAsDone(SubProjectWithTasksDTO subProjectWithTasksDTO) {
+
+<span class="nc" id="L36">        List&lt;Task&gt; tasks = subProjectWithTasksDTO.taskList();</span>
+<span class="nc bnc" id="L37" title="All 2 branches missed.">        for (Task task : tasks) {</span>
+<span class="nc bnc" id="L38" title="All 2 branches missed.">            if (task.getStatus() != Status.DONE) {</span>
+<span class="nc" id="L39">                return false;</span>
+            }
+<span class="nc" id="L41">        }</span>
+<span class="nc" id="L42">        return true;</span>
+    }
+
+    // ------------------------------- Task med SubTasks ----------------------------------------
+
+    public boolean canMarkTaskAsDone(TaskWithSubTasksDTO taskWithSubTasksDTO) {
+
+<span class="nc" id="L49">        List&lt;SubTask&gt; subTasks = taskWithSubTasksDTO.subTaskList();</span>
+
+<span class="nc bnc" id="L51" title="All 2 branches missed.">        for (SubTask subTask : subTasks) {</span>
+<span class="nc bnc" id="L52" title="All 2 branches missed.">            if(subTask.getStatus() != Status.DONE) {</span>
+<span class="nc" id="L53">                return false;</span>
+            }
+<span class="nc" id="L55">        }</span>
+<span class="nc" id="L56">        return true;</span>
+    }
+
+    // ------------------------------- SubTask --------------------------------------------------
+
+    public boolean canMarkSubTaskAsDone(SubTask subTask) {
+
+<span class="nc" id="L63">        return true;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

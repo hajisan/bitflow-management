@@ -1,45 +1,58 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Project List</title>
+    <title>Project-list</title>
+    <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
 
-<h1>Projektliste</h1>
-
-<!-- Fejlbesked -->
-<section th:if="${error}" class="error-section">
-    <p th:text="${error}" class="error-message"></p>
-</section>
-
-<!-- Opret nyt projekt -->
-<section class="form-actions">
-    <div>
-        <a th:href="@{/projects/create}">
-            <button>Opret nyt projekt</button>
-        </a>
-    </div>
-</section>
-
-
-<!-- Projektoversigt -->
-<section class="mini-info">
-    <div th:each="project : ${projectList}" class="project-summary">
-        <div>Navn: <span th:text="${project.name}"></span></div>
-        <div>Deadline: <span th:text="${project.deadline}"></span></div>
-        <div>Forbrugt tid: <span th:text="${project.timeSpent} + ' t.'"></span></div>
-        <div>Status: <span th:text="${project.status}"></span></div>
-        <div class="details-link">
-            <a th:href="@{/projects/{projectId}(projectId=${project.projectId})}">Se detaljer</a>
-        </div>
-        <hr/>
-    </div>
-</section>
-
 <!-- Navigation -->
-<section class="navigation">
-    <a th:href="@{/users/profile}">Tilbage til forside</a>
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<!-- Feedback-beskeder -->
+<div th:if="${success}" class="success-section"><p class="success-message" th:text="${success}"></p></div>
+<div th:if="${error}" class="error-section"><p class="error-message" th:text="${error}"></p></div>
+
+<section class="dashboard-section">
+    <!-- Header med knap -->
+    <div class="list-header">
+        <h2 class="section-title">Projektoversigt</h2>
+        <a th:href="@{/projects/create}" class="btn btn-primary">➕ Opret nyt projekt</a>
+    </div>
+
+    <!-- Projektliste -->
+    <div class="list-wrapper">
+        <div class="list">
+            <div class="row" th:each="project : ${projectList}">
+                <div class="info">
+                    <span class="icon">📁</span>
+
+                    <div class="details">
+                        <p class="name" th:text="'Navn: ' + ${project.name}"></p>
+
+                        <div class="meta">
+                            <p th:text="'Deadline: ' + ${project.deadline}"></p>
+                            <p th:text="'Estimeret tid: ' + ${project.estimatedTime} + ' t.'"></p>
+                            <p th:text="'Forbrugt tid: ' + ${project.timeSpent} + ' t.'"></p>
+                        </div>
+
+                        <p class="status"
+                           th:text="'Status: ' + ${project.status}"
+                           th:classappend="' status-' + ${project.status.name().toLowerCase()}">
+                        </p>
+                    </div>
+
+                </div>
+                <div class="actions">
+                    <a th:href="@{/projects/{projectId}(projectId=${project.projectId})}" class="btn btn-secondary">Se detaljer</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fast tilbageknap nederst til højre -->
+    <a th:href="@{/users/profile}" class="btn btn-secondary fixed-bottom-right">🏠 Dashboard</a>
 </section>
 
 </body>

@@ -1,19 +1,115 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>TimeEntry Detail</title>
+    <title>Timeentry-detail</title>
+    <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
-<h1>Detaljer for time entry</h1>
 
-<p><strong>ID:</strong> <span th:text="${timeentry.timeId}">1</span></p>
-<p><strong>Bruger ID:</strong> <span th:text="${timeentry.userId}">10</span></p>
-<p><strong>Opgave ID:</strong> <span th:text="${timeentry.taskId}">101</span></p>
-<p><strong>Underopgave ID:</strong> <span th:text="${timeentry.subTaskId}">1001</span></p>
-<p><strong>Timer brugt:</strong> <span th:text="${timeentry.hoursSpent}">3</span></p>
-<p><strong>Dato:</strong> <span th:text="${timeentry.date}">2025-05-08</span></p>
+<!-- Navbar -->
+<div th:replace="fragments/navbar :: navbar"></div>
 
-<a th:href="@{/timeentries}">Tilbage til oversigt</a>
+<!-- Feedback-beskeder -->
+<div th:if="${success}" class="success-section"><p class="success-message" th:text="${success}"></p></div>
+<div th:if="${error}" class="error-section"><p class="error-message" th:text="${error}"></p></div>
+
+<section class="dashboard-section">
+
+    <!-- Overskrift og rediger-knap -->
+    <div class="list-header">
+        <h2 class="section-title">Detaljer for tidsregistrering</h2>
+        <a th:href="@{/timeentries/edit/{id}(id=${timeentry.timeId})}" class="btn btn-secondary">✏️ Rediger</a>
+    </div>
+
+    <!-- Detaljer -->
+    <div class="details-box">
+        <p><strong>ID:</strong> <span th:text="${timeentry.timeId}"></span></p>
+        <p><strong>Bruger ID:</strong> <span th:text="${timeentry.userId}"></span></p>
+        <p><strong>Task ID:</strong> <span th:text="${timeentry.taskId}"></span></p>
+        <p><strong>Subtask ID:</strong> <span th:text="${timeentry.subTaskId} ?: 'Ingen'"></span></p>
+        <p><strong>Forbrugt tid:</strong> <span th:text="${timeentry.hoursSpent} + ' t.'"></span></p>
+        <p><strong>Dato:</strong> <span th:text="${timeentry.date}"></span></p>
+    </div>
+
+    <!-- Navigation -->
+    <div class="fixed-bottom-right">
+        <a th:if="${timeentry.subTaskId != null}" th:href="@{/subtasks/{id}/timeentries(id=${timeentry.subTaskId})}" class="btn btn-secondary">⬅️ Tilbage til subtaskens tidsregistreringer</a>
+        <a th:if="${timeentry.subTaskId == null}" th:href="@{/tasks/{id}/timeentries(id=${timeentry.taskId})}" class="btn btn-secondary">⬅️ Tilbage til taskens tidsregistreringer</a>
+        <a th:if="${session.currentUser.role.name() == 'ADMIN'}" th:href="@{/timeentries/list}" class="btn btn-secondary">📋 Alle tidsregistreringer</a>
+        <a th:href="@{/users/profile}" class="btn btn-secondary">🏠 Dashboard</a>
+    </div>
+
+</section>
+
 </body>
 </html>
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Tidsregistrering Detaljer</title>-->
+<!--</head>-->
+<!--<body>-->
+
+<!--<h1>Detaljer for tidsregistrering</h1>-->
+
+<!--&lt;!&ndash; Fejlbesked &ndash;&gt;-->
+<!--<section th:if="${error}" class="error-section">-->
+<!--    <p th:text="${error}" class="error-message"></p>-->
+<!--</section>-->
+
+<!--&lt;!&ndash; Viser detaljer om tidsregistrering &ndash;&gt;-->
+<!--<section class="details-grid">-->
+<!--    <div>ID: <span th:text="${timeentry.timeId}"></span></div>-->
+<!--    <div>Bruger ID: <span th:text="${timeentry.userId}"></span></div>-->
+<!--    <div>Opgave ID: <span th:text="${timeentry.taskId}"></span></div>-->
+<!--    <div>Underopgave ID: <span th:text="${timeentry.subTaskId}"></span></div>-->
+<!--    <div>Timer brugt: <span th:text="${timeentry.hoursSpent}"></span> timer</div>-->
+<!--    <div>Dato: <span th:text="${timeentry.date}"></span></div>-->
+<!--</section>-->
+
+<!--&lt;!&ndash; Rediger timeentry (tilgængelig for alle) &ndash;&gt;-->
+<!--<section class="form-actions">-->
+<!--    <div>-->
+<!--        <a th:href="@{/timeentries/edit/{id}(id=${timeentry.timeId})}">-->
+<!--            <button>Rediger tidsregistrering</button>-->
+<!--        </a>-->
+<!--    </div>-->
+<!--</section>-->
+
+<!--&lt;!&ndash; Navigation &ndash;&gt;-->
+<!--<section class="navigation">-->
+
+<!--    &lt;!&ndash; Tilbage til opgavens eller underopgavens timeentries &ndash;&gt;-->
+<!--    <div th:if="${timeentry.subTaskId != null}">-->
+<!--        <a th:href="@{/subtask/{id}/timeentries(id=${timeentry.subTaskId})}">-->
+<!--            <button>Tilbage til underopgavens tidsregistreringer</button>-->
+<!--        </a>-->
+<!--    </div>-->
+
+<!--    <div th:if="${timeentry.subTaskId == null}">-->
+<!--        <a th:href="@{/tasks/{id}/timeentries(id=${timeentry.taskId})}">-->
+<!--            <button>Tilbage til opgavens tidsregistreringer</button>-->
+<!--        </a>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Tilbage til oversigt over timeentry-list.html (kun for admin) &ndash;&gt;-->
+<!--    <div th:if="${session.currentUser.role.name() == 'ADMIN'}">-->
+<!--        <a th:href="@{/timeentries/list}">-->
+<!--            <button>Tilbage til alle tidsregistreringer</button>-->
+<!--        </a>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Tilbage til forside &ndash;&gt;-->
+<!--    <div>-->
+<!--        <a th:href="@{/users/profile}">-->
+<!--            <button>Tilbage til forside</button>-->
+<!--        </a>-->
+<!--    </div>-->
+
+<!--</section>-->
+
+<!--</body>-->
+<!--</html>-->

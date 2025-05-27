@@ -4,6 +4,7 @@ import com.example.estimationtool.model.Project;
 import com.example.estimationtool.model.SubProject;
 import com.example.estimationtool.model.SubTask;
 import com.example.estimationtool.model.Task;
+import com.example.estimationtool.toolbox.controllerAdvice.UserFriendlyException;
 import com.example.estimationtool.toolbox.dto.UserWithProjectsDTO;
 import com.example.estimationtool.toolbox.dto.UserWithSubProjectsDTO;
 import com.example.estimationtool.toolbox.dto.UserWithSubTasksDTO;
@@ -25,7 +26,7 @@ public class AssignCheck {
                 return;
             }
         }
-        throw new SecurityException("Status for projektet kan kun ændres af tilknyttede brugere.");
+        throw new UserFriendlyException("Status for projektet kan kun ændres af tilknyttede brugere.", "/users/profile");
     }
 
     // ------------------------------------ User med SubProjects ---------------------------------------
@@ -37,7 +38,7 @@ public class AssignCheck {
                 return;
             }
         }
-        throw new SecurityException("Status for subprojektet kan kun ændres af tilknyttede brugere.");
+        throw new UserFriendlyException("Status for subprojektet kan kun ændres af tilknyttede brugere.", "/users/profile");
     }
 
     // ------------------------------------ User med Tasks ------------------------------------------
@@ -49,7 +50,7 @@ public class AssignCheck {
                 return;
             }
         }
-        throw new SecurityException("Status for task kan kun ændres af tilknyttede brugere.");
+        throw new UserFriendlyException("Status for task kan kun ændres af tilknyttede brugere.", "/users/profile");
     }
 
     // ------------------------------------ User med SubTasks ----------------------------------------
@@ -61,7 +62,7 @@ public class AssignCheck {
                 return;
             }
         }
-        throw new SecurityException("Status for subtask kan kun ændres af tilknyttede brugere.");
+        throw new UserFriendlyException("Status for subtask kan kun ændres af tilknyttet bruger.", "/users/profile");
     }
 
 

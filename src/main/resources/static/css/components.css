@@ -1,0 +1,317 @@
+/* components.css */
+.alert {
+    padding: 1rem;
+    border-radius: var(--border-radius);
+    margin-bottom: var(--spacing-sm);
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.alert-error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.card {
+    background-color: var(--color-white);
+    border: 1px solid #e0e0e0;
+    border-radius: var(--border-radius);
+    padding: var(--spacing-md);
+    box-shadow: var(--box-shadow);
+}
+
+/* ===== NAVBAR ===== */
+
+.navbar {
+    background-color: var(--color-white);
+    padding: var(--spacing-sm) var(--spacing-md);
+    box-shadow: var(--box-shadow);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.navbar-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: var(--container-max-width);
+    margin: 0 auto;
+}
+
+.logo {
+    height: 40px;
+    max-width: 200px;  /* begrænser hvor bredt SVG’et må blive */
+    width: auto;
+    object-fit: contain;
+}
+
+.navbar-center .nav-link {
+    margin-left: var(--spacing-sm);
+    color: var(--color-text);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.navbar-center .nav-link:hover {
+    color: var(--color-primary);
+}
+
+.navbar-center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-size: 1.6rem;
+    letter-spacing: -0.5px;
+    text-transform: uppercase;
+    color: var(--color-text);
+}
+
+.navbar-center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.2rem;
+}
+
+/* ===== LOGIN ===== */
+
+.login-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+}
+
+.login-card {
+    max-width: 400px;
+    width: 100%;
+    padding: var(--spacing-lg);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    background-color: var(--color-white);
+}
+
+/* ===== DASHBOARD ===== */
+
+.welcome-box {
+    text-align: center;
+    margin: var(--spacing-lg) auto var(--spacing-md);
+    max-width: 600px;
+    padding: var(--spacing-md);
+}
+
+.welcome-box h1 {
+    font-size: 2rem;
+    margin-bottom: var(--spacing-xs);
+    white-space: nowrap;
+}
+
+.user-role {
+    font-size: 1rem;
+    color: var(--color-muted);
+    font-weight: 500;
+}
+
+.dashboard-section {
+    margin: var(--spacing-lg) auto;
+    max-width: var(--container-max-width);
+    padding: var(--spacing-md);
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-md);
+}
+
+.dashboard-card {
+    background: var(--color-white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: var(--spacing-md);
+    text-decoration: none;
+    text-align: center;
+    font-weight: bold;
+    color: var(--color-text);
+    transition: all 0.2s ease;
+}
+
+.dashboard-card:hover {
+    background-color: var(--color-primary-light);
+    color: var(--color-primary);
+    transform: translateY(-2px);
+    text-decoration: none;
+}
+
+/* ===== LIST LAYOUT ===== */
+
+.list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-sm);
+}
+
+/* Scrollbar-wrapper til listen */
+.list-wrapper {
+    max-height: 500px;
+    overflow-y: auto;
+    padding: 0 var(--spacing-sm);
+}
+
+/* Listecontainer (lodret stacking) */
+.list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+/* Enkelt række (bruger/projekt etc.) */
+.row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--color-white);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+
+/* Venstre informationssektion */
+.info {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+/* Emoji-ikon */
+.icon {
+    font-size: 1.5rem;
+    color: var(--color-muted);
+}
+
+/* Tekstjustering */
+.details .name {
+    font-weight: bold;
+    margin: 0;
+}
+
+/* Ny gruppe med muted styling */
+.details .meta p {
+    font-size: 0.95rem;
+    color: var(--color-muted);
+    margin: 0.25rem 0;
+}
+
+/* Højre knapsektion */
+.actions .btn {
+    white-space: nowrap;
+}
+
+.status {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 1rem;
+    font-size: 0.9rem;
+    font-weight: bold;
+    background-color: #eee;
+}
+
+.status-active {
+    background-color: #e8f5e9;
+    color: #388e3c;
+}
+
+.status-done {
+    background-color: #e0f3ff; /* lys blå nuance */
+    color: #0277bd;            /* mørk blå tekst */
+}
+
+
+
+/* ===== DETAILS LAYOUT ===== */
+
+.details-box {
+    background: var(--color-white);
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    margin-bottom: var(--spacing-md);
+    line-height: 1.8;
+    max-width: 500px;
+}
+
+.list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.action-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+}
+
+/* === FEEDBACK MESSAGE STYLING === */
+
+.success-section,
+.error-section {
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Vertikal centrering */
+    margin: var(--spacing-sm) auto;
+    padding: 0.75rem 1rem; /* Mindre padding */
+    max-width: 400px; /* Smallere bredde */
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    text-align: center;
+    box-shadow: var(--box-shadow);
+    min-height: 2.5rem; /* Ensartet højde selv ved kort besked */
+}
+
+.success-section {
+    background-color: var(--color-success-light);
+    color: var(--color-success);
+}
+
+.error-section {
+    background-color: var(--color-primary-light);
+    color: var(--color-primary);
+}
+
+/* ===== ERROR PAGE ===== */
+
+.error-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: var(--spacing-lg);
+    min-height: 70vh;
+}
+
+.error-title {
+    font-size: 2rem;
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-sm);
+    font-weight: 700;
+}
+
+.error-description {
+    font-size: 1.1rem;
+    color: var(--color-muted);
+    max-width: 600px;
+    margin-bottom: var(--spacing-md);
+}
+
+

@@ -1,34 +1,137 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Edit TimeEntry</title>
+    <title>Edit-timeentry</title>
+    <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
-<h1>Rediger tidsregistrering</h1>
 
-<form th:action="@{/timeentries/update}" th:object="${timeentry}" method="post">
+<!-- Navbar -->
+<div th:replace="fragments/navbar :: navbar"></div>
 
-    <input type="hidden" th:field="*{timeId}" />
+<section class="dashboard-section">
 
-    <label>Bruger ID:</label>
-    <input type="number" th:field="*{userId}" /><br/>
+    <!-- Overskrift -->
+    <h2 class="section-title">Rediger tidsregistrering</h2>
 
-    <label>Opgave ID:</label>
-    <input type="number" th:field="*{taskId}" /><br/>
+    <!-- Feedback -->
+    <div th:if="${success}" class="success-section">
+        <p class="success-message" th:text="${success}"></p>
+    </div>
+    <div th:if="${error}" class="error-section">
+        <p class="error-message" th:text="${error}"></p>
+    </div>
 
-    <label>Underopgave ID:</label>
-    <input type="number" th:field="*{subTaskId}" /><br/>
+    <!-- Formular -->
+    <form th:action="@{/timeentries/update}" th:object="${timeentry}" method="post" class="form-styled">
 
-    <label>Timer brugt:</label>
-    <input type="number" th:field="*{hoursSpent}" /><br/>
+        <!-- Skjulte felter -->
+        <input type="hidden" th:field="*{timeId}" />
+        <input type="hidden" th:field="*{userId}" />
+        <input type="hidden" th:field="*{taskId}" />
+        <input type="hidden" th:field="*{subTaskId}" />
 
-    <label>Dato:</label>
-    <input type="date" th:field="*{date}" /><br/>
+        <div class="form-group">
+            <label for="hoursSpent">Timer brugt:</label>
+            <input type="number" id="hoursSpent" th:field="*{hoursSpent}" class="input" min="0" step="0.25" required />
+        </div>
 
-    <button type="submit">Opdater</button>
-</form>
+        <div class="form-group">
+            <label for="date">Dato:</label>
+            <input type="date" id="date" th:field="*{date}" class="input" required />
+        </div>
 
-<a th:href="@{/timeentries}">Tilbage til oversigt</a>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">💾 Opdater tidsregistrering</button>
+        </div>
+    </form>
+
+    <form th:action="@{/timeentries/delete/{id}(id=${timeentry.timeId})}" method="post"
+          onsubmit="return confirm('Er du sikker på, at du vil slette denne tidsregistrering?');">
+        <button type="submit" class="btn btn-danger">🗑️ Slet tidsregistrering</button>
+    </form>
+
+
+    <!-- Navigation -->
+    <div class="fixed-bottom-right">
+        <a th:href="@{/timeentries/{id}(id=${timeentry.timeId})}" class="btn btn-secondary">⬅️Tilbage til detaljer om tidsregistrering</a>
+        <a th:href="@{/users/profile}" class="btn btn-secondary">🏠 Dashboard</a>
+    </div>
+
+</section>
+
 </body>
 </html>
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Rediger tidsregistrering</title>-->
+<!--</head>-->
+<!--<body>-->
+
+<!--<h1>Rediger tidsregistrering</h1>-->
+
+<!--&lt;!&ndash; Fejl-/succesbesked &ndash;&gt;-->
+<!--<section th:if="${error}" class="error-section">-->
+<!--    <p th:text="${error}" class="error-message"></p>-->
+<!--</section>-->
+<!--<section th:if="${success}" class="success-section">-->
+<!--    <p th:text="${success}" class="success-message"></p>-->
+<!--</section>-->
+
+<!--&lt;!&ndash; Redigeringsformular &ndash;&gt;-->
+<!--<section>-->
+<!--    <form th:action="@{/timeentries/update}" th:object="${timeentry}" method="post" class="form-actions">-->
+
+<!--        &lt;!&ndash; Skjulte felter &ndash;&gt;-->
+<!--        <input type="hidden" th:field="*{timeId}" />-->
+<!--        <input type="hidden" th:field="*{userId}" />-->
+<!--        <input type="hidden" th:field="*{taskId}" />-->
+<!--        <input type="hidden" th:field="*{subTaskId}" />-->
+
+<!--        <div>-->
+<!--            <label>Timer brugt:</label>-->
+<!--            <input type="number" th:field="*{hoursSpent}" min="0" step="0.25" required />-->
+<!--        </div>-->
+
+<!--        <div>-->
+<!--            <label>Dato:</label>-->
+<!--            <input type="date" th:field="*{date}" required />-->
+<!--        </div>-->
+
+<!--        <div>-->
+<!--            <button type="submit">Opdater tidsregistrering</button>-->
+<!--        </div>-->
+<!--    </form>-->
+<!--</section>-->
+
+<!--&lt;!&ndash; Navigation &ndash;&gt;-->
+<!--<section class="navigation">-->
+
+<!--    &lt;!&ndash; Tilbage til subtask- eller task-timeentries &ndash;&gt;-->
+<!--    <div th:if="${timeentry.subTaskId != null}">-->
+<!--        <a th:href="@{/subtask/{id}/timeentries(id=${timeentry.subTaskId})}">-->
+<!--            <button>Tilbage til underopgavens tidsregistreringer</button>-->
+<!--        </a>-->
+<!--    </div>-->
+
+<!--    <div th:if="${timeentry.subTaskId == null}">-->
+<!--        <a th:href="@{/tasks/{id}/timeentries(id=${timeentry.taskId})}">-->
+<!--            <button>Tilbage til opgavens tidsregistreringer</button>-->
+<!--        </a>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Tilbage til forside &ndash;&gt;-->
+<!--    <div>-->
+<!--        <a th:href="@{/users/profile}">-->
+<!--            <button>Tilbage til forside</button>-->
+<!--        </a>-->
+<!--    </div>-->
+
+<!--</section>-->
+
+<!--</body>-->
+<!--</html>-->

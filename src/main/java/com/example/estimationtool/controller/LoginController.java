@@ -46,17 +46,18 @@ public class LoginController {
 
     //--------------------------------- Logout ----------------------------------
 
+    @PostMapping("/logout")
 
-
-
-    @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate();
         return "index";
     }
 
+    //--------------------------------- Styleguide ----------------------------------
 
-
-
+    @GetMapping("/styleguide")
+    public String showStyleguide() {
+        return "styleguide"; // Uden .html
+    }
 
 }

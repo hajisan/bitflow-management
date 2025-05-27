@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="EstimationTool" uuid="c1480b0c-51a2-4230-a7ec-76441b6cbb67">
+    <data-source source="LOCAL" name="estimation-tool-db" uuid="ec9924a1-60a3-496a-8339-7f07a6005a56">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
@@ -14,7 +14,7 @@
       </jdbc-additional-properties>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="mysql" uuid="d0a96d3d-51b1-47a8-851c-90510e3a9b81">
+    <data-source source="LOCAL" name="mysql" uuid="e02d32fa-f0b4-412b-9ed5-9cb111e17b0d">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <imported>true</imported>

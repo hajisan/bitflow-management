@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="SqlDialectMappings">
+    <file url="file://$PROJECT_DIR$/src/main/java/com/example/estimationtool/repository/ProjectRepository.java" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/example/estimationtool/repository/TimeEntryRepository.java" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/database/project_data.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/database/project_db.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/src/test/resources/h2init.sql" dialect="H2" />
+    <file url="file://$PROJECT_DIR$/target/test-classes/h2init.sql" dialect="MySQL" />
   </component>
 </project>

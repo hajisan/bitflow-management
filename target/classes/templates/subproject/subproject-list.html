@@ -1,43 +1,69 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>All SubProjects</title>
+    <title>Subprojektoversigt</title>
+    <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
-<h1>Alle subprojekter</h1>
 
-<!-- Fejlbesked -->
-<section th:if="${error}" class="error-section">
-    <p th:text="${error}" class="error-message"></p>
-</section>
+<!-- Navigation -->
+<div th:replace="fragments/navbar :: navbar"></div>
 
-<!-- Liste af subprojekter er kun for admin -->
-<section th:if="${session.currentUser.role.name() == 'ADMIN'}" class="mini-info">
-    <div th:each="subproject : ${allSubprojects}" class="list">
-        <div>Navn: <span th:text="${subproject.name}"></span></div>
-        <div>Projekt ID: <span th:text="${subproject.projectId}"></span></div>
-        <div>
-            <a th:href="@{/subprojects/{subprojectId}(subprojectId=${subproject.subProjectId})}">
-                <button>Se detaljer</button>
-            </a>
+<!-- Feedback-beskeder -->
+<div th:if="${success}" class="success-section"><p class="success-message" th:text="${success}"></p></div>
+<div th:if="${error}" class="error-section"><p class="error-message" th:text="${error}"></p></div>
+
+<!-- Kun for ADMIN -->
+<section th:if="${session.currentUser.role.name() == 'ADMIN'}" class="dashboard-section">
+
+    <!-- Header -->
+    <div class="list-header">
+        <h2 class="section-title">Subprojektoversigt</h2>
+    </div>
+
+    <!-- Liste over subprojekter -->
+    <div class="list-wrapper">
+        <div class="list">
+            <div class="row" th:each="subproject : ${allSubprojects}">
+                <div class="info">
+                    <span class="icon">🗂️</span>
+
+                    <div class="details">
+                        <p class="name" th:text="'Navn: ' + ${subproject.name}"></p>
+
+                        <div class="meta">
+                            <p th:text="'Projekt ID: ' + ${subproject.projectId}"></p>
+                            <p th:text="'Subprojekt ID: ' + ${subproject.subProjectId}"></p>
+
+                        </div>
+
+                        <p class="status"
+                           th:text="'Status: ' + ${subproject.status}"
+                           th:classappend="' status-' + ${subproject.status.name().toLowerCase()}">
+                        </p>
+                    </div>
+
+                </div>
+                <div class="actions">
+                    <a th:href="@{/subprojects/{subprojectId}(subprojectId=${subproject.subProjectId})}" class="btn btn-secondary">Se detaljer</a>
+                </div>
+            </div>
         </div>
     </div>
 </section>
 
-<!-- Hvis en anden rolle forsøger at tilgå -->
-<section th:unless="${session.currentUser.role.name() == 'ADMIN'}">
-    <p>Du har ikke adgang til denne side.</p>
+<!-- Ikke tilladt for andre roller -->
+<section th:unless="${session.currentUser.role.name() == 'ADMIN'}" class="dashboard-section">
+    <div class="list-header">
+        <h2 class="section-title">Adgang nægtet</h2>
+    </div>
+    <p class="error-message">Du har ikke adgang til denne side.</p>
 </section>
 
-<!-- Navigation -->
-<section class="navigation">
-    <div>
-        <a th:href="@{/users/profile}">
-            <button>Tilbage til forside</button>
-        </a>
-    </div>
-</section>
+<!-- Tilbage-knap -->
+<a th:href="@{/users/profile}" class="btn btn-secondary fixed-bottom-right">🏠 Dashboard</a>
 
 </body>
 </html>
+

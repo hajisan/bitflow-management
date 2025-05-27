@@ -113,7 +113,7 @@ public class UserService {
 
         // Tjekker om bruger findes
         if (existingUser == null) {
-            throw new UserFriendlyException("Brugeren du forsøger at ændre, findes ikke.", "/users/profile"); // <-- Ret URL når vi har det på plads
+            throw new UserFriendlyException("Brugeren du forsøger at ændre, findes ikke.", "/users/profile");
         }
 
         // Kun admin må redigere en bruger
@@ -155,16 +155,16 @@ public class UserService {
 
     public UserViewDTO login(String email, String inputPassword) {
 
-        User user = iUserRepository.readByEmail(email);
+            User user = iUserRepository.readByEmail(email);
 
-        if (user == null) {
-            throw new UserFriendlyException("Brugeren blev ikke fundet.", "/login");
-        }
-        // Matcher input-password med databasens hashet password
+            if (user == null) {
+                throw new UserFriendlyException("Brugeren blev ikke fundet.", "/login");
+            }
+            // Matcher input-password med databasens hashet password
 
-        if (!passwordEncoder.matches(inputPassword, user.getPasswordHash())) {
-            throw new UserFriendlyException("Adgangskoden er forkert.", "/login");
-        }
+            if (!passwordEncoder.matches(inputPassword, user.getPasswordHash())) {
+                throw new UserFriendlyException("Adgangskoden er forkert.", "/login");
+            }
             return new UserViewDTO(
                     user.getUserId(),
                     user.getFirstName(),
@@ -172,6 +172,7 @@ public class UserService {
                     user.getEmail(),
                     user.getRole()
             );
+
         }
 
     //----------------- Henter UserUpdateDTO for GET-mapping: showEditUser() --------------

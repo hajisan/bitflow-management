@@ -1,43 +1,62 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>TimeEntry List</title>
+    <title>Timeentry-list</title>
+    <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
-<h1>Alle tidsregistreringer</h1>
 
-<table border="1">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Bruger ID</th>
-        <th>Opgave ID</th>
-        <th>Underopgave ID</th>
-        <th>Timer</th>
-        <th>Dato</th>
-        <th>Handlinger</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="entry : ${timeentries}">
-        <td th:text="${entry.timeId}">1</td>
-        <td th:text="${entry.userId}">1</td>
-        <td th:text="${entry.taskId}">1</td>
-        <td th:text="${entry.subTaskId}">1</td>
-        <td th:text="${entry.hoursSpent}">5</td>
-        <td th:text="${entry.date}">2025-05-08</td>
-        <td>
-            <a th:href="@{|/timeentries/${entry.timeId}|}">Vis</a> |
-            <a th:href="@{|/timeentries/edit/${entry.timeId}|}">Rediger</a> |
-            <form th:action="@{|/timeentries/delete/${entry.timeId}|}" method="post" style="display:inline">
-                <button type="submit">Slet</button>
-            </form>
-        </td>
-    </tr>
-    </tbody>
-</table>
+<!-- Navbar -->
+<div th:replace="fragments/navbar :: navbar"></div>
 
-<a th:href="@{/timeentries/create}">Opret ny tidsregistrering</a>
+<!-- Feedback-beskeder -->
+<div th:if="${success}" class="success-section"><p class="success-message" th:text="${success}"></p></div>
+<div th:if="${error}" class="error-section"><p class="error-message" th:text="${error}"></p></div>
+
+<!-- Kun for ADMIN -->
+<section th:if="${session.currentUser.role.name() == 'ADMIN'}" class="dashboard-section">
+
+    <!-- Header -->
+    <div class="list-header">
+        <h2 class="section-title">Tidsregistreringsoversigt</h2>
+    </div>
+
+    <!-- Liste over tidsregistreringer -->
+    <div class="list-wrapper">
+        <div class="list">
+            <div class="row" th:each="entry : ${timeentries}">
+                <div class="info">
+                    <span class="icon">⏱️</span>
+
+                    <div class="details">
+                        <p class="name" th:text="'ID: ' + ${entry.timeId}"></p>
+                        <p th:text="'Timer: ' + ${entry.hoursSpent} + ' t.'"></p>
+                        <p th:text="'Dato: ' + ${entry.date}"></p>
+                    </div>
+                </div>
+                <div class="actions">
+                    <a th:href="@{/timeentries/{id}(id=${entry.timeId})}" class="btn btn-secondary">Se detaljer</a>
+                    <a th:href="@{/timeentries/edit/{id}(id=${entry.timeId})}" class="btn btn-secondary">✏️ Rediger</a>
+                    <form th:action="@{/timeentries/delete/{id}(id=${entry.timeId})}" method="post" style="display:inline">
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Er du sikker på, at du vil slette denne tidsregistrering?')">🗑️ Slet</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Ikke tilladt for andre roller -->
+<section th:unless="${session.currentUser.role.name() == 'ADMIN'}" class="dashboard-section">
+    <div class="list-header">
+        <h2 class="section-title">Adgang nægtet</h2>
+    </div>
+    <p class="error-message">Du har ikke adgang til denne side.</p>
+</section>
+
+<!-- Tilbage-knap -->
+<a th:href="@{/users/profile}" class="btn btn-secondary fixed-bottom-right">🏠 Dashboard</a>
+
 </body>
 </html>

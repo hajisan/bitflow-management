@@ -1,88 +1,174 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Create SubTask</title>
+    <title>Create-subtask</title>
+    <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
 
-<h1>Opret ny subtask</h1>
+<!-- Navigation -->
+<div th:replace="fragments/navbar :: navbar"></div>
 
-<!-- Succesbesked -->
-<section class="success">
-    <div th:if="${success}" class="success" th:text="${success}"></div>
-</section>
+<section class="dashboard-section">
 
-<!-- Fejlbesked -->
-<section th:if="${error}" class="error-section">
-    <p th:text="${error}" class="error-message"></p>
-</section>
+    <!-- Sideoverskrift -->
+    <h2 class="section-title">Opret ny subtask</h2>
 
-<!-- Formular -->
-<section class="form-actions">
-    <form th:action="@{/subtasks/create}" th:object="${subtask}" method="post">
+    <!-- Feedback-beskeder -->
+    <div th:if="${success}" class="success-section"><p class="success-message" th:text="${success}"></p></div>
+    <div th:if="${error}" class="error-section"><p class="error-message" th:text="${error}"></p></div>
+
+    <!-- Formular -->
+    <form th:action="@{/subtasks/create}" th:object="${subtask}" method="post" class="form-styled">
 
         <!-- Skjult felt til taskId -->
         <input type="hidden" th:field="*{taskId}" />
 
-        <div>
+        <div class="form-group">
             <label for="name">Navn:</label>
-            <input type="text" id="name" th:field="*{name}" required />
+            <input type="text" id="name" th:field="*{name}" class="input" required />
         </div>
 
-        <div>
+        <div class="form-group">
             <label for="description">Beskrivelse:</label>
-            <textarea id="description" th:field="*{description}" required></textarea>
+            <textarea id="description" th:field="*{description}" class="input" required></textarea>
         </div>
 
-        <div>
+        <div class="form-group">
             <label for="estimatedTime">Estimeret tid (timer):</label>
-            <input type="number" id="estimatedTime" th:field="*{estimatedTime}" min="0" required />
+            <input type="number" id="estimatedTime" th:field="*{estimatedTime}" class="input" min="0" required />
         </div>
 
-        <div>
+        <div class="form-group">
             <label for="timeSpent">Forbrugt tid (timer):</label>
-            <input type="number" id="timeSpent" th:field="*{timeSpent}" min="0" required />
+            <input type="number" id="timeSpent" th:field="*{timeSpent}" class="input" min="0" required />
         </div>
 
-        <div>
+        <div class="form-group">
             <label for="deadline">Deadline:</label>
-            <input type="date" id="deadline" th:field="*{deadline}" required />
+            <input type="date" id="deadline" th:field="*{deadline}" class="input" required />
         </div>
 
-        <div>
+        <div class="form-group">
             <label for="status">Status:</label>
-            <select id="status" th:field="*{status}" required>
+            <select id="status" th:field="*{status}" class="input" required>
                 <option th:each="s : ${T(com.example.estimationtool.model.enums.Status).values()}"
-                        th:value="${s}"
-                        th:text="${s}">
+                        th:value="${s}" th:text="${s}"></option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="assigneduser">Tildel bruger:</label>
+            <select id="assigneduser" name="assignedUserId" class="input" required>
+                <option value="">-- Vælg bruger --</option>
+                <option th:each="user : ${unassignedusers}"
+                        th:value="${user.userId}"
+                        th:text="${user.firstName + ' ' + user.lastName}">
                 </option>
             </select>
         </div>
 
-        <div>
-            <label for="assigneduser">Brugere</label>
-            <select id="assigneduser" required>
-                <option value = "0"></option>
-                <option th:each="user : ${unassignedusers}" th:value="${user}" th:text="${user.firstName} + ' ' + ${user.lastName}"></option>
-            </select>
-        </div>
-
-        <div>
-            <button type="submit">Opret underopgave</button>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">➕ Opret subtask</button>
         </div>
     </form>
-</section>
 
-<!-- Navigation -->
-<section class="navigation">
-
-    <div>
-        <a th:href="@{/users/profile}">
-            <button>Tilbage til forside</button>
-        </a>
+    <!-- Navigation -->
+    <div class="fixed-bottom-right">
+        <a th:href="@{/subprojects/{id}/tasks(id=${subtask.taskId})}" class="btn btn-secondary">⬅️ Tilbage til subtask</a>
+        <a th:href="@{/users/profile}" class="btn btn-secondary">🏠 Forside</a>
     </div>
-</section>
 
+</section>
 </body>
 </html>
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Create SubTask</title>-->
+<!--</head>-->
+<!--<body>-->
+
+<!--<h1>Opret ny subtask</h1>-->
+
+<!--&lt;!&ndash; Succesbesked &ndash;&gt;-->
+<!--<section class="success">-->
+<!--    <div th:if="${success}" class="success" th:text="${success}"></div>-->
+<!--</section>-->
+
+<!--&lt;!&ndash; Fejlbesked &ndash;&gt;-->
+<!--<section th:if="${error}" class="error-section">-->
+<!--    <p th:text="${error}" class="error-message"></p>-->
+<!--</section>-->
+
+<!--&lt;!&ndash; Formular &ndash;&gt;-->
+<!--<section class="form-actions">-->
+<!--    <form th:action="@{/subtasks/create}" th:object="${subtask}" method="post">-->
+
+<!--        &lt;!&ndash; Skjult felt til taskId &ndash;&gt;-->
+<!--        <input type="hidden" th:field="*{taskId}" />-->
+
+<!--        <div>-->
+<!--            <label for="name">Navn:</label>-->
+<!--            <input type="text" id="name" th:field="*{name}" required />-->
+<!--        </div>-->
+
+<!--        <div>-->
+<!--            <label for="description">Beskrivelse:</label>-->
+<!--            <textarea id="description" th:field="*{description}" required></textarea>-->
+<!--        </div>-->
+
+<!--        <div>-->
+<!--            <label for="estimatedTime">Estimeret tid (timer):</label>-->
+<!--            <input type="number" id="estimatedTime" th:field="*{estimatedTime}" min="0" required />-->
+<!--        </div>-->
+
+<!--        <div>-->
+<!--            <label for="timeSpent">Forbrugt tid (timer):</label>-->
+<!--            <input type="number" id="timeSpent" th:field="*{timeSpent}" min="0" required />-->
+<!--        </div>-->
+
+<!--        <div>-->
+<!--            <label for="deadline">Deadline:</label>-->
+<!--            <input type="date" id="deadline" th:field="*{deadline}" required />-->
+<!--        </div>-->
+
+<!--        <div>-->
+<!--            <label for="status">Status:</label>-->
+<!--            <select id="status" th:field="*{status}" required>-->
+<!--                <option th:each="s : ${T(com.example.estimationtool.model.enums.Status).values()}"-->
+<!--                        th:value="${s}"-->
+<!--                        th:text="${s}">-->
+<!--                </option>-->
+<!--            </select>-->
+<!--        </div>-->
+
+<!--        <div>-->
+<!--            <label for="assigneduser">Brugere</label>-->
+<!--            <select id="assigneduser" required>-->
+<!--                <option value = "0"></option>-->
+<!--                <option th:each="user : ${unassignedusers}" th:value="${user}" th:text="${user.firstName} + ' ' + ${user.lastName}"></option>-->
+<!--            </select>-->
+<!--        </div>-->
+
+<!--        <div>-->
+<!--            <button type="submit">Opret underopgave</button>-->
+<!--        </div>-->
+<!--    </form>-->
+<!--</section>-->
+
+<!--&lt;!&ndash; Navigation &ndash;&gt;-->
+<!--<section class="navigation">-->
+
+<!--    <div>-->
+<!--        <a th:href="@{/users/profile}">-->
+<!--            <button>Tilbage til forside</button>-->
+<!--        </a>-->
+<!--    </div>-->
+<!--</section>-->
+
+<!--</body>-->
+<!--</html>-->

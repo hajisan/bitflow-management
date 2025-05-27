@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="da"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SubTaskController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EstimationTool</a> &gt; <a href="index.source.html" class="el_package">com.example.estimationtool.controller</a> &gt; <span class="el_source">SubTaskController.java</span></div><h1>SubTaskController.java</h1><pre class="source lang-java linenums">package com.example.estimationtool.controller;
+
+import com.example.estimationtool.model.SubTask;
+import com.example.estimationtool.service.SubTaskService;
+import com.example.estimationtool.service.UserService;
+import com.example.estimationtool.toolbox.dto.SubTaskWithTimeEntriesDTO;
+import com.example.estimationtool.toolbox.dto.UserViewDTO;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import java.util.List;
+
+
+@Controller
+@RequestMapping(&quot;/subtasks&quot;)
+public class SubTaskController {
+
+    private final SubTaskService subTaskService;
+    private final UserService userService;
+
+<span class="fc" id="L23">    public SubTaskController(SubTaskService subTaskService, UserService userService) {</span>
+<span class="fc" id="L24">        this.subTaskService = subTaskService;</span>
+<span class="fc" id="L25">        this.userService = userService;</span>
+<span class="fc" id="L26">    }</span>
+
+    //------------------------------------ Sætter sessionen ----------------------------
+
+
+    private UserViewDTO getCurrentUser(HttpSession session) {
+<span class="nc" id="L32">        return (UserViewDTO) session.getAttribute(&quot;currentUser&quot;);</span>
+    }
+
+    //------------------------------------ Hent Create() -------------------------------
+
+    // TODO - DONE
+
+    @GetMapping(&quot;/create&quot;)
+    public String showCreateSubTask(@RequestParam int taskId,
+                                    Model model,
+                                    HttpSession session,
+                                    RedirectAttributes redirectAttributes) {
+
+        // Henter og sætter session for Thymeleaf
+<span class="nc" id="L46">        UserViewDTO currentUser = getCurrentUser(session);</span>
+<span class="nc" id="L47">        session.setAttribute(&quot;currentUser&quot;, currentUser);</span>
+
+        // Tjekker om brugeren er logget ind
+<span class="nc bnc" id="L50" title="All 2 branches missed.">        if (currentUser == null) {</span>
+<span class="nc" id="L51">            redirectAttributes.addFlashAttribute(&quot;error&quot;, &quot;Log ind for at oprette en subtask.&quot;);</span>
+<span class="nc" id="L52">            return &quot;redirect:/login&quot;;</span>
+        }
+
+<span class="nc" id="L55">        SubTask subTask = new SubTask();</span>
+<span class="nc" id="L56">        subTask.setTaskId(taskId); // Binder subtask til task</span>
+<span class="nc" id="L57">        model.addAttribute(&quot;subtask&quot;, subTask);</span>
+<span class="nc" id="L58">        List&lt;UserViewDTO&gt; unassignedUsers = subTaskService.readAllAvailableUsers();</span>
+<span class="nc" id="L59">        model.addAttribute(&quot;unassignedusers&quot;, unassignedUsers);</span>
+
+<span class="nc" id="L61">        return &quot;subtask/create-subtask&quot;;</span>
+    }
+
+    //------------------------------------ Create() ------------------------------------
+
+
+    @PostMapping(&quot;/create&quot;)
+    public String createSubTask(@ModelAttribute(&quot;subtask&quot;) SubTask subTask,
+                                HttpSession session,
+                                RedirectAttributes redirectAttributes) {
+
+        // Henter og sætter session for Thymeleaf
+<span class="nc" id="L73">        UserViewDTO currentUser = getCurrentUser(session);</span>
+<span class="nc" id="L74">        session.setAttribute(&quot;currentUser&quot;, currentUser);</span>
+
+        // Tjekker om brugeren er logget ind
+<span class="nc bnc" id="L77" title="All 2 branches missed.">        if (currentUser == null) {</span>
+<span class="nc" id="L78">            redirectAttributes.addFlashAttribute(&quot;error&quot;, &quot;Log ind for at oprette en subtask.&quot;);</span>
+<span class="nc" id="L79">            return &quot;redirect:/login&quot;;</span>
+        }
+
+<span class="nc" id="L82">        subTaskService.createSubTask(currentUser, subTask);</span>
+
+<span class="nc" id="L84">        redirectAttributes.addFlashAttribute(&quot;success&quot;, &quot;Subtask blev oprettet.&quot;);</span>
+
+        // Redirect til task-with-subtasks.html
+<span class="nc" id="L87">        return &quot;redirect:/tasks/&quot; + subTask.getTaskId() + &quot;/subtasks&quot;;</span>
+
+    }
+
+    //------------------------------------ Read() --------------------------------------
+
+    // TODO - DONE
+    @GetMapping(&quot;/list&quot;)
+
+    public String showAllSubTasks(Model model,
+                                  HttpSession session,
+                                  RedirectAttributes redirectAttributes) {
+
+        // Henter og sætter session for Thymeleaf
+<span class="nc" id="L101">        UserViewDTO currentUser = getCurrentUser(session);</span>
+<span class="nc" id="L102">        session.setAttribute(&quot;currentUser&quot;, currentUser);</span>
+
+
+        // Tjekker om brugeren er logget ind
+<span class="nc bnc" id="L106" title="All 2 branches missed.">        if (currentUser == null) {</span>
+<span class="nc" id="L107">            redirectAttributes.addFlashAttribute(&quot;error&quot;, &quot;Log ind for at se alle subtasks.&quot;);</span>
+<span class="nc" id="L108">            return &quot;redirect:/login&quot;;</span>
+        }
+
+<span class="nc" id="L111">        List&lt;SubTask&gt; subTaskList = subTaskService.readAll();</span>
+<span class="nc" id="L112">        model.addAttribute(&quot;subtasks&quot;, subTaskList);</span>
+
+<span class="nc" id="L114">        return &quot;subtask/subtask-list&quot;;</span>
+
+    }
+
+
+    @GetMapping(&quot;/{subtaskId}&quot;)
+    public String showSubTask(@PathVariable int subtaskId,
+                              Model model,
+                              HttpSession session,
+                              RedirectAttributes redirectAttributes) {
+
+        // Henter og sætter session for Thymeleaf
+<span class="nc" id="L126">        UserViewDTO currentUser = getCurrentUser(session);</span>
+<span class="nc" id="L127">        session.setAttribute(&quot;currentUser&quot;, currentUser);</span>
+
+
+        // Tjekker om brugeren er logget ind
+<span class="nc bnc" id="L131" title="All 2 branches missed.">        if (currentUser == null) {</span>
+<span class="nc" id="L132">            redirectAttributes.addFlashAttribute(&quot;error&quot;, &quot;Log ind for at se en subtask.&quot;);</span>
+<span class="nc" id="L133">            return &quot;redirect:/login&quot;;</span>
+        }
+
+        // Henter alle subtasks
+<span class="nc" id="L137">        SubTask subTask = subTaskService.readById(subtaskId);</span>
+<span class="nc" id="L138">        model.addAttribute(&quot;subtask&quot;, subTask);</span>
+
+        // Henter alle brugere (for dropdown menu)
+<span class="nc" id="L141">        List&lt;UserViewDTO&gt; allUserList = userService.readAll();</span>
+<span class="nc" id="L142">        model.addAttribute(&quot;allUserList&quot;, allUserList);</span>
+
+        //Henter brugeren tilknyttet subtask
+<span class="nc" id="L145">        UserViewDTO assignedUser = subTaskService.readAssignedUserBySubTaskId(subtaskId);</span>
+<span class="nc" id="L146">        model.addAttribute(&quot;assignedUser&quot;, assignedUser);</span>
+
+<span class="nc" id="L148">        return &quot;subtask/subtask-detail&quot;;</span>
+
+    }
+    //------------------------------------ Hent Update() -------------------------------
+
+
+    @GetMapping(&quot;/edit/{subtaskId}&quot;)
+    public String showEditSubTask(@PathVariable int subtaskId,
+                                  Model model,
+                                  HttpSession session,
+                                  RedirectAttributes redirectAttributes) {
+
+        // Henter og sætter session for Thymeleaf
+<span class="nc" id="L161">        UserViewDTO currentUser = getCurrentUser(session);</span>
+<span class="nc" id="L162">        session.setAttribute(&quot;currentUser&quot;, currentUser);</span>
+
+
+        // Tjekker om brugeren er logget ind
+<span class="nc bnc" id="L166" title="All 2 branches missed.">        if (currentUser == null) {</span>
+<span class="nc" id="L167">            redirectAttributes.addFlashAttribute(&quot;error&quot;, &quot;Log ind for at redigere en subtask.&quot;);</span>
+<span class="nc" id="L168">            return &quot;redirect:/login&quot;;</span>
+        }
+
+<span class="nc" id="L171">        SubTask subTask = subTaskService.readById(subtaskId);</span>
+
+<span class="nc" id="L173">        model.addAttribute(&quot;subtask&quot;, subTask);</span>
+//        model.addAttribute(&quot;statuses&quot;, Status.values()); //Fordi Thymeleaf ikke vil læse vores enum
+
+<span class="nc" id="L176">        return &quot;subtask/edit-subtask&quot;;</span>
+    }
+
+    //------------------------------------ Update() ------------------------------------
+
+
+    @PostMapping(&quot;/update&quot;)
+    public String updateSubTask(@ModelAttribute(&quot;subtask&quot;) SubTask subTask,
+                                HttpSession session,
+                                RedirectAttributes redirectAttributes) {
+
+        // Henter og sætter session for Thymeleaf
+<span class="nc" id="L188">        UserViewDTO currentUser = getCurrentUser(session);</span>
+<span class="nc" id="L189">        session.setAttribute(&quot;currentUser&quot;, currentUser);</span>
+
+
+        // Tjekker om bruger er logget ind
+<span class="nc bnc" id="L193" title="All 2 branches missed.">        if (currentUser == null) {</span>
+<span class="nc" id="L194">            redirectAttributes.addFlashAttribute(&quot;error&quot;, &quot;Log ind for at opdatere en subtask.&quot;);</span>
+<span class="nc" id="L195">            return &quot;redirect:/login&quot;;</span>
+        }
+
+<span class="nc" id="L198">        subTaskService.updateSubTask(subTask);</span>
+
+        // Tilføj succesbesked som flash-attribut (vises efter redirect)
+<span class="nc" id="L201">        redirectAttributes.addFlashAttribute(&quot;success&quot;, &quot;Underopgaven blev opdateret.&quot;);</span>
+
+<span class="nc" id="L203">        return &quot;redirect:/subtasks/&quot; + subTask.getSubTaskId(); // Redirect til subtask-detail.html</span>
+    }
+
+    //------------------------------------ Delete() ------------------------------------
+
+
+    @PostMapping(&quot;/delete/{subtaskId}&quot;)
+    public String deleteSubTask(@PathVariable int subtaskId,
+                                HttpSession session,
+                                RedirectAttributes redirectAttributes) {
+
+        // Henter og sætter session for Thymeleaf
+<span class="nc" id="L215">        UserViewDTO currentUser = getCurrentUser(session);</span>
+<span class="nc" id="L216">        session.setAttribute(&quot;currentUser&quot;, currentUser);</span>
+
+
+<span class="nc bnc" id="L219" title="All 2 branches missed.">        if (currentUser == null) {</span>
+<span class="nc" id="L220">            redirectAttributes.addFlashAttribute(&quot;error&quot;, &quot;Du skal være logget ind for at kunne slette en subtask.&quot;);</span>
+<span class="nc" id="L221">            return &quot;redirect:/login&quot;;</span>
+        }
+
+<span class="nc" id="L224">        subTaskService.deleteById(subtaskId);</span>
+
+<span class="nc" id="L226">        redirectAttributes.addFlashAttribute(&quot;success&quot;, &quot;Subtask blev slettet.&quot;);</span>
+
+<span class="nc" id="L228">        return &quot;redirect:/subtasks/&quot;;</span>
+    }
+
+    //---------------------------------- DTO read() ------------------------------------
+
+
+    // -------------------- Viser en subtask's tilknyttede timeEntries ----------------
+
+    @GetMapping(&quot;/{subtaskId}/timeentries&quot;)
+    public String showSubTaskWithTimeEntries(@PathVariable int subtaskId,
+                                             HttpSession session,
+                                             Model model,
+                                             RedirectAttributes redirectAttributes) {
+
+        // Henter og sætter session for Thymeleaf
+<span class="nc" id="L243">        UserViewDTO currentUser = getCurrentUser(session);</span>
+<span class="nc" id="L244">        session.setAttribute(&quot;currentUser&quot;, currentUser);</span>
+
+<span class="nc bnc" id="L246" title="All 2 branches missed.">        if (currentUser == null) {</span>
+<span class="nc" id="L247">            redirectAttributes.addFlashAttribute(&quot;error&quot;, &quot;Du skal være logget ind for at se tidsregistreringer for en subtask.&quot;);</span>
+<span class="nc" id="L248">            return &quot;redirect:/login&quot;;</span>
+        }
+
+<span class="nc" id="L251">        SubTaskWithTimeEntriesDTO dto = subTaskService.readAllTimeEntriesBySubTaskId(subtaskId);</span>
+<span class="nc" id="L252">        model.addAttribute(&quot;subTaskWithTimeEntries&quot;, dto);</span>
+
+<span class="nc" id="L254">        SubTask subTask = subTaskService.readById(subtaskId);</span>
+<span class="nc" id="L255">        model.addAttribute(&quot;subTask&quot;, subTask);</span>
+
+
+<span class="nc" id="L258">        return &quot;subtask/subtask-with-timeentries&quot;;</span>
+    }
+
+    //------------------------- POST Assign mig selv til SubTask -----------------------
+
+    @PostMapping(&quot;/{userId}/assignme&quot;)
+    public String assignSelfToSubTask(@PathVariable int userId,
+                                      HttpSession session,
+                                      RedirectAttributes redirectAttributes) {
+
+        // Henter og sætter session for Thymeleaf
+<span class="nc" id="L269">        UserViewDTO currentUser = getCurrentUser(session);</span>
+<span class="nc" id="L270">        session.setAttribute(&quot;currentUser&quot;, currentUser);</span>
+
+<span class="nc bnc" id="L272" title="All 2 branches missed.">        if (currentUser == null) {</span>
+<span class="nc" id="L273">            redirectAttributes.addFlashAttribute(&quot;error&quot;, &quot;Du skal være logget ind.&quot;);</span>
+<span class="nc" id="L274">            return &quot;redirect:/login&quot;;</span>
+        }
+
+<span class="nc" id="L277">        subTaskService.assignUserToSubTask(currentUser, currentUser.getUserId(), userId);</span>
+
+<span class="nc" id="L279">        redirectAttributes.addFlashAttribute(&quot;success&quot;, &quot;Du er nu tildelt denne subtask.&quot;);</span>
+<span class="nc" id="L280">        return &quot;redirect:/subtasks/&quot; + userId;</span>
+
+    }
+
+    //------------------------- POST Assign User til SubTask --------------------------
+
+    @PostMapping(&quot;/{id}/assign&quot;)
+    public String assignOtherUserToSubTask(@PathVariable int id,
+                                           @RequestParam(&quot;userId&quot;) int userId,
+                                           HttpSession session,
+                                           RedirectAttributes redirectAttributes) {
+
+        // Henter og sætter session for Thymeleaf
+<span class="nc" id="L293">        UserViewDTO currentUser = getCurrentUser(session);</span>
+<span class="nc" id="L294">        session.setAttribute(&quot;currentUser&quot;, currentUser);</span>
+
+<span class="nc bnc" id="L296" title="All 2 branches missed.">        if (currentUser == null) {</span>
+<span class="nc" id="L297">            redirectAttributes.addFlashAttribute(&quot;error&quot;, &quot;Login kræves.&quot;);</span>
+<span class="nc" id="L298">            return &quot;redirect:/login&quot;;</span>
+        }
+
+<span class="nc" id="L301">        subTaskService.assignUserToSubTask(currentUser, userId, id);</span>
+
+<span class="nc" id="L303">        redirectAttributes.addFlashAttribute(&quot;success&quot;, &quot;Subtasken blev tildelt brugeren.&quot;);</span>
+<span class="nc" id="L304">        return &quot;redirect:/subtasks/&quot; + id;</span>
+    }
+
+
+
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

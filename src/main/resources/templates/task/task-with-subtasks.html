@@ -1,70 +1,152 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Task With SubTasks</title>
+    <title>Task-with-subtasks</title>
+    <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
 
-<h1>Subtasks tilknyttet en task</h1>
-<!-- Kort info om opgaven -->
-<section class="mini-info">
-    <div>Navn: <span th:text="${taskWithSubTasks.task.name}"></span></div>
-    <div>Deadline: <span th:text="${taskWithSubTasks.task.deadline}"></span></div>
-    <div>Status: <span th:text="${taskWithSubTasks.task.status}"></span></div>
-</section>
+<!-- Navigation -->
+<div th:replace="fragments/navbar :: navbar"></div>
 
-<h3>Subtasks</h3>
+<!-- Feedback-beskeder -->
+<div th:if="${success}" class="success-section"><p class="success-message" th:text="${success}"></p></div>
+<div th:if="${error}" class="error-section"><p class="error-message" th:text="${error}"></p></div>
 
-<section class="mini-info">
-    <div th:if="${!#lists.isEmpty(taskWithSubTasks.subTaskList)}">
-        <div th:each="sub : ${taskWithSubTasks.subTaskList}" class="list">
-            <div>Navn: <span th:text="${sub.name}"></span></div>
-            <div>Status: <span th:text="${sub.status}"></span></div>
-            <div>Deadline: <span th:text="${sub.deadline}"></span></div>
-            <div>
-                <a th:href="@{/subtasks/{id}(id=${sub.subTaskId})}">
-                    <button>Se detaljer</button>
-                </a>
+<section class="dashboard-section">
+
+    <!-- Sideoverskrift og opret-knap -->
+    <div class="list-header">
+        <h2 class="section-title">Subtasks for <span th:text="${taskWithSubTasks.task.name}"></span></h2>
+        <a th:href="@{/subtasks/create(taskId=${taskWithSubTasks.task.taskId})}" class="btn btn-primary">➕ Opret subtask</a>
+    </div>
+
+    <!-- Kort task-info -->
+    <div class="details-box">
+        <p><strong>Deadline:</strong> <span th:text="${taskWithSubTasks.task.deadline}"></span></p>
+        <p><strong>Estimeret tid</strong> <span th:text="${taskWithSubTasks.task.estimatedTime}"></span></p>
+        <p class="status"
+           th:text="'Status: ' + ${taskWithSubTasks.task.status}"
+           th:classappend="' status-' + ${taskWithSubTasks.task.status.name().toLowerCase()}">
+        </p>
+    </div>
+
+    <!-- Liste over subtasks -->
+    <div class="list-wrapper">
+        <div th:if="${!#lists.isEmpty(taskWithSubTasks.subTaskList)}" class="list">
+            <div class="row" th:each="sub : ${taskWithSubTasks.subTaskList}">
+                <div class="info">
+                    <span class="icon">🧩</span>
+                    <div class="details">
+                        <p class="name" th:text="'Navn: ' + ${sub.name}"></p>
+
+                        <div class="meta">
+                            <p th:text="'Deadline: ' + ${sub.deadline}"></p>
+                        </div>
+                        <div class="meta">
+                            <p th:text="'Estimeret tid: ' + ${sub.estimatedTime}"></p>
+                        </div>
+                        <div class="meta">
+                            <p th:text="'Forbrugt tid: ' + ${sub.timeSpent}"></p>
+                        </div>
+
+                        <p class="status"
+                           th:text="'Status: ' + ${sub.status}"
+                           th:classappend="' status-' + ${sub.status.name().toLowerCase()}">
+                        </p>
+                    </div>
+                </div>
+                <div class="actions">
+                    <a th:href="@{/subtasks/{id}(id=${sub.subTaskId})}" class="btn btn-secondary">Se detaljer</a>
+                </div>
             </div>
-            <hr/>
+        </div>
+
+        <!-- Hvis ingen subtasks -->
+        <div th:if="${#lists.isEmpty(taskWithSubTasks.subTaskList)}">
+            <p>Opgaven har ingen tilknyttede subtasks.</p>
         </div>
     </div>
-</section>
 
-<section>
-    <!-- Hvis ingen underopgaver -->
-    <div th:if="${#lists.isEmpty(taskWithSubTasks.subTaskList)}">
-        Der er ingen subtasks tilknyttet denne opgave.
-    </div>
-</section>
-
-<!-- Opret subtask-knap -->
-<section class="form-actions">
-    <div>
-        <a th:href="@{/subtasks/create(taskId=${taskWithSubTasks.task.taskId})}">
-            <button>Opret ny subtask</button>
-        </a>
-    </div>
-</section>
-
-<!-- Navigation -->
-<section class="navigation">
-
-    <!-- Tilbage til task-detail.html -->
-    <div>
-        <a th:href="@{/tasks/{id}(id=${taskWithSubTasks.task.taskId})}">
-            <button>Tilbage til task-detaljer</button>
-        </a>
+    <!-- Navigation -->
+    <div class="fixed-bottom-right">
+        <a th:href="@{/tasks/{id}(id=${taskWithSubTasks.task.taskId})}" class="btn btn-secondary">⬅️ Tilbage til task</a>
+        <a th:href="@{/users/profile}" class="btn btn-secondary">🏠 Dashboard</a>
     </div>
 
-    <!-- Tilbage til forside -->
-    <div>
-        <a th:href="@{/users/profile}">
-            <button>Tilbage til forside</button>
-        </a>
-    </div>
 </section>
 
 </body>
 </html>
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Task With SubTasks</title>-->
+<!--</head>-->
+<!--<body>-->
+
+<!--<h1>Subtasks tilknyttet en task</h1>-->
+<!--&lt;!&ndash; Kort info om opgaven &ndash;&gt;-->
+<!--<section class="mini-info">-->
+<!--    <div>Navn: <span th:text="${taskWithSubTasks.task.name}"></span></div>-->
+<!--    <div>Deadline: <span th:text="${taskWithSubTasks.task.deadline}"></span></div>-->
+<!--    <div>Status: <span th:text="${taskWithSubTasks.task.status}"></span></div>-->
+<!--</section>-->
+
+<!--<h3>Subtasks</h3>-->
+
+<!--<section class="mini-info">-->
+<!--    <div th:if="${!#lists.isEmpty(taskWithSubTasks.subTaskList)}">-->
+<!--        <div th:each="sub : ${taskWithSubTasks.subTaskList}" class="list">-->
+<!--            <div>Navn: <span th:text="${sub.name}"></span></div>-->
+<!--            <div>Status: <span th:text="${sub.status}"></span></div>-->
+<!--            <div>Deadline: <span th:text="${sub.deadline}"></span></div>-->
+<!--            <div>-->
+<!--                <a th:href="@{/subtasks/{id}(id=${sub.subTaskId})}">-->
+<!--                    <button>Se detaljer</button>-->
+<!--                </a>-->
+<!--            </div>-->
+<!--            <hr/>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</section>-->
+
+<!--<section>-->
+<!--    &lt;!&ndash; Hvis ingen underopgaver &ndash;&gt;-->
+<!--    <div th:if="${#lists.isEmpty(taskWithSubTasks.subTaskList)}">-->
+<!--        Der er ingen subtasks tilknyttet denne opgave.-->
+<!--    </div>-->
+<!--</section>-->
+
+<!--&lt;!&ndash; Opret subtask-knap &ndash;&gt;-->
+<!--<section class="form-actions">-->
+<!--    <div>-->
+<!--        <a th:href="@{/subtasks/create(taskId=${taskWithSubTasks.task.taskId})}">-->
+<!--            <button>Opret ny subtask</button>-->
+<!--        </a>-->
+<!--    </div>-->
+<!--</section>-->
+
+<!--&lt;!&ndash; Navigation &ndash;&gt;-->
+<!--<section class="navigation">-->
+
+<!--    &lt;!&ndash; Tilbage til task-detail.html &ndash;&gt;-->
+<!--    <div>-->
+<!--        <a th:href="@{/tasks/{id}(id=${taskWithSubTasks.task.taskId})}">-->
+<!--            <button>Tilbage til task-detaljer</button>-->
+<!--        </a>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Tilbage til forside &ndash;&gt;-->
+<!--    <div>-->
+<!--        <a th:href="@{/users/profile}">-->
+<!--            <button>Tilbage til forside</button>-->
+<!--        </a>-->
+<!--    </div>-->
+<!--</section>-->
+
+<!--</body>-->
+<!--</html>-->

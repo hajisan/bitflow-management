@@ -1,0 +1,55 @@
+/* base.css */
+
+/*
+   Nulstiller standardmargin og padding på alle elementer,
+   og sætter box-sizing til border-box, så padding og border tælles med i elementets samlede bredde og højde.
+*/
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/*
+   Grundopsætning for <body>:
+   - Bruger defineret skrifttype og -størrelse fra theme.
+   - Sørger for god linjeafstand.
+   - Sætter en lys baggrundsfarve og sort tekstfarve.
+*/
+body {
+    font-family: var(--font-family);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height);
+    background-color: var(--color-white);
+    color: var(--color-text);
+}
+
+/*
+   Standardopsætning for billeder:
+   - Gør dem responsive ved at begrænse bredden til 100% af forælder.
+   - Bevarer proportioner med auto-højde.
+   - Fjerner whitespace under billeder med display: block.
+*/
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/*
+   Styling for links:
+   - Bruger primær farve til tekst.
+   - Fjerner understregning som standard.
+*/
+a {
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+/*
+   Ved hover over links:
+   - Tilføjer understregning for at give brugeren visuel feedback.
+*/
+a:hover {
+    text-decoration: underline;
+}

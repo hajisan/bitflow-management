@@ -141,9 +141,9 @@ public class SubTaskController {
         List<UserViewDTO> allUserList = userService.readAll();
         model.addAttribute("allUserList", allUserList);
 
-        // Henter brugeren tilknyttet subtask
-        //UserViewDTO assignedUser = subTaskService.readAssignedUserBySubTaskId(subtaskId);
-        //model.addAttribute("assignedUser", assignedUser);
+        //Henter brugeren tilknyttet subtask
+        UserViewDTO assignedUser = subTaskService.readAssignedUserBySubTaskId(subtaskId);
+        model.addAttribute("assignedUser", assignedUser);
 
         return "subtask/subtask-detail";
 
@@ -225,7 +225,7 @@ public class SubTaskController {
 
         redirectAttributes.addFlashAttribute("success", "Subtask blev slettet.");
 
-        return "redirect:/subtasks/";
+        return "redirect:/users/profile";
     }
 
     //---------------------------------- DTO read() ------------------------------------
@@ -250,6 +250,10 @@ public class SubTaskController {
 
         SubTaskWithTimeEntriesDTO dto = subTaskService.readAllTimeEntriesBySubTaskId(subtaskId);
         model.addAttribute("subTaskWithTimeEntries", dto);
+
+        SubTask subTask = subTaskService.readById(subtaskId);
+        model.addAttribute("subTask", subTask);
+
 
         return "subtask/subtask-with-timeentries";
     }

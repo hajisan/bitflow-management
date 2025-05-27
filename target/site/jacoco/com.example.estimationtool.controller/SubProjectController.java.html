@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="da"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SubProjectController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EstimationTool</a> &gt; <a href="index.source.html" class="el_package">com.example.estimationtool.controller</a> &gt; <span class="el_source">SubProjectController.java</span></div><h1>SubProjectController.java</h1><pre class="source lang-java linenums">package com.example.estimationtool.controller;
+
+import com.example.estimationtool.model.SubProject;
+import com.example.estimationtool.model.enums.Role;
+import com.example.estimationtool.service.ProjectService;
+import com.example.estimationtool.service.SubProjectService;
+import com.example.estimationtool.toolbox.dto.SubProjectWithTasksDTO;
+import com.example.estimationtool.toolbox.dto.SubProjectWithUsersDTO;
+import com.example.estimationtool.toolbox.dto.UserViewDTO;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.List;
+
+@Controller
+@RequestMapping(&quot;/subprojects&quot;)
+public class SubProjectController {
+
+    private final SubProjectService subProjectService;
+
+<span class="fc" id="L24">    public SubProjectController(SubProjectService subProjectService) {</span>
+<span class="fc" id="L25">        this.subProjectService = subProjectService;</span>
+
+<span class="fc" id="L27">    }</span>
+
+    private UserViewDTO getCurrentUser(HttpSession session) {
+<span class="nc" id="L30">        return (UserViewDTO) session.getAttribute(&quot;currentUser&quot;);</span>
+    }
+
+    //------------------------------------ Create() ------------------------------------
+
+    // TODO - DONE
+
+    @GetMapping(&quot;/create&quot;)
+    public String showCreateSubProject(@RequestParam int projectId,
+                                       HttpSession session,
+                                       Model model) {
+
+        // Henter og sætter session for Thymeleaf
+<span class="nc" id="L43">        UserViewDTO currentUser = getCurrentUser(session);</span>
+<span class="nc" id="L44">        session.setAttribute(&quot;currentUser&quot;, currentUser);</span>
+
+        // Tjekker om brugeren har en aktiv session
+<span class="nc bnc" id="L47" title="All 2 branches missed.">        if (currentUser == null) return &quot;redirect:/login&quot;;</span>
+
+        // Sender projektId med
+<span class="nc" id="L50">        SubProject subProject = new SubProject();</span>
+<span class="nc" id="L51">        subProject.setProjectId(projectId);</span>
+<span class="nc" id="L52">        model.addAttribute(&quot;subproject&quot;, subProject);</span>
+
+<span class="nc" id="L54">        return &quot;subproject/create-subproject&quot;;</span>
+    }
+
+    // TODO - DONE
+
+    @PostMapping(&quot;/create&quot;)
+    public String createSubProject(@ModelAttribute SubProject subProject,
+                                   HttpSession session,
+                                   RedirectAttributes redirectAttributes) {
+
+        // Henter og sætter session for Thymeleaf
+<span class="nc" id="L65">        UserViewDTO currentUser = getCurrentUser(session);</span>
+<span class="nc" id="L66">        session.setAttribute(&quot;currentUser&quot;, currentUser);</span>
+
+        // Tjekker om brugeren har en aktiv session
+<span class="nc bnc" id="L69" title="All 2 branches missed.">        if (currentUser == null) {</span>
+<span class="nc" id="L70">            redirectAttributes.addFlashAttribute(&quot;error&quot;, &quot;Log ind for at oprette et subprojekt.&quot;);</span>
+<span class="nc" id="L71">            return &quot;redirect:/login&quot;;</span>
+        }
+
+<span class="nc" id="L74">        subProjectService.create(currentUser, subProject);</span>
+<span class="nc" id="L75">        redirectAttributes.addFlashAttribute(&quot;success&quot;, &quot;Subprojektet er oprettet.&quot;);</span>
+
+        // Redirect til project-with-subprojects.html
+<span class="nc" id="L78">        return &quot;redirect:/projects/&quot; + subProject.getProjectId() + &quot;/subprojects&quot;;</span>
+    }
+
+    //------------------------------------ Read() --------------------------------------
+
+    // TODO - DONE
+
+    @GetMapping(&quot;/list&quot;)
+    public String showAllSubProjects(HttpSession session,
+                                     Model model,
+                                     RedirectAttributes redirectAttributes) {
+
+        // Henter og sætter session for Thymeleaf
+<span class="nc" id="L91">        UserViewDTO currentUser = getCurrentUser(session);</span>
+<span class="nc" id="L92">        session.setAttribute(&quot;currentUser&quot;, currentUser);</span>
+
+        // Tjekker om brugeren har en aktiv session
+<span class="nc bnc" id="L95" title="All 2 branches missed.">        if (currentUser == null) {</span>
+<span class="nc" id="L96">            redirectAttributes.addFlashAttribute(&quot;error&quot;, &quot;Log ind for at oprette et subprojekt.&quot;);</span>
+<span class="nc" id="L97">            return &quot;redirect:/login&quot;;</span>
+        }
+
+<span class="nc" id="L100">        List&lt;SubProject&gt; subProjectList = subProjectService.readAll();</span>
+<span class="nc" id="L101">        model.addAttribute(&quot;allSubprojects&quot;, subProjectList);</span>
+
+<span class="nc" id="L103">        return &quot;subproject/subproject-list&quot;;</span>
+    }
+
+
+    // TODO - DONE
+    @GetMapping(&quot;/{subprojectId}&quot;)
+    public String showSubProject(HttpSession session,
+                                 Model model,
+                                 RedirectAttributes redirectAttributes,
+                                 @PathVariable int subprojectId) {
+
+        // Henter og sætter session for Thymeleaf
+<span class="nc" id="L115">        UserViewDTO currentUser = getCurrentUser(session);</span>
+<span class="nc" id="L116">        session.setAttribute(&quot;currentUser&quot;, currentUser);</span>
+
+        // Tjekker om brugeren har en aktiv session
+<span class="nc bnc" id="L119" title="All 2 branches missed.">        if (currentUser == null) {</span>
+<span class="nc" id="L120">            redirectAttributes.addFlashAttribute(&quot;error&quot;, &quot;Log ind for at oprette et subprojekt.&quot;);</span>
+<span class="nc" id="L121">            return &quot;redirect:/login&quot;;</span>
+        }
+
+<span class="nc" id="L124">        SubProject subProject = subProjectService.readById(subprojectId);</span>
+<span class="nc" id="L125">        model.addAttribute(&quot;subproject&quot;, subProject);</span>
+
+<span class="nc" id="L127">        return &quot;subproject/subproject-detail&quot;;</span>
+    }
+
+    //------------------------------------ Update() ------------------------------------
+
+    // TODO - DONE
+
+    @GetMapping(&quot;/edit/{subprojectId}&quot;)
+    public String showEditSubProject(HttpSession session,
+                                     RedirectAttributes redirectAttributes,
+                                     Model model,
+                                     @PathVariable int subprojectId) {
+
+        // Henter og sætter session for Thymeleaf
+<span class="nc" id="L141">        UserViewDTO currentUser = getCurrentUser(session);</span>
+<span class="nc" id="L142">        session.setAttribute(&quot;currentUser&quot;, currentUser);</span>
+
+        // Tjekker om brugeren har en aktiv session
+<span class="nc bnc" id="L145" title="All 2 branches missed.">        if (currentUser == null) {</span>
+<span class="nc" id="L146">            redirectAttributes.addFlashAttribute(&quot;error&quot;, &quot;Log ind for at oprette et subprojekt.&quot;);</span>
+<span class="nc" id="L147">            return &quot;redirect:/login&quot;;</span>
+        }
+
+<span class="nc" id="L150">        SubProject subProject = subProjectService.readById(subprojectId);</span>
+<span class="nc" id="L151">        model.addAttribute(&quot;subproject&quot;, subProject);</span>
+
+<span class="nc" id="L153">        return &quot;subproject/edit-subproject&quot;;</span>
+    }
+
+    // TODO - DONE
+
+    @PostMapping(&quot;/update&quot;)
+    public String updateSubProject(HttpSession session,
+                                   RedirectAttributes redirectAttributes,
+                                   @ModelAttribute(&quot;subproject&quot;) SubProject subProject) {
+
+        // Henter og sætter session for Thymeleaf
+<span class="nc" id="L164">        UserViewDTO currentUser = getCurrentUser(session);</span>
+<span class="nc" id="L165">        session.setAttribute(&quot;currentUser&quot;, currentUser);</span>
+
+        // Tjekker om brugeren har en aktiv session
+<span class="nc bnc" id="L168" title="All 2 branches missed.">        if (currentUser == null) {</span>
+<span class="nc" id="L169">            redirectAttributes.addFlashAttribute(&quot;error&quot;, &quot;Log ind for at oprette et subprojekt.&quot;);</span>
+<span class="nc" id="L170">            return &quot;redirect:/login&quot;;</span>
+        }
+
+<span class="nc" id="L173">        subProjectService.update(currentUser, subProject);</span>
+<span class="nc" id="L174">        redirectAttributes.addFlashAttribute(&quot;success&quot;, &quot;Subprojekt blev opdateret.&quot;);</span>
+
+<span class="nc" id="L176">        return &quot;redirect:/subprojects/&quot; + subProject.getSubProjectId();</span>
+    }
+
+    //------------------------------------ Delete() ------------------------------------
+
+    // TODO - DONE
+
+    @PostMapping(&quot;/delete/{subprojectId}&quot;)
+    public String deleteSubProject(@PathVariable int subprojectId,
+                                   HttpSession session,
+                                   RedirectAttributes redirectAttributes) {
+
+        // Henter og sætter session for Thymeleaf
+<span class="nc" id="L189">        UserViewDTO currentUser = getCurrentUser(session);</span>
+<span class="nc" id="L190">        session.setAttribute(&quot;currentUser&quot;, currentUser);</span>
+
+        // Tjekker om brugeren har en aktiv session
+<span class="nc bnc" id="L193" title="All 2 branches missed.">        if (currentUser == null) {</span>
+<span class="nc" id="L194">            redirectAttributes.addFlashAttribute(&quot;error&quot;, &quot;Du skal være logget ind for at kunne slette et delprojekt.&quot;);</span>
+<span class="nc" id="L195">            return &quot;redirect:/login&quot;;</span>
+        }
+
+        // Henter projektId før sletning for redirect
+<span class="nc" id="L199">        SubProject subProject = subProjectService.readById(subprojectId);</span>
+<span class="nc" id="L200">        int projectId = subProject.getProjectId();</span>
+
+<span class="nc" id="L202">        subProjectService.deleteById(currentUser, subprojectId);</span>
+
+<span class="nc" id="L204">        redirectAttributes.addFlashAttribute(&quot;success&quot;, &quot;Subprojektet blev slettet.&quot;);</span>
+
+        // Redirect til project-with-subprojects.html
+<span class="nc" id="L207">        return &quot;redirect:/projects/&quot; + projectId + &quot;/subprojects&quot;;</span>
+    }
+
+    //------------------------------------ DTO'er ------------------------------------
+
+    // TODO - DONE
+
+    // --- Viser brugere tilknyttet ét subprojekt ---
+
+    @GetMapping(&quot;/{subprojectId}/users&quot;)
+    public String showSubProjectWithUsers(@PathVariable int subprojectId,
+                                          HttpSession session,
+                                          Model model,
+                                          RedirectAttributes redirectAttributes) {
+
+        // Henter og sætter session for Thymeleaf
+<span class="nc" id="L223">        UserViewDTO currentUser = getCurrentUser(session);</span>
+<span class="nc" id="L224">        session.setAttribute(&quot;currentUser&quot;, currentUser);</span>
+
+        // Tjekker at bruger er logget ind
+<span class="nc bnc" id="L227" title="All 2 branches missed.">        if (currentUser == null) {</span>
+<span class="nc" id="L228">            redirectAttributes.addFlashAttribute(&quot;error&quot;, &quot;Du skal være logget ind for at kunne se et delprojekts brugere.&quot;);</span>
+<span class="nc" id="L229">            return &quot;redirect:/login&quot;;</span>
+        }
+
+        // Viser allerede tilknyttede brugere
+<span class="nc" id="L233">        SubProjectWithUsersDTO subProjectWithUsersDTO = subProjectService.readAllUsersBySubProjectId(subprojectId);</span>
+<span class="nc" id="L234">        model.addAttribute(&quot;subProjectWithUsers&quot;, subProjectWithUsersDTO);</span>
+
+        // Viser ikke-tilknyttede brugere (til POST-formularen)
+<span class="nc" id="L237">        List&lt;UserViewDTO&gt; unassignedUsers = subProjectService.readAllUnAssignedUsers(subprojectId);</span>
+<span class="nc" id="L238">        model.addAttribute(&quot;unassignedUsers&quot;, unassignedUsers);</span>
+
+<span class="nc" id="L240">        return &quot;subproject/subproject-with-users&quot;;</span>
+
+    }
+
+    // TODO - DONE
+    // --- Viser tasks tilknyttet ét subprojekt ---
+
+    @GetMapping(&quot;/{subprojectId}/tasks&quot;)
+    public String showSubProjectWithTasks(@PathVariable int subprojectId,
+                                          HttpSession session,
+                                          Model model,
+                                          RedirectAttributes redirectAttributes) {
+
+        // Henter og sætter session for Thymeleaf
+<span class="nc" id="L254">        UserViewDTO currentUser = getCurrentUser(session);</span>
+<span class="nc" id="L255">        session.setAttribute(&quot;currentUser&quot;, currentUser);</span>
+
+        // Tjekker at bruger er logget ind
+<span class="nc bnc" id="L258" title="All 2 branches missed.">        if (currentUser == null) {</span>
+<span class="nc" id="L259">            redirectAttributes.addFlashAttribute(&quot;error&quot;, &quot;Du skal være logget ind for at kunne se et delprojekts opgaver.&quot;);</span>
+<span class="nc" id="L260">            return &quot;redirect:/login&quot;;</span>
+        }
+
+        // Henter subprojekt + tilknyttede tasks
+<span class="nc" id="L264">        SubProjectWithTasksDTO subProjectWithTasksDTO = subProjectService.readAllTasksBySubProjectId(subprojectId);</span>
+        // Tilføjer til model
+<span class="nc" id="L266">        model.addAttribute(&quot;subProjectWithTasks&quot;, subProjectWithTasksDTO);</span>
+
+<span class="nc" id="L268">        return &quot;subproject/subproject-with-tasks&quot;;</span>
+    }
+
+    //---------------------------- POST Assign User to Subproject -------------------------
+
+    @PostMapping(&quot;/{subprojectId}/assignusers&quot;)
+    public String assignUsersToSubProject(@PathVariable int subprojectId,
+                                          @RequestParam(&quot;userIds&quot;) List&lt;Integer&gt; userIds,
+                                          HttpSession session,
+                                          RedirectAttributes redirectAttributes) {
+
+        // Henter og sætter session for Thymeleaf
+<span class="nc" id="L280">        UserViewDTO currentUser = getCurrentUser(session);</span>
+<span class="nc" id="L281">        session.setAttribute(&quot;currentUser&quot;, currentUser);</span>
+
+        // Tjekker sessionen
+<span class="nc bnc" id="L284" title="All 2 branches missed.">        if (currentUser == null) {</span>
+<span class="nc" id="L285">            redirectAttributes.addFlashAttribute(&quot;error&quot;, &quot;Du skal logge ind for at kunne tildele brugere et subprojekt.&quot;);</span>
+<span class="nc" id="L286">            return &quot;redirect:/login&quot;;</span>
+        }
+
+<span class="nc" id="L289">        subProjectService.assignUsersToSubProject(currentUser, userIds, subprojectId);</span>
+
+<span class="nc" id="L291">        redirectAttributes.addFlashAttribute(&quot;success&quot;, &quot;Brugere blev tildelt subprojektet.&quot;);</span>
+<span class="nc" id="L292">        return &quot;redirect:/subprojects/&quot; + subprojectId + &quot;/users&quot;;</span>
+    }
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

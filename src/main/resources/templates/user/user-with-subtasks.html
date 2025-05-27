@@ -1,49 +1,65 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>User With SubTasks</title>
+    <title>User-with-subtasks</title>
+    <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
-<h1>Brugerens subtasks</h1>
 
-<!-- Kort info om brugeren -->
-<section class="mini-info">
-    <div>Fornavn: <span th:text="${userWithSubTasks.user.firstName}"></span></div>
-    <div>Efternavn: <span th:text="${userWithSubTasks.user.lastName}"></span></div>
-    <div>Rolle: <span th:text="${userWithSubTasks.user.role}"></span></div>
-</section>
+<!-- Navigation -->
+<div th:replace="fragments/navbar :: navbar"></div>
 
-<h3>Subtasks</h3>
+<!-- Feedback-beskeder -->
+<div th:if="${success}" class="success-section"><p class="success-message" th:text="${success}"></p></div>
+<div th:if="${error}" class="error-section"><p class="error-message" th:text="${error}"></p></div>
 
-<!-- Subtasks -->
-<section class="mini-info">
-    <div th:if="${!#lists.isEmpty(userWithSubTasks.subTaskList)}">
-        <div th:each="subtask : ${userWithSubTasks.subTaskList}" class="list">
-            <div>Navn: <span th:text="${subtask.name}"></span></div>
-            <div>Status: <span th:text="${subtask.status}"></span></div>
-            <div>Deadline: <span th:text="${subtask.deadline}"></span></div>
-            <div>
-                <a th:href="@{/subtasks/{id}(id=${subtask.subTaskId})}">
-                    <button>Se detaljer</button>
-                </a>
+<section class="dashboard-section">
+
+    <!-- Brugerinfo -->
+    <div class="list-header">
+        <h2 class="section-title">Subtasks for <span th:text="${userWithSubTasks.user.firstName}"></span></h2>
+        <p class="role" th:text="'Rolle: ' + ${userWithSubTasks.user.role}"></p>
+    </div>
+
+    <!-- Liste med subtasks -->
+    <div class="list-wrapper">
+        <div th:if="${!#lists.isEmpty(userWithSubTasks.subTaskList)}" class="list">
+
+            <div th:each="subtask : ${userWithSubTasks.subTaskList}" class="row">
+                <div class="info">
+                    <span class="icon">📝</span>
+                    <div class="details">
+                        <p class="name" th:text="'Navn: ' + ${subtask.name}"></p>
+
+                        <div class="meta">
+                            <p th:text="'Deadline: ' + ${subtask.deadline}"></p>
+                            <p th:text="'Estimeret tid: ' + ${subtask.estimatedTime} + ' t.'"></p>
+                            <p th:text="'Forbrugt tid: ' + ${subtask.timeSpent} + ' t.'"></p>
+                        </div>
+
+                        <p class="status"
+                           th:text="'Status: ' + ${subtask.status}"
+                           th:classappend="' status-' + ${subtask.status.name().toLowerCase()}">
+                        </p>
+                    </div>
+                </div>
+                <div class="actions">
+                    <a th:href="@{/subtasks/{id}(id=${subtask.subTaskId})}" class="btn btn-secondary">Se detaljer</a>
+                </div>
             </div>
-            <hr/>
+
+        </div>
+
+        <!-- Hvis ingen underopgaver -->
+        <div th:if="${#lists.isEmpty(userWithSubTasks.subTaskList)}">
+            <p>Brugeren <span th:text="${userWithSubTasks.user.firstName}"></span> har ingen tilknyttede underopgaver.</p>
         </div>
     </div>
 
-    <!-- Hvis der ingen underopgaver er -->
-    <div th:if="${#lists.isEmpty(userWithSubTasks.subTaskList)}">
-        Brugeren <span th:text="${userWithSubTasks.user.firstName}"></span> har ingen tilknyttede underopgaver.
-    </div>
-</section>
-
-<!-- Navigation -->
-<section class="navigation">
-    <div>
-        <a th:href="@{/users/profile}">
-            <button>Tilbage til forside</button>
-        </a>
+    <div class="fixed-bottom-right">
+        <a th:href="@{/users/{userId}(userId=${userWithSubTasks.user.userId})}" class="btn btn-secondary">⬅️ Tilbage til brugerdetaljer</a>
+        <a th:href="@{/users/profile}" class="btn btn-secondary">🏠 Dashboard</a>
     </div>
 </section>
 </body>

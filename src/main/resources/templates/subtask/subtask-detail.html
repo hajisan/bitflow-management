@@ -1,105 +1,200 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>SubTask Detail</title>
+    <title>Subtask-detail</title>
+    <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
-<h1>Detaljer for subtask</h1>
 
-<!-- Fejl- og succesbesked -->
-<section th:if="${error}" class="error-section">
-    <p th:text="${error}" class="error-message"></p>
-</section>
-<section th:if="${success}" class="success-section">
-    <p th:text="${success}" class="success-message"></p>
-</section>
+<!-- Navbar -->
+<div th:replace="fragments/navbar :: navbar"></div>
 
-<!-- Detaljer -->
-<section class="details-grid">
-    <div>Navn: <span th:text="${subtask.name}"></span></div>
-    <div>Beskrivelse: <span th:text="${subtask.description}"></span></div>
-    <div>Deadline: <span th:text="${subtask.deadline}"></span></div>
-    <div>Estimeret tid: <span th:text="${subtask.estimatedTime}"></span> timer</div>
-    <div>Aktuelle tidsforbrug: <span th:text="${subtask.timeSpent}"></span> timer</div>
-    <div>Status: <span th:text="${subtask.status}"></span></div>
-</section>
-
-<!-- Rediger-knap for ADMIN og PROJECT_MANAGER -->
-<section class="form-actions">
-    <div>
-        <a th:href="@{/subtasks/edit/{id}(id=${subtask.subTaskId})}">
-            <button>Rediger subtask</button>
-        </a>
-    </div>
-</section>
-
-<!-- Knap der fører til oprettelse af ny time entry -->
-<section class="form-actions">
-    <div>
-        <a th:href="@{/timeentries/create(taskId=${subtask.taskId}, subTaskId=${subtask.subTaskId})}">
-            <button>Opret ny time entry</button>
-        </a>
-    </div>
-</section>
-
-<!-- Knap der fører til subtaskens time entry-liste -->
-<div>
-    <a th:href="@{/subtasks/{subTaskId}/timeentries(subTaskId=${subtask.subTaskId})}">
-        <button>Se tilknyttede time entries</button>
-    </a>
+<!-- Feedback-beskeder -->
+<div th:if="${success}" class="success-section">
+    <p class="success-message" th:text="${success}"></p>
+</div>
+<div th:if="${error}" class="error-section">
+    <p class="error-message" th:text="${error}"></p>
 </div>
 
-<!-- Vis tilknyttet bruger -->
-<section class="mini-info">
-    <h2>Tildelt bruger</h2>
-    <p th:if="${assignedUser != null}">
-        <span th:text="${assignedUser.firstName + ' ' + assignedUser.lastName + ' (' + assignedUser.role + ')'}"></span>
-    </p>
-    <p th:if="${assignedUser == null}">
-        Ingen bruger er endnu tildelt denne underopgave.
-    </p>
-</section>
+<section class="dashboard-section">
 
-<!-- Formularer til tildeling af bruger -->
-<section class="form-actions">
-    <h2>Tildel mig selv</h2>
-    <form th:action="@{'/subtasks/' + ${subtask.subTaskId} + '/assignme'}" method="post">
-        <button type="submit">Tildel mig</button>
-    </form>
-</section>
-
-<section class="form-actions">
-    <h2>Tildel en anden bruger</h2>
-    <form th:action="@{'/subtasks/' + ${subtask.subTaskId} + '/assign'}" method="post">
-        <div>
-            <label for="userId">Vælg bruger:</label>
-            <select name="userId" id="userId">
-                <option th:each="user : ${allUserList}"
-                        th:value="${user.userId}"
-                        th:text="${user.firstName + ' ' + user.lastName + ' (' + user.role + ')'}">
-                </option>
-            </select>
-        </div>
-        <div>
-            <button type="submit">Tildel</button>
-        </div>
-    </form>
-</section>
-
-<!-- Navigation -->
-<section class="navigation">
-    <div>
-        <a th:href="@{/subtasks}">
-            <button>Tilbage til underopgaveliste</button>
-        </a>
+    <!-- Overskrift -->
+    <div class="list-header">
+        <h2 class="section-title">Detaljer for subtask</h2>
+        <a th:if="${session.currentUser.role.name() == 'ADMIN' or session.currentUser.role.name() == 'PROJECT_MANAGER'}"
+           th:href="@{/subtasks/edit/{id}(id=${subtask.subTaskId})}" class="btn btn-secondary">✏️ Rediger</a>
     </div>
-    <div>
-        <a th:href="@{/users/profile}">
-            <button>Tilbage til forside</button>
-        </a>
-    </div>
-</section>
 
+    <!-- Info -->
+    <div class="details-box">
+        <p><strong>Navn:</strong> <span th:text="${subtask.name}"></span></p>
+        <p><strong>Beskrivelse:</strong> <span th:text="${subtask.description}"></span></p>
+        <p><strong>Deadline:</strong> <span th:text="${subtask.deadline}"></span></p>
+        <p><strong>Estimeret tid:</strong> <span th:text="${subtask.estimatedTime} + ' t.'"></span></p>
+        <p><strong>Forbrugt tid:</strong> <span th:text="${subtask.timeSpent} + ' t.'"></span></p>
+        <p class="status"
+           th:text="'Status: ' + ${subtask.status}"
+           th:classappend="' status-' + ${subtask.status.name().toLowerCase()}"></p>
+    </div>
+
+    <!-- Tildelt bruger -->
+    <div class="details-box">
+        <h3>Tildelt bruger</h3>
+        <p th:if="${assignedUser != null}">
+            <span th:text="${assignedUser.firstName + ' ' + assignedUser.lastName + ' (' + assignedUser.role + ')'}"></span>
+        </p>
+        <p th:if="${assignedUser == null}">
+            Ingen bruger er endnu tildelt denne underopgave.
+        </p>
+    </div>
+
+    <!-- Handlinger -->
+    <div class="action-buttons">
+        <a th:href="@{/timeentries/create(taskId=${subtask.taskId}, subTaskId=${subtask.subTaskId})}" class="btn btn-primary">➕ Opret tidsregistrering</a>
+        <a th:href="@{/subtasks/{subTaskId}/timeentries(subTaskId=${subtask.subTaskId})}" class="btn btn-secondary">⏱️ Se tidsregistreringer</a>
+    </div>
+
+    <!-- Formular: tildel mig selv -->
+    <div class="form-section">
+        <h3>Tildel mig selv</h3>
+        <form th:action="@{'/subtasks/' + ${subtask.subTaskId} + '/assignme'}" method="post">
+            <button type="submit" class="btn btn-primary">🙋 Tildel mig</button>
+        </form>
+    </div>
+
+    <!-- Formular: tildel anden bruger -->
+    <div class="form-section" style="margin-top: var(--spacing-md);">
+        <h3>Tildel anden bruger</h3>
+        <form th:action="@{'/subtasks/' + ${subtask.subTaskId} + '/assign'}" method="post">
+            <div class="form-group">
+                <label for="userId">Vælg bruger:</label>
+                <select name="userId" id="userId" class="input">
+                    <option th:each="user : ${allUserList}"
+                            th:value="${user.userId}"
+                            th:text="${user.firstName + ' ' + user.lastName + ' (' + user.role + ')'}"></option>
+                </select>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">👤 Tildel</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Navigation -->
+    <div class="fixed-bottom-right">
+    <a th:href="@{/tasks/{taskId}/subtasks(taskId=${subtask.taskId})}" class="btn btn-secondary">⬅️ Tilbage til taskens subtasks</a>
+    <a th:href="@{/users/profile}" class="btn btn-secondary">🏠 Dashboard</a>
+    </div>
+
+
+</section>
 </body>
 </html>
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>SubTask Detail</title>-->
+<!--</head>-->
+<!--<body>-->
+<!--<h1>Detaljer for subtask</h1>-->
+
+<!--&lt;!&ndash; Fejl- og succesbesked &ndash;&gt;-->
+<!--<section th:if="${error}" class="error-section">-->
+<!--    <p th:text="${error}" class="error-message"></p>-->
+<!--</section>-->
+<!--<section th:if="${success}" class="success-section">-->
+<!--    <p th:text="${success}" class="success-message"></p>-->
+<!--</section>-->
+
+<!--&lt;!&ndash; Detaljer &ndash;&gt;-->
+<!--<section class="details-grid">-->
+<!--    <div>Navn: <span th:text="${subtask.name}"></span></div>-->
+<!--    <div>Beskrivelse: <span th:text="${subtask.description}"></span></div>-->
+<!--    <div>Deadline: <span th:text="${subtask.deadline}"></span></div>-->
+<!--    <div>Estimeret tid: <span th:text="${subtask.estimatedTime}"></span> timer</div>-->
+<!--    <div>Aktuelle tidsforbrug: <span th:text="${subtask.timeSpent}"></span> timer</div>-->
+<!--    <div>Status: <span th:text="${subtask.status}"></span></div>-->
+<!--</section>-->
+
+<!--&lt;!&ndash; Rediger-knap for ADMIN og PROJECT_MANAGER &ndash;&gt;-->
+<!--<section class="form-actions">-->
+<!--    <div>-->
+<!--        <a th:href="@{/subtasks/edit/{id}(id=${subtask.subTaskId})}">-->
+<!--            <button>Rediger subtask</button>-->
+<!--        </a>-->
+<!--    </div>-->
+<!--</section>-->
+
+<!--&lt;!&ndash; Knap der fører til oprettelse af ny time entry &ndash;&gt;-->
+<!--<section class="form-actions">-->
+<!--    <div>-->
+<!--        <a th:href="@{/timeentries/create(taskId=${subtask.taskId}, subTaskId=${subtask.subTaskId})}">-->
+<!--            <button>Opret ny time entry</button>-->
+<!--        </a>-->
+<!--    </div>-->
+<!--</section>-->
+
+<!--&lt;!&ndash; Knap der fører til subtaskens time entry-liste &ndash;&gt;-->
+<!--<div>-->
+<!--    <a th:href="@{/subtasks/{subTaskId}/timeentries(subTaskId=${subtask.subTaskId})}">-->
+<!--        <button>Se tilknyttede time entries</button>-->
+<!--    </a>-->
+<!--</div>-->
+
+<!--&lt;!&ndash; Vis tilknyttet bruger &ndash;&gt;-->
+<!--<section class="mini-info">-->
+<!--    <h2>Tildelt bruger</h2>-->
+<!--    <p th:if="${assignedUser != null}">-->
+<!--        <span th:text="${assignedUser.firstName + ' ' + assignedUser.lastName + ' (' + assignedUser.role + ')'}"></span>-->
+<!--    </p>-->
+<!--    <p th:if="${assignedUser == null}">-->
+<!--        Ingen bruger er endnu tildelt denne underopgave.-->
+<!--    </p>-->
+<!--</section>-->
+
+<!--&lt;!&ndash; Formularer til tildeling af bruger &ndash;&gt;-->
+<!--<section class="form-actions">-->
+<!--    <h2>Tildel mig selv</h2>-->
+<!--    <form th:action="@{'/subtasks/' + ${subtask.subTaskId} + '/assignme'}" method="post">-->
+<!--        <button type="submit">Tildel mig</button>-->
+<!--    </form>-->
+<!--</section>-->
+
+<!--<section class="form-actions">-->
+<!--    <h2>Tildel en anden bruger</h2>-->
+<!--    <form th:action="@{'/subtasks/' + ${subtask.subTaskId} + '/assign'}" method="post">-->
+<!--        <div>-->
+<!--            <label for="userId">Vælg bruger:</label>-->
+<!--            <select name="userId" id="userId">-->
+<!--                <option th:each="user : ${allUserList}"-->
+<!--                        th:value="${user.userId}"-->
+<!--                        th:text="${user.firstName + ' ' + user.lastName + ' (' + user.role + ')'}">-->
+<!--                </option>-->
+<!--            </select>-->
+<!--        </div>-->
+<!--        <div>-->
+<!--            <button type="submit">Tildel</button>-->
+<!--        </div>-->
+<!--    </form>-->
+<!--</section>-->
+
+<!--&lt;!&ndash; Navigation &ndash;&gt;-->
+<!--<section class="navigation">-->
+<!--    <div>-->
+<!--        <a th:href="@{/subtasks}">-->
+<!--            <button>Tilbage til underopgaveliste</button>-->
+<!--        </a>-->
+<!--    </div>-->
+<!--    <div>-->
+<!--        <a th:href="@{/users/profile}">-->
+<!--            <button>Tilbage til forside</button>-->
+<!--        </a>-->
+<!--    </div>-->
+<!--</section>-->
+
+<!--</body>-->
+<!--</html>-->

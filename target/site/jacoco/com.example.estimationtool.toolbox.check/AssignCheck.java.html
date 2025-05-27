@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="da"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AssignCheck.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EstimationTool</a> &gt; <a href="index.source.html" class="el_package">com.example.estimationtool.toolbox.check</a> &gt; <span class="el_source">AssignCheck.java</span></div><h1>AssignCheck.java</h1><pre class="source lang-java linenums">package com.example.estimationtool.toolbox.check;
+
+import com.example.estimationtool.model.Project;
+import com.example.estimationtool.model.SubProject;
+import com.example.estimationtool.model.SubTask;
+import com.example.estimationtool.model.Task;
+import com.example.estimationtool.toolbox.dto.UserWithProjectsDTO;
+import com.example.estimationtool.toolbox.dto.UserWithSubProjectsDTO;
+import com.example.estimationtool.toolbox.dto.UserWithSubTasksDTO;
+import com.example.estimationtool.toolbox.dto.UserWithTasksDTO;
+
+// Tjekker om bruger er tilknyttet en bestemt model
+// DTO'erne indeholder brugerens tildelte modeller
+
+<span class="nc" id="L15">public class AssignCheck {</span>
+
+
+
+    // ------------------------------------ User med Projects ------------------------------------------
+
+    public static void ensureUserAssignedToProject(UserWithProjectsDTO userWithProjectsDTO, int projectId) {
+
+<span class="nc bnc" id="L23" title="All 2 branches missed.">        for (Project project : userWithProjectsDTO.projectList()) {</span>
+<span class="nc bnc" id="L24" title="All 2 branches missed.">            if (project.getProjectId() == projectId) {</span>
+<span class="nc" id="L25">                return;</span>
+            }
+<span class="nc" id="L27">        }</span>
+<span class="nc" id="L28">        throw new SecurityException(&quot;Status for projektet kan kun ændres af tilknyttede brugere.&quot;);</span>
+    }
+
+    // ------------------------------------ User med SubProjects ---------------------------------------
+
+    public static void ensureUserAssignedToSubProject(UserWithSubProjectsDTO userWithSubProjectsDTO, int subProjectId) {
+
+<span class="nc bnc" id="L35" title="All 2 branches missed.">        for (SubProject subProject : userWithSubProjectsDTO.subProjectList()) {</span>
+<span class="nc bnc" id="L36" title="All 2 branches missed.">            if (subProject.getSubProjectId() == subProjectId) {</span>
+<span class="nc" id="L37">                return;</span>
+            }
+<span class="nc" id="L39">        }</span>
+<span class="nc" id="L40">        throw new SecurityException(&quot;Status for subprojektet kan kun ændres af tilknyttede brugere.&quot;);</span>
+    }
+
+    // ------------------------------------ User med Tasks ------------------------------------------
+
+    public static void ensureUserAssignedToTask(UserWithTasksDTO userWithTasksDTO, int taskId) {
+
+<span class="nc bnc" id="L47" title="All 2 branches missed.">        for (Task task : userWithTasksDTO.taskList()) {</span>
+<span class="nc bnc" id="L48" title="All 2 branches missed.">            if (task.getTaskId() == taskId) {</span>
+<span class="nc" id="L49">                return;</span>
+            }
+<span class="nc" id="L51">        }</span>
+<span class="nc" id="L52">        throw new SecurityException(&quot;Status for task kan kun ændres af tilknyttede brugere.&quot;);</span>
+    }
+
+    // ------------------------------------ User med SubTasks ----------------------------------------
+
+    public static void ensureUserAssignedToSubTask(UserWithSubTasksDTO userWithSubTasksDTO, int subTaskId) {
+
+<span class="nc bnc" id="L59" title="All 2 branches missed.">        for (SubTask subTask : userWithSubTasksDTO.subTaskList()) {</span>
+<span class="nc bnc" id="L60" title="All 2 branches missed.">            if (subTask.getSubTaskId() == subTaskId) {</span>
+<span class="nc" id="L61">                return;</span>
+            }
+<span class="nc" id="L63">        }</span>
+<span class="nc" id="L64">        throw new SecurityException(&quot;Status for subtask kan kun ændres af tilknyttede brugere.&quot;);</span>
+    }
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

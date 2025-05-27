@@ -131,9 +131,10 @@ public class TaskController {
         }
 
         Task task = taskService.readById(taskId);
-        List<SubTask> subTasksUnderTask = taskService.readAllSubTasksByTaskId(taskId).subTaskList();
-        TaskWithSubTasksDTO taskWithSubTasksDTO = new TaskWithSubTasksDTO(task, subTasksUnderTask);
         model.addAttribute("task", task);
+
+        TaskWithSubTasksDTO taskWithSubTasksDTO = taskService.readAllSubTasksByTaskId(taskId);
+
         model.addAttribute("taskwithsubtasks", taskWithSubTasksDTO);
 
         return "task/task-detail";
@@ -311,7 +312,7 @@ public class TaskController {
 
     //---------------------------- POST Assign User to Task ---------------------------
 
-    @PostMapping("/tasks/{taskId}/assignusers")
+    @PostMapping("/{taskId}/assignusers")
     public String assignUsersToTask(@PathVariable int taskId,
                                     @RequestParam("userIds") List<Integer> userIds,
                                     HttpSession session,
