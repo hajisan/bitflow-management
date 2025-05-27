@@ -1,16 +1,7 @@
 -- Dropper tables hvis de findes for at rydde al data
-/*
-DROP TABLE IF EXISTS Users;
-DROP TABLE IF EXISTS Users_Project;
-DROP TABLE IF EXISTS Users_SubProject;
-DROP TABLE IF EXISTS User_Task;
-DROP TABLE IF EXISTS User_SubTask;
-DROP TABLE IF EXISTS SubpPoject;
-DROP TABLE IF EXISTS Project;
-DROP TABLE IF EXISTS SubTask;
-DROP TABLE IF EXISTS Task;
-DROP TABLE IF EXISTS TimeEntry;
-*/
+CREATE SCHEMA IF NOT EXISTS project_db;
+USE project_db;
+
 DROP TABLE IF EXISTS Users_SubTask;
 DROP TABLE IF EXISTS Users_Task;
 DROP TABLE IF EXISTS Users_SubProject;
