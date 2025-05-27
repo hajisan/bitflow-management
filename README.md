@@ -1,4 +1,4 @@
-# EstimationTool – Projektplanlægning og Tidsstyring
+# Bitflow Management – Projektplanlægning og Tidsstyring
 
 Med mange ansatte fordelt over flere lande er projektstyring en kompleks opgave. Dette system hjælper med at nedbryde og planlægge projektopgaver, lave tidskalkulationer og etablere pipelines til automatisering.
 
