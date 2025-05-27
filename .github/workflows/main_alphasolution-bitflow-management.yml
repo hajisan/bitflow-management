@@ -61,6 +61,8 @@ jobs:
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'alphasolution-bitflow-management'
-          slot-name: 'Production'
           package: '*.jar'
+
+
+
           
