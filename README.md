@@ -23,7 +23,7 @@ Projektet giver virksomheden et klart overblik over projekter, delprojekter og o
 7. Deploy til Azure  
    GitHub Actions er sat op til at håndtere CI/CD.  
 
-🔗 Kørende applikation på Azure: (indsæt-link-her) http://alphasolution-estimation-tool-fdf6h3fwcvgcdhfq.swedencentral-01.azurewebsites.net
+🔗 Kørende applikation på Azure: ([website](https://bitbros-management-e8cbhgezdjb6erb0.swedencentral-01.azurewebsites.net))
 
 ## 📘 Hvor brugere kan få hjælp
 - Scrum board og projektoversigt: GitHub Project Board  
