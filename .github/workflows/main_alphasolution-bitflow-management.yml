@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy JAR app to Azure Web App - EstimationToolApplication
+name: Build and deploy JAR app to Azure Web App - alphasolution-bitflow-management
 
 on:
   push:
@@ -52,15 +52,17 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_C107AD874305438584C9CD51B69219BF }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_9CD4A59AA046486CB7E838F876CB2C31 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_E8F800BD7534413BBE62C92BBA1E49BD }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_2B5F664A4A3C4673AB55CD45CF96549C }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_93801BDEF8A94254853EC8F470E7C014 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_DC66223B02924A78AA24FE96D3E710B7 }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'EstimationToolApplication'
-          slot-name: 'Production'
+          app-name: 'alphasolution-bitflow-management'
           package: '*.jar'
+
+
+
           
