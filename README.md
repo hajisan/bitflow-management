@@ -63,9 +63,8 @@ SQL-scripts til databaseoprettelse og seed-data findes i src/main/resources.
 Domænemodel:
 ![Domænemodel - Project Manager](https://github.com/user-attachments/assets/e5e53c3a-45a6-4b49-ae4a-a667aaa0b2fe)
 
-
 ER-model:
-(Nima kan smide 600 DPI HiRes version af ER-modellen fra Visual Paradigm her)
+![ER Model](https://github.com/user-attachments/assets/310d9a82-0ecd-40d2-95fa-3600ae1afb0f)
 
 Klassediagram:    
 ![Class Diagram - EstimationToolWithAttributes](https://github.com/user-attachments/assets/c8d7c13e-1d2a-4a47-bf01-ad994a5d64b7)
