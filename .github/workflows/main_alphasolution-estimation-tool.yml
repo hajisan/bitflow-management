@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy JAR app to Azure Web App - alphasolution-estimation-tool
+name: Build and deploy JAR app to Azure Web App - EstimationToolApplication
 
 on:
   push:
@@ -39,18 +39,28 @@ jobs:
     environment:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-      
+    permissions:
+      id-token: write #This is required for requesting the JWT
+      contents: read #This is required for actions/checkout
+  
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
           name: java-app
       
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_C107AD874305438584C9CD51B69219BF }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_9CD4A59AA046486CB7E838F876CB2C31 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_E8F800BD7534413BBE62C92BBA1E49BD }}
+
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'alphasolution-estimation-tool'
+          app-name: 'EstimationToolApplication'
           slot-name: 'Production'
           package: '*.jar'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_D2B10AA9A09B4202B814FA7DCD8FBAD1 }}
+          
