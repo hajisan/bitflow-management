@@ -3,16 +3,23 @@ CREATE DATABASE IF NOT EXISTS project_db;
 USE project_db;
 
 -- Dropper tables hvis de findes for at rydde al data
-DROP TABLE IF EXISTS users;
+-- Drop timeentry først --
+DROP TABLE IF EXISTS timeentry;
+-- Derefter drop Users_-tabellerne -- 
 DROP TABLE IF EXISTS users_project;
 DROP TABLE IF EXISTS users_subproject;
 DROP TABLE IF EXISTS users_task;
 DROP TABLE IF EXISTS users_subtask;
-DROP TABLE IF EXISTS subproject;
-DROP TABLE IF EXISTS project;
+-- Derefter drop Users --
+DROP TABLE IF EXISTS users;
+-- Til sidst droppes projektkomponenttabellerne fra lavest til højest -- 
 DROP TABLE IF EXISTS subtask;
 DROP TABLE IF EXISTS task;
-DROP TABLE IF EXISTS timeentry;
+DROP TABLE IF EXISTS subproject;
+DROP TABLE IF EXISTS project;
+
+
+
 
 -- ========================
 -- Tabel: Users
