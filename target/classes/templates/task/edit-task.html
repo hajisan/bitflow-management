@@ -7,7 +7,7 @@
 </head>
 <body>
 
-<!-- Navbar -->
+<!-- Navbar med log ud knap -->
 <div th:replace="fragments/navbar :: navbar"></div>
 
 <section class="dashboard-section">
@@ -15,7 +15,7 @@
     <!-- Overskrift -->
     <h2 class="section-title" th:text="'Rediger opgave: ' + ${task.name}">Rediger task</h2>
 
-    <!-- Feedback -->
+    <!-- Feedback-beskeder -->
     <div th:if="${success}" class="success-section"><p class="success-message" th:text="${success}"></p></div>
     <div th:if="${error}" class="error-section"><p class="error-message" th:text="${error}"></p></div>
 

@@ -7,7 +7,7 @@
 </head>
 <body>
 
-<!-- Navbar -->
+<!-- Navbar med log ud knap -->
 <div th:replace="fragments/navbar :: navbar"></div>
 
 <section class="dashboard-section">
@@ -16,12 +16,8 @@
     <h2 class="section-title" th:text="'Rediger subtask: ' + ${subtask.name}">Rediger subtask</h2>
 
     <!-- Feedback-beskeder -->
-    <div th:if="${success}" class="success-section">
-        <p class="success-message" th:text="${success}"></p>
-    </div>
-    <div th:if="${error}" class="error-section">
-        <p class="error-message" th:text="${error}"></p>
-    </div>
+    <div th:if="${success}" class="success-section"><p class="success-message" th:text="${success}"></p></div>
+    <div th:if="${error}" class="error-section"><p class="error-message" th:text="${error}"></p></div>
 
     <!-- Formular -->
     <form th:action="@{/subtasks/update}" method="post" th:object="${subtask}" class="form-styled">
